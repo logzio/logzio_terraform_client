@@ -26,9 +26,9 @@ func createValidAlert() CreateAlertType {
 }
 
 func TestCreateAlert(t *testing.T) {
-	api_token := os.Getenv("LOGZIO_API_TOKEN")
+	api_token := os.Getenv(ENV_LOGZIO_API_TOKEN)
 	if len(api_token) == 0 {
-		t.Fatalf("%q could not get an API token from LOGZIO_API_TOKEN", "TestDeleteAlert")
+		t.Fatalf("%v could not get an API token from %v", "TestDeleteAlert", ENV_LOGZIO_API_TOKEN)
 	}
 
 	var client *Client
