@@ -47,9 +47,9 @@ func buildCreateApiRequest(apiToken string, jsonObject map[string]interface{}) (
 	return req, err
 }
 
-func buildDeleteApiRequest(apiToken string, alertId string) (*http.Request, error) {
-	url := fmt.Sprintf("https://api.logz.io/v1/alerts/%s", alertId)
-	log.Print("%s::%s::%s", "some_token", "DeleteAlert", url)
+func buildDeleteApiRequest(apiToken string, alertId int64) (*http.Request, error) {
+	url := fmt.Sprintf("https://api.logz.io/v1/alerts/%d", alertId)
+	log.Printf("%s::%s::%s", "some_token", "DeleteAlert", url)
 	req, err := http.NewRequest("DELETE", url, nil)
 	addHttpHeaders(apiToken, req)
 	return req, err
@@ -75,11 +75,11 @@ type CreateAlertType struct {
 	Operation 					string
 	SeverityThresholdTiers 		[]SeverityThresholdType
 	SearchTimeFrameMinutes 		int
-	NotificationEmails 			[]interface{} //required, can't be blank
+	NotificationEmails 			[]interface{} //required, can be empty
 	IsEnabled 					bool
 	SuppressNotificationMinutes int //optional, defaults to 0 if not specified
 	ValueAggregationType 		string
-	ValueAggregationField 		string
+	ValueAggregationField 		interface{}
 	GroupByAggregationFields 	[]interface{}
 	AlertNotificationEndpoints 	[]interface{} //required, can be empty if specified
 }
@@ -95,22 +95,93 @@ const (
 	LessThan string = "LESS_THAN"
 	NotEquals string = "NOT_EQUALS"
 	Equals string = "EQUALS"
+
+	UniqueCount string = "UNIQUE_COUNT"
+	Avg string = "AVG"
+	Max string = "MAX"
+	None string = "NONE"
+	Sum string = "SUM"
+	Count string = "COUNT"
+	Min string = "MIN"
 )
+
+func contains(slice []string, s string) bool {
+	for _, value := range slice {
+		if value == s {
+			return true
+		}
+	}
+	return false
+}
+
+func validateCreateAlertRequest(alert CreateAlertType) (error) {
+
+	if len(alert.Title) == 0 {
+		return fmt.Errorf("title must be set")
+	}
+
+	if len(alert.QueryString) == 0 {
+		return fmt.Errorf("query string must be set")
+	}
+
+	if alert.NotificationEmails == nil {
+		return fmt.Errorf("notificationEmails must not be nil")
+	}
+
+	validAggregationTypes := []string {UniqueCount, Avg, Max, None, Sum, Count, Min}
+	if !contains(validAggregationTypes, alert.ValueAggregationType) {
+		return fmt.Errorf("valueAggregationType must be one of %s", validAggregationTypes)
+	}
+
+	validOperations := []string {GreaterThanOrEquals, LessThanOrEquals, GreaterThan, LessThan, NotEquals, Equals}
+	if !contains(validOperations, alert.Operation) {
+		return fmt.Errorf("operation must be one of %s", validOperations)
+	}
+
+	if None == alert.ValueAggregationType && (alert.ValueAggregationField != nil || alert.GroupByAggregationFields != nil) {
+		return fmt.Errorf("if ValueAggregaionType is %s then ValueAggregationField and GroupByAggregationFields must be nil", None)
+	}
+
+	return nil
+}
+
+func buildCreateAlertRequest(alert CreateAlertType) (map[string]interface{}) {
+	var createAlert = map[string]interface{}{}
+	createAlert["title"] = alert.Title
+	createAlert["description"] = alert.Description
+	if len(alert.Filter) > 0 {
+		createAlert["filter"] = alert.Filter
+	}
+	createAlert["query_string"] = alert.QueryString
+	createAlert["operation"] = alert.Operation
+	createAlert["severityThresholdTiers"] = alert.SeverityThresholdTiers
+	createAlert["searchTimeFrameMinutes"] = alert.SearchTimeFrameMinutes
+	createAlert["notificationEmails"] = alert.NotificationEmails
+	createAlert["isEnabled"] = alert.IsEnabled
+	createAlert["suppressNotificationMinutes"] = alert.SuppressNotificationMinutes
+	createAlert["valueAggregationType"] = alert.ValueAggregationType
+	createAlert["valueAggregationField"] = alert.ValueAggregationField
+	createAlert["groupByAggregationFields"] = alert.GroupByAggregationFields
+	createAlert["alertNotificationEndpoints"] = alert.AlertNotificationEndpoints
+	return createAlert
+}
 
 func (n *Client) CreateAlert(alert CreateAlertType) (*AlertType, error) {
 
-	var createApiRequest map[string]interface{}
-
-	if len(alert.Filter) > 0 {
-		createApiRequest["filter"] = alert.Filter
+	err := validateCreateAlertRequest(alert)
+	if err != nil {
+		return nil, err
 	}
 
+	createAlert := buildCreateAlertRequest(alert)
+
+	/**
 	createAlert := map[string]interface{}{
 		"title" : alert.Title,
 		"description" : alert.Description,
+		"filter" : alert.Filter,
 		"query_string" : alert.QueryString,
-		"operation": alert.Operation,
-		"severityThresholdTiers" : alert.SeverityThresholdTiers,
+		"severityThresholdTiers" : alert.,
 		"searchTimeFrameMinutes" : alert.SearchTimeFrameMinutes,
 		"notificationEmails" : []string{"jon.boydell@massive.co"},
 		"isEnabled" : alert.IsEnabled,
@@ -120,6 +191,7 @@ func (n *Client) CreateAlert(alert CreateAlertType) (*AlertType, error) {
 		"groupByAggregationFields" : nil,
 		"alertNotificationEndpoints" : alert.AlertNotificationEndpoints,
 	}
+	**/
 
 	req, _ := buildCreateApiRequest(n.name, createAlert)
 
@@ -132,16 +204,13 @@ func (n *Client) CreateAlert(alert CreateAlertType) (*AlertType, error) {
 		return nil, fmt.Errorf("%s", data)
 	}
 
-	var target map[string]interface{}
+	var target AlertType
 	json.Unmarshal(data, &target)
 
-	v := new(AlertType)
-	v.AlertId = target["alertId"].(int64)
-
-	return v, nil
+	return &target, nil
 }
 
-func (n *Client) DeleteAlert(alertId string) error {
+func (n *Client) DeleteAlert(alertId int64) error {
 	req, _ := buildDeleteApiRequest(n.name, alertId)
 
 	var client http.Client
@@ -170,14 +239,14 @@ func (n *Client) ListAlerts() ([]AlertType, error) {
 
 	data, _ := ioutil.ReadAll(resp.Body)
 
+	if resp.StatusCode != 200 {
+		return nil, fmt.Errorf("%s", data)
+	}
+
 	var arr []AlertType
 	err = json.Unmarshal([]byte(data), &arr)
 	if err != nil {
 		return nil, err
-	}
-
-	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("%s", data)
 	}
 
 	return arr, nil

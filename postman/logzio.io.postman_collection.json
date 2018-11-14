@@ -1,0 +1,127 @@
+{
+	"info": {
+		"_postman_id": "3e181f08-9fde-4a49-a754-b7b4ddab5613",
+		"name": "logzio.io",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Alert::Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-API-TOKEN",
+						"value": "{{x_api_token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"alertNotificationEndpoints\": [],\n   \"description\": \"\",\n   \"groupByAggregationFields\": null,\n   \"isEnabled\": true,\n   \"notificationEmails\": [\n     \"{{email_address}}\"\n   ],\n   \"operation\": \"GREATER_THAN\",\n   \"query_string\": \"loglevel:ERROR\",\n   \"searchTimeFrameMinutes\": 5,\n   \"severityThresholdTiers\": [],\n   \"suppressNotificationMinutes\": 5,\n   \"title\": \"hello\",\n    \"valueAggregationField\": null,\n    \"valueAggregationType\": \"NONE\"\n }"
+				},
+				"url": {
+					"raw": "https://api.logz.io/v1/alerts",
+					"protocol": "https",
+					"host": [
+						"api",
+						"logz",
+						"io"
+					],
+					"path": [
+						"v1",
+						"alerts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Alert::Delete",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "X-API-TOKEN",
+						"type": "text",
+						"value": "{{x_api_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\": \"hello\",\n\t\"query_string\":\"error:TRUE\",\n\t\"notificationEmails\": [\"support@massive.co\"]\n}"
+				},
+				"url": {
+					"raw": "https://api.logz.io/v1/alerts/:id",
+					"protocol": "https",
+					"host": [
+						"api",
+						"logz",
+						"io"
+					],
+					"path": [
+						"v1",
+						"alerts",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Alert::List",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-API-TOKEN",
+						"type": "text",
+						"value": "{{x_api_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://api.logz.io/v1/alerts",
+					"protocol": "https",
+					"host": [
+						"api",
+						"logz",
+						"io"
+					],
+					"path": [
+						"v1",
+						"alerts"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
