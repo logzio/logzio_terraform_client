@@ -5,13 +5,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"net/http"
 	"log"
+	"net/http"
 )
 
 type Client struct {
 	name string
-	log log.Logger
+	log  log.Logger
 }
 
 func New(name string) *Client {
@@ -26,7 +26,7 @@ func prettyprint(b []byte) ([]byte, error) {
 	return out.Bytes(), err
 }
 
-func addHttpHeaders (apiToken string, req *http.Request) {
+func addHttpHeaders(apiToken string, req *http.Request) {
 	req.Header.Add("X-API-TOKEN", apiToken)
 	req.Header.Add("Content-Type", "application/json")
 }
@@ -35,7 +35,7 @@ func buildCreateApiRequest(apiToken string, jsonObject map[string]interface{}) (
 
 	mybytes, err := json.Marshal(jsonObject)
 
-	s,_ := prettyprint(mybytes)
+	s, _ := prettyprint(mybytes)
 	log.Printf("%s::%s::%s", "some_token", "buildCreateApiRequest", s)
 
 	if err != nil {
@@ -63,25 +63,25 @@ func buildListApiRequest(apiToken string) (*http.Request, error) {
 }
 
 type SeverityThresholdType struct {
-	severity string
+	severity  string
 	threshold int
 }
 
 type CreateAlertType struct {
-	Title 						string //required
-	Description 				string //optional, can be blank if specified
-	QueryString 				string //required, can't be blank
-	Filter 						string //optional, can't be blank if specified
-	Operation 					string
-	SeverityThresholdTiers 		[]SeverityThresholdType
-	SearchTimeFrameMinutes 		int
-	NotificationEmails 			[]interface{} //required, can be empty
-	IsEnabled 					bool
+	Title                       string //required
+	Description                 string //optional, can be blank if specified
+	QueryString                 string //required, can't be blank
+	Filter                      string //optional, can't be blank if specified
+	Operation                   string
+	SeverityThresholdTiers      []SeverityThresholdType
+	SearchTimeFrameMinutes      int
+	NotificationEmails          []interface{} //required, can be empty
+	IsEnabled                   bool
 	SuppressNotificationMinutes int //optional, defaults to 0 if not specified
-	ValueAggregationType 		string
-	ValueAggregationField 		interface{}
-	GroupByAggregationFields 	[]interface{}
-	AlertNotificationEndpoints 	[]interface{} //required, can be empty if specified
+	ValueAggregationType        string
+	ValueAggregationField       interface{}
+	GroupByAggregationFields    []interface{}
+	AlertNotificationEndpoints  []interface{} //required, can be empty if specified
 }
 
 type AlertType struct {
@@ -90,19 +90,19 @@ type AlertType struct {
 
 const (
 	GreaterThanOrEquals string = "GREATER_THAN_OR_EQUALS"
-	LessThanOrEquals string = "LESS_THAN_OR_EQUALS"
-	GreaterThan string = "GREATER_THAN"
-	LessThan string = "LESS_THAN"
-	NotEquals string = "NOT_EQUALS"
-	Equals string = "EQUALS"
+	LessThanOrEquals    string = "LESS_THAN_OR_EQUALS"
+	GreaterThan         string = "GREATER_THAN"
+	LessThan            string = "LESS_THAN"
+	NotEquals           string = "NOT_EQUALS"
+	Equals              string = "EQUALS"
 
 	UniqueCount string = "UNIQUE_COUNT"
-	Avg string = "AVG"
-	Max string = "MAX"
-	None string = "NONE"
-	Sum string = "SUM"
-	Count string = "COUNT"
-	Min string = "MIN"
+	Avg         string = "AVG"
+	Max         string = "MAX"
+	None        string = "NONE"
+	Sum         string = "SUM"
+	Count       string = "COUNT"
+	Min         string = "MIN"
 )
 
 func contains(slice []string, s string) bool {
@@ -114,7 +114,7 @@ func contains(slice []string, s string) bool {
 	return false
 }
 
-func validateCreateAlertRequest(alert CreateAlertType) (error) {
+func validateCreateAlertRequest(alert CreateAlertType) error {
 
 	if len(alert.Title) == 0 {
 		return fmt.Errorf("title must be set")
@@ -128,12 +128,12 @@ func validateCreateAlertRequest(alert CreateAlertType) (error) {
 		return fmt.Errorf("notificationEmails must not be nil")
 	}
 
-	validAggregationTypes := []string {UniqueCount, Avg, Max, None, Sum, Count, Min}
+	validAggregationTypes := []string{UniqueCount, Avg, Max, None, Sum, Count, Min}
 	if !contains(validAggregationTypes, alert.ValueAggregationType) {
 		return fmt.Errorf("valueAggregationType must be one of %s", validAggregationTypes)
 	}
 
-	validOperations := []string {GreaterThanOrEquals, LessThanOrEquals, GreaterThan, LessThan, NotEquals, Equals}
+	validOperations := []string{GreaterThanOrEquals, LessThanOrEquals, GreaterThan, LessThan, NotEquals, Equals}
 	if !contains(validOperations, alert.Operation) {
 		return fmt.Errorf("operation must be one of %s", validOperations)
 	}
@@ -145,7 +145,7 @@ func validateCreateAlertRequest(alert CreateAlertType) (error) {
 	return nil
 }
 
-func buildCreateAlertRequest(alert CreateAlertType) (map[string]interface{}) {
+func buildCreateAlertRequest(alert CreateAlertType) map[string]interface{} {
 	var createAlert = map[string]interface{}{}
 	createAlert["title"] = alert.Title
 	createAlert["description"] = alert.Description

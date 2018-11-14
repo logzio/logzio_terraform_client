@@ -6,7 +6,7 @@ import (
 )
 
 func containsAlert(alerts []AlertType, alertId int64) bool {
-	for x := 0; x < len(alerts); x++  {
+	for x := 0; x < len(alerts); x++ {
 		if alerts[x].AlertId == alertId {
 			return true
 		}
@@ -38,4 +38,3 @@ func TestDeleteAlert(t *testing.T) {
 		t.Fatalf("%q %d should have been deleted, but is returned by ListAlerts", "DeleteAlert", alertId)
 	}
 }
-

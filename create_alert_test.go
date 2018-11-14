@@ -8,20 +8,20 @@ import (
 
 func createValidAlert() CreateAlertType {
 	return CreateAlertType{
-		Title:"this is my title",
-		Description:"this is my description",
-		QueryString:"loglevel:ERROR",
-		Filter:"",
-		Operation:GreaterThan,
-		SeverityThresholdTiers:[]SeverityThresholdType{},
-		SearchTimeFrameMinutes:0,
-		NotificationEmails:[]interface{}{},
-		IsEnabled:true,
-		SuppressNotificationMinutes:0,
-		ValueAggregationType:None,
-		ValueAggregationField:nil,
-		GroupByAggregationFields:nil,
-		AlertNotificationEndpoints:[]interface{}{},
+		Title:                       "this is my title",
+		Description:                 "this is my description",
+		QueryString:                 "loglevel:ERROR",
+		Filter:                      "",
+		Operation:                   GreaterThan,
+		SeverityThresholdTiers:      []SeverityThresholdType{},
+		SearchTimeFrameMinutes:      0,
+		NotificationEmails:          []interface{}{},
+		IsEnabled:                   true,
+		SuppressNotificationMinutes: 0,
+		ValueAggregationType:        None,
+		ValueAggregationField:       nil,
+		GroupByAggregationFields:    nil,
+		AlertNotificationEndpoints:  []interface{}{},
 	}
 }
 
@@ -46,7 +46,6 @@ func TestCreateAlert(t *testing.T) {
 	}
 	alerts = append(alerts, alert.AlertId)
 
-
 	alertId := fmt.Sprintf("%d", alert.AlertId)
 
 	if len(alertId) == 0 {
@@ -66,7 +65,6 @@ func TestCreateAlert(t *testing.T) {
 	if err == nil {
 		t.Fatalf("should have raised an error for invalid use of operation: %v", err)
 	}
-
 
 	createAlert = createValidAlert()
 	createAlert.ValueAggregationType = ""
@@ -106,8 +104,6 @@ func TestCreateAlert(t *testing.T) {
 
 	// clean up any created alerts
 	for x := 0; x < len(alerts); x++ {
-	    client.DeleteAlert(alerts[x])
+		client.DeleteAlert(alerts[x])
 	}
 }
-
-
