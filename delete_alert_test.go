@@ -16,6 +16,9 @@ func containsAlert(alerts []AlertType, alertId int64) bool {
 
 func TestDeleteAlert(t *testing.T) {
 	api_token := os.Getenv("LOGZIO_API_TOKEN")
+	if len(api_token) == 0 {
+		t.Fatalf("%q could not get an API token from LOGZIO_API_TOKEN", "TestDeleteAlert")
+	}
 
 	var client *Client
 	client = New(api_token)
@@ -24,7 +27,7 @@ func TestDeleteAlert(t *testing.T) {
 
 	alert, err := client.CreateAlert(createAlert)
 	if err != nil {
-		t.Fatalf("%q should not have raised an error: %v", "CreateAlert", err)
+		t.Fatalf("%q should not have raised an error: %v", "DeleteAlert", err)
 	}
 
 	alertId := alert.AlertId
@@ -32,7 +35,7 @@ func TestDeleteAlert(t *testing.T) {
 
 	alerts, err := client.ListAlerts()
 	if containsAlert(alerts, alertId) {
-		t.Fatalf("Alert %d should have been deleted, but is returned by ListAlerts", alertId)
+		t.Fatalf("%q %d should have been deleted, but is returned by ListAlerts", "DeleteAlert", alertId)
 	}
 }
 

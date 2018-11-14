@@ -4,13 +4,13 @@ Client library for logz.io - only supports Alerts (experimentally) at the moment
 
 ##### API support
 
-|api  |method|support     |implementation|
-|-----|------|------------|--------------|
-|alert|create|experimental|`CreateAlert` |
-|alert|delete|experimental|`DeleteAlert` |
-|alert|list  |experimental|`ListAlerts`  |
-|alert|update|none        |              |
-|alert|read  |none        |              |
+|api  |method|support     |implementation|test coverage|
+|-----|------|------------|--------------|-------------|
+|alert|create|experimental|`CreateAlert` |yes          |
+|alert|delete|experimental|`DeleteAlert` |yes          |
+|alert|list  |experimental|`ListAlerts`  |yes          |
+|alert|update|none        |              |             |
+|alert|read  |none        |              |             |
 
 ##### Basic usage
 
