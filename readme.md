@@ -1,5 +1,7 @@
 # Logz.io client library
 
+[![Build Status](https://travis-ci.org/jonboydell/logzio_client.svg?branch=develop)](https://travis-ci.org/jonboydell/logzio_client)
+
 Client library for logz.io - only supports Alerts (experimentally) at the moment
 
 ##### API support
