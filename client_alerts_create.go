@@ -5,13 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"net/http"
 	"log"
+	"net/http"
 )
 
-const createServiceUrl string = "https://api.logz.io/v1/alerts"
+const createServiceUrl string = "%s/v1/alerts"
 const createServiceMethod string = "POST"
-
 
 func validateCreateAlertRequest(alert CreateAlertType) error {
 
@@ -67,20 +66,22 @@ func buildCreateAlertRequest(alert CreateAlertType) map[string]interface{} {
 
 func buildCreateApiRequest(apiToken string, jsonObject map[string]interface{}) (*http.Request, error) {
 
-	mybytes, err := json.Marshal(jsonObject)
-
-	s, _ := prettyprint(mybytes)
-	log.Printf("%s::%s::%s", "some_token", "buildCreateApiRequest", s)
-
+	jsonBytes, err := json.Marshal(jsonObject)
 	if err != nil {
 		return nil, err
 	}
-	req, err := http.NewRequest(createServiceMethod, createServiceUrl, bytes.NewBuffer(mybytes))
+
+	jsonStr, _ := prettyprint(jsonBytes)
+	log.Printf("%s::%s::%s", "some_token", "buildCreateApiRequest", jsonStr)
+
+	baseUrl := getLogzioBaseUrl()
+	req, err := http.NewRequest(createServiceMethod, fmt.Sprintf(createServiceUrl, baseUrl), bytes.NewBuffer(jsonBytes))
 	addHttpHeaders(apiToken, req)
+
 	return req, err
 }
 
-func (n *Client) CreateAlert(alert CreateAlertType) (*AlertType, error) {
+func (c *Client) CreateAlert(alert CreateAlertType) (*AlertType, error) {
 
 	err := validateCreateAlertRequest(alert)
 	if err != nil {
@@ -88,15 +89,16 @@ func (n *Client) CreateAlert(alert CreateAlertType) (*AlertType, error) {
 	}
 
 	createAlert := buildCreateAlertRequest(alert)
-	req, _ := buildCreateApiRequest(n.name, createAlert)
+	req, _ := buildCreateApiRequest(c.apiToken, createAlert)
 
 	var client http.Client
 	resp, _ := client.Do(req)
 
 	data, _ := ioutil.ReadAll(resp.Body)
+	s, _ := prettyprint(data)
 
 	if !checkValidStatus(resp, []int { 200 }) {
-		return nil, fmt.Errorf("%s", data)
+		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "CreateAlert", resp.StatusCode, s)
 	}
 
 	var target AlertType

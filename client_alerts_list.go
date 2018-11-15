@@ -16,8 +16,8 @@ func buildListApiRequest(apiToken string) (*http.Request, error) {
 	return req, err
 }
 
-func (n *Client) ListAlerts() ([]AlertType, error) {
-	req, _ := buildListApiRequest(n.name)
+func (c *Client) ListAlerts() ([]AlertType, error) {
+	req, _ := buildListApiRequest(c.apiToken)
 
 	var client http.Client
 	resp, err := client.Do(req)
@@ -26,9 +26,10 @@ func (n *Client) ListAlerts() ([]AlertType, error) {
 	}
 
 	data, _ := ioutil.ReadAll(resp.Body)
+	s, _ := prettyprint(data)
 
 	if !checkValidStatus(resp, []int{200}) {
-		return nil, fmt.Errorf("%s", data)
+		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "ListAlerts", resp.StatusCode, s)
 	}
 
 	var arr []AlertType

@@ -2,7 +2,6 @@ package logzio_client
 
 import (
 	"fmt"
-	"os"
 	"testing"
 )
 
@@ -26,10 +25,8 @@ func createValidAlert() CreateAlertType {
 }
 
 func TestCreateAlert(t *testing.T) {
-	api_token := os.Getenv(ENV_LOGZIO_API_TOKEN)
-	if len(api_token) == 0 {
-		t.Fatalf("%v could not get an API token from %v", "TestDeleteAlert", ENV_LOGZIO_API_TOKEN)
-	}
+
+	api_token := GetApiToken(t)
 
 	var client *Client
 	client = New(api_token)

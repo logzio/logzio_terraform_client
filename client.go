@@ -5,16 +5,29 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 )
 
 type Client struct {
-	name string
+	apiToken string
 	log  log.Logger
 }
 
-func New(name string) *Client {
+const ENV_LOGZIO_BASE_URL = "LOGZIO_BASE_URL"
+const LOGZIO_BASE_URL string = "https://api.logz.io"
+
+var logzioBaseUrl string = LOGZIO_BASE_URL
+
+func getLogzioBaseUrl() string {
+	if len(os.Getenv(ENV_LOGZIO_BASE_URL)) > 0 {
+		logzioBaseUrl = os.Getenv(ENV_LOGZIO_BASE_URL)
+	}
+	return logzioBaseUrl
+}
+
+func New(apiToken string) *Client {
 	var c Client
-	c.name = name
+	c.apiToken = apiToken
 	return &c
 }
 
@@ -55,6 +68,23 @@ type AlertType struct {
 	AlertId int64
 	Title string
 	Severity string
+	LastUpdated string
+	CreatedAt string
+	CreatedBy string
+	Description string
+	QueryString string `json:query_string`
+	Filter string
+	Operation string
+	Threshold float64 // @todo: why is this a float64?
+	SearchTimeFrameMinutes int
+	NotificationEmails          []interface{}
+	IsEnabled                   bool
+	SuppressNotificationMinutes int //optional, defaults to 0 if not specified
+	ValueAggregationType        string
+	ValueAggregationField       interface{}
+	GroupByAggregationFields    []interface{}
+	AlertNotificationEndpoints  []interface{} //required, can be empty if specified
+	LastTriggeredAt             interface{}
 }
 
 const (

@@ -5,20 +5,22 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"log"
 )
 
-const getServiceUrl string = "https://api.logz.io/v1/alerts/%d"
+const getServiceUrl string = "%s/v1/alerts/%d"
 const getServiceMethod string = "GET"
 
 func buildGetApiRequest(apiToken string, alertId int64) (*http.Request, error) {
-	req, err := http.NewRequest(getServiceMethod, fmt.Sprintf(getServiceUrl, alertId), nil)
+
+	baseUrl := getLogzioBaseUrl()
+	req, err := http.NewRequest(getServiceMethod, fmt.Sprintf(getServiceUrl, baseUrl, alertId), nil)
+
 	addHttpHeaders(apiToken, req)
 	return req, err
 }
 
-func (n *Client) GetAlert(alertId int64) (*AlertType, error) {
-	req, _ := buildGetApiRequest(n.name, alertId)
+func (c *Client) GetAlert(alertId int64) (*AlertType, error) {
+	req, _ := buildGetApiRequest(c.apiToken, alertId)
 
 	var client http.Client
 	resp, err := client.Do(req)
@@ -27,12 +29,10 @@ func (n *Client) GetAlert(alertId int64) (*AlertType, error) {
 	}
 
 	data, _ := ioutil.ReadAll(resp.Body)
-
 	s, _ := prettyprint(data)
-	log.Printf("%s::%s::%s", "some_token", "buildCreateApiRequest", s)
 
 	if !checkValidStatus(resp, []int { 200 }) {
-		return nil, fmt.Errorf("%s", data)
+		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "GetAlert", resp.StatusCode, s)
 	}
 
 	var alert AlertType
