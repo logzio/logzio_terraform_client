@@ -50,8 +50,6 @@ func buildUpdateApiRequest(apiToken string, alertId int64, jsonObject map[string
 	return req, err
 }
 
-
-
 func (c *Client) UpdateAlert(alertId int64, alert CreateAlertType) (*AlertType, error) {
 
 	err := validateCreateAlertRequest(alert)
@@ -70,7 +68,7 @@ func (c *Client) UpdateAlert(alertId int64, alert CreateAlertType) (*AlertType, 
 
 	log.Printf("%s::%s", "UpdateAlert::Response", s)
 
-	if !checkValidStatus(resp, []int { 200 }) {
+	if !checkValidStatus(resp, []int{200}) {
 		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "UpdateAlert", resp.StatusCode, s)
 	}
 

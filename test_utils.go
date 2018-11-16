@@ -24,22 +24,22 @@ func getApiToken(t *testing.T) string {
 	return api_token
 }
 
-func alertToCreateAlert(alert *AlertType) (CreateAlertType) {
+func alertToCreateAlert(alert *AlertType) CreateAlertType {
 	target := CreateAlertType{
-		Title:alert.Title,
-		Description:alert.Description,
-		QueryString:alert.QueryString,
-		Filter:alert.Filter,
-		Operation:alert.Operation,
-		SeverityThresholdTiers:alert.SeverityThresholdTiers,
-		SearchTimeFrameMinutes:alert.SearchTimeFrameMinutes,
-		NotificationEmails:alert.NotificationEmails,
-		IsEnabled:alert.IsEnabled,
-		SuppressNotificationMinutes:alert.SuppressNotificationMinutes,
-		ValueAggregationType:alert.ValueAggregationType,
-		ValueAggregationField:alert.ValueAggregationField,
-		GroupByAggregationFields:alert.GroupByAggregationFields,
-		AlertNotificationEndpoints:alert.AlertNotificationEndpoints,
+		Title:                       alert.Title,
+		Description:                 alert.Description,
+		QueryString:                 alert.QueryString,
+		Filter:                      alert.Filter,
+		Operation:                   alert.Operation,
+		SeverityThresholdTiers:      alert.SeverityThresholdTiers,
+		SearchTimeFrameMinutes:      alert.SearchTimeFrameMinutes,
+		NotificationEmails:          alert.NotificationEmails,
+		IsEnabled:                   alert.IsEnabled,
+		SuppressNotificationMinutes: alert.SuppressNotificationMinutes,
+		ValueAggregationType:        alert.ValueAggregationType,
+		ValueAggregationField:       alert.ValueAggregationField,
+		GroupByAggregationFields:    alert.GroupByAggregationFields,
+		AlertNotificationEndpoints:  alert.AlertNotificationEndpoints,
 	}
 	return target
 }

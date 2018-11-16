@@ -29,7 +29,7 @@ func (c *Client) DeleteAlert(alertId int64) error {
 	data, _ := ioutil.ReadAll(resp.Body)
 	s, _ := prettyprint(data)
 
-	if !checkValidStatus(resp, []int { 200 }) {
+	if !checkValidStatus(resp, []int{200}) {
 		return fmt.Errorf("API call %s failed with status code %d, data: %s", "DeleteAlert", resp.StatusCode, s)
 	}
 

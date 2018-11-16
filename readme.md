@@ -5,7 +5,7 @@
 
 Client library for logz.io - only supports Alerts (experimentally) at the moment
 
-##### API support
+##### Logz.io API support
 
 |api  |method|support     |implementation|test coverage|
 |-----|------|------------|--------------|-------------|

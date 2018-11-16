@@ -32,16 +32,15 @@ func TestGetAlert(t *testing.T) {
 
 	_, err = client.GetAlert(alert.AlertId)
 
-	if (err != nil) {
+	if err != nil {
 		t.Fatalf("%v should not have raised an error: %v", "GetAlert", err)
 	}
 
 	var alertId int64 = 12345
 	_, err = client.GetAlert(alertId)
-	if (err == nil) {
+	if err == nil {
 		t.Fatalf("%v should have raised an error, alert %d not found: %v", "GetAlert", alertId, err)
 	}
-
 
 	// clean up any created alerts
 	for x := 0; x < len(alerts); x++ {

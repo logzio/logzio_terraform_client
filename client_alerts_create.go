@@ -13,7 +13,7 @@ const createServiceUrl string = "%s/v1/alerts"
 const createServiceMethod string = "POST"
 
 type FieldError struct {
-	Field string
+	Field   string
 	Message string
 }
 
@@ -55,7 +55,7 @@ func validateCreateAlertRequest(alert CreateAlertType) error {
 
 	if AggregationTypeNone == alert.ValueAggregationType && (alert.ValueAggregationField != nil || alert.GroupByAggregationFields != nil) {
 		message := fmt.Sprintf("if ValueAggregaionType is %s then ValueAggregationField and GroupByAggregationFields must be nil", AggregationTypeNone)
-		return FieldError{ "valueAggregationTypeComposite", message}
+		return FieldError{"valueAggregationTypeComposite", message}
 	}
 
 	return nil
@@ -116,7 +116,7 @@ func (c *Client) CreateAlert(alert CreateAlertType) (*AlertType, error) {
 
 	log.Printf("%s::%s", "CreateAlert::Response", data)
 
-	if !checkValidStatus(resp, []int { 200 }) {
+	if !checkValidStatus(resp, []int{200}) {
 		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "CreateAlert", resp.StatusCode, s)
 	}
 

@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"net/http"
 	"log"
+	"net/http"
 	"strings"
 )
 
@@ -33,7 +33,7 @@ func (c *Client) GetAlert(alertId int64) (*AlertType, error) {
 	data, _ := ioutil.ReadAll(resp.Body)
 	log.Printf("%s::%s", "GetAlert", data)
 
-	if !checkValidStatus(resp, []int { 200 }) {
+	if !checkValidStatus(resp, []int{200}) {
 		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "GetAlert", resp.StatusCode, data)
 	}
 
@@ -46,24 +46,24 @@ func (c *Client) GetAlert(alertId int64) (*AlertType, error) {
 	err = json.Unmarshal([]byte(data), &jsonResponse)
 
 	alert := AlertType{
-		AlertId: int64(jsonResponse["alertId"].(float64)),
-		Title: jsonResponse["title"].(string),
-		Severity: jsonResponse["severity"].(string),
-		LastUpdated: jsonResponse["lastUpdated"].(string),
-		CreatedAt: jsonResponse["createdAt"].(string),
-		CreatedBy: jsonResponse["createdBy"].(string),
-		Description: jsonResponse["description"].(string),
-		QueryString: jsonResponse["query_string"].(string),
-		Filter: jsonResponse["filter"].(string),
-		Operation: jsonResponse["operation"].(string),
-		Threshold: int(jsonResponse["alertId"].(float64)),
-		SearchTimeFrameMinutes: int(jsonResponse["searchTimeFrameMinutes"].(float64)),
-		NotificationEmails: jsonResponse["notificationEmails"].([]interface{}),
-		IsEnabled: jsonResponse["isEnabled"].(bool),
-		ValueAggregationType: jsonResponse["valueAggregationType"].(string),
-		GroupByAggregationFields: jsonResponse["groupByAggregationFields"].([]interface{}),
+		AlertId:                    int64(jsonResponse["alertId"].(float64)),
+		Title:                      jsonResponse["title"].(string),
+		Severity:                   jsonResponse["severity"].(string),
+		LastUpdated:                jsonResponse["lastUpdated"].(string),
+		CreatedAt:                  jsonResponse["createdAt"].(string),
+		CreatedBy:                  jsonResponse["createdBy"].(string),
+		Description:                jsonResponse["description"].(string),
+		QueryString:                jsonResponse["query_string"].(string),
+		Filter:                     jsonResponse["filter"].(string),
+		Operation:                  jsonResponse["operation"].(string),
+		Threshold:                  int(jsonResponse["alertId"].(float64)),
+		SearchTimeFrameMinutes:     int(jsonResponse["searchTimeFrameMinutes"].(float64)),
+		NotificationEmails:         jsonResponse["notificationEmails"].([]interface{}),
+		IsEnabled:                  jsonResponse["isEnabled"].(bool),
+		ValueAggregationType:       jsonResponse["valueAggregationType"].(string),
+		GroupByAggregationFields:   jsonResponse["groupByAggregationFields"].([]interface{}),
 		AlertNotificationEndpoints: jsonResponse["alertNotificationEndpoints"].([]interface{}),
-		SeverityThresholdTiers: []SeverityThresholdType{},
+		SeverityThresholdTiers:     []SeverityThresholdType{},
 	}
 
 	tiers := jsonResponse["severityThresholdTiers"].([]interface{})
@@ -71,7 +71,7 @@ func (c *Client) GetAlert(alertId int64) (*AlertType, error) {
 		tier := tiers[x].(map[string]interface{})
 		threshold := SeverityThresholdType{
 			Threshold: int(tier["threshold"].(float64)),
-			Severity: tier["severity"].(string),
+			Severity:  tier["severity"].(string),
 		}
 		alert.SeverityThresholdTiers = append(alert.SeverityThresholdTiers, threshold)
 	}

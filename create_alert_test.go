@@ -12,7 +12,7 @@ func createValidAlert() CreateAlertType {
 		QueryString: "loglevel:ERROR",
 		Filter:      "",
 		Operation:   OperatorGreaterThan,
-		SeverityThresholdTiers:      []SeverityThresholdType{
+		SeverityThresholdTiers: []SeverityThresholdType{
 			SeverityThresholdType{
 				SeverityHigh,
 				10,
@@ -132,8 +132,8 @@ func TestCreateAlert(t *testing.T) {
 	createAlert = createValidAlert()
 	createAlert.SeverityThresholdTiers = []SeverityThresholdType{
 		SeverityThresholdType{
-			Severity:"TEST",
-			Threshold:10,
+			Severity:  "TEST",
+			Threshold: 10,
 		},
 	}
 	alert, err = client.CreateAlert(createAlert)

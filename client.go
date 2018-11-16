@@ -10,7 +10,7 @@ import (
 
 type Client struct {
 	apiToken string
-	log  log.Logger
+	log      log.Logger
 }
 
 const ENV_LOGZIO_BASE_URL = "LOGZIO_BASE_URL"
@@ -65,19 +65,19 @@ type CreateAlertType struct {
 }
 
 type AlertType struct {
-	AlertId int64
-	Title string
-	Severity string
-	LastUpdated string
-	CreatedAt string
-	CreatedBy string
-	Description string
-	QueryString string `json:"query_string"`
-	Filter string
-	Operation string
-	SeverityThresholdTiers []SeverityThresholdType `json:"severityThresholdTiers"`
-	Threshold int     `json:"threshold"` // @todo: why is this a float64?
-	SearchTimeFrameMinutes int
+	AlertId                     int64
+	Title                       string
+	Severity                    string
+	LastUpdated                 string
+	CreatedAt                   string
+	CreatedBy                   string
+	Description                 string
+	QueryString                 string `json:"query_string"`
+	Filter                      string
+	Operation                   string
+	SeverityThresholdTiers      []SeverityThresholdType `json:"severityThresholdTiers"`
+	Threshold                   int                     `json:"threshold"` // @todo: why is this a float64?
+	SearchTimeFrameMinutes      int
 	NotificationEmails          []interface{}
 	IsEnabled                   bool
 	SuppressNotificationMinutes int //optional, defaults to 0 if not specified
