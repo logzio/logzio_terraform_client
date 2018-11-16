@@ -53,7 +53,7 @@ type CreateAlertType struct {
 	QueryString                 string //required, can't be blank
 	Filter                      string //optional, can't be blank if specified
 	Operation                   string
-	SeverityThresholdTiers      []SeverityThresholdType
+	SeverityThresholdTiers      []SeverityThresholdType `json:"severityThresholdTiers"`
 	SearchTimeFrameMinutes      int
 	NotificationEmails          []interface{} //required, can be empty
 	IsEnabled                   bool
@@ -75,8 +75,8 @@ type AlertType struct {
 	QueryString string `json:"query_string"`
 	Filter string
 	Operation string
-	SeverityThresholdTiers []interface{}
-	Threshold float64 // @todo: why is this a float64?
+	SeverityThresholdTiers []SeverityThresholdType `json:"severityThresholdTiers"`
+	Threshold int     `json:"threshold"` // @todo: why is this a float64?
 	SearchTimeFrameMinutes int
 	NotificationEmails          []interface{}
 	IsEnabled                   bool

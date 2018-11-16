@@ -31,7 +31,7 @@ func createValidAlert() CreateAlertType {
 
 func TestCreateAlert(t *testing.T) {
 
-	api_token := GetApiToken(t)
+	api_token := getApiToken(t)
 
 	var client *Client
 	client = New(api_token)
@@ -127,6 +127,18 @@ func TestCreateAlert(t *testing.T) {
 	alert, err = client.CreateAlert(createAlert)
 	if err == nil {
 		t.Fatalf("should have raised an error for invalid use of queryString: %v", err)
+	}
+
+	createAlert = createValidAlert()
+	createAlert.SeverityThresholdTiers = []SeverityThresholdType{
+		SeverityThresholdType{
+			Severity:"TEST",
+			Threshold:10,
+		},
+	}
+	alert, err = client.CreateAlert(createAlert)
+	if err == nil {
+		t.Fatalf("should have raised an error for invalid severity: %v", err)
 	}
 
 	// clean up any created alerts

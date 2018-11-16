@@ -89,8 +89,8 @@ func buildCreateApiRequest(apiToken string, jsonObject map[string]interface{}) (
 		return nil, err
 	}
 
-	jsonStr, _ := prettyprint(jsonBytes)
-	log.Printf("%s::%s", "buildCreateApiRequest", jsonStr)
+	//jsonStr, _ := prettyprint(jsonBytes)
+	log.Printf("%s::%s", "buildCreateApiRequest", jsonBytes)
 
 	baseUrl := getLogzioBaseUrl()
 	req, err := http.NewRequest(createServiceMethod, fmt.Sprintf(createServiceUrl, baseUrl), bytes.NewBuffer(jsonBytes))
@@ -111,11 +111,10 @@ func (c *Client) CreateAlert(alert CreateAlertType) (*AlertType, error) {
 
 	var client http.Client
 	resp, _ := client.Do(req)
-
 	data, _ := ioutil.ReadAll(resp.Body)
 	s, _ := prettyprint(data)
 
-	log.Printf("%s::%s", "CreateAlert::Response", s)
+	log.Printf("%s::%s", "CreateAlert::Response", data)
 
 	if !checkValidStatus(resp, []int { 200 }) {
 		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "CreateAlert", resp.StatusCode, s)

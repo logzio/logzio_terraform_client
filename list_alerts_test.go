@@ -6,7 +6,7 @@ import (
 
 func TestListAlerts(t *testing.T) {
 
-	api_token := GetApiToken(t)
+	api_token := getApiToken(t)
 	if len(api_token) == 0 {
 		t.Fatalf("%v could not get an API token from %v", "TestDeleteAlert", ENV_LOGZIO_API_TOKEN)
 	}

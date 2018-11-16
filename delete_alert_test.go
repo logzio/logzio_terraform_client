@@ -6,7 +6,7 @@ import (
 
 func TestDeleteAlert(t *testing.T) {
 
-	api_token := GetApiToken(t)
+	api_token := getApiToken(t)
 
 	var client *Client
 	client = New(api_token)

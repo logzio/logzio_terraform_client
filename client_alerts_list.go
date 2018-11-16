@@ -26,16 +26,66 @@ func (c *Client) ListAlerts() ([]AlertType, error) {
 	}
 
 	data, _ := ioutil.ReadAll(resp.Body)
-	s, _ := prettyprint(data)
+	//s, _ := prettyprint(data)
 
 	if !checkValidStatus(resp, []int{200}) {
-		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "ListAlerts", resp.StatusCode, s)
+		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "ListAlerts", resp.StatusCode, data)
 	}
 
 	var arr []AlertType
-	err = json.Unmarshal([]byte(data), &arr)
-	if err != nil {
-		return nil, err
+
+	var jsonResponse []interface{}
+	err = json.Unmarshal([]byte(data), &jsonResponse)
+
+	for x := 0; x < len(jsonResponse); x++ {
+
+		var jsonAlert map[string]interface{}
+		jsonAlert = jsonResponse[x].(map[string]interface{})
+
+		alert := AlertType{
+			AlertId:                    int64(jsonAlert["alertId"].(float64)),
+			Title:                      jsonAlert["title"].(string),
+			Severity:                   jsonAlert["severity"].(string),
+			LastUpdated:                jsonAlert["lastUpdated"].(string),
+			CreatedAt:                  jsonAlert["createdAt"].(string),
+			CreatedBy:                  jsonAlert["createdBy"].(string),
+			Description:                jsonAlert["description"].(string),
+			QueryString:                jsonAlert["query_string"].(string),
+			Filter:                     jsonAlert["filter"].(string),
+			Operation:                  jsonAlert["operation"].(string),
+			Threshold:                  int(jsonAlert["alertId"].(float64)),
+			SearchTimeFrameMinutes:     int(jsonAlert["searchTimeFrameMinutes"].(float64)),
+			NotificationEmails:         jsonAlert["notificationEmails"].([]interface{}),
+			IsEnabled:                  jsonAlert["isEnabled"].(bool),
+			ValueAggregationType:       jsonAlert["valueAggregationType"].(string),
+			GroupByAggregationFields:   jsonAlert["groupByAggregationFields"].([]interface{}),
+			AlertNotificationEndpoints: jsonAlert["alertNotificationEndpoints"].([]interface{}),
+			SeverityThresholdTiers:     []SeverityThresholdType{},
+		}
+
+		tiers := jsonAlert["severityThresholdTiers"].([]interface{})
+		for x := 0; x < len(tiers); x++ {
+			tier := tiers[x].(map[string]interface{})
+			threshold := SeverityThresholdType{
+				Threshold: int(tier["threshold"].(float64)),
+				Severity:  tier["severity"].(string),
+			}
+			alert.SeverityThresholdTiers = append(alert.SeverityThresholdTiers, threshold)
+		}
+
+		if jsonAlert["suppressNotificationMinutes"] != nil {
+			alert.SuppressNotificationMinutes = jsonAlert["suppressNotificationMinutes"].(int)
+		}
+
+		if jsonAlert["valueAggregationField"] != nil {
+			alert.ValueAggregationField = jsonAlert["valueAggregationField"].(interface{})
+		}
+
+		if jsonAlert["lastTriggeredAt"] != nil {
+			alert.LastTriggeredAt = jsonAlert["lastTriggeredAt"].(interface{})
+		}
+
+		arr = append(arr, alert)
 	}
 
 	return arr, nil

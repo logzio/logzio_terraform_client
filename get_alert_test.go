@@ -6,7 +6,7 @@ import (
 
 func TestGetAlert(t *testing.T) {
 
-	api_token := GetApiToken(t)
+	api_token := getApiToken(t)
 	if len(api_token) == 0 {
 		t.Fatalf("%v could not get an API token from %v", "TestDeleteAlert", ENV_LOGZIO_API_TOKEN)
 	}
@@ -35,6 +35,13 @@ func TestGetAlert(t *testing.T) {
 	if (err != nil) {
 		t.Fatalf("%v should not have raised an error: %v", "GetAlert", err)
 	}
+
+	var alertId int64 = 12345
+	_, err = client.GetAlert(alertId)
+	if (err == nil) {
+		t.Fatalf("%v should have raised an error, alert %d not found: %v", "GetAlert", alertId, err)
+	}
+
 
 	// clean up any created alerts
 	for x := 0; x < len(alerts); x++ {

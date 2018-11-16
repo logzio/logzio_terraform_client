@@ -12,8 +12,11 @@ Client library for logz.io - only supports Alerts (experimentally) at the moment
 |alert|create|experimental|`CreateAlert` |yes          |
 |alert|delete|experimental|`DeleteAlert` |yes          |
 |alert|list  |experimental|`ListAlerts`  |yes          |
-|alert|update|none        |              |             |
+|alert|update|experimental|`UpdateAlert` |yes          |
 |alert|read  |experimental|`GetAlert`    |yes          |
+
+- experimental - it works but not all permutations of parameters are tested
+- ready - it works and a large proportion of permutation of parameter are tested
 
 ##### Basic usage
 
