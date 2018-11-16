@@ -43,8 +43,8 @@ func addHttpHeaders(apiToken string, req *http.Request) {
 }
 
 type SeverityThresholdType struct {
-	severity  string
-	threshold int
+	Severity  string `json:"severity"`
+	Threshold int    `json:"threshold"`
 }
 
 type CreateAlertType struct {
@@ -72,9 +72,10 @@ type AlertType struct {
 	CreatedAt string
 	CreatedBy string
 	Description string
-	QueryString string `json:query_string`
+	QueryString string `json:"query_string"`
 	Filter string
 	Operation string
+	SeverityThresholdTiers []interface{}
 	Threshold float64 // @todo: why is this a float64?
 	SearchTimeFrameMinutes int
 	NotificationEmails          []interface{}
@@ -88,20 +89,24 @@ type AlertType struct {
 }
 
 const (
-	GreaterThanOrEquals string = "GREATER_THAN_OR_EQUALS"
-	LessThanOrEquals    string = "LESS_THAN_OR_EQUALS"
-	GreaterThan         string = "GREATER_THAN"
-	LessThan            string = "LESS_THAN"
-	NotEquals           string = "NOT_EQUALS"
-	Equals              string = "EQUALS"
+	OperatorGreaterThanOrEquals string = "GREATER_THAN_OR_EQUALS"
+	OperatorLessThanOrEquals    string = "LESS_THAN_OR_EQUALS"
+	OperatorGreaterThan         string = "GREATER_THAN"
+	OperatorLessThan            string = "LESS_THAN"
+	OperatorNotEquals           string = "NOT_EQUALS"
+	OperatorEquals              string = "EQUALS"
 
-	UniqueCount string = "UNIQUE_COUNT"
-	Avg         string = "AVG"
-	Max         string = "MAX"
-	None        string = "NONE"
-	Sum         string = "SUM"
-	Count       string = "COUNT"
-	Min         string = "MIN"
+	AggregationTypeUniqueCount string = "UNIQUE_COUNT"
+	AggregationTypeAvg         string = "AVG"
+	AggregationTypeMax         string = "MAX"
+	AggregationTypeNone        string = "NONE"
+	AggregationTypeSum         string = "SUM"
+	AggregationTypeCount       string = "COUNT"
+	AggregationTypeMin         string = "MIN"
+
+	SeverityHigh   string = "HIGH"
+	SeverityLow    string = "LOW"
+	SeverityMedium string = "MEDIUM"
 )
 
 func contains(slice []string, s string) bool {

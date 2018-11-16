@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"log"
 )
 
 const getServiceUrl string = "%s/v1/alerts/%d"
@@ -30,6 +31,7 @@ func (c *Client) GetAlert(alertId int64) (*AlertType, error) {
 
 	data, _ := ioutil.ReadAll(resp.Body)
 	s, _ := prettyprint(data)
+	log.Printf("%s::%s", "GetAlert", s)
 
 	if !checkValidStatus(resp, []int { 200 }) {
 		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "GetAlert", resp.StatusCode, s)

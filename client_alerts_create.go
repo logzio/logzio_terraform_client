@@ -12,6 +12,15 @@ import (
 const createServiceUrl string = "%s/v1/alerts"
 const createServiceMethod string = "POST"
 
+type FieldError struct {
+	Field string
+	Message string
+}
+
+func (e FieldError) Error() string {
+	return fmt.Sprintf("%v: %v", e.Field, e.Message)
+}
+
 func validateCreateAlertRequest(alert CreateAlertType) error {
 
 	if len(alert.Title) == 0 {
@@ -26,18 +35,27 @@ func validateCreateAlertRequest(alert CreateAlertType) error {
 		return fmt.Errorf("notificationEmails must not be nil")
 	}
 
-	validAggregationTypes := []string{UniqueCount, Avg, Max, None, Sum, Count, Min}
+	validAggregationTypes := []string{AggregationTypeUniqueCount, AggregationTypeAvg, AggregationTypeMax, AggregationTypeNone, AggregationTypeSum, AggregationTypeCount, AggregationTypeMin}
 	if !contains(validAggregationTypes, alert.ValueAggregationType) {
 		return fmt.Errorf("valueAggregationType must be one of %s", validAggregationTypes)
 	}
 
-	validOperations := []string{GreaterThanOrEquals, LessThanOrEquals, GreaterThan, LessThan, NotEquals, Equals}
+	validOperations := []string{OperatorGreaterThanOrEquals, OperatorLessThanOrEquals, OperatorGreaterThan, OperatorLessThan, OperatorNotEquals, OperatorEquals}
 	if !contains(validOperations, alert.Operation) {
 		return fmt.Errorf("operation must be one of %s", validOperations)
 	}
 
-	if None == alert.ValueAggregationType && (alert.ValueAggregationField != nil || alert.GroupByAggregationFields != nil) {
-		return fmt.Errorf("if ValueAggregaionType is %s then ValueAggregationField and GroupByAggregationFields must be nil", None)
+	validSeverities := []string{SeverityHigh, SeverityLow, SeverityMedium}
+	for x := 0; x < len(alert.SeverityThresholdTiers); x++ {
+		s := alert.SeverityThresholdTiers[x]
+		if !contains(validSeverities, s.Severity) {
+			return fmt.Errorf("severity must be one of %s", validSeverities)
+		}
+	}
+
+	if AggregationTypeNone == alert.ValueAggregationType && (alert.ValueAggregationField != nil || alert.GroupByAggregationFields != nil) {
+		message := fmt.Sprintf("if ValueAggregaionType is %s then ValueAggregationField and GroupByAggregationFields must be nil", AggregationTypeNone)
+		return FieldError{ "valueAggregationTypeComposite", message}
 	}
 
 	return nil
@@ -72,7 +90,7 @@ func buildCreateApiRequest(apiToken string, jsonObject map[string]interface{}) (
 	}
 
 	jsonStr, _ := prettyprint(jsonBytes)
-	log.Printf("%s::%s::%s", "some_token", "buildCreateApiRequest", jsonStr)
+	log.Printf("%s::%s", "buildCreateApiRequest", jsonStr)
 
 	baseUrl := getLogzioBaseUrl()
 	req, err := http.NewRequest(createServiceMethod, fmt.Sprintf(createServiceUrl, baseUrl), bytes.NewBuffer(jsonBytes))
@@ -96,6 +114,8 @@ func (c *Client) CreateAlert(alert CreateAlertType) (*AlertType, error) {
 
 	data, _ := ioutil.ReadAll(resp.Body)
 	s, _ := prettyprint(data)
+
+	log.Printf("%s::%s", "CreateAlert::Response", s)
 
 	if !checkValidStatus(resp, []int { 200 }) {
 		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "CreateAlert", resp.StatusCode, s)

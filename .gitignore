@@ -3,3 +3,6 @@
 
 # golang
 coverage.out
+
+# swagger server
+swagger

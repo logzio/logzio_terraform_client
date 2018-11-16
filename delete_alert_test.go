@@ -25,4 +25,10 @@ func TestDeleteAlert(t *testing.T) {
 	if containsAlert(alerts, alertId) {
 		t.Fatalf("%v %d should have been deleted, but is returned by ListAlerts", "DeleteAlert", alertId)
 	}
+
+	err = client.DeleteAlert(12345)
+	if err == nil {
+		t.Fatalf("should have raised an error for unknown id: %v", err)
+	}
+
 }

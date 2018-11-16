@@ -7,19 +7,24 @@ import (
 
 func createValidAlert() CreateAlertType {
 	return CreateAlertType{
-		Title:                       "this is my title",
-		Description:                 "this is my description",
-		QueryString:                 "loglevel:ERROR",
-		Filter:                      "",
-		Operation:                   GreaterThan,
-		SeverityThresholdTiers:      []SeverityThresholdType{},
+		Title:       "this is my title",
+		Description: "this is my description",
+		QueryString: "loglevel:ERROR",
+		Filter:      "",
+		Operation:   OperatorGreaterThan,
+		SeverityThresholdTiers:      []SeverityThresholdType{
+			SeverityThresholdType{
+				SeverityHigh,
+				10,
+			},
+		},
 		SearchTimeFrameMinutes:      0,
 		NotificationEmails:          []interface{}{},
 		IsEnabled:                   true,
 		SuppressNotificationMinutes: 0,
-		ValueAggregationType:        None,
+		ValueAggregationType:        AggregationTypeCount,
 		ValueAggregationField:       nil,
-		GroupByAggregationFields:    nil,
+		GroupByAggregationFields:    []interface{}{"my_field"},
 		AlertNotificationEndpoints:  []interface{}{},
 	}
 }
@@ -50,10 +55,25 @@ func TestCreateAlert(t *testing.T) {
 	}
 
 	createAlert = createValidAlert()
+	createAlert.Filter = "{\"bool\":{\"must\":[{\"match\":{\"type\":\"mytype\"}}],\"must_not\":[]}}"
+	alert, err = client.CreateAlert(createAlert)
+	if err != nil {
+		t.Fatalf("%q should not have raised an error: %v", "CreateAlert", err)
+	}
+	alerts = append(alerts, alert.AlertId)
+
+	createAlert = createValidAlert()
 	createAlert.Title = ""
 	alert, err = client.CreateAlert(createAlert)
 	if err == nil {
 		t.Fatalf("should have raised an error for blank title: %v", err)
+	}
+
+	createAlert = createValidAlert()
+	createAlert.Filter = "This is my filter"
+	alert, err = client.CreateAlert(createAlert)
+	if err == nil {
+		t.Fatalf("should have raised an error for invalid use of filter: %v", err)
 	}
 
 	createAlert = createValidAlert()
@@ -78,11 +98,21 @@ func TestCreateAlert(t *testing.T) {
 	}
 
 	createAlert = createValidAlert()
+	createAlert.ValueAggregationType = AggregationTypeNone
 	createAlert.ValueAggregationField = nil
-	createAlert.GroupByAggregationFields = []interface{}{"helooe", "there"}
+	createAlert.GroupByAggregationFields = []interface{}{"my_field"}
 	alert, err = client.CreateAlert(createAlert)
 	if err == nil {
 		t.Fatalf("should have raised an error for invalid use of groupByAggregationFields: %v", err)
+	}
+
+	createAlert = createValidAlert()
+	createAlert.ValueAggregationType = AggregationTypeCount
+	createAlert.ValueAggregationField = "hello"
+	createAlert.GroupByAggregationFields = []interface{}{"my_field"}
+	alert, err = client.CreateAlert(createAlert)
+	if err == nil {
+		t.Fatalf("should have raised an error for invalid use of valueAggregationField: %v", err)
 	}
 
 	createAlert = createValidAlert()
