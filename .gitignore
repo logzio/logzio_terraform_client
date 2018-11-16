@@ -1,1 +1,8 @@
+# idea
 .idea
+
+# golang
+coverage.out
+
+# swagger server
+swagger
