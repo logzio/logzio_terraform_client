@@ -58,7 +58,6 @@ func (c *Client) ListAlerts() ([]AlertType, error) {
 			NotificationEmails:         jsonAlert["notificationEmails"].([]interface{}),
 			IsEnabled:                  jsonAlert["isEnabled"].(bool),
 			ValueAggregationType:       jsonAlert["valueAggregationType"].(string),
-			GroupByAggregationFields:   jsonAlert["groupByAggregationFields"].([]interface{}),
 			AlertNotificationEndpoints: jsonAlert["alertNotificationEndpoints"].([]interface{}),
 			SeverityThresholdTiers:     []SeverityThresholdType{},
 		}
@@ -79,6 +78,10 @@ func (c *Client) ListAlerts() ([]AlertType, error) {
 
 		if jsonAlert["valueAggregationField"] != nil {
 			alert.ValueAggregationField = jsonAlert["valueAggregationField"].(interface{})
+		}
+
+if jsonAlert["groupByAggregationFields"] != nil {
+			alert.GroupByAggregationFields = jsonAlert["groupByAggregationFields"].([]interface{})
 		}
 
 		if jsonAlert["lastTriggeredAt"] != nil {
