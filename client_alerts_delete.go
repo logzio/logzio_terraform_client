@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"log"
 )
 
 const deleteServiceUrl string = "%s/v1/alerts/%d"
