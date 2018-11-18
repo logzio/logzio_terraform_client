@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"log"
 )
 
 const listServiceUrl string = "https://api.logz.io/v1/alerts"
