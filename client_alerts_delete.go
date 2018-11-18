@@ -14,6 +14,8 @@ func buildDeleteApiRequest(apiToken string, alertId int64) (*http.Request, error
 	baseUrl := getLogzioBaseUrl()
 	req, err := http.NewRequest(deleteServiceMethod, fmt.Sprintf(deleteServiceUrl, baseUrl, alertId), nil)
 	addHttpHeaders(apiToken, req)
+	log.Printf("%s::%s", "buildDeleteApiRequest", req.URL.Path)
+
 	return req, err
 }
 
@@ -28,6 +30,8 @@ func (c *Client) DeleteAlert(alertId int64) error {
 
 	data, _ := ioutil.ReadAll(resp.Body)
 	s, _ := prettyprint(data)
+	log.Printf("%s::%s", "DeleteAlert", s)
+
 
 	if !checkValidStatus(resp, []int{200}) {
 		return fmt.Errorf("API call %s failed with status code %d, data: %s", "DeleteAlert", resp.StatusCode, s)
