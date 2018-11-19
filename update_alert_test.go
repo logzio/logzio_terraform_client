@@ -24,7 +24,6 @@ func TestUpdateAlert(t *testing.T) {
 	alerts = append(alerts, alert.AlertId)
 
 	updateAlert := alertToCreateAlert(alert)
-	updateAlert.Title = "the new title"
 	alert, err = client.UpdateAlert(alert.AlertId, updateAlert)
 
 	// clean up any created alerts
