@@ -63,22 +63,22 @@ func validateCreateAlertRequest(alert CreateAlertType) error {
 
 func buildCreateAlertRequest(alert CreateAlertType) map[string]interface{} {
 	var createAlert = map[string]interface{}{}
-	createAlert["title"] = alert.Title
+	createAlert["alertNotificationEndpoints"] = alert.AlertNotificationEndpoints
 	createAlert["description"] = alert.Description
 	if len(alert.Filter) > 0 {
 		createAlert["filter"] = alert.Filter
 	}
-	createAlert["query_string"] = alert.QueryString
-	createAlert["operation"] = alert.Operation
-	createAlert["severityThresholdTiers"] = alert.SeverityThresholdTiers
-	createAlert["searchTimeFrameMinutes"] = alert.SearchTimeFrameMinutes
-	createAlert["notificationEmails"] = alert.NotificationEmails
-	createAlert["isEnabled"] = alert.IsEnabled
-	createAlert["suppressNotificationMinutes"] = alert.SuppressNotificationMinutes
-	createAlert["valueAggregationType"] = alert.ValueAggregationType
-	createAlert["valueAggregationField"] = alert.ValueAggregationField
 	createAlert["groupByAggregationFields"] = alert.GroupByAggregationFields
-	createAlert["alertNotificationEndpoints"] = alert.AlertNotificationEndpoints
+	createAlert["isEnabled"] = alert.IsEnabled
+	createAlert["query_string"] = alert.QueryString
+	createAlert["notificationEmails"] = alert.NotificationEmails
+	createAlert["operation"] = alert.Operation
+	createAlert["searchTimeFrameMinutes"] = alert.SearchTimeFrameMinutes
+	createAlert["severityThresholdTiers"] = alert.SeverityThresholdTiers
+	createAlert["suppressNotificationMinutes"] = alert.SuppressNotificationMinutes
+	createAlert["title"] = alert.Title
+	createAlert["valueAggregationField"] = alert.ValueAggregationField
+	createAlert["valueAggregationType"] = alert.ValueAggregationType
 	return createAlert
 }
 

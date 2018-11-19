@@ -26,20 +26,20 @@ func getApiToken(t *testing.T) string {
 
 func alertToCreateAlert(alert *AlertType) CreateAlertType {
 	target := CreateAlertType{
-		Title:                       alert.Title,
+		AlertNotificationEndpoints:  alert.AlertNotificationEndpoints,
 		Description:                 alert.Description,
-		QueryString:                 alert.QueryString,
 		Filter:                      alert.Filter,
-		Operation:                   alert.Operation,
-		SeverityThresholdTiers:      alert.SeverityThresholdTiers,
-		SearchTimeFrameMinutes:      alert.SearchTimeFrameMinutes,
-		NotificationEmails:          alert.NotificationEmails,
+		GroupByAggregationFields:    alert.GroupByAggregationFields,
 		IsEnabled:                   alert.IsEnabled,
+		NotificationEmails:          alert.NotificationEmails,
+		Operation:                   alert.Operation,
+		QueryString:                 alert.QueryString,
+		SearchTimeFrameMinutes:      alert.SearchTimeFrameMinutes,
+		SeverityThresholdTiers:      alert.SeverityThresholdTiers,
 		SuppressNotificationMinutes: alert.SuppressNotificationMinutes,
+		Title:                       alert.Title,
 		ValueAggregationType:        alert.ValueAggregationType,
 		ValueAggregationField:       alert.ValueAggregationField,
-		GroupByAggregationFields:    alert.GroupByAggregationFields,
-		AlertNotificationEndpoints:  alert.AlertNotificationEndpoints,
 	}
 	return target
 }

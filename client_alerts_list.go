@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"log"
 )
 
 const listServiceUrl string = "https://api.logz.io/v1/alerts"
@@ -29,7 +28,7 @@ func (c *Client) ListAlerts() ([]AlertType, error) {
 	data, _ := ioutil.ReadAll(resp.Body)
 	s, _ := prettyprint(data)
 	
-	logSomething("ListAlerts", s)
+	logSomething("ListAlerts", fmt.Sprintf("%s", s))
 
 	if !checkValidStatus(resp, []int{200}) {
 		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "ListAlerts", resp.StatusCode, data)
@@ -47,22 +46,30 @@ func (c *Client) ListAlerts() ([]AlertType, error) {
 
 		alert := AlertType{
 			AlertId:                    int64(jsonAlert["alertId"].(float64)),
-			Title:                      jsonAlert["title"].(string),
-			Severity:                   jsonAlert["severity"].(string),
-			LastUpdated:                jsonAlert["lastUpdated"].(string),
+			AlertNotificationEndpoints: jsonAlert["alertNotificationEndpoints"].([]interface{}),
 			CreatedAt:                  jsonAlert["createdAt"].(string),
 			CreatedBy:                  jsonAlert["createdBy"].(string),
 			Description:                jsonAlert["description"].(string),
-			QueryString:                jsonAlert["query_string"].(string),
 			Filter:                     jsonAlert["filter"].(string),
-			Operation:                  jsonAlert["operation"].(string),
-			Threshold:                  int(jsonAlert["alertId"].(float64)),
-			SearchTimeFrameMinutes:     int(jsonAlert["searchTimeFrameMinutes"].(float64)),
-			NotificationEmails:         jsonAlert["notificationEmails"].([]interface{}),
 			IsEnabled:                  jsonAlert["isEnabled"].(bool),
-			ValueAggregationType:       jsonAlert["valueAggregationType"].(string),
-			AlertNotificationEndpoints: jsonAlert["alertNotificationEndpoints"].([]interface{}),
+			LastUpdated:                jsonAlert["lastUpdated"].(string),
+			NotificationEmails:         jsonAlert["notificationEmails"].([]interface{}),
+			Operation:                  jsonAlert["operation"].(string),
+			QueryString:                jsonAlert["query_string"].(string),
+			Severity:                   jsonAlert["severity"].(string),
+			SearchTimeFrameMinutes:     int(jsonAlert["searchTimeFrameMinutes"].(float64)),
 			SeverityThresholdTiers:     []SeverityThresholdType{},
+			Threshold:                  int(jsonAlert["alertId"].(float64)),
+			Title:                      jsonAlert["title"].(string),
+			ValueAggregationType:       jsonAlert["valueAggregationType"].(string),
+		}
+
+		if jsonAlert["groupByAggregationFields"] != nil {
+			alert.GroupByAggregationFields = jsonAlert["groupByAggregationFields"].([]interface{})
+		}
+
+		if jsonAlert["lastTriggeredAt"] != nil {
+			alert.LastTriggeredAt = jsonAlert["lastTriggeredAt"].(interface{})
 		}
 
 		tiers := jsonAlert["severityThresholdTiers"].([]interface{})
@@ -83,13 +90,6 @@ func (c *Client) ListAlerts() ([]AlertType, error) {
 			alert.ValueAggregationField = jsonAlert["valueAggregationField"].(interface{})
 		}
 
-if jsonAlert["groupByAggregationFields"] != nil {
-			alert.GroupByAggregationFields = jsonAlert["groupByAggregationFields"].([]interface{})
-		}
-
-		if jsonAlert["lastTriggeredAt"] != nil {
-			alert.LastTriggeredAt = jsonAlert["lastTriggeredAt"].(interface{})
-		}
 
 		arr = append(arr, alert)
 	}

@@ -37,8 +37,7 @@ func prettyprint(b []byte) ([]byte, error) {
 	return out.Bytes(), err
 }
 
-func logSomething(function string, logStr string)
-{
+func logSomething(function string, logStr string) {
 	log.Printf("%s::%s", function, logStr)
 }
 
@@ -94,13 +93,6 @@ type AlertType struct {
 }
 
 const (
-	OperatorGreaterThanOrEquals string = "GREATER_THAN_OR_EQUALS"
-	OperatorLessThanOrEquals    string = "LESS_THAN_OR_EQUALS"
-	OperatorGreaterThan         string = "GREATER_THAN"
-	OperatorLessThan            string = "LESS_THAN"
-	OperatorNotEquals           string = "NOT_EQUALS"
-	OperatorEquals              string = "EQUALS"
-
 	AggregationTypeUniqueCount string = "UNIQUE_COUNT"
 	AggregationTypeAvg         string = "AVG"
 	AggregationTypeMax         string = "MAX"
@@ -108,6 +100,13 @@ const (
 	AggregationTypeSum         string = "SUM"
 	AggregationTypeCount       string = "COUNT"
 	AggregationTypeMin         string = "MIN"
+
+	OperatorGreaterThanOrEquals string = "GREATER_THAN_OR_EQUALS"
+	OperatorLessThanOrEquals    string = "LESS_THAN_OR_EQUALS"
+	OperatorGreaterThan         string = "GREATER_THAN"
+	OperatorLessThan            string = "LESS_THAN"
+	OperatorNotEquals           string = "NOT_EQUALS"
+	OperatorEquals              string = "EQUALS"
 
 	SeverityHigh   string = "HIGH"
 	SeverityLow    string = "LOW"
