@@ -10,7 +10,7 @@ import (
 )
 
 const createServiceUrl string = "%s/v1/alerts"
-const createServiceMethod string = "POST"
+const createServiceMethod string = http.MethodPost
 
 type FieldError struct {
 	Field   string

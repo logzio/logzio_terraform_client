@@ -37,6 +37,11 @@ func prettyprint(b []byte) ([]byte, error) {
 	return out.Bytes(), err
 }
 
+func logSomething(function string, logStr string)
+{
+	log.Printf("%s::%s", function, logStr)
+}
+
 func addHttpHeaders(apiToken string, req *http.Request) {
 	req.Header.Add("X-API-TOKEN", apiToken)
 	req.Header.Add("Content-Type", "application/json")
@@ -48,44 +53,44 @@ type SeverityThresholdType struct {
 }
 
 type CreateAlertType struct {
-	Title                       string //required
-	Description                 string //optional, can be blank if specified
-	QueryString                 string //required, can't be blank
-	Filter                      string //optional, can't be blank if specified
-	Operation                   string
-	SeverityThresholdTiers      []SeverityThresholdType `json:"severityThresholdTiers"`
-	SearchTimeFrameMinutes      int
+    AlertNotificationEndpoints  []interface{} //required, can be empty if specified
+    Description                 string //optional, can be blank if specified
+    Filter                      string //optional, can't be blank if specified
+    GroupByAggregationFields    []interface{}
+    IsEnabled                   bool
 	NotificationEmails          []interface{} //required, can be empty
-	IsEnabled                   bool
+	Operation                   string
+	QueryString                 string //required, can't be blank
+	SearchTimeFrameMinutes      int
+	SeverityThresholdTiers      []SeverityThresholdType `json:"severityThresholdTiers"`
 	SuppressNotificationMinutes int //optional, defaults to 0 if not specified
-	ValueAggregationType        string
+	Title                       string //required
 	ValueAggregationField       interface{}
-	GroupByAggregationFields    []interface{}
-	AlertNotificationEndpoints  []interface{} //required, can be empty if specified
+	ValueAggregationType        string
 }
 
 type AlertType struct {
 	AlertId                     int64
-	Title                       string
-	Severity                    string
-	LastUpdated                 string
+	AlertNotificationEndpoints  []interface{} //required, can be empty if specified
 	CreatedAt                   string
 	CreatedBy                   string
 	Description                 string
-	QueryString                 string `json:"query_string"`
 	Filter                      string
-	Operation                   string
-	SeverityThresholdTiers      []SeverityThresholdType `json:"severityThresholdTiers"`
-	Threshold                   int                     `json:"threshold"` // @todo: why is this a float64?
-	SearchTimeFrameMinutes      int
-	NotificationEmails          []interface{}
-	IsEnabled                   bool
-	SuppressNotificationMinutes int //optional, defaults to 0 if not specified
-	ValueAggregationType        string
-	ValueAggregationField       interface{}
 	GroupByAggregationFields    []interface{}
-	AlertNotificationEndpoints  []interface{} //required, can be empty if specified
+	IsEnabled                   bool
 	LastTriggeredAt             interface{}
+	LastUpdated                 string
+	NotificationEmails          []interface{}
+	Operation                   string
+	QueryString                 string `json:"query_string"`
+	SearchTimeFrameMinutes      int
+	Severity                    string
+	SeverityThresholdTiers      []SeverityThresholdType `json:"severityThresholdTiers"`
+	SuppressNotificationMinutes int //optional, defaults to 0 if not specified
+	Threshold                   int                     `json:"threshold"` // @todo: why is this a float64?
+	Title                       string
+	ValueAggregationField       interface{}
+	ValueAggregationType        string
 }
 
 const (

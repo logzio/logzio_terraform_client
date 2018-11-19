@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"log"
 )
 
 const listServiceUrl string = "https://api.logz.io/v1/alerts"
-const listServiceMethod string = "GET"
+const listServiceMethod string = http.MethodGet
 
 func buildListApiRequest(apiToken string) (*http.Request, error) {
 	req, err := http.NewRequest(listServiceMethod, listServiceUrl, nil)
@@ -26,7 +27,9 @@ func (c *Client) ListAlerts() ([]AlertType, error) {
 	}
 
 	data, _ := ioutil.ReadAll(resp.Body)
-	//s, _ := prettyprint(data)
+	s, _ := prettyprint(data)
+	
+	logSomething("ListAlerts", s)
 
 	if !checkValidStatus(resp, []int{200}) {
 		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "ListAlerts", resp.StatusCode, data)
