@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
-	"log"
 )
 
 const deleteServiceUrl string = "%s/v1/alerts/%d"
@@ -31,7 +30,7 @@ func (c *Client) DeleteAlert(alertId int64) error {
 
 	data, _ := ioutil.ReadAll(resp.Body)
 	s, _ := prettyprint(data)
-	logSomething("DeleteAlert", s)
+	logSomething("DeleteAlert", fmt.Sprintf("%s", s))
 
 	if !checkValidStatus(resp, []int{200}) {
 		return fmt.Errorf("API call %s failed with status code %d, data: %s", "DeleteAlert", resp.StatusCode, s)
