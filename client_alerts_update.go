@@ -10,7 +10,7 @@ import (
 )
 
 const updateServiceUrl string = "%s/v1/alerts/%d"
-const updateServiceMethod string = "DELETE"
+const updateServiceMethod string = "PUT"
 
 func buildUpdateAlertRequest(alert CreateAlertType) map[string]interface{} {
 	var createAlert = map[string]interface{}{}
