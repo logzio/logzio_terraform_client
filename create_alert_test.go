@@ -30,7 +30,6 @@ func createValidAlert() CreateAlertType {
 }
 
 func TestCreateAlert(t *testing.T) {
-
 	api_token := getApiToken(t)
 
 	var client *Client

@@ -7,12 +7,15 @@ import (
 	"net/http"
 )
 
-const listServiceUrl string = "https://api.logz.io/v1/alerts"
+const listServiceUrl string = "%s/v1/alerts"
 const listServiceMethod string = http.MethodGet
+const listMethodSuccess int = 200
 
 func buildListApiRequest(apiToken string) (*http.Request, error) {
-	req, err := http.NewRequest(listServiceMethod, listServiceUrl, nil)
+	baseUrl := getLogzioBaseUrl()
+	req, err := http.NewRequest(listServiceMethod, fmt.Sprintf(listServiceUrl, baseUrl), nil)
 	addHttpHeaders(apiToken, req)
+
 	return req, err
 }
 
@@ -25,71 +28,22 @@ func (c *Client) ListAlerts() ([]AlertType, error) {
 		return nil, err
 	}
 
-	data, _ := ioutil.ReadAll(resp.Body)
-	s, _ := prettyprint(data)
-	
-	logSomething("ListAlerts", fmt.Sprintf("%s", s))
+	jsonBytes, _ := ioutil.ReadAll(resp.Body)
+	logSomething("ListAlerts::Response", fmt.Sprintf("%s", jsonBytes))
 
-	if !checkValidStatus(resp, []int{200}) {
-		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "ListAlerts", resp.StatusCode, data)
+	if !checkValidStatus(resp, []int{listMethodSuccess}) {
+		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "ListAlerts", resp.StatusCode, jsonBytes)
 	}
 
 	var arr []AlertType
-
 	var jsonResponse []interface{}
-	err = json.Unmarshal([]byte(data), &jsonResponse)
+	err = json.Unmarshal([]byte(jsonBytes), &jsonResponse)
 
 	for x := 0; x < len(jsonResponse); x++ {
-
 		var jsonAlert map[string]interface{}
 		jsonAlert = jsonResponse[x].(map[string]interface{})
 
-		alert := AlertType{
-			AlertId:                    int64(jsonAlert["alertId"].(float64)),
-			AlertNotificationEndpoints: jsonAlert["alertNotificationEndpoints"].([]interface{}),
-			CreatedAt:                  jsonAlert["createdAt"].(string),
-			CreatedBy:                  jsonAlert["createdBy"].(string),
-			Description:                jsonAlert["description"].(string),
-			Filter:                     jsonAlert["filter"].(string),
-			IsEnabled:                  jsonAlert["isEnabled"].(bool),
-			LastUpdated:                jsonAlert["lastUpdated"].(string),
-			NotificationEmails:         jsonAlert["notificationEmails"].([]interface{}),
-			Operation:                  jsonAlert["operation"].(string),
-			QueryString:                jsonAlert["query_string"].(string),
-			Severity:                   jsonAlert["severity"].(string),
-			SearchTimeFrameMinutes:     int(jsonAlert["searchTimeFrameMinutes"].(float64)),
-			SeverityThresholdTiers:     []SeverityThresholdType{},
-			Threshold:                  int(jsonAlert["alertId"].(float64)),
-			Title:                      jsonAlert["title"].(string),
-			ValueAggregationType:       jsonAlert["valueAggregationType"].(string),
-		}
-
-		if jsonAlert["groupByAggregationFields"] != nil {
-			alert.GroupByAggregationFields = jsonAlert["groupByAggregationFields"].([]interface{})
-		}
-
-		if jsonAlert["lastTriggeredAt"] != nil {
-			alert.LastTriggeredAt = jsonAlert["lastTriggeredAt"].(interface{})
-		}
-
-		tiers := jsonAlert["severityThresholdTiers"].([]interface{})
-		for x := 0; x < len(tiers); x++ {
-			tier := tiers[x].(map[string]interface{})
-			threshold := SeverityThresholdType{
-				Threshold: int(tier["threshold"].(float64)),
-				Severity:  tier["severity"].(string),
-			}
-			alert.SeverityThresholdTiers = append(alert.SeverityThresholdTiers, threshold)
-		}
-
-		if jsonAlert["suppressNotificationMinutes"] != nil {
-			alert.SuppressNotificationMinutes = jsonAlert["suppressNotificationMinutes"].(int)
-		}
-
-		if jsonAlert["valueAggregationField"] != nil {
-			alert.ValueAggregationField = jsonAlert["valueAggregationField"].(interface{})
-		}
-
+		alert := jsonAlertToAlert(jsonAlert)
 
 		arr = append(arr, alert)
 	}

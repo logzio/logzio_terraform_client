@@ -1,8 +1,6 @@
 package logzio_client
 
 import (
-	"bytes"
-	"encoding/json"
 	"log"
 	"net/http"
 	"os"
@@ -31,12 +29,6 @@ func New(apiToken string) *Client {
 	return &c
 }
 
-func prettyprint(b []byte) ([]byte, error) {
-	var out bytes.Buffer
-	err := json.Indent(&out, b, "", "  ")
-	return out.Bytes(), err
-}
-
 func logSomething(function string, logStr string) {
 	log.Printf("%s::%s", function, logStr)
 }
@@ -52,25 +44,25 @@ type SeverityThresholdType struct {
 }
 
 type CreateAlertType struct {
-    AlertNotificationEndpoints  []interface{} //required, can be empty if specified
-    Description                 string //optional, can be blank if specified
-    Filter                      string //optional, can't be blank if specified
-    GroupByAggregationFields    []interface{}
-    IsEnabled                   bool
-	NotificationEmails          []interface{} //required, can be empty
+	AlertNotificationEndpoints  []interface{}
+	Description                 string
+	Filter                      string
+	GroupByAggregationFields    []interface{}
+	IsEnabled                   bool
+	NotificationEmails          []interface{}
 	Operation                   string
-	QueryString                 string //required, can't be blank
+	QueryString                 string
 	SearchTimeFrameMinutes      int
 	SeverityThresholdTiers      []SeverityThresholdType `json:"severityThresholdTiers"`
-	SuppressNotificationMinutes int //optional, defaults to 0 if not specified
-	Title                       string //required
+	SuppressNotificationMinutes int
+	Title                       string
 	ValueAggregationField       interface{}
 	ValueAggregationType        string
 }
 
 type AlertType struct {
 	AlertId                     int64
-	AlertNotificationEndpoints  []interface{} //required, can be empty if specified
+	AlertNotificationEndpoints  []interface{}
 	CreatedAt                   string
 	CreatedBy                   string
 	Description                 string
@@ -85,8 +77,8 @@ type AlertType struct {
 	SearchTimeFrameMinutes      int
 	Severity                    string
 	SeverityThresholdTiers      []SeverityThresholdType `json:"severityThresholdTiers"`
-	SuppressNotificationMinutes int //optional, defaults to 0 if not specified
-	Threshold                   int                     `json:"threshold"` // @todo: why is this a float64?
+	SuppressNotificationMinutes int
+	Threshold                   int `json:"threshold"`
 	Title                       string
 	ValueAggregationField       interface{}
 	ValueAggregationType        string
@@ -111,6 +103,27 @@ const (
 	SeverityHigh   string = "HIGH"
 	SeverityLow    string = "LOW"
 	SeverityMedium string = "MEDIUM"
+
+	alertNotificationEndpoints  string = "alertNotificationEndpoints"
+	createdAt                   string = "createdAt"
+	createdBy                   string = "createdBy"
+	description                 string = "description"
+	filter                      string = "filter"
+	groupByAggregationFields    string = "groupByAggregationFields"
+	isEnabled                   string = "isEnabled"
+	queryString                 string = "query_string"
+	lastTriggeredAt             string = "lastTriggeredAt"
+	lastUpdated                 string = "lastUpdated"
+	notificationEmails          string = "notificationEmails"
+	operation                   string = "operation"
+	searchTimeFrameMinutes      string = "searchTimeFrameMinutes"
+	severity                    string = "severity"
+	severityThresholdTiers      string = "severityThresholdTiers"
+	suppressNotificationMinutes string = "suppressNotificationMinutes"
+	threshold                   string = "threshold"
+	title                       string = "title"
+	valueAggregationField       string = "valueAggregationField"
+	valueAggregationType        string = "valueAggregationType"
 )
 
 func contains(slice []string, s string) bool {
@@ -129,4 +142,54 @@ func checkValidStatus(response *http.Response, status []int) bool {
 		}
 	}
 	return false
+}
+
+func jsonAlertToAlert(jsonAlert map[string]interface{}) AlertType {
+	alert := AlertType{
+		AlertId:                    int64(jsonAlert["alertId"].(float64)),
+		AlertNotificationEndpoints: jsonAlert[alertNotificationEndpoints].([]interface{}),
+		CreatedAt:                  jsonAlert[createdAt].(string),
+		CreatedBy:                  jsonAlert[createdBy].(string),
+		Description:                jsonAlert[description].(string),
+		Filter:                     jsonAlert[filter].(string),
+		IsEnabled:                  jsonAlert[isEnabled].(bool),
+		LastUpdated:                jsonAlert[lastUpdated].(string),
+		NotificationEmails:         jsonAlert[notificationEmails].([]interface{}),
+		Operation:                  jsonAlert[operation].(string),
+		QueryString:                jsonAlert[queryString].(string),
+		Severity:                   jsonAlert[severity].(string),
+		SearchTimeFrameMinutes:     int(jsonAlert[searchTimeFrameMinutes].(float64)),
+		SeverityThresholdTiers:     []SeverityThresholdType{},
+		Threshold:                  int(jsonAlert[threshold].(float64)),
+		Title:                      jsonAlert[title].(string),
+		ValueAggregationType:       jsonAlert[valueAggregationType].(string),
+	}
+
+	if jsonAlert[groupByAggregationFields] != nil {
+		alert.GroupByAggregationFields = jsonAlert[groupByAggregationFields].([]interface{})
+	}
+
+	if jsonAlert[lastTriggeredAt] != nil {
+		alert.LastTriggeredAt = jsonAlert[lastTriggeredAt].(interface{})
+	}
+
+	tiers := jsonAlert[severityThresholdTiers].([]interface{})
+	for x := 0; x < len(tiers); x++ {
+		tier := tiers[x].(map[string]interface{})
+		threshold := SeverityThresholdType{
+			Threshold: int(tier[threshold].(float64)),
+			Severity:  tier[severity].(string),
+		}
+		alert.SeverityThresholdTiers = append(alert.SeverityThresholdTiers, threshold)
+	}
+
+	if jsonAlert[suppressNotificationMinutes] != nil {
+		alert.SuppressNotificationMinutes = jsonAlert[suppressNotificationMinutes].(int)
+	}
+
+	if jsonAlert[valueAggregationField] != nil {
+		alert.ValueAggregationField = jsonAlert[valueAggregationField].(interface{})
+	}
+
+	return alert
 }
