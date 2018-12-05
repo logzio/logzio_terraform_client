@@ -18,14 +18,14 @@ func createValidAlert() CreateAlertType {
 				10,
 			},
 		},
-		SearchTimeFrameMinutes:      0,
-		NotificationEmails:          []interface{}{},
-		IsEnabled:                   true,
-		SuppressNotificationMinutes: 0,
-		ValueAggregationType:        AggregationTypeCount,
-		ValueAggregationField:       nil,
-		GroupByAggregationFields:    []interface{}{"my_field"},
-		AlertNotificationEndpoints:  []interface{}{},
+		SearchTimeFrameMinutes:       0,
+		NotificationEmails:           []interface{}{},
+		IsEnabled:                    true,
+		SuppressNotificationsMinutes: 0,
+		ValueAggregationType:         AggregationTypeCount,
+		ValueAggregationField:        nil,
+		GroupByAggregationFields:     []interface{}{"my_field"},
+		AlertNotificationEndpoints:   []interface{}{},
 	}
 }
 

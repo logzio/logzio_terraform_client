@@ -44,44 +44,44 @@ type SeverityThresholdType struct {
 }
 
 type CreateAlertType struct {
-	AlertNotificationEndpoints  []interface{}
-	Description                 string
-	Filter                      string
-	GroupByAggregationFields    []interface{}
-	IsEnabled                   bool
-	NotificationEmails          []interface{}
-	Operation                   string
-	QueryString                 string
-	SearchTimeFrameMinutes      int
-	SeverityThresholdTiers      []SeverityThresholdType `json:"severityThresholdTiers"`
-	SuppressNotificationMinutes int
-	Title                       string
-	ValueAggregationField       interface{}
-	ValueAggregationType        string
+	AlertNotificationEndpoints   []interface{}
+	Description                  string
+	Filter                       string
+	GroupByAggregationFields     []interface{}
+	IsEnabled                    bool
+	NotificationEmails           []interface{}
+	Operation                    string
+	QueryString                  string
+	SearchTimeFrameMinutes       int
+	SeverityThresholdTiers       []SeverityThresholdType `json:"severityThresholdTiers"`
+	SuppressNotificationsMinutes int
+	Title                        string
+	ValueAggregationField        interface{}
+	ValueAggregationType         string
 }
 
 type AlertType struct {
-	AlertId                     int64
-	AlertNotificationEndpoints  []interface{}
-	CreatedAt                   string
-	CreatedBy                   string
-	Description                 string
-	Filter                      string
-	GroupByAggregationFields    []interface{}
-	IsEnabled                   bool
-	LastTriggeredAt             interface{}
-	LastUpdated                 string
-	NotificationEmails          []interface{}
-	Operation                   string
-	QueryString                 string `json:"query_string"`
-	SearchTimeFrameMinutes      int
-	Severity                    string
-	SeverityThresholdTiers      []SeverityThresholdType `json:"severityThresholdTiers"`
-	SuppressNotificationMinutes int
-	Threshold                   int `json:"threshold"`
-	Title                       string
-	ValueAggregationField       interface{}
-	ValueAggregationType        string
+	AlertId                      int64
+	AlertNotificationEndpoints   []interface{}
+	CreatedAt                    string
+	CreatedBy                    string
+	Description                  string
+	Filter                       string
+	GroupByAggregationFields     []interface{}
+	IsEnabled                    bool
+	LastTriggeredAt              interface{}
+	LastUpdated                  string
+	NotificationEmails           []interface{}
+	Operation                    string
+	QueryString                  string `json:"query_string"`
+	SearchTimeFrameMinutes       int
+	Severity                     string
+	SeverityThresholdTiers       []SeverityThresholdType `json:"severityThresholdTiers"`
+	SuppressNotificationsMinutes int
+	Threshold                    int `json:"threshold"`
+	Title                        string
+	ValueAggregationField        interface{}
+	ValueAggregationType         string
 }
 
 const (
@@ -104,26 +104,26 @@ const (
 	SeverityLow    string = "LOW"
 	SeverityMedium string = "MEDIUM"
 
-	alertNotificationEndpoints  string = "alertNotificationEndpoints"
-	createdAt                   string = "createdAt"
-	createdBy                   string = "createdBy"
-	description                 string = "description"
-	filter                      string = "filter"
-	groupByAggregationFields    string = "groupByAggregationFields"
-	isEnabled                   string = "isEnabled"
-	queryString                 string = "query_string"
-	lastTriggeredAt             string = "lastTriggeredAt"
-	lastUpdated                 string = "lastUpdated"
-	notificationEmails          string = "notificationEmails"
-	operation                   string = "operation"
-	searchTimeFrameMinutes      string = "searchTimeFrameMinutes"
-	severity                    string = "severity"
-	severityThresholdTiers      string = "severityThresholdTiers"
-	suppressNotificationMinutes string = "suppressNotificationMinutes"
-	threshold                   string = "threshold"
-	title                       string = "title"
-	valueAggregationField       string = "valueAggregationField"
-	valueAggregationType        string = "valueAggregationType"
+	alertNotificationEndpoints   string = "alertNotificationEndpoints"
+	createdAt                    string = "createdAt"
+	createdBy                    string = "createdBy"
+	description                  string = "description"
+	filter                       string = "filter"
+	groupByAggregationFields     string = "groupByAggregationFields"
+	isEnabled                    string = "isEnabled"
+	queryString                  string = "query_string"
+	lastTriggeredAt              string = "lastTriggeredAt"
+	lastUpdated                  string = "lastUpdated"
+	notificationEmails           string = "notificationEmails"
+	operation                    string = "operation"
+	searchTimeFrameMinutes       string = "searchTimeFrameMinutes"
+	severity                     string = "severity"
+	severityThresholdTiers       string = "severityThresholdTiers"
+	suppressNotificationsMinutes string = "suppressNotificationsMinutes"
+	threshold                    string = "threshold"
+	title                        string = "title"
+	valueAggregationField        string = "valueAggregationField"
+	valueAggregationType         string = "valueAggregationType"
 )
 
 func contains(slice []string, s string) bool {
@@ -183,8 +183,8 @@ func jsonAlertToAlert(jsonAlert map[string]interface{}) AlertType {
 		alert.SeverityThresholdTiers = append(alert.SeverityThresholdTiers, threshold)
 	}
 
-	if jsonAlert[suppressNotificationMinutes] != nil {
-		alert.SuppressNotificationMinutes = jsonAlert[suppressNotificationMinutes].(int)
+	if jsonAlert[suppressNotificationsMinutes] != nil {
+		alert.SuppressNotificationsMinutes = int(jsonAlert[suppressNotificationsMinutes].(float64))
 	}
 
 	if jsonAlert[valueAggregationField] != nil {
