@@ -75,7 +75,7 @@ func buildCreateAlertRequest(alert CreateAlertType) map[string]interface{} {
 	createAlert[operation] = alert.Operation
 	createAlert[searchTimeFrameMinutes] = alert.SearchTimeFrameMinutes
 	createAlert[severityThresholdTiers] = alert.SeverityThresholdTiers
-	createAlert[suppressNotificationMinutes] = alert.SuppressNotificationMinutes
+	createAlert[suppressNotificationsMinutes] = alert.SuppressNotificationsMinutes
 	createAlert[title] = alert.Title
 	createAlert[valueAggregationField] = alert.ValueAggregationField
 	createAlert[valueAggregationType] = alert.ValueAggregationType
