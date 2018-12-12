@@ -124,6 +124,10 @@ const (
 	title                        string = "title"
 	valueAggregationField        string = "valueAggregationField"
 	valueAggregationType         string = "valueAggregationType"
+
+	endpointType string = "endpointType"
+	id string = "id"
+
 )
 
 func contains(slice []string, s string) bool {
