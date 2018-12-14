@@ -60,6 +60,11 @@ type CreateAlertType struct {
 	ValueAggregationType         string
 }
 
+type EndpointType struct {
+    EndpointId int64
+    EndpointType string
+}
+
 type AlertType struct {
 	AlertId                      int64
 	AlertNotificationEndpoints   []interface{}
@@ -103,7 +108,11 @@ const (
 	SeverityHigh   string = "HIGH"
 	SeverityLow    string = "LOW"
 	SeverityMedium string = "MEDIUM"
+	
+	endpointId string = "endpointId"
+	endpointType string = "endpointType"
 
+	alertId string = "alertId"
 	alertNotificationEndpoints   string = "alertNotificationEndpoints"
 	createdAt                    string = "createdAt"
 	createdBy                    string = "createdBy"
@@ -148,9 +157,16 @@ func checkValidStatus(response *http.Response, status []int) bool {
 	return false
 }
 
+func jsonNotificationToNotification(jsonEndpoint map[string]interface{}) EndpointType {
+    notification := EndpointType{
+        EndpointId: int64(jsonEndpoint[endpointId].(float64)),
+    }
+    return endpoint
+}
+
 func jsonAlertToAlert(jsonAlert map[string]interface{}) AlertType {
 	alert := AlertType{
-		AlertId:                    int64(jsonAlert["alertId"].(float64)),
+		AlertId:                    int64(jsonAlert[alertId].(float64)),
 		AlertNotificationEndpoints: jsonAlert[alertNotificationEndpoints].([]interface{}),
 		CreatedAt:                  jsonAlert[createdAt].(string),
 		CreatedBy:                  jsonAlert[createdBy].(string),
