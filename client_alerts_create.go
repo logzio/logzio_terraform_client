@@ -8,9 +8,9 @@ import (
 	"net/http"
 )
 
-const createServiceUrl string = "%s/v1/alerts"
-const createServiceMethod string = http.MethodPost
-const createMethodSuccess int = 200
+const createAlertServiceUrl string = "%s/v1/alerts"
+const createAlertServiceMethod string = http.MethodPost
+const createAlertMethodSuccess int = 200
 
 type FieldError struct {
 	Field   string
@@ -63,22 +63,22 @@ func validateCreateAlertRequest(alert CreateAlertType) error {
 
 func buildCreateAlertRequest(alert CreateAlertType) map[string]interface{} {
 	var createAlert = map[string]interface{}{}
-	createAlert[alertNotificationEndpoints] = alert.AlertNotificationEndpoints
-	createAlert[description] = alert.Description
+	createAlert[fldAlertNotificationEndpoints] = alert.AlertNotificationEndpoints
+	createAlert[fldDescription] = alert.Description
 	if len(alert.Filter) > 0 {
-		createAlert[filter] = alert.Filter
+		createAlert[fldFilter] = alert.Filter
 	}
-	createAlert[groupByAggregationFields] = alert.GroupByAggregationFields
-	createAlert[isEnabled] = alert.IsEnabled
-	createAlert[queryString] = alert.QueryString
-	createAlert[notificationEmails] = alert.NotificationEmails
-	createAlert[operation] = alert.Operation
-	createAlert[searchTimeFrameMinutes] = alert.SearchTimeFrameMinutes
-	createAlert[severityThresholdTiers] = alert.SeverityThresholdTiers
-	createAlert[suppressNotificationsMinutes] = alert.SuppressNotificationsMinutes
-	createAlert[title] = alert.Title
-	createAlert[valueAggregationField] = alert.ValueAggregationField
-	createAlert[valueAggregationType] = alert.ValueAggregationType
+	createAlert[fldGroupByAggregationFields] = alert.GroupByAggregationFields
+	createAlert[fldIsEnabled] = alert.IsEnabled
+	createAlert[fldQueryString] = alert.QueryString
+	createAlert[fldNotificationEmails] = alert.NotificationEmails
+	createAlert[fldOperation] = alert.Operation
+	createAlert[fldSearchTimeFrameMinutes] = alert.SearchTimeFrameMinutes
+	createAlert[fldSeverityThresholdTiers] = alert.SeverityThresholdTiers
+	createAlert[fldSuppressNotificationsMinutes] = alert.SuppressNotificationsMinutes
+	createAlert[fldTitle] = alert.Title
+	createAlert[fldValueAggregationField] = alert.ValueAggregationField
+	createAlert[fldValueAggregationType] = alert.ValueAggregationType
 	return createAlert
 }
 
@@ -90,7 +90,7 @@ func buildCreateApiRequest(apiToken string, jsonObject map[string]interface{}) (
 	logSomething("buildCreateApiRequest", fmt.Sprintf("%s", jsonBytes))
 
 	baseUrl := getLogzioBaseUrl()
-	req, err := http.NewRequest(createServiceMethod, fmt.Sprintf(createServiceUrl, baseUrl), bytes.NewBuffer(jsonBytes))
+	req, err := http.NewRequest(createAlertServiceMethod, fmt.Sprintf(createAlertServiceUrl, baseUrl), bytes.NewBuffer(jsonBytes))
 	addHttpHeaders(apiToken, req)
 
 	return req, err
@@ -111,7 +111,7 @@ func (c *Client) CreateAlert(alert CreateAlertType) (*AlertType, error) {
 
 	logSomething("CreateAlert::Response", fmt.Sprintf("%s", jsonBytes))
 
-	if !checkValidStatus(resp, []int{createMethodSuccess}) {
+	if !checkValidStatus(resp, []int{createAlertMethodSuccess}) {
 		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "CreateAlert", resp.StatusCode, jsonBytes)
 	}
 

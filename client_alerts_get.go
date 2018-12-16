@@ -8,13 +8,13 @@ import (
 	"strings"
 )
 
-const getServiceUrl string = "%s/v1/alerts/%d"
-const getServiceMethod string = http.MethodGet
-const getMethodSuccess int = 200
+const getAlertServiceUrl string = "%s/v1/alerts/%d"
+const getAlertServiceMethod string = http.MethodGet
+const getAlertMethodSuccess int = 200
 
 func buildGetApiRequest(apiToken string, alertId int64) (*http.Request, error) {
 	baseUrl := getLogzioBaseUrl()
-	req, err := http.NewRequest(getServiceMethod, fmt.Sprintf(getServiceUrl, baseUrl, alertId), nil)
+	req, err := http.NewRequest(getAlertServiceMethod, fmt.Sprintf(getAlertServiceUrl, baseUrl, alertId), nil)
 	addHttpHeaders(apiToken, req)
 
 	return req, err
@@ -32,7 +32,7 @@ func (c *Client) GetAlert(alertId int64) (*AlertType, error) {
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 	logSomething("GetAlert::Response", fmt.Sprintf("%s", jsonBytes))
 
-	if !checkValidStatus(resp, []int{getMethodSuccess}) {
+	if !checkValidStatus(resp, []int{getAlertMethodSuccess}) {
 		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "GetAlert", resp.StatusCode, jsonBytes)
 	}
 

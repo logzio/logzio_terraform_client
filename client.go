@@ -61,8 +61,12 @@ type CreateAlertType struct {
 }
 
 type EndpointType struct {
-    EndpointId int64
+    Id int64
     EndpointType string
+	Title string
+    Description string
+    Url string
+    Message string
 }
 
 type AlertType struct {
@@ -108,35 +112,36 @@ const (
 	SeverityHigh   string = "HIGH"
 	SeverityLow    string = "LOW"
 	SeverityMedium string = "MEDIUM"
-	
-	endpointId string = "endpointId"
-	endpointType string = "endpointType"
 
-	alertId string = "alertId"
-	alertNotificationEndpoints   string = "alertNotificationEndpoints"
-	createdAt                    string = "createdAt"
-	createdBy                    string = "createdBy"
-	description                  string = "description"
-	filter                       string = "filter"
-	groupByAggregationFields     string = "groupByAggregationFields"
-	isEnabled                    string = "isEnabled"
-	queryString                  string = "query_string"
-	lastTriggeredAt              string = "lastTriggeredAt"
-	lastUpdated                  string = "lastUpdated"
-	notificationEmails           string = "notificationEmails"
-	operation                    string = "operation"
-	searchTimeFrameMinutes       string = "searchTimeFrameMinutes"
-	severity                     string = "severity"
-	severityThresholdTiers       string = "severityThresholdTiers"
-	suppressNotificationsMinutes string = "suppressNotificationsMinutes"
-	threshold                    string = "threshold"
-	title                        string = "title"
-	valueAggregationField        string = "valueAggregationField"
-	valueAggregationType         string = "valueAggregationType"
+	fldAlertId                    string = "alertId"
+	fldAlertNotificationEndpoints string = "alertNotificationEndpoints"
+	fldCreatedAt               string = "createdAt"
+	fldCreatedBy               string = "createdBy"
+	fldDescription             string = "description"
+	fldFilter                  string = "filter"
+	fldGroupByAggregationFields   string = "groupByAggregationFields"
+	fldIsEnabled                  string = "isEnabled"
+	fldQueryString                string = "query_string"
+	fldLastTriggeredAt            string = "lastTriggeredAt"
+	fldLastUpdated                string = "lastUpdated"
+	fldNotificationEmails         string = "notificationEmails"
+	fldOperation                  string = "operation"
+	fldSearchTimeFrameMinutes     string = "searchTimeFrameMinutes"
+	fldSeverity                   string = "severity"
+	fldSeverityThresholdTiers       string = "severityThresholdTiers"
+	fldSuppressNotificationsMinutes string = "suppressNotificationsMinutes"
+	fldThreshold                    string = "threshold"
+	fldTitle                        string = "title"
+	fldValueAggregationField        string = "valueAggregationField"
+	fldValueAggregationType         string = "valueAggregationType"
 
-	endpointType string = "endpointType"
-	id string = "id"
+	fldEndpointId string = "id"
+	fldEndpointType string = "endpointType"
+	fldEndpointTitle string = "title"
+	fldEndpointDescription string = "description"
+	fldEndpointUrl string = "url"
 
+	endpointTypeSlack string = "slack"
 )
 
 func contains(slice []string, s string) bool {
@@ -157,58 +162,62 @@ func checkValidStatus(response *http.Response, status []int) bool {
 	return false
 }
 
-func jsonNotificationToNotification(jsonEndpoint map[string]interface{}) EndpointType {
-    notification := EndpointType{
-        EndpointId: int64(jsonEndpoint[endpointId].(float64)),
-    }
+func jsonEndpointToEndpoint(jsonEndpoint map[string]interface{}) EndpointType {
+	endpoint := EndpointType{
+        Id: int64(jsonEndpoint[fldEndpointId].(float64)),
+		EndpointType:                  jsonEndpoint[fldEndpointType].(string),
+		Title:                  jsonEndpoint[fldEndpointTitle].(string),
+		Description:                  jsonEndpoint[fldEndpointDescription].(string),
+
+	}
     return endpoint
 }
 
 func jsonAlertToAlert(jsonAlert map[string]interface{}) AlertType {
 	alert := AlertType{
-		AlertId:                    int64(jsonAlert[alertId].(float64)),
-		AlertNotificationEndpoints: jsonAlert[alertNotificationEndpoints].([]interface{}),
-		CreatedAt:                  jsonAlert[createdAt].(string),
-		CreatedBy:                  jsonAlert[createdBy].(string),
-		Description:                jsonAlert[description].(string),
-		Filter:                     jsonAlert[filter].(string),
-		IsEnabled:                  jsonAlert[isEnabled].(bool),
-		LastUpdated:                jsonAlert[lastUpdated].(string),
-		NotificationEmails:         jsonAlert[notificationEmails].([]interface{}),
-		Operation:                  jsonAlert[operation].(string),
-		QueryString:                jsonAlert[queryString].(string),
-		Severity:                   jsonAlert[severity].(string),
-		SearchTimeFrameMinutes:     int(jsonAlert[searchTimeFrameMinutes].(float64)),
+		AlertId:                    int64(jsonAlert[fldAlertId].(float64)),
+		AlertNotificationEndpoints: jsonAlert[fldAlertNotificationEndpoints].([]interface{}),
+		CreatedAt:                  jsonAlert[fldCreatedAt].(string),
+		CreatedBy:                  jsonAlert[fldCreatedBy].(string),
+		Description:                jsonAlert[fldDescription].(string),
+		Filter:                     jsonAlert[fldFilter].(string),
+		IsEnabled:                  jsonAlert[fldIsEnabled].(bool),
+		LastUpdated:                jsonAlert[fldLastUpdated].(string),
+		NotificationEmails:         jsonAlert[fldNotificationEmails].([]interface{}),
+		Operation:                  jsonAlert[fldOperation].(string),
+		QueryString:                jsonAlert[fldQueryString].(string),
+		Severity:                   jsonAlert[fldSeverity].(string),
+		SearchTimeFrameMinutes:     int(jsonAlert[fldSearchTimeFrameMinutes].(float64)),
 		SeverityThresholdTiers:     []SeverityThresholdType{},
-		Threshold:                  int(jsonAlert[threshold].(float64)),
-		Title:                      jsonAlert[title].(string),
-		ValueAggregationType:       jsonAlert[valueAggregationType].(string),
+		Threshold:                  int(jsonAlert[fldThreshold].(float64)),
+		Title:                      jsonAlert[fldTitle].(string),
+		ValueAggregationType:       jsonAlert[fldValueAggregationType].(string),
 	}
 
-	if jsonAlert[groupByAggregationFields] != nil {
-		alert.GroupByAggregationFields = jsonAlert[groupByAggregationFields].([]interface{})
+	if jsonAlert[fldGroupByAggregationFields] != nil {
+		alert.GroupByAggregationFields = jsonAlert[fldGroupByAggregationFields].([]interface{})
 	}
 
-	if jsonAlert[lastTriggeredAt] != nil {
-		alert.LastTriggeredAt = jsonAlert[lastTriggeredAt].(interface{})
+	if jsonAlert[fldLastTriggeredAt] != nil {
+		alert.LastTriggeredAt = jsonAlert[fldLastTriggeredAt].(interface{})
 	}
 
-	tiers := jsonAlert[severityThresholdTiers].([]interface{})
+	tiers := jsonAlert[fldSeverityThresholdTiers].([]interface{})
 	for x := 0; x < len(tiers); x++ {
 		tier := tiers[x].(map[string]interface{})
 		threshold := SeverityThresholdType{
-			Threshold: int(tier[threshold].(float64)),
-			Severity:  tier[severity].(string),
+			Threshold: int(tier[fldThreshold].(float64)),
+			Severity:  tier[fldSeverity].(string),
 		}
 		alert.SeverityThresholdTiers = append(alert.SeverityThresholdTiers, threshold)
 	}
 
-	if jsonAlert[suppressNotificationsMinutes] != nil {
-		alert.SuppressNotificationsMinutes = int(jsonAlert[suppressNotificationsMinutes].(float64))
+	if jsonAlert[fldSuppressNotificationsMinutes] != nil {
+		alert.SuppressNotificationsMinutes = int(jsonAlert[fldSuppressNotificationsMinutes].(float64))
 	}
 
-	if jsonAlert[valueAggregationField] != nil {
-		alert.ValueAggregationField = jsonAlert[valueAggregationField].(interface{})
+	if jsonAlert[fldValueAggregationField] != nil {
+		alert.ValueAggregationField = jsonAlert[fldValueAggregationField].(interface{})
 	}
 
 	return alert

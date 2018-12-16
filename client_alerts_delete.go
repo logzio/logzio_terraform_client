@@ -7,13 +7,13 @@ import (
 	"strings"
 )
 
-const deleteServiceUrl string = "%s/v1/alerts/%d"
-const deleteServiceMethod string = http.MethodDelete
-const deleteMethodSuccess int = 200
+const deleteAlertServiceUrl string = "%s/v1/alerts/%d"
+const deleteAlertServiceMethod string = http.MethodDelete
+const deleteAlertMethodSuccess int = 200
 
 func buildDeleteApiRequest(apiToken string, alertId int64) (*http.Request, error) {
 	baseUrl := getLogzioBaseUrl()
-	req, err := http.NewRequest(deleteServiceMethod, fmt.Sprintf(deleteServiceUrl, baseUrl, alertId), nil)
+	req, err := http.NewRequest(deleteAlertServiceMethod, fmt.Sprintf(deleteAlertServiceUrl, baseUrl, alertId), nil)
 	addHttpHeaders(apiToken, req)
 	logSomething("buildDeleteApiRequest", req.URL.Path)
 
@@ -32,7 +32,7 @@ func (c *Client) DeleteAlert(alertId int64) error {
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 	logSomething("DeleteAlert::Response", fmt.Sprintf("%s", jsonBytes))
 
-	if !checkValidStatus(resp, []int{deleteMethodSuccess}) {
+	if !checkValidStatus(resp, []int{deleteAlertMethodSuccess}) {
 		return fmt.Errorf("API call %s failed with status code %d, data: %s", "DeleteAlert", resp.StatusCode, jsonBytes)
 	}
 
