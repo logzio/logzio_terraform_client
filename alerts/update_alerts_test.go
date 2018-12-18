@@ -29,7 +29,8 @@ func TestUpdateAlert(t *testing.T) {
 
 		// clean up any created alerts
 		for x := 0; x < len(alerts); x++ {
-			client.DeleteAlert(alerts[x])
+			err = client.DeleteAlert(alerts[x])
+			assert.NoError(t, err)
 		}
 	}
 }
