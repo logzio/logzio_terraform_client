@@ -34,10 +34,17 @@ func validateUpdateEndpointRequest(endpoint EndpointType) error {
 func buildUpdateEndpointRequest(endpoint EndpointType, service string) map[string]interface{} {
 	var updateEndpoint = map[string]interface{}{}
 
-	if service == endpointTypeSlack {
+	if endpointTypeSlack == service {
 		updateEndpoint[fldEndpointTitle] = endpoint.Title
 		updateEndpoint[fldEndpointDescription] = endpoint.Description
 		updateEndpoint[fldEndpointUrl] = endpoint.Url
+	} else if endpointTypeCustom == service {
+		updateEndpoint[fldEndpointTitle] = endpoint.Title
+		updateEndpoint[fldEndpointDescription] = endpoint.Description
+		updateEndpoint[fldEndpointUrl] = endpoint.Url
+		updateEndpoint[fldEndpointMethod] = endpoint.Method
+		updateEndpoint[fldEndpointHeaders] = endpoint.Headers
+		updateEndpoint[fldEndpointBodyTemplate] = endpoint.BodyTemplate
 	}
 
 	return updateEndpoint

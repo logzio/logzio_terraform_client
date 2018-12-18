@@ -14,6 +14,12 @@ const getEndpointsServiceUrl string = "%s/v1/endpoints/%d"
 const getEndpointsServiceMethod string = http.MethodGet
 const getEndpointsMethodSuccess int = 200
 
+const apiGetEndpointNoEndpoint = "no endpoint id"
+
+const errorGetEndpointApiCallFailed = "API call GetEndpoint failed with status code:%d, data:%s"
+const errorGetEndpointDoesntExist = "API call GetEndpoint failed as endpoint with id:%d doesn't exist, data:%s"
+
+
 func buildGetEnpointApiRequest(apiToken string, notificationId int64) (*http.Request, error) {
 	baseUrl := client.GetLogzioBaseUrl()
 	req, err := http.NewRequest(getEndpointsServiceMethod, fmt.Sprintf(getEndpointsServiceUrl, baseUrl, notificationId), nil)
@@ -48,12 +54,12 @@ func (c *Endpoints) GetEndpoint(endpointId int64) (*EndpointType, error) {
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 
 	if !logzio_client.CheckValidStatus(resp, []int{getEndpointsMethodSuccess}) {
-		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "GetEndpoint", resp.StatusCode, jsonBytes)
+		return nil, fmt.Errorf(errorGetEndpointApiCallFailed, resp.StatusCode, jsonBytes)
 	}
 
 	str := fmt.Sprintf("%s", jsonBytes)
-	if strings.Contains(str, "no endpoint id") {
-		return nil, fmt.Errorf("API call %s failed with missing notification %d, data: %s", "GetEndpoint", endpointId, str)
+	if strings.Contains(str, apiGetEndpointNoEndpoint) {
+		return nil, fmt.Errorf(errorGetEndpointDoesntExist, endpointId, str)
 	}
 
 	var jsonEndpoint map[string]interface{}

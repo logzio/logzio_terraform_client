@@ -7,21 +7,40 @@ import (
 )
 
 const (
-	fldEndpointId          string = "id"
-	fldEndpointType        string = "endpointType"
-	fldEndpointTitle       string = "title"
-	fldEndpointDescription string = "description"
-	fldEndpointUrl         string = "url"
-	endpointTypeSlack      string = "slack"
+	fldEndpointId           string = "id"
+	fldEndpointType         string = "endpointType"
+	fldEndpointTitle        string = "title"
+	fldEndpointDescription  string = "description"
+	fldEndpointUrl          string = "url"
+	fldEndpointMethod       string = "method"
+	fldEndpointHeaders      string = "headers"
+	fldEndpointBodyTemplate string = "bodyTemplate"
+
+	endpointTypeSlack     string = "slack"
+	endpointTypeCustom    string = "custom"
+	endpointTypePagerDuty string = "pager-duty"
+	endpointTypeBigPanda  string = "big-panda"
+	endpointTypeDataDog   string = "data-dog"
+	endpointTypeVictorOps string = "victorops"
 )
 
 type EndpointType struct {
-	Id           int64
-	EndpointType string
-	Title        string
-	Description  string
-	Url          string
-	Message      string
+	Id            int64                  // all
+	EndpointType  string                 // all
+	Title         string                 // all
+	Description   string                 // all
+	Url           string                 // custom & slack
+	Method        string                 // custom
+	Headers       string                 // custom
+	BodyTemplate  map[string]interface{} // custom
+	Message       string                 // n.b. this is a hack to determine if there was an error (despite a 200 being returned)
+	ServiceKey    string                 // pager-duty
+	ApiToken      string                 // big-panda
+	AppKey        string                 // big-panda
+	ApiKey        string                 // data-dog
+	RoutingKey    string                 // victorops
+	MessageType   string                 // victorops
+	ServiceApiKey string                 // victorops
 }
 
 func jsonEndpointToEndpoint(jsonEndpoint map[string]interface{}) EndpointType {
@@ -34,9 +53,14 @@ func jsonEndpointToEndpoint(jsonEndpoint map[string]interface{}) EndpointType {
 	if endpointTypeSlack == strings.ToLower(endpoint.EndpointType) {
 		endpoint.Url = jsonEndpoint[fldEndpointUrl].(string)
 	}
+	if endpointTypeCustom == strings.ToLower(endpoint.EndpointType) {
+		endpoint.Url = jsonEndpoint[fldEndpointUrl].(string)
+		endpoint.BodyTemplate = jsonEndpoint[fldEndpointBodyTemplate].(map[string]interface{})
+		endpoint.Headers = jsonEndpoint[fldEndpointHeaders].(string)
+		endpoint.Method = jsonEndpoint[fldEndpointMethod].(string)
+	}
 	return endpoint
 }
-
 
 type Endpoints struct {
 	client.Client
