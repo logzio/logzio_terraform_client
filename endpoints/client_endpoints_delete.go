@@ -1,7 +1,9 @@
-package logzio_client
+package endpoints
 
 import (
 	"fmt"
+	"github.com/jonboydell/logzio_client"
+	"github.com/jonboydell/logzio_client/client"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -14,16 +16,15 @@ const deleteEndpointMethodSuccess int = 200
 const deleteEndpointFnId = "DeleteEndpoint"
 
 func buildDeleteEndpointApiRequest(apiToken string, endpointId int64) (*http.Request, error) {
-	baseUrl := getLogzioBaseUrl()
+	baseUrl := client.GetLogzioBaseUrl()
 	req, err := http.NewRequest(deleteEndpointServiceMethod, fmt.Sprintf(deleteEndpointServiceUrl, baseUrl, endpointId), nil)
-	addHttpHeaders(apiToken, req)
-	logSomething("buildDeleteEndpointApiRequest", req.URL.Path)
+	logzio_client.AddHttpHeaders(apiToken, req)
 
 	return req, err
 }
 
-func (c *Client) DeleteEndpoint(endpointId int64) error {
-	req, _ := buildDeleteEndpointApiRequest(c.apiToken, endpointId)
+func (c *Endpoints) DeleteEndpoint(endpointId int64) error {
+	req, _ := buildDeleteEndpointApiRequest(c.ApiToken, endpointId)
 
 	var client http.Client
 	resp, err := client.Do(req)
@@ -32,9 +33,8 @@ func (c *Client) DeleteEndpoint(endpointId int64) error {
 	}
 
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
-	logSomething(deleteEndpointFnId + "::Response", fmt.Sprintf("%s", jsonBytes))
 
-	if !checkValidStatus(resp, []int{deleteEndpointMethodSuccess}) {
+	if !logzio_client.CheckValidStatus(resp, []int{deleteEndpointMethodSuccess}) {
 		return fmt.Errorf("API call %s failed with status code %d, data: %s", deleteEndpointFnId, resp.StatusCode, jsonBytes)
 	}
 

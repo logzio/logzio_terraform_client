@@ -1,8 +1,10 @@
-package logzio_client
+package endpoints
 
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/jonboydell/logzio_client"
+	"github.com/jonboydell/logzio_client/client"
 	"io/ioutil"
 	"net/http"
 )
@@ -12,15 +14,15 @@ const listEndpointsServiceMethod string = http.MethodGet
 const listEndpointsMethodSuccess int = 200
 
 func buildListEndpointsApiRequest(apiToken string) (*http.Request, error) {
-	baseUrl := getLogzioBaseUrl()
+	baseUrl := client.GetLogzioBaseUrl()
 	req, err := http.NewRequest(listEndpointsServiceMethod, fmt.Sprintf(listEndpointsServiceUrl, baseUrl), nil)
-	addHttpHeaders(apiToken, req)
+	logzio_client.AddHttpHeaders(apiToken, req)
 
 	return req, err
 }
 
-func (c *Client) ListEndpoints() ([]EndpointType, error) {
-	req, _ := buildListEndpointsApiRequest(c.apiToken)
+func (c *Endpoints) ListEndpoints() ([]EndpointType, error) {
+	req, _ := buildListEndpointsApiRequest(c.ApiToken)
 
 	var client http.Client
 	resp, err := client.Do(req)
@@ -29,9 +31,8 @@ func (c *Client) ListEndpoints() ([]EndpointType, error) {
 	}
 
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
-	logSomething("ListEndpoints::Response", fmt.Sprintf("%s", jsonBytes))
 
-	if !checkValidStatus(resp, []int{listEndpointsMethodSuccess}) {
+	if !logzio_client.CheckValidStatus(resp, []int{listEndpointsMethodSuccess}) {
 		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "ListEndpoints", resp.StatusCode, jsonBytes)
 	}
 

@@ -1,9 +1,11 @@
-package logzio_client
+package alerts
 
 import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/jonboydell/logzio_client"
+	"github.com/jonboydell/logzio_client/client"
 	"io/ioutil"
 	"net/http"
 )
@@ -40,30 +42,27 @@ func buildUpdateApiRequest(apiToken string, alertId int64, jsonObject map[string
 		return nil, err
 	}
 
-	logSomething("buildUpdateApiRequest", fmt.Sprintf("%s", jsonBytes))
-
-	baseUrl := getLogzioBaseUrl()
+	baseUrl := client.GetLogzioBaseUrl()
 	req, err := http.NewRequest(updateAlertServiceMethod, fmt.Sprintf(updateAlertServiceUrl, baseUrl, alertId), bytes.NewBuffer(jsonBytes))
-	addHttpHeaders(apiToken, req)
+	logzio_client.AddHttpHeaders(apiToken, req)
 
 	return req, err
 }
 
-func (c *Client) UpdateAlert(alertId int64, alert CreateAlertType) (*AlertType, error) {
+func (c *Alerts) UpdateAlert(alertId int64, alert CreateAlertType) (*AlertType, error) {
 	err := validateCreateAlertRequest(alert)
 	if err != nil {
 		return nil, err
 	}
 
 	createAlert := buildUpdateAlertRequest(alert)
-	req, _ := buildUpdateApiRequest(c.apiToken, alertId, createAlert)
+	req, _ := buildUpdateApiRequest(c.ApiToken, alertId, createAlert)
 
 	var client http.Client
 	resp, _ := client.Do(req)
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
-	logSomething("UpdateAlert::Response", fmt.Sprintf("%s", jsonBytes))
 
-	if !checkValidStatus(resp, []int{updateAlertMethodSuccess}) {
+	if !logzio_client.CheckValidStatus(resp, []int{updateAlertMethodSuccess}) {
 		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "UpdateAlert", resp.StatusCode, jsonBytes)
 	}
 

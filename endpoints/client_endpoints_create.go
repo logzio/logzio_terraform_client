@@ -1,10 +1,13 @@
-package logzio_client
+package endpoints
 
 import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/jonboydell/logzio_client"
+	"github.com/jonboydell/logzio_client/client"
 	"io/ioutil"
+	"log"
 	"net/http"
 )
 
@@ -17,23 +20,25 @@ func buildCreateEndpointApiRequest(apiToken string, service string, jsonObject m
 	if err != nil {
 		return nil, err
 	}
-	logSomething("buildCreateEndpointApiRequest", fmt.Sprintf("%s", jsonBytes))
 
-	baseUrl := getLogzioBaseUrl()
-	req, err := http.NewRequest(createEndpointServiceMethod, fmt.Sprintf(createEndpointServiceUrl, baseUrl, service), bytes.NewBuffer(jsonBytes))
-	addHttpHeaders(apiToken, req)
+	baseUrl := client.GetLogzioBaseUrl()
+	url := fmt.Sprintf(createEndpointServiceUrl, baseUrl, service)
+	req, err := http.NewRequest(createEndpointServiceMethod, url, bytes.NewBuffer(jsonBytes))
+	logzio_client.AddHttpHeaders(apiToken, req)
+
+	log.Printf("%s, %s, %s", url, req.Header, jsonObject)
 
 	return req, err
 }
 
-func validateCreateEndpointRequest(endpoint EndpointType) (error) {
+func validateCreateEndpointRequest(endpoint EndpointType) error {
 	return nil
 }
 
-func buildCreateEndpointRequest(endpoint EndpointType) map[string]interface{} {
+func buildCreateEndpointRequest(endpoint EndpointType, service string) map[string]interface{} {
 	var createEndpoint = map[string]interface{}{}
 
-	if endpoint.EndpointType == endpointTypeSlack {
+	if service == endpointTypeSlack {
 		createEndpoint[fldEndpointTitle] = endpoint.Title
 		createEndpoint[fldEndpointDescription] = endpoint.Description
 		createEndpoint[fldEndpointUrl] = endpoint.Url
@@ -42,22 +47,20 @@ func buildCreateEndpointRequest(endpoint EndpointType) map[string]interface{} {
 	return createEndpoint
 }
 
-func (c *Client) createEndpoint(endpoint EndpointType) (*EndpointType, error) {
+func (c *Endpoints) createEndpoint(endpoint EndpointType, service string) (*EndpointType, error) {
 	err := validateCreateEndpointRequest(endpoint)
 	if err != nil {
 		return nil, err
 	}
 
-	createEndpoint := buildCreateEndpointRequest(endpoint)
-	req, _ := buildCreateEndpointApiRequest(c.apiToken, endpoint.EndpointType, createEndpoint)
+	createEndpoint := buildCreateEndpointRequest(endpoint, service)
+	req, _ := buildCreateEndpointApiRequest(c.ApiToken, service, createEndpoint)
 
 	var client http.Client
 	resp, _ := client.Do(req)
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 
-	logSomething("CreateEndpoint::Response", fmt.Sprintf("%s", jsonBytes))
-
-	if !checkValidStatus(resp, []int{createEndpointMethodSuccess}) {
+	if !logzio_client.CheckValidStatus(resp, []int{createEndpointMethodSuccess}) {
 		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "CreateEndpoint", resp.StatusCode, jsonBytes)
 	}
 

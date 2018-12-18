@@ -1,22 +1,26 @@
-package logzio_client
+package alerts
 
 import (
+	"github.com/jonboydell/logzio_client/client"
+	"github.com/jonboydell/logzio_client/test_utils"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestGetAlert(t *testing.T) {
-	api_token := getApiToken(t)
+	api_token := test_utils.GetApiToken()
 	if len(api_token) == 0 {
-		t.Fatalf("%v could not get an API token from %v", "TestDeleteAlert", ENV_LOGZIO_API_TOKEN)
+		t.Fatalf("%v could not get an API token from %v", "TestDeleteAlert", client.ENV_LOGZIO_BASE_URL)
 	}
 
-	var client *Client
-	client = New(api_token)
+	var client *Alerts
+	client, err := New(api_token)
+	assert.NoError(t, err)
+	assert.NotNil(t, client)
 
 	createAlert := createValidAlert()
 
 	var alert *AlertType
-	var err error
 	alerts := []int64{}
 
 	alert, err = client.CreateAlert(createAlert)

@@ -1,9 +1,11 @@
-package logzio_client
+package alerts
 
 import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/jonboydell/logzio_client"
+	"github.com/jonboydell/logzio_client/client"
 	"io/ioutil"
 	"net/http"
 )
@@ -36,19 +38,19 @@ func validateCreateAlertRequest(alert CreateAlertType) error {
 	}
 
 	validAggregationTypes := []string{AggregationTypeUniqueCount, AggregationTypeAvg, AggregationTypeMax, AggregationTypeNone, AggregationTypeSum, AggregationTypeCount, AggregationTypeMin}
-	if !contains(validAggregationTypes, alert.ValueAggregationType) {
+	if !logzio_client.Contains(validAggregationTypes, alert.ValueAggregationType) {
 		return fmt.Errorf("valueAggregationType must be one of %s", validAggregationTypes)
 	}
 
 	validOperations := []string{OperatorGreaterThanOrEquals, OperatorLessThanOrEquals, OperatorGreaterThan, OperatorLessThan, OperatorNotEquals, OperatorEquals}
-	if !contains(validOperations, alert.Operation) {
+	if !logzio_client.Contains(validOperations, alert.Operation) {
 		return fmt.Errorf("operation must be one of %s", validOperations)
 	}
 
 	validSeverities := []string{SeverityHigh, SeverityLow, SeverityMedium}
 	for x := 0; x < len(alert.SeverityThresholdTiers); x++ {
 		s := alert.SeverityThresholdTiers[x]
-		if !contains(validSeverities, s.Severity) {
+		if !logzio_client.Contains(validSeverities, s.Severity) {
 			return fmt.Errorf("severity must be one of %s", validSeverities)
 		}
 	}
@@ -87,31 +89,28 @@ func buildCreateApiRequest(apiToken string, jsonObject map[string]interface{}) (
 	if err != nil {
 		return nil, err
 	}
-	logSomething("buildCreateApiRequest", fmt.Sprintf("%s", jsonBytes))
 
-	baseUrl := getLogzioBaseUrl()
+	baseUrl := client.GetLogzioBaseUrl()
 	req, err := http.NewRequest(createAlertServiceMethod, fmt.Sprintf(createAlertServiceUrl, baseUrl), bytes.NewBuffer(jsonBytes))
-	addHttpHeaders(apiToken, req)
+	logzio_client.AddHttpHeaders(apiToken, req)
 
 	return req, err
 }
 
-func (c *Client) CreateAlert(alert CreateAlertType) (*AlertType, error) {
+func (c *Alerts) CreateAlert(alert CreateAlertType) (*AlertType, error) {
 	err := validateCreateAlertRequest(alert)
 	if err != nil {
 		return nil, err
 	}
 
 	createAlert := buildCreateAlertRequest(alert)
-	req, _ := buildCreateApiRequest(c.apiToken, createAlert)
+	req, _ := buildCreateApiRequest(c.ApiToken, createAlert)
 
 	var client http.Client
 	resp, _ := client.Do(req)
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 
-	logSomething("CreateAlert::Response", fmt.Sprintf("%s", jsonBytes))
-
-	if !checkValidStatus(resp, []int{createAlertMethodSuccess}) {
+	if !logzio_client.CheckValidStatus(resp, []int{createAlertMethodSuccess}) {
 		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "CreateAlert", resp.StatusCode, jsonBytes)
 	}
 
