@@ -31,32 +31,39 @@ func buildGetEnpointApiRequest(apiToken string, notificationId int64) (*http.Req
 // Returns an endpoint, given it's name.  Returns nil (and an error) if an endpoint with the specified name can't be found
 func (c *Endpoints) GetEndpointByName(endpointName string) (*EndpointType, error) {
 	list, err := c.ListEndpoints()
-	for i := 0; i < len(list); i++ {
-		var endpoint EndpointType
-		endpoint = list[i]
-		if endpoint.Title == endpointName {
-			return &endpoint, nil
-		}
+	if err != nil {
+	    return nil, err
 	}
+	
+	for _, endpoint := range list {
+        if endpoint.Title == endpointName {
+            return &endpoint, nil
+	   }
+	}
+	
 	return nil, err
 }
 
 // Returns an endpoint, given it's identity.  Returns nul (and an error) if an endpoint with the specified id can't be found
 func (c *Endpoints) GetEndpoint(endpointId int64) (*EndpointType, error) {
 	req, _ := buildGetEnpointApiRequest(c.ApiToken, endpointId)
-
+ 
+	//@todo: can the http client handling be wrapped into one function?
 	var client http.Client
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
 
+      // @todo: this isn't the idiomatic way to read a response body
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 
 	if !logzio_client.CheckValidStatus(resp, []int{getEndpointsMethodSuccess}) {
 		return nil, fmt.Errorf(errorGetEndpointApiCallFailed, resp.StatusCode, jsonBytes)
 	}
 
+      // sometimes logz.io returns a string rather than a json object (and a 200 status code), even though the call has failed
+      // @todo: can this be refactored?
 	str := fmt.Sprintf("%s", jsonBytes)
 	if strings.Contains(str, apiGetEndpointNoEndpoint) {
 		return nil, fmt.Errorf(errorGetEndpointDoesntExist, endpointId, str)

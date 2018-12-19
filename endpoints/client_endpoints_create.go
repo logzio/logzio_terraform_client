@@ -17,70 +17,6 @@ const createEndpointMethodSuccess int = 200
 const errorInvalidEndpointDefinition = "Endpoint definition %s is not valid for service %s"
 const errorCreateEndpointApiCallFailed = "API call CreateEndpoint failed with status code %d, data: %s"
 
-func validSlackEndpoint(endpointType EndpointType) bool {
-	return len(endpointType.Title) > 0 &&
-		len(endpointType.Url) > 0 && len(endpointType.Description) > 0
-}
-
-func validCustomEndpoint(endpointType EndpointType) bool {
-	return len(endpointType.Title) > 0 &&
-		len(endpointType.Url) > 0 && len(endpointType.Description) > 0 &&
-		len(endpointType.Method) > 0 && len(endpointType.Headers) > 0 &&
-		len(endpointType.BodyTemplate) > 0
-}
-
-func validPagerDutyEndpoint(endpointType EndpointType) bool {
-	return len(endpointType.Title) > 0 &&
-		len(endpointType.Url) > 0 && len(endpointType.Description) > 0 &&
-		len(endpointType.ServiceKey) > 0
-}
-
-func validBigPandaEndpoint(endpointType EndpointType) bool {
-	return len(endpointType.Title) > 0 &&
-		len(endpointType.Url) > 0 && len(endpointType.Description) > 0 &&
-		len(endpointType.ApiToken) > 0 && len(endpointType.AppKey) > 0
-}
-
-func validDataDogEndpoint(endpointType EndpointType) bool {
-	return len(endpointType.Title) > 0 &&
-		len(endpointType.Url) > 0 && len(endpointType.Description) > 0 &&
-		len(endpointType.AppKey) > 0
-}
-
-func validVictorOpsEndpoint(endpointType EndpointType) bool {
-	return len(endpointType.Title) > 0 &&
-		len(endpointType.Url) > 0 && len(endpointType.Description) > 0 &&
-		len(endpointType.RoutingKey) > 0 && len(endpointType.MessageType) > 0 && len(endpointType.ServiceApiKey) > 0
-}
-
-func validateCreateEndpointRequest(endpoint EndpointType, service string) error {
-	if service == endpointTypeSlack && validSlackEndpoint(endpoint) {
-		return nil
-	}
-
-	if service == endpointTypeCustom && validCustomEndpoint(endpoint) {
-		return nil
-	}
-
-	if service == endpointTypePagerDuty && validPagerDutyEndpoint(endpoint) {
-		return nil
-	}
-
-	if service == endpointTypeBigPanda && validBigPandaEndpoint(endpoint) {
-		return nil
-	}
-
-	if service == endpointTypeDataDog && validDataDogEndpoint(endpoint) {
-		return nil
-	}
-
-	if service == endpointTypeVictorOps && validVictorOpsEndpoint(endpoint) {
-		return nil
-	}
-
-	return fmt.Errorf(errorInvalidEndpointDefinition, endpoint, service)
-}
-
 func buildCreateEndpointRequest(endpoint EndpointType) map[string]interface{} {
 	var createEndpoint = map[string]interface{}{}
 
@@ -131,7 +67,7 @@ func buildCreateEndpointApiRequest(apiToken string, service string, jsonObject m
 // Creates an endpoint, given the endpoint definition and the service to create the endpoint against
 // Returns the endpoint object if successful (hopefully with an ID) and a non-nil error if not
 func (c *Endpoints) CreateEndpoint(endpoint EndpointType) (*EndpointType, error) {
-	err := validateCreateEndpointRequest(endpoint, endpoint.EndpointType)
+	err := ValidateEndpointRequest(endpoint)
 	if err != nil {
 		return nil, err
 	}

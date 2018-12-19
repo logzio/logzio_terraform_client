@@ -13,6 +13,8 @@ const listEndpointsServiceUrl string = "%s/v1/endpoints"
 const listEndpointsServiceMethod string = http.MethodGet
 const listEndpointsMethodSuccess int = 200
 
+const errorListEndpointApiCallFailed = "API call ListEndpoints failed with status code:%d, data:%s"
+
 func buildListEndpointsApiRequest(apiToken string) (*http.Request, error) {
 	baseUrl := client.GetLogzioBaseUrl()
 	req, err := http.NewRequest(listEndpointsServiceMethod, fmt.Sprintf(listEndpointsServiceUrl, baseUrl), nil)
@@ -33,19 +35,25 @@ func (c *Endpoints) ListEndpoints() ([]EndpointType, error) {
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 
 	if !logzio_client.CheckValidStatus(resp, []int{listEndpointsMethodSuccess}) {
-		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "ListEndpoints", resp.StatusCode, jsonBytes)
+		return nil, fmt.Errorf(errorListEndpointApiCallFailed, resp.StatusCode, jsonBytes)
 	}
 
 	var arr []EndpointType
 	var jsonResponse []interface{}
 	err = json.Unmarshal([]byte(jsonBytes), &jsonResponse)
+	
+	for _, json := range jsonResponse {
+        jsonEndpoint = json.(map[string]interface{})
+        endpoint := jsonEndpointToEndpoint(jsonEndpoint)
+        arr = append(arr, endpoint)
+	}
 
-	for x := 0; x < len(jsonResponse); x++ {
+	/*for x := 0; x < len(jsonResponse); x++ {
 		var jsonEndpoint map[string]interface{}
 		jsonEndpoint = jsonResponse[x].(map[string]interface{})
 		endpoint := jsonEndpointToEndpoint(jsonEndpoint)
 		arr = append(arr, endpoint)
-	}
+	}*/
 
 	return arr, nil
 }

@@ -16,6 +16,8 @@ const deleteEndpointMethodSuccess int = 200
 const errorDeleteEndpointApiCallFailed = "API call DeleteEndpoint failed with status code:%d, data:%s"
 const errorDeleteEndpointDoesntExist = "API call DeleteEndpoint failed as endpoint with id:%d doesn't exist, data:%s"
 
+const apiDeleteEndpointNoEndpoint = "no endpoint id"
+
 func buildDeleteEndpointApiRequest(apiToken string, endpointId int64) (*http.Request, error) {
 	baseUrl := client.GetLogzioBaseUrl()
 	req, err := http.NewRequest(deleteEndpointServiceMethod, fmt.Sprintf(deleteEndpointServiceUrl, baseUrl, endpointId), nil)
@@ -40,7 +42,7 @@ func (c *Endpoints) DeleteEndpoint(endpointId int64) error {
 	}
 
 	str := fmt.Sprintf("%s", jsonBytes)
-	if strings.Contains(str, "no endpoint id") {
+	if strings.Contains(str, apiDeleteEndpointNoEndpoint) {
 		return fmt.Errorf(errorDeleteEndpointDoesntExist, endpointId, jsonBytes)
 	}
 

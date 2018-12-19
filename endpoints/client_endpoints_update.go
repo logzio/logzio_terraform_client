@@ -14,6 +14,9 @@ const updateEndpointServiceUrl string = "%s/v1/endpoints/%s/%d"
 const updateEndpointServiceMethod string = http.MethodPut
 const updateEndpointMethodSuccess int = 200
 
+const errorUpdateEndpointApiCallFailed = "API call UpdateEndpoint failed with status code:%d, data:%s"
+const errorUpdateEndpointDoesntExist = "API call UpdateEndpoint failed as endpoint with id:%d doesn't exist, data:%s"
+
 func buildUpdateEndpointApiRequest(apiToken string, id int64, service string, jsonObject map[string]interface{}) (*http.Request, error) {
 	jsonBytes, err := json.Marshal(jsonObject)
 	if err != nil {
@@ -25,10 +28,6 @@ func buildUpdateEndpointApiRequest(apiToken string, id int64, service string, js
 	logzio_client.AddHttpHeaders(apiToken, req)
 
 	return req, err
-}
-
-func validateUpdateEndpointRequest(endpoint EndpointType) error {
-	return nil
 }
 
 func buildUpdateEndpointRequest(endpoint EndpointType, service string) map[string]interface{} {
@@ -51,7 +50,7 @@ func buildUpdateEndpointRequest(endpoint EndpointType, service string) map[strin
 }
 
 func (c *Endpoints) updateEndpoint(id int64, endpoint EndpointType, service string) (*EndpointType, error) {
-	err := validateUpdateEndpointRequest(endpoint)
+	err := ValidateEndpointRequest(endpoint)
 	if err != nil {
 		return nil, err
 	}
@@ -64,14 +63,14 @@ func (c *Endpoints) updateEndpoint(id int64, endpoint EndpointType, service stri
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 
 	if !logzio_client.CheckValidStatus(resp, []int{updateEndpointMethodSuccess}) {
-		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "UpdateEndpoint", resp.StatusCode, jsonBytes)
+		return nil, fmt.Errorf(errorUpdateEndpointApiCallFailed, resp.StatusCode, jsonBytes)
 	}
 
 	var target EndpointType
 	json.Unmarshal(jsonBytes, &target)
 
 	if len(target.Message) > 0 {
-		return nil, fmt.Errorf("API call %s failed with status code %d, but with message: %s", "UpdateEndpoint", resp.StatusCode, target.Message)
+		return nil, fmt.Errorf(errorUpdateEndpointDoesntExist, resp.StatusCode, target.Message)
 	}
 
 	return &target, nil
