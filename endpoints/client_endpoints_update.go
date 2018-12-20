@@ -30,7 +30,7 @@ func buildUpdateEndpointApiRequest(apiToken string, id int64, service string, js
 	return req, err
 }
 
-func buildUpdateEndpointRequest(endpoint EndpointType, service string) map[string]interface{} {
+func buildUpdateEndpointRequest(endpoint Endpoint, service string) map[string]interface{} {
 	var updateEndpoint = map[string]interface{}{}
 
 	if endpointTypeSlack == service {
@@ -49,7 +49,7 @@ func buildUpdateEndpointRequest(endpoint EndpointType, service string) map[strin
 	return updateEndpoint
 }
 
-func (c *Endpoints) updateEndpoint(id int64, endpoint EndpointType, service string) (*EndpointType, error) {
+func (c *Endpoints) updateEndpoint(id int64, endpoint Endpoint, service string) (*Endpoint, error) {
 	err := ValidateEndpointRequest(endpoint)
 	if err != nil {
 		return nil, err
@@ -66,7 +66,7 @@ func (c *Endpoints) updateEndpoint(id int64, endpoint EndpointType, service stri
 		return nil, fmt.Errorf(errorUpdateEndpointApiCallFailed, resp.StatusCode, jsonBytes)
 	}
 
-	var target EndpointType
+	var target Endpoint
 	json.Unmarshal(jsonBytes, &target)
 
 	if len(target.Message) > 0 {

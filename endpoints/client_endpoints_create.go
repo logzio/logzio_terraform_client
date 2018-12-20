@@ -14,10 +14,10 @@ const createEndpointServiceUrl string = "%s/v1/endpoints/%s"
 const createEndpointServiceMethod string = http.MethodPost
 const createEndpointMethodSuccess int = 200
 
-const errorInvalidEndpointDefinition = "Endpoint definition %s is not valid for service %s"
+const errorInvalidEndpointDefinition = "Endpoint definition %v is not valid for service %s"
 const errorCreateEndpointApiCallFailed = "API call CreateEndpoint failed with status code %d, data: %s"
 
-func buildCreateEndpointRequest(endpoint EndpointType) map[string]interface{} {
+func buildCreateEndpointRequest(endpoint Endpoint) map[string]interface{} {
 	var createEndpoint = map[string]interface{}{}
 
 	if endpoint.EndpointType == endpointTypeSlack {
@@ -66,7 +66,7 @@ func buildCreateEndpointApiRequest(apiToken string, service string, jsonObject m
 
 // Creates an endpoint, given the endpoint definition and the service to create the endpoint against
 // Returns the endpoint object if successful (hopefully with an ID) and a non-nil error if not
-func (c *Endpoints) CreateEndpoint(endpoint EndpointType) (*EndpointType, error) {
+func (c *Endpoints) CreateEndpoint(endpoint Endpoint) (*Endpoint, error) {
 	err := ValidateEndpointRequest(endpoint)
 	if err != nil {
 		return nil, err
@@ -83,7 +83,7 @@ func (c *Endpoints) CreateEndpoint(endpoint EndpointType) (*EndpointType, error)
 		return nil, fmt.Errorf(errorCreateEndpointApiCallFailed, resp.StatusCode, jsonBytes)
 	}
 
-	var target EndpointType
+	var target Endpoint
 	json.Unmarshal(jsonBytes, &target)
 
 	// logz.io sometimes returns a 200 even though the message is a failure message
