@@ -15,7 +15,7 @@ const getAlertServiceMethod string = http.MethodGet
 const getAlertMethodSuccess int = 200
 
 func buildGetApiRequest(apiToken string, alertId int64) (*http.Request, error) {
-	baseUrl := client.GetLogzioBaseUrl();
+	baseUrl := client.GetLogzioBaseUrl()
 	req, err := http.NewRequest(getAlertServiceMethod, fmt.Sprintf(getAlertServiceUrl, baseUrl, alertId), nil)
 	logzio_client.AddHttpHeaders(apiToken, req)
 

@@ -7,36 +7,80 @@ import (
 )
 
 const (
-	fldEndpointId          string = "id"
-	fldEndpointType        string = "endpointType"
-	fldEndpointTitle       string = "title"
-	fldEndpointDescription string = "description"
-	fldEndpointUrl         string = "url"
-	endpointTypeSlack      string = "slack"
+	fldEndpointId            string = "id"
+	fldEndpointType          string = "endpointType"
+	fldEndpointTitle         string = "title"
+	fldEndpointDescription   string = "description"
+	fldEndpointUrl           string = "url"
+	fldEndpointMethod        string = "method"
+	fldEndpointHeaders       string = "headers"
+	fldEndpointBodyTemplate  string = "bodyTemplate"
+	fldEndpointServiceKey    string = "serviceKey"
+	fldEndpointApiToken      string = "apiToken"
+	fldEndpointAppKey        string = "appKey"
+	fldEndpointApiKey        string = "apiKey"
+	fldEndpointRoutingKey    string = "routingKey"
+	fldEndpointMessageType   string = "messageType"
+	fldEndpointServiceApiKey string = "serviceApiKey"
+
+	endpointTypeSlack     string = "slack"
+	endpointTypeCustom    string = "custom"
+	endpointTypePagerDuty string = "pager-duty"
+	endpointTypeBigPanda  string = "big-panda"
+	endpointTypeDataDog   string = "data-dog"
+	endpointTypeVictorOps string = "victorops"
 )
 
-type EndpointType struct {
-	Id           int64
-	EndpointType string
-	Title        string
-	Description  string
-	Url          string
-	Message      string
+type Endpoint struct {
+	Id            int64                  // all
+	EndpointType  string                 // all
+	Title         string                 // all
+	Description   string                 // all
+	Url           string                 // custom & slack
+	Method        string                 // custom
+	Headers       string                 // custom
+	BodyTemplate  map[string]interface{} // custom
+	Message       string                 // n.b. this is a hack to determine if there was an error (despite a 200 being returned)
+	ServiceKey    string                 // pager-duty
+	ApiToken      string                 // big-panda
+	AppKey        string                 // big-panda
+	ApiKey        string                 // data-dog
+	RoutingKey    string                 // victorops
+	MessageType   string                 // victorops
+	ServiceApiKey string                 // victorops
 }
 
-func jsonEndpointToEndpoint(jsonEndpoint map[string]interface{}) EndpointType {
-	endpoint := EndpointType{
+func jsonEndpointToEndpoint(jsonEndpoint map[string]interface{}) Endpoint {
+	endpoint := Endpoint{
 		Id:           int64(jsonEndpoint[fldEndpointId].(float64)),
 		EndpointType: jsonEndpoint[fldEndpointType].(string),
 		Title:        jsonEndpoint[fldEndpointTitle].(string),
 		Description:  jsonEndpoint[fldEndpointDescription].(string),
 	}
-	if endpointTypeSlack == strings.ToLower(endpoint.EndpointType) {
+
+	switch strings.ToLower(endpoint.EndpointType) {
+	case endpointTypeSlack:
 		endpoint.Url = jsonEndpoint[fldEndpointUrl].(string)
+	case endpointTypeCustom:
+		endpoint.Url = jsonEndpoint[fldEndpointUrl].(string)
+		endpoint.BodyTemplate = jsonEndpoint[fldEndpointBodyTemplate].(map[string]interface{})
+		endpoint.Headers = jsonEndpoint[fldEndpointHeaders].(string)
+		endpoint.Method = jsonEndpoint[fldEndpointMethod].(string)
+	case endpointTypePagerDuty:
+		endpoint.ServiceKey = jsonEndpoint[fldEndpointServiceKey].(string)
+	case endpointTypeBigPanda:
+		endpoint.ApiToken = jsonEndpoint[fldEndpointApiToken].(string)
+		endpoint.AppKey = jsonEndpoint[fldEndpointAppKey].(string)
+	case endpointTypeDataDog:
+		endpoint.ApiKey = jsonEndpoint[fldEndpointApiKey].(string)
+	case endpointTypeVictorOps:
+		endpoint.RoutingKey = jsonEndpoint[fldEndpointRoutingKey].(string)
+		endpoint.MessageType = jsonEndpoint[fldEndpointMessageType].(string)
+		endpoint.ServiceApiKey = jsonEndpoint[fldEndpointServiceApiKey].(string)
 	}
+
 	return endpoint
 }
-
 
 type Endpoints struct {
 	client.Client

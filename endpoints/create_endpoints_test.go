@@ -31,32 +31,32 @@ func TestMain(m *testing.M) {
 }
 
 // Tests create of an already existing endpoint (same titles)
-func TestCreateEndpointAlreadyExists(t *testing.T) {
-	var endpoint *EndpointType
+func TestEndpoints_CreateEndpointAlreadyExists(t *testing.T) {
+	var endpoint *Endpoint
 	var err error
 
 	assert.NotNil(t, endpoints)
 
 	if endpoints != nil {
-		endpoint, err = endpoints.createEndpoint(createDuplicateEndpoint(), "slack")
+		endpoint, err = endpoints.CreateEndpoint(createDuplicateEndpoint())
 		assert.Nil(t, err)
 		assert.NotNil(t, endpoint)
 		createdEndpoints = append(createdEndpoints, endpoint.Id)
 
-		endpoint, err = endpoints.createEndpoint(createDuplicateEndpoint(), "slack")
+		endpoint, err = endpoints.CreateEndpoint(createDuplicateEndpoint())
 		assert.Error(t, err)
 		assert.Nil(t, endpoint)
 	}
 }
 
-func TestCreateValidEndpoint(t *testing.T) {
-	var endpoint *EndpointType
+func TestEndpoints_CreateValidEndpoint(t *testing.T) {
+	var endpoint *Endpoint
 	var err error
 
 	assert.NotNil(t, endpoints)
 
 	if endpoints != nil {
-		endpoint, err = endpoints.createEndpoint(createValidEndpoint(), "slack")
+		endpoint, err = endpoints.CreateEndpoint(createValidEndpoint())
 		assert.Nil(t, err)
 		createdEndpoints = append(createdEndpoints, endpoint.Id)
 
@@ -65,7 +65,10 @@ func TestCreateValidEndpoint(t *testing.T) {
 		assert.NotNil(t, selectedEndpoint)
 		assert.Equal(t, endpoint.Id, selectedEndpoint.Id)
 
-		_, err = endpoints.updateEndpoint(endpoint.Id, updateValidEndpoint(), "slack")
+		_, err = endpoints.GetEndpointByName(createValidEndpoint().Title)
+		assert.NoError(t, err)
+
+		_, err = endpoints.UpdateEndpoint(endpoint.Id, updateValidEndpoint())
 		assert.NoError(t, err)
 
 		updatedEndpoint, err := endpoints.GetEndpoint(endpoint.Id)
@@ -77,43 +80,57 @@ func TestCreateValidEndpoint(t *testing.T) {
 	}
 }
 
-func TestCreateInvalidEndpoint(t *testing.T) {
+func TestEndpoints_ListEndpoints(t *testing.T) {
+	assert.NotNil(t, endpoints)
+
+	if endpoints != nil {
+		list, err := endpoints.ListEndpoints()
+		assert.NoError(t, err)
+		assert.True(t, len(list) > 0)
+	}
+}
+
+func TestEndpoints_CreateInvalidEndpoint(t *testing.T) {
 	if assert.NotNil(t, endpoints) {
 		invalidEndpoint := createInvalidEndpoint()
-		endpoint, err := endpoints.createEndpoint(invalidEndpoint, "slack")
+		endpoint, err := endpoints.CreateEndpoint(invalidEndpoint)
 		assert.Nil(t, endpoint)
 		assert.Error(t, err)
 	}
 }
 
-func createDuplicateEndpoint() EndpointType {
-	return EndpointType{
-		Title:       "duplicateEndpoint",
-		Description: "my description",
-		Url:         "https://this.is.com/some/webhook",
+func createDuplicateEndpoint() Endpoint {
+	return Endpoint{
+		Title:        "duplicateEndpoint",
+		Description:  "my description",
+		Url:          "https://this.is.com/some/webhook",
+		EndpointType: "slack",
 	}
 }
 
-func createValidEndpoint() EndpointType {
-	return EndpointType{
-		Title:       "validEndpoint",
-		Description: "my description",
-		Url:         "https://this.is.com/some/webhook",
+func createValidEndpoint() Endpoint {
+	return Endpoint{
+		Title:        "validEndpoint",
+		Description:  "my description",
+		Url:          "https://this.is.com/some/webhook",
+		EndpointType: "slack",
 	}
 }
 
-func createInvalidEndpoint() EndpointType {
-	return EndpointType{
-		Title:       "invalidEndpoint",
-		Description: "my description",
-		Url:         "https://someUrl",
+func createInvalidEndpoint() Endpoint {
+	return Endpoint{
+		Title:        "invalidEndpoint",
+		Description:  "my description",
+		Url:          "https://someUrl",
+		EndpointType: "slack",
 	}
 }
 
-func updateValidEndpoint() EndpointType {
-	return EndpointType{
-		Title:       "updatedEndpoint",
-		Description: "my updated description",
-		Url:         "https://this.is.com/some/other/webhook",
+func updateValidEndpoint() Endpoint {
+	return Endpoint{
+		Title:        "updatedEndpoint",
+		Description:  "my updated description",
+		Url:          "https://this.is.com/some/other/webhook",
+		EndpointType: "slack",
 	}
 }
