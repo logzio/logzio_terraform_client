@@ -30,33 +30,51 @@ func buildUpdateEndpointApiRequest(apiToken string, id int64, service string, js
 	return req, err
 }
 
-func buildUpdateEndpointRequest(endpoint Endpoint, service string) map[string]interface{} {
+func buildUpdateEndpointRequest(endpoint Endpoint) map[string]interface{} {
 	var updateEndpoint = map[string]interface{}{}
 
-	if endpointTypeSlack == service {
-		updateEndpoint[fldEndpointTitle] = endpoint.Title
-		updateEndpoint[fldEndpointDescription] = endpoint.Description
+	updateEndpoint[fldEndpointTitle] = endpoint.Title
+	updateEndpoint[fldEndpointDescription] = endpoint.Description
+
+	if endpointTypeSlack == endpoint.EndpointType {
 		updateEndpoint[fldEndpointUrl] = endpoint.Url
-	} else if endpointTypeCustom == service {
-		updateEndpoint[fldEndpointTitle] = endpoint.Title
-		updateEndpoint[fldEndpointDescription] = endpoint.Description
+	} else if endpointTypeCustom == endpoint.EndpointType {
 		updateEndpoint[fldEndpointUrl] = endpoint.Url
 		updateEndpoint[fldEndpointMethod] = endpoint.Method
 		updateEndpoint[fldEndpointHeaders] = endpoint.Headers
 		updateEndpoint[fldEndpointBodyTemplate] = endpoint.BodyTemplate
 	}
 
+	if endpoint.EndpointType == endpointTypePagerDuty {
+		updateEndpoint[fldEndpointServiceKey] = endpoint.ServiceKey
+	}
+
+	if endpoint.EndpointType == endpointTypeBigPanda {
+		updateEndpoint[fldEndpointApiToken] = endpoint.ApiToken
+		updateEndpoint[fldEndpointAppKey] = endpoint.AppKey
+	}
+
+	if endpoint.EndpointType == endpointTypeDataDog {
+		updateEndpoint[fldEndpointApiKey] = endpoint.ApiKey
+	}
+
+	if endpoint.EndpointType == endpointTypeVictorOps {
+		updateEndpoint[fldEndpointRoutingKey] = endpoint.RoutingKey
+		updateEndpoint[fldEndpointMessageType] = endpoint.MessageType
+		updateEndpoint[fldEndpointServiceApiKey] = endpoint.ServiceApiKey
+	}
+
 	return updateEndpoint
 }
 
-func (c *Endpoints) updateEndpoint(id int64, endpoint Endpoint, service string) (*Endpoint, error) {
+func (c *Endpoints) UpdateEndpoint(id int64, endpoint Endpoint) (*Endpoint, error) {
 	err := ValidateEndpointRequest(endpoint)
 	if err != nil {
 		return nil, err
 	}
 
-	updateEndpoint := buildUpdateEndpointRequest(endpoint, service)
-	req, _ := buildUpdateEndpointApiRequest(c.ApiToken, id, service, updateEndpoint)
+	updateEndpoint := buildUpdateEndpointRequest(endpoint)
+	req, _ := buildUpdateEndpointApiRequest(c.ApiToken, id, endpoint.EndpointType, updateEndpoint)
 
 	var httpClient http.Client
 	resp, _ := httpClient.Do(req)

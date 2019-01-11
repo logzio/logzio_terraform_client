@@ -20,15 +20,14 @@ const errorCreateEndpointApiCallFailed = "API call CreateEndpoint failed with st
 func buildCreateEndpointRequest(endpoint Endpoint) map[string]interface{} {
 	var createEndpoint = map[string]interface{}{}
 
+	createEndpoint[fldEndpointTitle] = endpoint.Title
+	createEndpoint[fldEndpointDescription] = endpoint.Description
+
 	if endpoint.EndpointType == endpointTypeSlack {
-		createEndpoint[fldEndpointTitle] = endpoint.Title
-		createEndpoint[fldEndpointDescription] = endpoint.Description
 		createEndpoint[fldEndpointUrl] = endpoint.Url
 	}
 
 	if endpoint.EndpointType == endpointTypeCustom {
-		createEndpoint[fldEndpointTitle] = endpoint.Title
-		createEndpoint[fldEndpointDescription] = endpoint.Description
 		createEndpoint[fldEndpointUrl] = endpoint.Url
 		createEndpoint[fldEndpointMethod] = endpoint.Method
 		createEndpoint[fldEndpointHeaders] = endpoint.Headers
@@ -36,15 +35,22 @@ func buildCreateEndpointRequest(endpoint Endpoint) map[string]interface{} {
 	}
 
 	if endpoint.EndpointType == endpointTypePagerDuty {
+		createEndpoint[fldEndpointServiceKey] = endpoint.ServiceKey
 	}
 
 	if endpoint.EndpointType == endpointTypeBigPanda {
+		createEndpoint[fldEndpointApiToken] = endpoint.ApiToken
+		createEndpoint[fldEndpointAppKey] = endpoint.AppKey
 	}
 
 	if endpoint.EndpointType == endpointTypeDataDog {
+		createEndpoint[fldEndpointApiKey] = endpoint.ApiKey
 	}
 
 	if endpoint.EndpointType == endpointTypeVictorOps {
+		createEndpoint[fldEndpointRoutingKey] = endpoint.RoutingKey
+		createEndpoint[fldEndpointMessageType] = endpoint.MessageType
+		createEndpoint[fldEndpointServiceApiKey] = endpoint.ServiceApiKey
 	}
 
 	return createEndpoint

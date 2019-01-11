@@ -93,3 +93,22 @@ func TestEndpoints_ValidateDataDog(t *testing.T) {
 	})
 	assert.Error(t, err)
 }
+
+func TestEndpoints_ValidateVictorOps(t *testing.T) {
+	var err error
+
+	err = ValidateEndpointRequest(Endpoint{
+		Title:        "title",
+		Description:  "description",
+		RoutingKey: "routingKey",
+		MessageType: "messageType",
+		ServiceApiKey: "serviceApiKey",
+		EndpointType: endpointTypeVictorOps,
+	})
+	assert.NoError(t, err)
+
+	err = ValidateEndpointRequest(Endpoint{
+		Title: "title",
+	})
+	assert.Error(t, err)
+}

@@ -14,7 +14,7 @@ const getEndpointsServiceUrl string = "%s/v1/endpoints/%d"
 const getEndpointsServiceMethod string = http.MethodGet
 const getEndpointsMethodSuccess int = 200
 
-const apiGetEndpointNoEndpoint = "no endpoint id"
+const apiGetEndpointNoEndpoint = "The endpoint doesn't exist"
 
 const errorGetEndpointApiCallFailed = "API call GetEndpoint failed with status code:%d, data:%s"
 const errorGetEndpointDoesntExist = "API call GetEndpoint failed as endpoint with id:%d doesn't exist, data:%s"

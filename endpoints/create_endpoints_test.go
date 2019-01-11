@@ -65,7 +65,10 @@ func TestEndpoints_CreateValidEndpoint(t *testing.T) {
 		assert.NotNil(t, selectedEndpoint)
 		assert.Equal(t, endpoint.Id, selectedEndpoint.Id)
 
-		_, err = endpoints.updateEndpoint(endpoint.Id, updateValidEndpoint(), "slack")
+		_, err = endpoints.GetEndpointByName(createValidEndpoint().Title)
+		assert.NoError(t, err)
+
+		_, err = endpoints.UpdateEndpoint(endpoint.Id, updateValidEndpoint())
 		assert.NoError(t, err)
 
 		updatedEndpoint, err := endpoints.GetEndpoint(endpoint.Id)
