@@ -22,7 +22,8 @@ const (
 	fldEndpointRoutingKey    string = "routingKey"
 	fldEndpointMessageType   string = "messageType"
 	fldEndpointServiceApiKey string = "serviceApiKey"
-
+)
+const (
 	endpointTypeSlack     string = "slack"
 	endpointTypeCustom    string = "custom"
 	endpointTypePagerDuty string = "pager-duty"
@@ -32,22 +33,22 @@ const (
 )
 
 type Endpoint struct {
-	Id            int64                  // all
-	EndpointType  string                 // all
-	Title         string                 // all
-	Description   string                 // all
-	Url           string                 // custom & slack
-	Method        string                 // custom
-	Headers       string                 // custom
-	BodyTemplate  map[string]interface{} // custom
-	Message       string                 // n.b. this is a hack to determine if there was an error (despite a 200 being returned)
-	ServiceKey    string                 // pager-duty
-	ApiToken      string                 // big-panda
-	AppKey        string                 // big-panda
-	ApiKey        string                 // data-dog
-	RoutingKey    string                 // victorops
-	MessageType   string                 // victorops
-	ServiceApiKey string                 // victorops
+	Id            int64             // all
+	EndpointType  string            // all
+	Title         string            // all
+	Description   string            // all
+	Url           string            // custom & slack
+	Method        string            // custom
+	Headers       map[string]string // custom
+	BodyTemplate  map[string]string // custom
+	Message       string            // n.b. this is a hack to determine if there was an error (despite a 200 being returned)
+	ServiceKey    string            // pager-duty
+	ApiToken      string            // big-panda
+	AppKey        string            // big-panda
+	ApiKey        string            // data-dog
+	RoutingKey    string            // victorops
+	MessageType   string            // victorops
+	ServiceApiKey string            // victorops
 }
 
 func jsonEndpointToEndpoint(jsonEndpoint map[string]interface{}) Endpoint {
@@ -63,8 +64,8 @@ func jsonEndpointToEndpoint(jsonEndpoint map[string]interface{}) Endpoint {
 		endpoint.Url = jsonEndpoint[fldEndpointUrl].(string)
 	case endpointTypeCustom:
 		endpoint.Url = jsonEndpoint[fldEndpointUrl].(string)
-		endpoint.BodyTemplate = jsonEndpoint[fldEndpointBodyTemplate].(map[string]interface{})
-		endpoint.Headers = jsonEndpoint[fldEndpointHeaders].(string)
+		endpoint.BodyTemplate = jsonEndpoint[fldEndpointBodyTemplate].(map[string]string)
+		endpoint.Headers = jsonEndpoint[fldEndpointHeaders].(map[string]string)
 		endpoint.Method = jsonEndpoint[fldEndpointMethod].(string)
 	case endpointTypePagerDuty:
 		endpoint.ServiceKey = jsonEndpoint[fldEndpointServiceKey].(string)

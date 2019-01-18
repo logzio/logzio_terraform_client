@@ -19,15 +19,14 @@ func TestEndpoints_buildCreateEndpointRequestSlack(t *testing.T) {
 	assert.NotContains(t, result, fldEndpointType)
 }
 
-
 func TestEndpoints_buildCreateEndpointRequestCustom(t *testing.T) {
 	result := buildCreateEndpointRequest(Endpoint{
 		Title:        "title",
 		Description:  "description",
 		Url:          "url",
 		Method:       "method",
-		Headers:      "headers",
-		BodyTemplate: map[string]interface{}{"key": "value"},
+		Headers:      map[string]string{"key": "value"},
+		BodyTemplate: map[string]string{"key": "value"},
 		EndpointType: endpointTypeCustom,
 	})
 
@@ -83,12 +82,12 @@ func TestEndpoints_buildCreateEndpointRequestDataDog(t *testing.T) {
 
 func TestEndpoints_buildCreateEndpointRequestVictorOps(t *testing.T) {
 	result := buildCreateEndpointRequest(Endpoint{
-		Title:        "title",
-		Description:  "description",
-		RoutingKey: "routingKey",
-		MessageType: "messageType",
+		Title:         "title",
+		Description:   "description",
+		RoutingKey:    "routingKey",
+		MessageType:   "messageType",
 		ServiceApiKey: "serviceApiKey",
-		EndpointType: endpointTypeVictorOps,
+		EndpointType:  endpointTypeVictorOps,
 	})
 	assert.Contains(t, result, fldEndpointTitle)
 	assert.Contains(t, result, fldEndpointDescription)

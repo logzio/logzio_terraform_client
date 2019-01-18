@@ -30,8 +30,8 @@ func TestEndpoints_ValidateCustomEndpoint(t *testing.T) {
 		Description:  "description",
 		Url:          "url",
 		Method:       "method",
-		Headers:      "headers",
-		BodyTemplate: map[string]interface{}{"key": "value"},
+		Headers:      map[string]string{"key": "value"},
+		BodyTemplate: map[string]string{"key": "value"},
 		EndpointType: endpointTypeCustom,
 	})
 	assert.NoError(t, err)
@@ -98,12 +98,12 @@ func TestEndpoints_ValidateVictorOps(t *testing.T) {
 	var err error
 
 	err = ValidateEndpointRequest(Endpoint{
-		Title:        "title",
-		Description:  "description",
-		RoutingKey: "routingKey",
-		MessageType: "messageType",
+		Title:         "title",
+		Description:   "description",
+		RoutingKey:    "routingKey",
+		MessageType:   "messageType",
 		ServiceApiKey: "serviceApiKey",
-		EndpointType: endpointTypeVictorOps,
+		EndpointType:  endpointTypeVictorOps,
 	})
 	assert.NoError(t, err)
 
