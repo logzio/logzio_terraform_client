@@ -1,6 +1,9 @@
 package endpoints
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 func validSlackEndpoint(endpointType Endpoint) bool {
 	return len(endpointType.Title) > 0 &&
@@ -39,27 +42,27 @@ func validVictorOpsEndpoint(endpointType Endpoint) bool {
 }
 
 func ValidateEndpointRequest(endpoint Endpoint) error {
-	if endpointTypeSlack == endpoint.EndpointType && validSlackEndpoint(endpoint) {
+	if strings.EqualFold(endpointTypeSlack, endpoint.EndpointType) && validSlackEndpoint(endpoint) {
 		return nil
 	}
 
-	if endpointTypeCustom == endpoint.EndpointType && validCustomEndpoint(endpoint) {
+	if strings.EqualFold(endpointTypeCustom, endpoint.EndpointType) && validCustomEndpoint(endpoint) {
 		return nil
 	}
 
-	if endpointTypePagerDuty == endpoint.EndpointType && validPagerDutyEndpoint(endpoint) {
+	if strings.EqualFold(endpointTypePagerDuty, endpoint.EndpointType) && validPagerDutyEndpoint(endpoint) {
 		return nil
 	}
 
-	if endpointTypeBigPanda == endpoint.EndpointType && validBigPandaEndpoint(endpoint) {
+	if strings.EqualFold(endpointTypeBigPanda, endpoint.EndpointType) && validBigPandaEndpoint(endpoint) {
 		return nil
 	}
 
-	if endpointTypeDataDog == endpoint.EndpointType && validDataDogEndpoint(endpoint) {
+	if strings.EqualFold(endpointTypeDataDog, endpoint.EndpointType) && validDataDogEndpoint(endpoint) {
 		return nil
 	}
 
-	if endpointTypeVictorOps == endpoint.EndpointType && validVictorOpsEndpoint(endpoint) {
+	if strings.EqualFold(endpointTypeVictorOps, endpoint.EndpointType) && validVictorOpsEndpoint(endpoint) {
 		return nil
 	}
 

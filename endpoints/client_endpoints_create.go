@@ -14,7 +14,7 @@ const createEndpointServiceUrl string = "%s/v1/endpoints/%s"
 const createEndpointServiceMethod string = http.MethodPost
 const createEndpointMethodSuccess int = 200
 
-const errorInvalidEndpointDefinition = "Endpoint definition %v is not valid for service %s"
+const errorInvalidEndpointDefinition = "endpoint definition %v is not valid for service %s"
 const errorCreateEndpointApiCallFailed = "API call CreateEndpoint failed with status code %d, data: %s"
 
 func buildCreateEndpointRequest(endpoint Endpoint) map[string]interface{} {
