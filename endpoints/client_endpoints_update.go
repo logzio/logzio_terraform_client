@@ -8,6 +8,7 @@ import (
 	"github.com/jonboydell/logzio_client/client"
 	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
 const updateEndpointServiceUrl string = "%s/v1/endpoints/%s/%d"
@@ -30,41 +31,35 @@ func buildUpdateEndpointApiRequest(apiToken string, id int64, service string, js
 	return req, err
 }
 
-func buildUpdateEndpointRequest(endpoint Endpoint) map[string]interface{} {
+func buildUpdateEndpointRequest(endpoint Endpoint) (map[string]interface{}, error) {
 	var updateEndpoint = map[string]interface{}{}
 
 	updateEndpoint[fldEndpointTitle] = endpoint.Title
 	updateEndpoint[fldEndpointDescription] = endpoint.Description
 
-	if endpointTypeSlack == endpoint.EndpointType {
+	if strings.EqualFold(endpointTypeSlack, endpoint.EndpointType) {
 		updateEndpoint[fldEndpointUrl] = endpoint.Url
-	} else if endpointTypeCustom == endpoint.EndpointType {
+	} else if strings.EqualFold(endpointTypeCustom, endpoint.EndpointType) {
 		updateEndpoint[fldEndpointUrl] = endpoint.Url
 		updateEndpoint[fldEndpointMethod] = endpoint.Method
 		updateEndpoint[fldEndpointHeaders] = endpoint.Headers
 		updateEndpoint[fldEndpointBodyTemplate] = endpoint.BodyTemplate
-	}
-
-	if endpoint.EndpointType == endpointTypePagerDuty {
+	} else if strings.EqualFold(endpoint.EndpointType, endpointTypePagerDuty) {
 		updateEndpoint[fldEndpointServiceKey] = endpoint.ServiceKey
-	}
-
-	if endpoint.EndpointType == endpointTypeBigPanda {
+	} else if strings.EqualFold(endpoint.EndpointType, endpointTypeBigPanda) {
 		updateEndpoint[fldEndpointApiToken] = endpoint.ApiToken
 		updateEndpoint[fldEndpointAppKey] = endpoint.AppKey
-	}
-
-	if endpoint.EndpointType == endpointTypeDataDog {
+	} else if strings.EqualFold(endpoint.EndpointType, endpointTypeDataDog) {
 		updateEndpoint[fldEndpointApiKey] = endpoint.ApiKey
-	}
-
-	if endpoint.EndpointType == endpointTypeVictorOps {
+	} else if strings.EqualFold(endpoint.EndpointType, endpointTypeVictorOps) {
 		updateEndpoint[fldEndpointRoutingKey] = endpoint.RoutingKey
 		updateEndpoint[fldEndpointMessageType] = endpoint.MessageType
 		updateEndpoint[fldEndpointServiceApiKey] = endpoint.ServiceApiKey
+	} else {
+		return nil, fmt.Errorf("don't recognise endpoint type %s", endpoint.EndpointType)
 	}
 
-	return updateEndpoint
+	return updateEndpoint, nil
 }
 
 func (c *Endpoints) UpdateEndpoint(id int64, endpoint Endpoint) (*Endpoint, error) {
@@ -73,7 +68,11 @@ func (c *Endpoints) UpdateEndpoint(id int64, endpoint Endpoint) (*Endpoint, erro
 		return nil, err
 	}
 
-	updateEndpoint := buildUpdateEndpointRequest(endpoint)
+	updateEndpoint, err := buildUpdateEndpointRequest(endpoint)
+	if err != nil {
+		return nil, err
+	}
+
 	req, _ := buildUpdateEndpointApiRequest(c.ApiToken, id, endpoint.EndpointType, updateEndpoint)
 
 	var httpClient http.Client
