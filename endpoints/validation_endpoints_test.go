@@ -31,7 +31,7 @@ func TestEndpoints_ValidateCustomEndpoint(t *testing.T) {
 		Url:          "url",
 		Method:       "method",
 		Headers:      map[string]string{"key": "value"},
-		BodyTemplate: map[string]string{"key": "value"},
+		BodyTemplate: "{\"hello\":\"there\"}",
 		EndpointType: endpointTypeCustom,
 	})
 	assert.NoError(t, err)

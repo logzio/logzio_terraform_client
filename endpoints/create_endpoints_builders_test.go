@@ -26,7 +26,7 @@ func TestEndpoints_buildCreateEndpointRequestCustom(t *testing.T) {
 		Url:          "url",
 		Method:       "method",
 		Headers:      map[string]string{"key": "value"},
-		BodyTemplate: map[string]string{"key": "value"},
+		BodyTemplate: "{ \"hello\" : \"there\"}",
 		EndpointType: endpointTypeCustom,
 	})
 

@@ -40,7 +40,7 @@ type Endpoint struct {
 	Url           string            // custom & slack
 	Method        string            // custom
 	Headers       map[string]string // custom
-	BodyTemplate  map[string]string // custom
+	BodyTemplate  string // custom
 	Message       string            // n.b. this is a hack to determine if there was an error (despite a 200 being returned)
 	ServiceKey    string            // pager-duty
 	ApiToken      string            // big-panda
@@ -64,7 +64,7 @@ func jsonEndpointToEndpoint(jsonEndpoint map[string]interface{}) Endpoint {
 		endpoint.Url = jsonEndpoint[fldEndpointUrl].(string)
 	case endpointTypeCustom:
 		endpoint.Url = jsonEndpoint[fldEndpointUrl].(string)
-		endpoint.BodyTemplate = jsonEndpoint[fldEndpointBodyTemplate].(map[string]string)
+		endpoint.BodyTemplate = jsonEndpoint[fldEndpointBodyTemplate].(string)
 		endpoint.Headers = jsonEndpoint[fldEndpointHeaders].(map[string]string)
 		endpoint.Method = jsonEndpoint[fldEndpointMethod].(string)
 	case endpointTypePagerDuty:
