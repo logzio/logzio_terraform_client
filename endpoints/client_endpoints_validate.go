@@ -13,8 +13,7 @@ func validSlackEndpoint(endpointType Endpoint) bool {
 func validCustomEndpoint(endpointType Endpoint) bool {
 	return len(endpointType.Title) > 0 &&
 		len(endpointType.Url) > 0 && len(endpointType.Description) > 0 &&
-		len(endpointType.Method) > 0 &&
-		len(endpointType.BodyTemplate) > 0
+		len(endpointType.Method) > 0
 }
 
 func validPagerDutyEndpoint(endpointType Endpoint) bool {
