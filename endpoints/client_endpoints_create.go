@@ -8,6 +8,7 @@ import (
 	"github.com/jonboydell/logzio_client/client"
 	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
 const createEndpointServiceUrl string = "%s/v1/endpoints/%s"
@@ -30,7 +31,13 @@ func buildCreateEndpointRequest(endpoint Endpoint) map[string]interface{} {
 	if endpoint.EndpointType == endpointTypeCustom {
 		createEndpoint[fldEndpointUrl] = endpoint.Url
 		createEndpoint[fldEndpointMethod] = endpoint.Method
-		createEndpoint[fldEndpointHeaders] = endpoint.Headers
+		headers := endpoint.Headers.(map[string]string)
+		headerStrings := []string{}
+		for k, v := range headers {
+			headerStrings = append(headerStrings, fmt.Sprintf("%s=%s", k, v))
+		}
+		headerString := strings.Trim(strings.Join(strings.Fields(fmt.Sprint(headerStrings)), ","), "[]")
+		createEndpoint[fldEndpointHeaders] = headerString
 		createEndpoint[fldEndpointBodyTemplate] = endpoint.BodyTemplate
 	}
 

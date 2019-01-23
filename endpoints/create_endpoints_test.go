@@ -99,6 +99,15 @@ func TestEndpoints_CreateInvalidEndpoint(t *testing.T) {
 	}
 }
 
+func TestEndpoints_CreateValidCustomEndpoint(t *testing.T) {
+	if assert.NotNil(t, endpoints) {
+		invalidEndpoint := createCustomEndpoint()
+		endpoint, err := endpoints.CreateEndpoint(invalidEndpoint)
+		assert.Nil(t, endpoint)
+		assert.Error(t, err)
+	}
+}
+
 func createDuplicateEndpoint() Endpoint {
 	return Endpoint{
 		Title:        "duplicateEndpoint",
@@ -132,5 +141,16 @@ func updateValidEndpoint() Endpoint {
 		Description:  "my updated description",
 		Url:          "https://this.is.com/some/other/webhook",
 		EndpointType: "slack",
+	}
+}
+
+func createCustomEndpoint() Endpoint {
+	return Endpoint{
+		Title:        "customEndpoint",
+		Description:  "my updated description",
+		Url:          "https://this.is.com/some/other/webhook",
+		EndpointType: "custom",
+		Headers: map[string]string{"hello":"there","header":"two"},
+		BodyTemplate: map[string]string{"hello":"there","header":"two"},
 	}
 }

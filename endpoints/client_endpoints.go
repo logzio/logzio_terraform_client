@@ -64,7 +64,7 @@ func jsonEndpointToEndpoint(jsonEndpoint map[string]interface{}) Endpoint {
 		endpoint.Url = jsonEndpoint[fldEndpointUrl].(string)
 	case endpointTypeCustom:
 		endpoint.Url = jsonEndpoint[fldEndpointUrl].(string)
-		endpoint.BodyTemplate = jsonEndpoint[fldEndpointBodyTemplate].(string)
+		endpoint.BodyTemplate = jsonEndpoint[fldEndpointBodyTemplate]
 		endpoint.Headers = jsonEndpoint[fldEndpointHeaders].(map[string]string)
 		endpoint.Method = jsonEndpoint[fldEndpointMethod].(string)
 	case endpointTypePagerDuty:
