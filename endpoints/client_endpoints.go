@@ -39,8 +39,8 @@ type Endpoint struct {
 	Description   string            // all
 	Url           string            // custom & slack
 	Method        string            // custom
-	Headers       interface{} // custom
-	BodyTemplate  interface{} // custom
+	Headers       map[string]string // custom
+	BodyTemplate  interface{}       // custom
 	Message       string            // n.b. this is a hack to determine if there was an error (despite a 200 being returned)
 	ServiceKey    string            // pager-duty
 	ApiToken      string            // big-panda

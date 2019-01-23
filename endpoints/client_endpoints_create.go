@@ -31,7 +31,7 @@ func buildCreateEndpointRequest(endpoint Endpoint) map[string]interface{} {
 	if endpoint.EndpointType == endpointTypeCustom {
 		createEndpoint[fldEndpointUrl] = endpoint.Url
 		createEndpoint[fldEndpointMethod] = endpoint.Method
-		headers := endpoint.Headers.(map[string]string)
+		headers := endpoint.Headers
 		headerStrings := []string{}
 		for k, v := range headers {
 			headerStrings = append(headerStrings, fmt.Sprintf("%s=%s", k, v))
