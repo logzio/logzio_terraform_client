@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestEndpoints_ValidateSlackEndpoint(t *testing.T) {
+func TestEndpointsValidateSlackEndpoint(t *testing.T) {
 	var err error
 
 	err = ValidateEndpointRequest(Endpoint{
@@ -22,7 +22,7 @@ func TestEndpoints_ValidateSlackEndpoint(t *testing.T) {
 	assert.Error(t, err)
 }
 
-func TestEndpoints_ValidateCustomEndpoint(t *testing.T) {
+func TestEndpointsValidateCustomEndpoint(t *testing.T) {
 	var err error
 
 	err = ValidateEndpointRequest(Endpoint{
@@ -42,7 +42,7 @@ func TestEndpoints_ValidateCustomEndpoint(t *testing.T) {
 	assert.Error(t, err)
 }
 
-func TestEndpoints_ValidatePagerDuty(t *testing.T) {
+func TestEndpointsValidatePagerDuty(t *testing.T) {
 	var err error
 
 	err = ValidateEndpointRequest(Endpoint{
@@ -59,7 +59,7 @@ func TestEndpoints_ValidatePagerDuty(t *testing.T) {
 	assert.Error(t, err)
 }
 
-func TestEndpoints_ValidateBigPanda(t *testing.T) {
+func TestEndpointsValidateBigPanda(t *testing.T) {
 	var err error
 
 	err = ValidateEndpointRequest(Endpoint{
@@ -77,7 +77,7 @@ func TestEndpoints_ValidateBigPanda(t *testing.T) {
 	assert.Error(t, err)
 }
 
-func TestEndpoints_ValidateDataDog(t *testing.T) {
+func TestEndpointsValidateDataDog(t *testing.T) {
 	var err error
 
 	err = ValidateEndpointRequest(Endpoint{
@@ -94,7 +94,7 @@ func TestEndpoints_ValidateDataDog(t *testing.T) {
 	assert.Error(t, err)
 }
 
-func TestEndpoints_ValidateVictorOps(t *testing.T) {
+func TestEndpointsValidateVictorOps(t *testing.T) {
 	var err error
 
 	err = ValidateEndpointRequest(Endpoint{

@@ -3,7 +3,6 @@ package endpoints
 import (
 	"github.com/jonboydell/logzio_client/test_utils"
 	"github.com/stretchr/testify/assert"
-	"os"
 	"testing"
 )
 
@@ -23,17 +22,12 @@ func shutdown() {
 	}
 }
 
-func TestMain(m *testing.M) {
-	setup()
-	code := m.Run()
-	shutdown()
-	os.Exit(code)
-}
-
 // Tests create of an already existing endpoint (same titles)
-func TestEndpoints_CreateEndpointAlreadyExists(t *testing.T) {
+func TestEndpointsCreateEndpointAlreadyExists(t *testing.T) {
 	var endpoint *Endpoint
 	var err error
+
+	setup()
 
 	assert.NotNil(t, endpoints)
 
@@ -47,11 +41,15 @@ func TestEndpoints_CreateEndpointAlreadyExists(t *testing.T) {
 		assert.Error(t, err)
 		assert.Nil(t, endpoint)
 	}
+
+	shutdown()
 }
 
-func TestEndpoints_CreateValidEndpoint(t *testing.T) {
+func TestEndpointsCreateValidEndpoint(t *testing.T) {
 	var endpoint *Endpoint
 	var err error
+
+	setup()
 
 	assert.NotNil(t, endpoints)
 
@@ -78,19 +76,28 @@ func TestEndpoints_CreateValidEndpoint(t *testing.T) {
 		assert.Equal(t, updateValidEndpoint().Url, updatedEndpoint.Url)
 		assert.Equal(t, updateValidEndpoint().Description, updatedEndpoint.Description)
 	}
+
+	shutdown()
 }
 
-func TestEndpoints_ListEndpoints(t *testing.T) {
+func TestEndpointsListEndpoints(t *testing.T) {
 	assert.NotNil(t, endpoints)
 
+	setup()
+
 	if endpoints != nil {
+		_, err := endpoints.CreateEndpoint(createValidEndpoint())
 		list, err := endpoints.ListEndpoints()
 		assert.NoError(t, err)
 		assert.True(t, len(list) > 0)
 	}
+
+	shutdown()
 }
 
-func TestEndpoints_CreateInvalidEndpoint(t *testing.T) {
+func TestEndpointsCreateInvalidEndpoint(t *testing.T) {
+
+	setup()
 	if assert.NotNil(t, endpoints) {
 		invalidEndpoint := createInvalidEndpoint()
 		endpoint, err := endpoints.CreateEndpoint(invalidEndpoint)
@@ -99,7 +106,7 @@ func TestEndpoints_CreateInvalidEndpoint(t *testing.T) {
 	}
 }
 
-func TestEndpoints_CreateValidCustomEndpoint(t *testing.T) {
+func TestEndpointsCreateValidCustomEndpoint(t *testing.T) {
 	setup()
 
 	if assert.NotNil(t, endpoints) {

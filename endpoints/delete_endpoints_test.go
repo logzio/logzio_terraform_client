@@ -9,6 +9,8 @@ func TestEndpoints_CreateDeleteValidEndpoint(t *testing.T) {
 	var endpoint *Endpoint
 	var err error
 
+	setup()
+
 	assert.NotNil(t, endpoints)
 
 	if endpoints != nil {
@@ -21,6 +23,8 @@ func TestEndpoints_CreateDeleteValidEndpoint(t *testing.T) {
 		_, err = endpoints.GetEndpoint(endpoint.Id)
 		assert.Error(t, err)
 	}
+
+	shutdown()
 }
 
 func deleteValidEndpoint() Endpoint {
