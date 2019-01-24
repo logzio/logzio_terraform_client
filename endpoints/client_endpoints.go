@@ -65,7 +65,14 @@ func jsonEndpointToEndpoint(jsonEndpoint map[string]interface{}) Endpoint {
 	case endpointTypeCustom:
 		endpoint.Url = jsonEndpoint[fldEndpointUrl].(string)
 		endpoint.BodyTemplate = jsonEndpoint[fldEndpointBodyTemplate]
-		endpoint.Headers = jsonEndpoint[fldEndpointHeaders].(map[string]string)
+		headerMap := make(map[string]string)
+		headerString := jsonEndpoint[fldEndpointHeaders].(string)
+		headers := strings.Split(headerString, ",")
+		for _, header := range headers {
+			kv := strings.Split(header, "=")
+			headerMap[kv[0]] = kv[1]
+		}
+		endpoint.Headers = headerMap
 		endpoint.Method = jsonEndpoint[fldEndpointMethod].(string)
 	case endpointTypePagerDuty:
 		endpoint.ServiceKey = jsonEndpoint[fldEndpointServiceKey].(string)

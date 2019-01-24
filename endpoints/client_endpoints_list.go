@@ -48,12 +48,5 @@ func (c *Endpoints) ListEndpoints() ([]Endpoint, error) {
 		arr = append(arr, endpoint)
 	}
 
-	/*for x := 0; x < len(jsonResponse); x++ {
-		var jsonEndpoint map[string]interface{}
-		jsonEndpoint = jsonResponse[x].(map[string]interface{})
-		endpoint := jsonEndpointToEndpoint(jsonEndpoint)
-		arr = append(arr, endpoint)
-	}*/
-
 	return arr, nil
 }

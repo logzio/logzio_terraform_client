@@ -100,11 +100,13 @@ func TestEndpoints_CreateInvalidEndpoint(t *testing.T) {
 }
 
 func TestEndpoints_CreateValidCustomEndpoint(t *testing.T) {
+	setup()
+
 	if assert.NotNil(t, endpoints) {
-		invalidEndpoint := createCustomEndpoint()
-		endpoint, err := endpoints.CreateEndpoint(invalidEndpoint)
-		assert.Nil(t, endpoint)
-		assert.Error(t, err)
+		customEndpoint := createCustomEndpoint()
+		endpoint, err := endpoints.CreateEndpoint(customEndpoint)
+		assert.NotNil(t, endpoint)
+		assert.NoError(t, err)
 	}
 }
 
@@ -147,6 +149,7 @@ func updateValidEndpoint() Endpoint {
 func createCustomEndpoint() Endpoint {
 	return Endpoint{
 		Title:        "customEndpoint",
+		Method: "POST",
 		Description:  "my updated description",
 		Url:          "https://this.is.com/some/other/webhook",
 		EndpointType: "custom",
