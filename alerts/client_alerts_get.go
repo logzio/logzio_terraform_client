@@ -1,27 +1,29 @@
-package logzio_client
+package alerts
 
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/jonboydell/logzio_client"
+	"github.com/jonboydell/logzio_client/client"
 	"io/ioutil"
 	"net/http"
 	"strings"
 )
 
-const getServiceUrl string = "%s/v1/alerts/%d"
-const getServiceMethod string = http.MethodGet
-const getMethodSuccess int = 200
+const getAlertServiceUrl string = "%s/v1/alerts/%d"
+const getAlertServiceMethod string = http.MethodGet
+const getAlertMethodSuccess int = 200
 
 func buildGetApiRequest(apiToken string, alertId int64) (*http.Request, error) {
-	baseUrl := getLogzioBaseUrl()
-	req, err := http.NewRequest(getServiceMethod, fmt.Sprintf(getServiceUrl, baseUrl, alertId), nil)
-	addHttpHeaders(apiToken, req)
+	baseUrl := client.GetLogzioBaseUrl()
+	req, err := http.NewRequest(getAlertServiceMethod, fmt.Sprintf(getAlertServiceUrl, baseUrl, alertId), nil)
+	logzio_client.AddHttpHeaders(apiToken, req)
 
 	return req, err
 }
 
-func (c *Client) GetAlert(alertId int64) (*AlertType, error) {
-	req, _ := buildGetApiRequest(c.apiToken, alertId)
+func (c *Alerts) GetAlert(alertId int64) (*AlertType, error) {
+	req, _ := buildGetApiRequest(c.ApiToken, alertId)
 
 	var client http.Client
 	resp, err := client.Do(req)
@@ -30,9 +32,8 @@ func (c *Client) GetAlert(alertId int64) (*AlertType, error) {
 	}
 
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
-	logSomething("GetAlert::Response", fmt.Sprintf("%s", jsonBytes))
 
-	if !checkValidStatus(resp, []int{getMethodSuccess}) {
+	if !logzio_client.CheckValidStatus(resp, []int{getAlertMethodSuccess}) {
 		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "GetAlert", resp.StatusCode, jsonBytes)
 	}
 

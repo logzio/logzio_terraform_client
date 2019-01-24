@@ -23,7 +23,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n   \"alertNotificationEndpoints\": [],\n   \"description\": \"\",\n   \"groupByAggregationFields\": null,\n   \"isEnabled\": true,\n   \"notificationEmails\": [\n     \"{{email_address}}\"\n   ],\n   \"operation\": \"GREATER_THAN\",\n   \"query_string\": \"loglevel:ERROR\",\n   \"searchTimeFrameMinutes\": 5,\n   \"severityThresholdTiers\": [],\n   \"suppressNotificationMinutes\": 5,\n   \"title\": \"hello\",\n    \"valueAggregationField\": null,\n    \"valueAggregationType\": \"NONE\"\n }"
+					"raw": "{\n   \"alertNotificationEndpoints\": [],\n   \"description\": \"\",\n   \"groupByAggregationFields\": null,\n   \"isEnabled\": true,\n   \"notificationEmails\": [\n     \"{{email_address}}\"\n   ],\n   \"query_string\": \"loglevel:ERROR\",\n   \"searchTimeFrameMinutes\": 5,\n   \"operation\":\"GREATER_THAN\",\n   \"severityThresholdTiers\": [\n   \t{\n   \t\t\"severity\": \"HIGH\",\n   \t\t\"threshold\": 10\n   \t}],\n   \"suppressNotificationMinutes\": 5,\n   \"title\": \"hello\",\n    \"valueAggregationField\": null,\n    \"valueAggregationType\": \"NONE\"\n }"
 				},
 				"url": {
 					"raw": "https://api.logz.io/v1/alerts",
@@ -62,12 +62,10 @@
 					"raw": "{\n\t\"title\": \"hello\",\n\t\"query_string\":\"error:TRUE\",\n\t\"notificationEmails\": [\"support@massive.co\"]\n}"
 				},
 				"url": {
-					"raw": "https://api.logz.io/v1/alerts/:id",
-					"protocol": "https",
+					"raw": "{{protocol}}://{{host_name}}/v1/alerts/:id",
+					"protocol": "{{protocol}}",
 					"host": [
-						"api",
-						"logz",
-						"io"
+						"{{host_name}}"
 					],
 					"path": [
 						"v1",
@@ -108,7 +106,85 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "https://api.logz.io/v1/alerts",
+					"raw": "{{protocol}}://{{host_name}}/v1/alerts",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{host_name}}"
+					],
+					"path": [
+						"v1",
+						"alerts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Alert::Get",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-API-TOKEN",
+						"type": "text",
+						"value": "{{x_api_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host_name}}/v1/alerts/:id",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{host_name}}"
+					],
+					"path": [
+						"v1",
+						"alerts",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "45041"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Endpoints::Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-API-TOKEN",
+						"type": "text",
+						"value": "{{x_api_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Title\":\"my endpoint\",\n\t\"Description\": \"my description\",\n\t\"EndpointType\": \"Slack\",\n\t\"Url\": \"https://this.is.com/some/webhook\"\n}\n"
+				},
+				"url": {
+					"raw": "https://api.logz.io/v1/endpoints",
 					"protocol": "https",
 					"host": [
 						"api",
@@ -117,7 +193,157 @@
 					],
 					"path": [
 						"v1",
+						"endpoints"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Endpoints::List",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-API-TOKEN",
+						"type": "text",
+						"value": "{{x_api_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host_name}}/v1/alerts",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{host_name}}"
+					],
+					"path": [
+						"v1",
 						"alerts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Endpoints::Delete",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "X-API-TOKEN",
+						"type": "text",
+						"value": "{{x_api_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\": \"hello\",\n\t\"query_string\":\"error:TRUE\",\n\t\"notificationEmails\": [\"support@massive.co\"]\n}"
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host_name}}/v1/alerts/:id",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{host_name}}"
+					],
+					"path": [
+						"v1",
+						"alerts",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Endpoints::Update",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-API-TOKEN",
+						"type": "text",
+						"value": "{{x_api_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Title\":\"my endpoint\",\n\t\"Description\": \"my description\",\n\t\"EndpointType\": \"Slack\",\n\t\"Url\": \"https://this.is.com/some/webhook\"\n}\n"
+				},
+				"url": {
+					"raw": "https://api.logz.io/v1/endpoints",
+					"protocol": "https",
+					"host": [
+						"api",
+						"logz",
+						"io"
+					],
+					"path": [
+						"v1",
+						"endpoints"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Endpoints::Get",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-API-TOKEN",
+						"type": "text",
+						"value": "{{x_api_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Title\":\"my endpoint\",\n\t\"Description\": \"my description\",\n\t\"EndpointType\": \"Slack\",\n\t\"Url\": \"https://this.is.com/some/webhook\"\n}\n"
+				},
+				"url": {
+					"raw": "https://api.logz.io/v1/endpoints",
+					"protocol": "https",
+					"host": [
+						"api",
+						"logz",
+						"io"
+					],
+					"path": [
+						"v1",
+						"endpoints"
 					]
 				}
 			},
