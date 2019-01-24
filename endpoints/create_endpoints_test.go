@@ -86,10 +86,11 @@ func TestEndpointsListEndpoints(t *testing.T) {
 	setup()
 
 	if endpoints != nil {
-		_, err := endpoints.CreateEndpoint(createValidEndpoint())
+		endpoint, err := endpoints.CreateEndpoint(createValidEndpoint())
 		list, err := endpoints.ListEndpoints()
 		assert.NoError(t, err)
 		assert.True(t, len(list) > 0)
+		createdEndpoints = append(createdEndpoints, endpoint.Id)
 	}
 
 	shutdown()
@@ -114,7 +115,11 @@ func TestEndpointsCreateValidCustomEndpoint(t *testing.T) {
 		endpoint, err := endpoints.CreateEndpoint(customEndpoint)
 		assert.NotNil(t, endpoint)
 		assert.NoError(t, err)
+		createdEndpoints = append(createdEndpoints, endpoint.Id)
 	}
+
+	shutdown()
+
 }
 
 func createDuplicateEndpoint() Endpoint {
