@@ -10,7 +10,7 @@ func TestEndpoints_buildCreateEndpointRequestSlack(t *testing.T) {
 		Title:        "title",
 		Description:  "description",
 		Url:          "url",
-		EndpointType: endpointTypeSlack,
+		EndpointType: EndpointTypeSlack,
 	})
 
 	assert.Contains(t, result, fldEndpointTitle)
@@ -27,7 +27,7 @@ func TestEndpoints_buildCreateEndpointRequestCustom(t *testing.T) {
 		Method:       "method",
 		Headers:      map[string]string{"key": "value"},
 		BodyTemplate: "{ \"hello\" : \"there\"}",
-		EndpointType: endpointTypeCustom,
+		EndpointType: EndpointTypeCustom,
 	})
 
 	assert.Contains(t, result, fldEndpointTitle)
@@ -44,7 +44,7 @@ func TestEndpoints_buildCreateEndpointRequestPagerDuty(t *testing.T) {
 		Title:        "title",
 		Description:  "description",
 		ServiceKey:   "serviceKey",
-		EndpointType: endpointTypePagerDuty,
+		EndpointType: EndpointTypePagerDuty,
 	})
 	assert.Contains(t, result, fldEndpointTitle)
 	assert.Contains(t, result, fldEndpointDescription)
@@ -58,7 +58,7 @@ func TestEndpoints_buildCreateEndpointRequestBigPanda(t *testing.T) {
 		Description:  "description",
 		ApiToken:     "ApiToken",
 		AppKey:       "AppKey",
-		EndpointType: endpointTypeBigPanda,
+		EndpointType: EndpointTypeBigPanda,
 	})
 	assert.Contains(t, result, fldEndpointTitle)
 	assert.Contains(t, result, fldEndpointDescription)
@@ -72,7 +72,7 @@ func TestEndpoints_buildCreateEndpointRequestDataDog(t *testing.T) {
 		Title:        "title",
 		Description:  "description",
 		ApiKey:       "ApiKey",
-		EndpointType: endpointTypeDataDog,
+		EndpointType: EndpointTypeDataDog,
 	})
 	assert.Contains(t, result, fldEndpointTitle)
 	assert.Contains(t, result, fldEndpointDescription)
@@ -87,7 +87,7 @@ func TestEndpoints_buildCreateEndpointRequestVictorOps(t *testing.T) {
 		RoutingKey:    "routingKey",
 		MessageType:   "messageType",
 		ServiceApiKey: "serviceApiKey",
-		EndpointType:  endpointTypeVictorOps,
+		EndpointType:  EndpointTypeVictorOps,
 	})
 	assert.Contains(t, result, fldEndpointTitle)
 	assert.Contains(t, result, fldEndpointDescription)

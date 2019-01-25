@@ -41,27 +41,27 @@ func validVictorOpsEndpoint(endpointType Endpoint) bool {
 }
 
 func ValidateEndpointRequest(endpoint Endpoint) error {
-	if strings.EqualFold(endpointTypeSlack, endpoint.EndpointType) && validSlackEndpoint(endpoint) {
+	if strings.EqualFold(EndpointTypeSlack, endpoint.EndpointType) && validSlackEndpoint(endpoint) {
 		return nil
 	}
 
-	if strings.EqualFold(endpointTypeCustom, endpoint.EndpointType) && validCustomEndpoint(endpoint) {
+	if strings.EqualFold(EndpointTypeCustom, endpoint.EndpointType) && validCustomEndpoint(endpoint) {
 		return nil
 	}
 
-	if strings.EqualFold(endpointTypePagerDuty, endpoint.EndpointType) && validPagerDutyEndpoint(endpoint) {
+	if strings.EqualFold(EndpointTypePagerDuty, endpoint.EndpointType) && validPagerDutyEndpoint(endpoint) {
 		return nil
 	}
 
-	if strings.EqualFold(endpointTypeBigPanda, endpoint.EndpointType) && validBigPandaEndpoint(endpoint) {
+	if strings.EqualFold(EndpointTypeBigPanda, endpoint.EndpointType) && validBigPandaEndpoint(endpoint) {
 		return nil
 	}
 
-	if strings.EqualFold(endpointTypeDataDog, endpoint.EndpointType) && validDataDogEndpoint(endpoint) {
+	if strings.EqualFold(EndpointTypeDataDog, endpoint.EndpointType) && validDataDogEndpoint(endpoint) {
 		return nil
 	}
 
-	if strings.EqualFold(endpointTypeVictorOps, endpoint.EndpointType) && validVictorOpsEndpoint(endpoint) {
+	if strings.EqualFold(EndpointTypeVictorOps, endpoint.EndpointType) && validVictorOpsEndpoint(endpoint) {
 		return nil
 	}
 

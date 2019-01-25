@@ -37,21 +37,21 @@ func buildUpdateEndpointRequest(endpoint Endpoint) (map[string]interface{}, erro
 	updateEndpoint[fldEndpointTitle] = endpoint.Title
 	updateEndpoint[fldEndpointDescription] = endpoint.Description
 
-	if strings.EqualFold(endpointTypeSlack, endpoint.EndpointType) {
+	if strings.EqualFold(EndpointTypeSlack, endpoint.EndpointType) {
 		updateEndpoint[fldEndpointUrl] = endpoint.Url
-	} else if strings.EqualFold(endpointTypeCustom, endpoint.EndpointType) {
+	} else if strings.EqualFold(EndpointTypeCustom, endpoint.EndpointType) {
 		updateEndpoint[fldEndpointUrl] = endpoint.Url
 		updateEndpoint[fldEndpointMethod] = endpoint.Method
 		updateEndpoint[fldEndpointHeaders] = endpoint.Headers
 		updateEndpoint[fldEndpointBodyTemplate] = endpoint.BodyTemplate
-	} else if strings.EqualFold(endpoint.EndpointType, endpointTypePagerDuty) {
+	} else if strings.EqualFold(endpoint.EndpointType, EndpointTypePagerDuty) {
 		updateEndpoint[fldEndpointServiceKey] = endpoint.ServiceKey
-	} else if strings.EqualFold(endpoint.EndpointType, endpointTypeBigPanda) {
+	} else if strings.EqualFold(endpoint.EndpointType, EndpointTypeBigPanda) {
 		updateEndpoint[fldEndpointApiToken] = endpoint.ApiToken
 		updateEndpoint[fldEndpointAppKey] = endpoint.AppKey
-	} else if strings.EqualFold(endpoint.EndpointType, endpointTypeDataDog) {
+	} else if strings.EqualFold(endpoint.EndpointType, EndpointTypeDataDog) {
 		updateEndpoint[fldEndpointApiKey] = endpoint.ApiKey
-	} else if strings.EqualFold(endpoint.EndpointType, endpointTypeVictorOps) {
+	} else if strings.EqualFold(endpoint.EndpointType, EndpointTypeVictorOps) {
 		updateEndpoint[fldEndpointRoutingKey] = endpoint.RoutingKey
 		updateEndpoint[fldEndpointMessageType] = endpoint.MessageType
 		updateEndpoint[fldEndpointServiceApiKey] = endpoint.ServiceApiKey

@@ -122,6 +122,21 @@ func TestEndpointsCreateValidCustomEndpoint(t *testing.T) {
 
 }
 
+func TestEndpointsCreateValidPagerDutyEndpoint(t *testing.T) {
+	setup()
+
+	if assert.NotNil(t, endpoints) {
+		customEndpoint := createPagerDutyEndpoint()
+		endpoint, err := endpoints.CreateEndpoint(customEndpoint)
+		assert.NotNil(t, endpoint)
+		assert.NoError(t, err)
+		createdEndpoints = append(createdEndpoints, endpoint.Id)
+	}
+
+	shutdown()
+
+}
+
 func createDuplicateEndpoint() Endpoint {
 	return Endpoint{
 		Title:        "duplicateEndpoint",
@@ -167,5 +182,14 @@ func createCustomEndpoint() Endpoint {
 		EndpointType: "custom",
 		Headers: map[string]string{"hello":"there","header":"two"},
 		BodyTemplate: map[string]string{"hello":"there","header":"two"},
+	}
+}
+
+func createPagerDutyEndpoint() Endpoint {
+	return Endpoint{
+		Title:        "validEndpoint",
+		Description:  "my description",
+		EndpointType: "pager-duty",
+		ServiceKey: "my_service_key",
 	}
 }

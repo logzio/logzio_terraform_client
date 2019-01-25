@@ -24,12 +24,12 @@ const (
 	fldEndpointServiceApiKey string = "serviceApiKey"
 )
 const (
-	endpointTypeSlack     string = "slack"
-	endpointTypeCustom    string = "custom"
-	endpointTypePagerDuty string = "pager-duty"
-	endpointTypeBigPanda  string = "big-panda"
-	endpointTypeDataDog   string = "data-dog"
-	endpointTypeVictorOps string = "victorops"
+	EndpointTypeSlack     string = "slack"
+	EndpointTypeCustom    string = "custom"
+	EndpointTypePagerDuty string = "pager-duty"
+	EndpointTypeBigPanda  string = "big-panda"
+	EndpointTypeDataDog   string = "data-dog"
+	EndpointTypeVictorOps string = "victorops"
 )
 
 type Endpoint struct {
@@ -60,9 +60,9 @@ func jsonEndpointToEndpoint(jsonEndpoint map[string]interface{}) Endpoint {
 	}
 
 	switch strings.ToLower(endpoint.EndpointType) {
-	case endpointTypeSlack:
+	case EndpointTypeSlack:
 		endpoint.Url = jsonEndpoint[fldEndpointUrl].(string)
-	case endpointTypeCustom:
+	case EndpointTypeCustom:
 		endpoint.Url = jsonEndpoint[fldEndpointUrl].(string)
 		endpoint.BodyTemplate = jsonEndpoint[fldEndpointBodyTemplate]
 		headerMap := make(map[string]string)
@@ -74,14 +74,14 @@ func jsonEndpointToEndpoint(jsonEndpoint map[string]interface{}) Endpoint {
 		}
 		endpoint.Headers = headerMap
 		endpoint.Method = jsonEndpoint[fldEndpointMethod].(string)
-	case endpointTypePagerDuty:
+	case EndpointTypePagerDuty:
 		endpoint.ServiceKey = jsonEndpoint[fldEndpointServiceKey].(string)
-	case endpointTypeBigPanda:
+	case EndpointTypeBigPanda:
 		endpoint.ApiToken = jsonEndpoint[fldEndpointApiToken].(string)
 		endpoint.AppKey = jsonEndpoint[fldEndpointAppKey].(string)
-	case endpointTypeDataDog:
+	case EndpointTypeDataDog:
 		endpoint.ApiKey = jsonEndpoint[fldEndpointApiKey].(string)
-	case endpointTypeVictorOps:
+	case EndpointTypeVictorOps:
 		endpoint.RoutingKey = jsonEndpoint[fldEndpointRoutingKey].(string)
 		endpoint.MessageType = jsonEndpoint[fldEndpointMessageType].(string)
 		endpoint.ServiceApiKey = jsonEndpoint[fldEndpointServiceApiKey].(string)

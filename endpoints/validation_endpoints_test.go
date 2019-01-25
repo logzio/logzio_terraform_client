@@ -12,7 +12,7 @@ func TestEndpointsValidateSlackEndpoint(t *testing.T) {
 		Title:        "title",
 		Description:  "description",
 		Url:          "url",
-		EndpointType: endpointTypeSlack,
+		EndpointType: EndpointTypeSlack,
 	})
 	assert.NoError(t, err)
 
@@ -32,7 +32,7 @@ func TestEndpointsValidateCustomEndpoint(t *testing.T) {
 		Method:       "method",
 		Headers:      map[string]string{"key": "value"},
 		BodyTemplate: "{\"hello\":\"there\"}",
-		EndpointType: endpointTypeCustom,
+		EndpointType: EndpointTypeCustom,
 	})
 	assert.NoError(t, err)
 
@@ -49,7 +49,7 @@ func TestEndpointsValidatePagerDuty(t *testing.T) {
 		Title:        "title",
 		Description:  "description",
 		ServiceKey:   "serviceKey",
-		EndpointType: endpointTypePagerDuty,
+		EndpointType: EndpointTypePagerDuty,
 	})
 	assert.NoError(t, err)
 
@@ -67,7 +67,7 @@ func TestEndpointsValidateBigPanda(t *testing.T) {
 		Description:  "description",
 		ApiToken:     "ApiToken",
 		AppKey:       "AppKey",
-		EndpointType: endpointTypeBigPanda,
+		EndpointType: EndpointTypeBigPanda,
 	})
 	assert.NoError(t, err)
 
@@ -84,7 +84,7 @@ func TestEndpointsValidateDataDog(t *testing.T) {
 		Title:        "title",
 		Description:  "description",
 		ApiKey:       "ApiKey",
-		EndpointType: endpointTypeDataDog,
+		EndpointType: EndpointTypeDataDog,
 	})
 	assert.NoError(t, err)
 
@@ -103,7 +103,7 @@ func TestEndpointsValidateVictorOps(t *testing.T) {
 		RoutingKey:    "routingKey",
 		MessageType:   "messageType",
 		ServiceApiKey: "serviceApiKey",
-		EndpointType:  endpointTypeVictorOps,
+		EndpointType:  EndpointTypeVictorOps,
 	})
 	assert.NoError(t, err)
 

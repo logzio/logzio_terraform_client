@@ -24,11 +24,11 @@ func buildCreateEndpointRequest(endpoint Endpoint) map[string]interface{} {
 	createEndpoint[fldEndpointTitle] = endpoint.Title
 	createEndpoint[fldEndpointDescription] = endpoint.Description
 
-	if endpoint.EndpointType == endpointTypeSlack {
+	if endpoint.EndpointType == EndpointTypeSlack {
 		createEndpoint[fldEndpointUrl] = endpoint.Url
 	}
 
-	if endpoint.EndpointType == endpointTypeCustom {
+	if endpoint.EndpointType == EndpointTypeCustom {
 		createEndpoint[fldEndpointUrl] = endpoint.Url
 		createEndpoint[fldEndpointMethod] = endpoint.Method
 		headers := endpoint.Headers
@@ -41,20 +41,20 @@ func buildCreateEndpointRequest(endpoint Endpoint) map[string]interface{} {
 		createEndpoint[fldEndpointBodyTemplate] = endpoint.BodyTemplate
 	}
 
-	if endpoint.EndpointType == endpointTypePagerDuty {
+	if endpoint.EndpointType == EndpointTypePagerDuty {
 		createEndpoint[fldEndpointServiceKey] = endpoint.ServiceKey
 	}
 
-	if endpoint.EndpointType == endpointTypeBigPanda {
+	if endpoint.EndpointType == EndpointTypeBigPanda {
 		createEndpoint[fldEndpointApiToken] = endpoint.ApiToken
 		createEndpoint[fldEndpointAppKey] = endpoint.AppKey
 	}
 
-	if endpoint.EndpointType == endpointTypeDataDog {
+	if endpoint.EndpointType == EndpointTypeDataDog {
 		createEndpoint[fldEndpointApiKey] = endpoint.ApiKey
 	}
 
-	if endpoint.EndpointType == endpointTypeVictorOps {
+	if endpoint.EndpointType == EndpointTypeVictorOps {
 		createEndpoint[fldEndpointRoutingKey] = endpoint.RoutingKey
 		createEndpoint[fldEndpointMessageType] = endpoint.MessageType
 		createEndpoint[fldEndpointServiceApiKey] = endpoint.ServiceApiKey
