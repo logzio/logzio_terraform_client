@@ -1,24 +1,38 @@
 package endpoints
 
 import (
-	"github.com/jonboydell/logzio_client/test_utils"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
-var endpoints *Endpoints
-var api_token string
-var createdEndpoints []int64
+func TestEndpoints_CreateDeleteValidEndpoint(t *testing.T) {
+	var endpoint *Endpoint
+	var err error
 
-func setup() {
-	api_token = test_utils.GetApiToken()
-	endpoints, _ = New(api_token)
-	createdEndpoints = []int64{}
+	setupEndpointsTest()
+
+	assert.NotNil(t, endpoints)
+
+	if endpoints != nil {
+		endpoint, err = endpoints.CreateEndpoint(deleteValidEndpoint())
+		assert.Nil(t, err)
+
+		err = endpoints.DeleteEndpoint(endpoint.Id)
+		assert.NoError(t, err)
+
+		_, err = endpoints.GetEndpoint(endpoint.Id)
+		assert.Error(t, err)
+	}
+
+	teardownEndpointsTest()
 }
 
-func shutdown() {
-	for x := 0; x < len(createdEndpoints); x++ {
-		endpoints.DeleteEndpoint(createdEndpoints[x])
+func deleteValidEndpoint() Endpoint {
+	return Endpoint{
+		Title:        "deleteValidEndpoint",
+		Description:  "my description",
+		Url:          "https://this.is.com/some/webhook",
+		EndpointType: "slack",
 	}
 }
 
@@ -27,7 +41,7 @@ func TestEndpointsCreateEndpointAlreadyExists(t *testing.T) {
 	var endpoint *Endpoint
 	var err error
 
-	setup()
+	setupEndpointsTest()
 
 	assert.NotNil(t, endpoints)
 
@@ -42,14 +56,14 @@ func TestEndpointsCreateEndpointAlreadyExists(t *testing.T) {
 		assert.Nil(t, endpoint)
 	}
 
-	shutdown()
+	teardownEndpointsTest()
 }
 
 func TestEndpointsCreateValidEndpoint(t *testing.T) {
 	var endpoint *Endpoint
 	var err error
 
-	setup()
+	setupEndpointsTest()
 
 	assert.NotNil(t, endpoints)
 
@@ -77,13 +91,13 @@ func TestEndpointsCreateValidEndpoint(t *testing.T) {
 		assert.Equal(t, updateValidEndpoint().Description, updatedEndpoint.Description)
 	}
 
-	shutdown()
+	teardownEndpointsTest()
 }
 
 func TestEndpointsListEndpoints(t *testing.T) {
 	assert.NotNil(t, endpoints)
 
-	setup()
+	setupEndpointsTest()
 
 	if endpoints != nil {
 		endpoint, err := endpoints.CreateEndpoint(createValidEndpoint())
@@ -93,48 +107,18 @@ func TestEndpointsListEndpoints(t *testing.T) {
 		createdEndpoints = append(createdEndpoints, endpoint.Id)
 	}
 
-	shutdown()
+	teardownEndpointsTest()
 }
 
 func TestEndpointsCreateInvalidEndpoint(t *testing.T) {
 
-	setup()
+	setupEndpointsTest()
 	if assert.NotNil(t, endpoints) {
 		invalidEndpoint := createInvalidEndpoint()
 		endpoint, err := endpoints.CreateEndpoint(invalidEndpoint)
 		assert.Nil(t, endpoint)
 		assert.Error(t, err)
 	}
-}
-
-func TestEndpointsCreateValidCustomEndpoint(t *testing.T) {
-	setup()
-
-	if assert.NotNil(t, endpoints) {
-		customEndpoint := createCustomEndpoint()
-		endpoint, err := endpoints.CreateEndpoint(customEndpoint)
-		assert.NotNil(t, endpoint)
-		assert.NoError(t, err)
-		createdEndpoints = append(createdEndpoints, endpoint.Id)
-	}
-
-	shutdown()
-
-}
-
-func TestEndpointsCreateValidPagerDutyEndpoint(t *testing.T) {
-	setup()
-
-	if assert.NotNil(t, endpoints) {
-		customEndpoint := createPagerDutyEndpoint()
-		endpoint, err := endpoints.CreateEndpoint(customEndpoint)
-		assert.NotNil(t, endpoint)
-		assert.NoError(t, err)
-		createdEndpoints = append(createdEndpoints, endpoint.Id)
-	}
-
-	shutdown()
-
 }
 
 func createDuplicateEndpoint() Endpoint {
@@ -170,26 +154,5 @@ func updateValidEndpoint() Endpoint {
 		Description:  "my updated description",
 		Url:          "https://this.is.com/some/other/webhook",
 		EndpointType: "slack",
-	}
-}
-
-func createCustomEndpoint() Endpoint {
-	return Endpoint{
-		Title:        "customEndpoint",
-		Method: "POST",
-		Description:  "my updated description",
-		Url:          "https://this.is.com/some/other/webhook",
-		EndpointType: "custom",
-		Headers: map[string]string{"hello":"there","header":"two"},
-		BodyTemplate: map[string]string{"hello":"there","header":"two"},
-	}
-}
-
-func createPagerDutyEndpoint() Endpoint {
-	return Endpoint{
-		Title:        "validEndpoint",
-		Description:  "my description",
-		EndpointType: "pager-duty",
-		ServiceKey: "my_service_key",
 	}
 }

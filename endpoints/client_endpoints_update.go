@@ -42,7 +42,13 @@ func buildUpdateEndpointRequest(endpoint Endpoint) (map[string]interface{}, erro
 	} else if strings.EqualFold(EndpointTypeCustom, endpoint.EndpointType) {
 		updateEndpoint[fldEndpointUrl] = endpoint.Url
 		updateEndpoint[fldEndpointMethod] = endpoint.Method
-		updateEndpoint[fldEndpointHeaders] = endpoint.Headers
+		headers := endpoint.Headers
+		headerStrings := []string{}
+		for k, v := range headers {
+			headerStrings = append(headerStrings, fmt.Sprintf("%s=%s", k, v))
+		}
+		headerString := strings.Trim(strings.Join(strings.Fields(fmt.Sprint(headerStrings)), ","), "[]")
+		updateEndpoint[fldEndpointHeaders] = headerString
 		updateEndpoint[fldEndpointBodyTemplate] = endpoint.BodyTemplate
 	} else if strings.EqualFold(endpoint.EndpointType, EndpointTypePagerDuty) {
 		updateEndpoint[fldEndpointServiceKey] = endpoint.ServiceKey
@@ -81,6 +87,14 @@ func (c *Endpoints) UpdateEndpoint(id int64, endpoint Endpoint) (*Endpoint, erro
 
 	if !logzio_client.CheckValidStatus(resp, []int{updateEndpointMethodSuccess}) {
 		return nil, fmt.Errorf(errorUpdateEndpointApiCallFailed, resp.StatusCode, jsonBytes)
+	}
+
+	if strings.Contains(fmt.Sprintf("%s", jsonBytes), "Insufficient privileges") {
+		return nil, fmt.Errorf("API call %s failed for endpoint %d, data: %s", "UpdateEndpoint", id, jsonBytes)
+	}
+
+	if strings.Contains(fmt.Sprintf("%s", jsonBytes), "already exists") {
+		return nil, fmt.Errorf("API call %s failed for endpoint %d, data: %s", "UpdateEndpoint", id, jsonBytes)
 	}
 
 	var target Endpoint
