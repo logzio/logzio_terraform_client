@@ -81,7 +81,7 @@ func (c *Endpoints) UpdateEndpoint(id int64, endpoint Endpoint) (*Endpoint, erro
 
 	req, _ := buildUpdateEndpointApiRequest(c.ApiToken, id, endpoint.EndpointType, updateEndpoint)
 
-	var httpClient http.Client
+	httpClient := client.GetHttpClient(req)
 	resp, _ := httpClient.Do(req)
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 

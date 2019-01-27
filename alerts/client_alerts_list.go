@@ -24,8 +24,8 @@ func buildListApiRequest(apiToken string) (*http.Request, error) {
 func (c *Alerts) ListAlerts() ([]AlertType, error) {
 	req, _ := buildListApiRequest(c.ApiToken)
 
-	var client http.Client
-	resp, err := client.Do(req)
+	httpClient := client.GetHttpClient(req)
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}

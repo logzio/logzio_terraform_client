@@ -26,8 +26,8 @@ func buildListEndpointsApiRequest(apiToken string) (*http.Request, error) {
 func (c *Endpoints) ListEndpoints() ([]Endpoint, error) {
 	req, _ := buildListEndpointsApiRequest(c.ApiToken)
 
-	var client http.Client
-	resp, err := client.Do(req)
+	httpClient := client.GetHttpClient(req)
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}

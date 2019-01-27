@@ -88,7 +88,8 @@ func (c *Endpoints) CreateEndpoint(endpoint Endpoint) (*Endpoint, error) {
 	createEndpoint := buildCreateEndpointRequest(endpoint)
 	req, _ := buildCreateEndpointApiRequest(c.ApiToken, endpoint.EndpointType, createEndpoint)
 
-	var httpClient http.Client
+	httpClient := client.GetHttpClient(req)
+
 	resp, _ := httpClient.Do(req)
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 

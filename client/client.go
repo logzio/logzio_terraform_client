@@ -2,11 +2,13 @@ package client
 
 import (
 	"log"
+	"net/http"
 	"os"
 )
 
 type Client struct {
 	ApiToken string
+	BaseUrl  string
 	log      log.Logger
 }
 
@@ -26,4 +28,17 @@ func New(apiToken string) *Client {
 	var c Client
 	c.ApiToken = apiToken
 	return &c
+}
+
+func (c *Client) SetBaseUrl(BaseUrl string) {
+	c.BaseUrl = BaseUrl
+}
+
+func GetHttpClient(req *http.Request) *http.Client {
+	url, _ := http.ProxyFromEnvironment(req)
+	tr := &http.Transport{
+		Proxy: http.ProxyURL(url),
+	}
+	httpClient := &http.Client{Transport: tr}
+	return httpClient
 }

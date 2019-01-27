@@ -28,9 +28,9 @@ func buildDeleteEndpointApiRequest(apiToken string, endpointId int64) (*http.Req
 // Deletes an endpoint with the given id, returns a non nil error otherwise
 func (c *Endpoints) DeleteEndpoint(endpointId int64) error {
 	req, _ := buildDeleteEndpointApiRequest(c.ApiToken, endpointId)
+	httpClient := client.GetHttpClient(req)
 
-	var client http.Client
-	resp, err := client.Do(req)
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		return err
 	}

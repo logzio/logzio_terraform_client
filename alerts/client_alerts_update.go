@@ -58,8 +58,8 @@ func (c *Alerts) UpdateAlert(alertId int64, alert CreateAlertType) (*AlertType, 
 	createAlert := buildUpdateAlertRequest(alert)
 	req, _ := buildUpdateApiRequest(c.ApiToken, alertId, createAlert)
 
-	var client http.Client
-	resp, _ := client.Do(req)
+	httpClient := client.GetHttpClient(req)
+	resp, _ := httpClient.Do(req)
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 
 	if !logzio_client.CheckValidStatus(resp, []int{updateAlertMethodSuccess}) {

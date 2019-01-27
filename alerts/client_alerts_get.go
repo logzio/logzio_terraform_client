@@ -25,8 +25,8 @@ func buildGetApiRequest(apiToken string, alertId int64) (*http.Request, error) {
 func (c *Alerts) GetAlert(alertId int64) (*AlertType, error) {
 	req, _ := buildGetApiRequest(c.ApiToken, alertId)
 
-	var client http.Client
-	resp, err := client.Do(req)
+	httpClient := client.GetHttpClient(req)
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
