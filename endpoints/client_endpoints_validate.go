@@ -40,30 +40,30 @@ func validVictorOpsEndpoint(endpointType Endpoint) bool {
 		len(endpointType.RoutingKey) > 0 && len(endpointType.MessageType) > 0 && len(endpointType.ServiceApiKey) > 0
 }
 
-func ValidateEndpointRequest(endpoint Endpoint) error {
+func ValidateEndpointRequest(endpoint Endpoint) (error, bool) {
 	if strings.EqualFold(EndpointTypeSlack, endpoint.EndpointType) && validSlackEndpoint(endpoint) {
-		return nil
+		return nil, true
 	}
 
 	if strings.EqualFold(EndpointTypeCustom, endpoint.EndpointType) && validCustomEndpoint(endpoint) {
-		return nil
+		return nil, true
 	}
 
 	if strings.EqualFold(EndpointTypePagerDuty, endpoint.EndpointType) && validPagerDutyEndpoint(endpoint) {
-		return nil
+		return nil, true
 	}
 
 	if strings.EqualFold(EndpointTypeBigPanda, endpoint.EndpointType) && validBigPandaEndpoint(endpoint) {
-		return nil
+		return nil, true
 	}
 
 	if strings.EqualFold(EndpointTypeDataDog, endpoint.EndpointType) && validDataDogEndpoint(endpoint) {
-		return nil
+		return nil, true
 	}
 
 	if strings.EqualFold(EndpointTypeVictorOps, endpoint.EndpointType) && validVictorOpsEndpoint(endpoint) {
-		return nil
+		return nil, true
 	}
 
-	return fmt.Errorf(errorInvalidEndpointDefinition, endpoint, endpoint.EndpointType)
+	return fmt.Errorf(errorInvalidEndpointDefinition, endpoint, endpoint.EndpointType), false
 }

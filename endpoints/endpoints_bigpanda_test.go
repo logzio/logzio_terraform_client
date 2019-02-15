@@ -7,18 +7,17 @@ import (
 
 func TestEndpointsBigPandaCreateUpdate(t *testing.T) {
 	setupEndpointsTest()
-
 	if assert.NotNil(t, endpoints) {
 		endpoint, err := endpoints.CreateEndpoint(createBigPandaEndpoint())
-		assert.NotNil(t, endpoint)
-		assert.NoError(t, err)
-		createdEndpoints = append(createdEndpoints, endpoint.Id)
 
-		endpoint, err = endpoints.UpdateEndpoint(endpoint.Id, updateBigPandaEndpoint())
-		assert.NotNil(t, endpoint)
-		assert.NoError(t, err)
+		if assert.NotNil(t, endpoint) {
+			assert.NoError(t, err)
+			createdEndpoints = append(createdEndpoints, endpoint.Id)
+			endpoint, err = endpoints.UpdateEndpoint(endpoint.Id, updateBigPandaEndpoint())
+			assert.NotNil(t, endpoint)
+			assert.NoError(t, err)
+		}
 	}
-
 	teardownEndpointsTest()
 }
 
