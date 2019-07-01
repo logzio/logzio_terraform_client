@@ -10,6 +10,10 @@ import (
 )
 
 const (
+	endpointServiceEndpoint = "%s/v1/endpoints"
+)
+
+const (
 	fldEndpointId            string = "id"
 	fldEndpointType          string = "endpointType"
 	fldEndpointTitle         string = "title"

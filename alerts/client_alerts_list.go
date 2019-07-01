@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-const listAlertServiceUrl string = "%s/v1/alerts"
+const listAlertServiceUrl string = alertsServiceEndpoint
 const listAlertServiceMethod string = http.MethodGet
 const listAlertMethodSuccess int = 200
 

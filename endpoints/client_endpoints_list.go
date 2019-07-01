@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-const listEndpointsServiceUrl string = "%s/v1/endpoints"
+const listEndpointsServiceUrl string = endpointServiceEndpoint
 const listEndpointsServiceMethod string = http.MethodGet
 const listEndpointsMethodSuccess int = 200
 

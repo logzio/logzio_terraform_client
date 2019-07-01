@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-const deleteAlertServiceUrl string = "%s/v1/alerts/%d"
+const deleteAlertServiceUrl string = alertsServiceEndpoint + "/%d"
 const deleteAlertServiceMethod string = http.MethodDelete
 const deleteAlertMethodSuccess int = 200
 

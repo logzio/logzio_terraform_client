@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	deleteEndpointServiceUrl string = "%s/v1/endpoints/%d"
+	deleteEndpointServiceUrl string = endpointServiceEndpoint + "/%d"
 	deleteEndpointServiceMethod string = http.MethodDelete
 	deleteEndpointMethodSuccess int = 200
 )

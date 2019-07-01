@@ -1,6 +1,7 @@
 package client
 
 import (
+	"crypto/tls"
 	"log"
 	"net/http"
 	"os"
@@ -34,11 +35,19 @@ func (c *Client) SetBaseUrl(BaseUrl string) {
 	c.BaseUrl = BaseUrl
 }
 
+func Test() {
+
+}
+
 func GetHttpClient(req *http.Request) *http.Client {
-	url, _ := http.ProxyFromEnvironment(req)
-	tr := &http.Transport{
-		Proxy: http.ProxyURL(url),
+	url, err := http.ProxyFromEnvironment(req)
+	if err != nil {
+		tr := &http.Transport{
+			Proxy:           http.ProxyURL(url),
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		}
+		return &http.Client{Transport: tr}
+	} else {
+		return &http.Client{}
 	}
-	httpClient := &http.Client{Transport: tr}
-	return httpClient
 }

@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-const getEndpointsServiceUrl string = "%s/v1/endpoints/%d"
+const getEndpointsServiceUrl string = endpointServiceEndpoint + "/%d"
 const getEndpointsServiceMethod string = http.MethodGet
 const getEndpointsMethodSuccess int = 200
 

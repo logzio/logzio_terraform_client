@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	createEndpointServiceUrl string = "%s/v1/endpoints/%s"
+	createEndpointServiceUrl string = endpointServiceEndpoint + "/%s"
 	createEndpointServiceMethod string = http.MethodPost
 	createEndpointMethodSuccess int = 200
 )

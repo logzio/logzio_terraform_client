@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-const getAlertServiceUrl string = "%s/v1/alerts/%d"
+const getAlertServiceUrl string = alertsServiceEndpoint + "/%d"
 const getAlertServiceMethod string = http.MethodGet
 const getAlertMethodSuccess int = 200
 

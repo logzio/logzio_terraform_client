@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	updateEndpointServiceUrl string = "%s/v1/endpoints/%s/%d"
+	updateEndpointServiceUrl string = endpointServiceEndpoint + "/%s/%d"
 	updateEndpointServiceMethod string = http.MethodPut
 	updateEndpointMethodSuccess int = 200
 )
