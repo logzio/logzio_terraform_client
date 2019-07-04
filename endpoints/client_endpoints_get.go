@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-const getEndpointsServiceUrl string = "%s/v1/endpoints/%d"
+const getEndpointsServiceUrl string = endpointServiceEndpoint + "/%d"
 const getEndpointsServiceMethod string = http.MethodGet
 const getEndpointsMethodSuccess int = 200
 
@@ -47,9 +47,8 @@ func (c *Endpoints) GetEndpointByName(endpointName string) (*Endpoint, error) {
 func (c *Endpoints) GetEndpoint(endpointId int64) (*Endpoint, error) {
 	req, _ := buildGetEnpointApiRequest(c.ApiToken, endpointId)
 
-	//@todo: can the http client handling be wrapped into one function?
-	var client http.Client
-	resp, err := client.Do(req)
+	httpClient := client.GetHttpClient(req)
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}

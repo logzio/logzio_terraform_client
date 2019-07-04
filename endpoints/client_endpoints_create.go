@@ -6,17 +6,20 @@ import (
 	"fmt"
 	"github.com/jonboydell/logzio_client"
 	"github.com/jonboydell/logzio_client/client"
-	"io/ioutil"
 	"net/http"
 	"strings"
 )
 
-const createEndpointServiceUrl string = "%s/v1/endpoints/%s"
-const createEndpointServiceMethod string = http.MethodPost
-const createEndpointMethodSuccess int = 200
+const (
+	createEndpointServiceUrl string = endpointServiceEndpoint + "/%s"
+	createEndpointServiceMethod string = http.MethodPost
+	createEndpointMethodSuccess int = 200
+)
 
-const errorInvalidEndpointDefinition = "endpoint definition %v is not valid for service %s"
-const errorCreateEndpointApiCallFailed = "API call CreateEndpoint failed with status code %d, data: %s"
+const (
+	errorInvalidEndpointDefinition = "endpoint definition %v is not valid for service %s"
+	errorCreateEndpointApiCallFailed = "API call CreateEndpoint failed with status code %d, data: %s"
+)
 
 func buildCreateEndpointRequest(endpoint Endpoint) map[string]interface{} {
 	var createEndpoint = map[string]interface{}{}
@@ -63,8 +66,10 @@ func buildCreateEndpointRequest(endpoint Endpoint) map[string]interface{} {
 	return createEndpoint
 }
 
-func buildCreateEndpointApiRequest(apiToken string, service string, jsonObject map[string]interface{}) (*http.Request, error) {
-	jsonBytes, err := json.Marshal(jsonObject)
+func buildCreateEndpointApiRequest(apiToken string, service string, endpoint Endpoint) (*http.Request, error) {
+	createEndpoint := buildCreateEndpointRequest(endpoint)
+
+	jsonBytes, err := json.Marshal(createEndpoint)
 	if err != nil {
 		return nil, err
 	}
@@ -80,29 +85,31 @@ func buildCreateEndpointApiRequest(apiToken string, service string, jsonObject m
 // Creates an endpoint, given the endpoint definition and the service to create the endpoint against
 // Returns the endpoint object if successful (hopefully with an ID) and a non-nil error if not
 func (c *Endpoints) CreateEndpoint(endpoint Endpoint) (*Endpoint, error) {
-	err := ValidateEndpointRequest(endpoint)
-	if err != nil {
+	if jsonBytes, err, ok := c.makeEndpointRequest(endpoint, ValidateEndpointRequest, buildCreateEndpointApiRequest, func(b []byte) error {
+		var data map[string]interface{}
+		json.Unmarshal(b, &data)
+
+		if val, ok := data["errorCode"]; ok {
+			return fmt.Errorf("%v", val)
+		}
+
+		if val, ok := data["message"]; ok {
+			return fmt.Errorf("%v", val)
+		}
+
+		if strings.Contains(fmt.Sprintf("%s", b), errorCreateEndpointApiCallFailed) {
+			return fmt.Errorf(errorCreateEndpointApiCallFailed, 200, errorCreateEndpointApiCallFailed)
+		}
+		return nil
+	}); !ok {
 		return nil, err
+	} else {
+		var target Endpoint
+		err = json.Unmarshal(jsonBytes, &target)
+		if err != nil {
+			return nil, err
+		}
+
+		return &target, nil
 	}
-
-	createEndpoint := buildCreateEndpointRequest(endpoint)
-	req, _ := buildCreateEndpointApiRequest(c.ApiToken, endpoint.EndpointType, createEndpoint)
-
-	var httpClient http.Client
-	resp, _ := httpClient.Do(req)
-	jsonBytes, _ := ioutil.ReadAll(resp.Body)
-
-	if !logzio_client.CheckValidStatus(resp, []int{createEndpointMethodSuccess}) {
-		return nil, fmt.Errorf(errorCreateEndpointApiCallFailed, resp.StatusCode, jsonBytes)
-	}
-
-	var target Endpoint
-	json.Unmarshal(jsonBytes, &target)
-
-	// logz.io sometimes returns a 200 even though the message is a failure message
-	if len(target.Message) > 0 {
-		return nil, fmt.Errorf(errorCreateEndpointApiCallFailed, resp.StatusCode, target.Message)
-	}
-
-	return &target, nil
 }

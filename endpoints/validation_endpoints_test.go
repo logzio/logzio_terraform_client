@@ -5,27 +5,31 @@ import (
 	"testing"
 )
 
-func TestEndpointsValidateSlackEndpoint(t *testing.T) {
-	var err error
+func TestEndpointsInvalidEndpoint(t *testing.T) {
+	if err, ok := ValidateEndpointRequest(Endpoint{
+		Title: "title",
+	}); ok {
+		assert.Fail(t, "shouldn't be true")
+	} else {
+		assert.Error(t, err)
+	}
+}
 
-	err = ValidateEndpointRequest(Endpoint{
+func TestEndpointsValidateSlackEndpoint(t *testing.T) {
+	if err, ok := ValidateEndpointRequest(Endpoint{
 		Title:        "title",
 		Description:  "description",
 		Url:          "url",
 		EndpointType: EndpointTypeSlack,
-	})
-	assert.NoError(t, err)
-
-	err = ValidateEndpointRequest(Endpoint{
-		Title: "title",
-	})
-	assert.Error(t, err)
+	}); ok {
+		assert.NoError(t, err)
+	} else {
+		assert.Fail(t, "shouldn't be false")
+	}
 }
 
 func TestEndpointsValidateCustomEndpoint(t *testing.T) {
-	var err error
-
-	err = ValidateEndpointRequest(Endpoint{
+	if err, ok := ValidateEndpointRequest(Endpoint{
 		Title:        "title",
 		Description:  "description",
 		Url:          "url",
@@ -33,82 +37,64 @@ func TestEndpointsValidateCustomEndpoint(t *testing.T) {
 		Headers:      map[string]string{"key": "value"},
 		BodyTemplate: "{\"hello\":\"there\"}",
 		EndpointType: EndpointTypeCustom,
-	})
-	assert.NoError(t, err)
-
-	err = ValidateEndpointRequest(Endpoint{
-		Title: "title",
-	})
-	assert.Error(t, err)
+	}); ok {
+		assert.NoError(t, err)
+	} else {
+		assert.Fail(t, "shouldn't be false")
+	}
 }
 
 func TestEndpointsValidatePagerDuty(t *testing.T) {
-	var err error
-
-	err = ValidateEndpointRequest(Endpoint{
+	if err, ok := ValidateEndpointRequest(Endpoint{
 		Title:        "title",
 		Description:  "description",
 		ServiceKey:   "serviceKey",
 		EndpointType: EndpointTypePagerDuty,
-	})
-	assert.NoError(t, err)
-
-	err = ValidateEndpointRequest(Endpoint{
-		Title: "title",
-	})
-	assert.Error(t, err)
+	}); ok {
+		assert.NoError(t, err)
+	} else {
+		assert.Fail(t, "shouldn't be false")
+	}
 }
 
 func TestEndpointsValidateBigPanda(t *testing.T) {
-	var err error
-
-	err = ValidateEndpointRequest(Endpoint{
+	if err, ok := ValidateEndpointRequest(Endpoint{
 		Title:        "title",
 		Description:  "description",
 		ApiToken:     "ApiToken",
 		AppKey:       "AppKey",
 		EndpointType: EndpointTypeBigPanda,
-	})
-	assert.NoError(t, err)
-
-	err = ValidateEndpointRequest(Endpoint{
-		Title: "title",
-	})
-	assert.Error(t, err)
+	}); ok {
+		assert.NoError(t, err)
+	} else {
+		assert.Fail(t, "shouldn't be false")
+	}
 }
 
 func TestEndpointsValidateDataDog(t *testing.T) {
-	var err error
-
-	err = ValidateEndpointRequest(Endpoint{
+	if err, ok := ValidateEndpointRequest(Endpoint{
 		Title:        "title",
 		Description:  "description",
 		ApiKey:       "ApiKey",
 		EndpointType: EndpointTypeDataDog,
-	})
-	assert.NoError(t, err)
-
-	err = ValidateEndpointRequest(Endpoint{
-		Title: "title",
-	})
-	assert.Error(t, err)
+	}); ok {
+		assert.NoError(t, err)
+	} else {
+		assert.Fail(t, "shouldn't be false")
+	}
 }
 
 func TestEndpointsValidateVictorOps(t *testing.T) {
-	var err error
-
-	err = ValidateEndpointRequest(Endpoint{
+	if err, ok := ValidateEndpointRequest(Endpoint{
 		Title:         "title",
 		Description:   "description",
 		RoutingKey:    "routingKey",
 		MessageType:   "messageType",
 		ServiceApiKey: "serviceApiKey",
 		EndpointType:  EndpointTypeVictorOps,
-	})
-	assert.NoError(t, err)
-
-	err = ValidateEndpointRequest(Endpoint{
-		Title: "title",
-	})
-	assert.Error(t, err)
+	}); ok {
+		assert.NoError(t, err)
+	} else {
+		assert.Fail(t, "shouldn't be false")
+	}
 }

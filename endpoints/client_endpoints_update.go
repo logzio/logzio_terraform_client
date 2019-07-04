@@ -6,25 +6,30 @@ import (
 	"fmt"
 	"github.com/jonboydell/logzio_client"
 	"github.com/jonboydell/logzio_client/client"
-	"io/ioutil"
 	"net/http"
 	"strings"
 )
 
-const updateEndpointServiceUrl string = "%s/v1/endpoints/%s/%d"
-const updateEndpointServiceMethod string = http.MethodPut
-const updateEndpointMethodSuccess int = 200
+const (
+	updateEndpointServiceUrl string = endpointServiceEndpoint + "/%s/%d"
+	updateEndpointServiceMethod string = http.MethodPut
+	updateEndpointMethodSuccess int = 200
+)
 
-const errorUpdateEndpointApiCallFailed = "API call UpdateEndpoint failed with status code:%d, data:%s"
-const errorUpdateEndpointDoesntExist = "API call UpdateEndpoint failed as endpoint with id:%d doesn't exist, data:%s"
+const (
+	errorUpdateEndpointApiCallFailed = "API call UpdateEndpoint failed with status code:%d, data:%s"
+	errorUpdateEndpointDoesntExist = "API call UpdateEndpoint failed as endpoint with id:%d doesn't exist, data:%s"
+)
 
-func buildUpdateEndpointApiRequest(apiToken string, id int64, service string, jsonObject map[string]interface{}) (*http.Request, error) {
+func buildUpdateEndpointApiRequest(apiToken string, service string, endpoint Endpoint) (*http.Request, error) {
+	jsonObject, err := buildUpdateEndpointRequest(endpoint)
 	jsonBytes, err := json.Marshal(jsonObject)
 	if err != nil {
 		return nil, err
 	}
 
 	baseUrl := client.GetLogzioBaseUrl()
+	id := endpoint.Id
 	req, err := http.NewRequest(updateEndpointServiceMethod, fmt.Sprintf(updateEndpointServiceUrl, baseUrl, strings.ToLower(service), id), bytes.NewBuffer(jsonBytes))
 	logzio_client.AddHttpHeaders(apiToken, req)
 
@@ -69,40 +74,25 @@ func buildUpdateEndpointRequest(endpoint Endpoint) (map[string]interface{}, erro
 }
 
 func (c *Endpoints) UpdateEndpoint(id int64, endpoint Endpoint) (*Endpoint, error) {
-	err := ValidateEndpointRequest(endpoint)
-	if err != nil {
+
+	endpoint.Id = id
+	if jsonBytes, err, ok := c.makeEndpointRequest(endpoint, ValidateEndpointRequest, buildUpdateEndpointApiRequest, func(b []byte) error {
+		if strings.Contains(fmt.Sprintf("%s", b), "Insufficient privileges") {
+			return fmt.Errorf("API call %s failed for endpoint %d, data: %s", "UpdateEndpoint", id, b)
+		}
+
+		if strings.Contains(fmt.Sprintf("%s", b), "already exists") {
+			return fmt.Errorf("API call %s failed for endpoint %d, data: %s", "UpdateEndpoint", id, b)
+		}
+		return nil
+	}); ok {
+		var target Endpoint
+		err = json.Unmarshal(jsonBytes, &target)
+		if err != nil {
+			return nil, err
+		}
+		return &target, nil
+	} else {
 		return nil, err
 	}
-
-	updateEndpoint, err := buildUpdateEndpointRequest(endpoint)
-	if err != nil {
-		return nil, err
-	}
-
-	req, _ := buildUpdateEndpointApiRequest(c.ApiToken, id, endpoint.EndpointType, updateEndpoint)
-
-	var httpClient http.Client
-	resp, _ := httpClient.Do(req)
-	jsonBytes, _ := ioutil.ReadAll(resp.Body)
-
-	if !logzio_client.CheckValidStatus(resp, []int{updateEndpointMethodSuccess}) {
-		return nil, fmt.Errorf(errorUpdateEndpointApiCallFailed, resp.StatusCode, jsonBytes)
-	}
-
-	if strings.Contains(fmt.Sprintf("%s", jsonBytes), "Insufficient privileges") {
-		return nil, fmt.Errorf("API call %s failed for endpoint %d, data: %s", "UpdateEndpoint", id, jsonBytes)
-	}
-
-	if strings.Contains(fmt.Sprintf("%s", jsonBytes), "already exists") {
-		return nil, fmt.Errorf("API call %s failed for endpoint %d, data: %s", "UpdateEndpoint", id, jsonBytes)
-	}
-
-	var target Endpoint
-	json.Unmarshal(jsonBytes, &target)
-
-	if len(target.Message) > 0 {
-		return nil, fmt.Errorf(errorUpdateEndpointDoesntExist, resp.StatusCode, target.Message)
-	}
-
-	return &target, nil
 }

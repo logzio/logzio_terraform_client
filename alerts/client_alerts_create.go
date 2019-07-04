@@ -10,7 +10,7 @@ import (
 	"net/http"
 )
 
-const createAlertServiceUrl string = "%s/v1/alerts"
+const createAlertServiceUrl string = alertsServiceEndpoint
 const createAlertServiceMethod string = http.MethodPost
 const createAlertMethodSuccess int = 200
 
@@ -106,8 +106,12 @@ func (c *Alerts) CreateAlert(alert CreateAlertType) (*AlertType, error) {
 	createAlert := buildCreateAlertRequest(alert)
 	req, _ := buildCreateApiRequest(c.ApiToken, createAlert)
 
-	var client http.Client
-	resp, _ := client.Do(req)
+	httpClient := client.GetHttpClient(req)
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 
 	if !logzio_client.CheckValidStatus(resp, []int{createAlertMethodSuccess}) {

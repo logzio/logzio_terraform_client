@@ -9,13 +9,13 @@ func TestEndpointsCustomCreateUpdate(t *testing.T) {
 	setupEndpointsTest()
 	if assert.NotNil(t, endpoints) {
 		endpoint, err := endpoints.CreateEndpoint(createCustomEndpoint())
-		assert.NotNil(t, endpoint)
-		assert.NoError(t, err)
-		createdEndpoints = append(createdEndpoints, endpoint.Id)
-
-		endpoint, err = endpoints.UpdateEndpoint(endpoint.Id, createUpdatedCustomEndpoint())
-		assert.NotNil(t, endpoint)
-		assert.NoError(t, err)
+		if assert.NotNil(t, endpoint) {
+			assert.NoError(t, err)
+			createdEndpoints = append(createdEndpoints, endpoint.Id)
+			endpoint, err = endpoints.UpdateEndpoint(endpoint.Id, createUpdatedCustomEndpoint())
+			assert.NotNil(t, endpoint)
+			assert.NoError(t, err)
+		}
 	}
 	teardownEndpointsTest()
 }
@@ -24,13 +24,13 @@ func TestEndpointsCustomCreateDuplicate(t *testing.T) {
 	setupEndpointsTest()
 	if assert.NotNil(t, endpoints) {
 		endpoint, err := endpoints.CreateEndpoint(createCustomEndpoint())
-		assert.NotNil(t, endpoint)
-		assert.NoError(t, err)
-		createdEndpoints = append(createdEndpoints, endpoint.Id)
-
-		endpoint, err = endpoints.CreateEndpoint(createCustomEndpoint())
-		assert.Nil(t, endpoint)
-		assert.Error(t, err)
+		if assert.NotNil(t, endpoint) {
+			assert.NoError(t, err)
+			createdEndpoints = append(createdEndpoints, endpoint.Id)
+			endpoint, err = endpoints.CreateEndpoint(createCustomEndpoint())
+			assert.Nil(t, endpoint)
+			assert.Error(t, err)
+		}
 	}
 	teardownEndpointsTest()
 }

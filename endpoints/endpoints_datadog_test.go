@@ -7,11 +7,9 @@ import (
 
 func TestEndpointsDataDogCreateUpdate(t *testing.T) {
 	setupEndpointsTest()
-
 	if assert.NotNil(t, endpoints) {
 		endpoint, err := endpoints.CreateEndpoint(createDataDogEndpoint())
 		assert.NotNil(t, endpoint)
-
 		createdEndpoints = append(createdEndpoints, endpoint.Id)
 		if assert.NoError(t, err) {
 			endpoint, err = endpoints.UpdateEndpoint(endpoint.Id, updateDataDogEndpoint())
@@ -19,7 +17,6 @@ func TestEndpointsDataDogCreateUpdate(t *testing.T) {
 			assert.NoError(t, err)
 		}
 	}
-
 	teardownEndpointsTest()
 }
 

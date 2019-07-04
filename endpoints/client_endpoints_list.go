@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-const listEndpointsServiceUrl string = "%s/v1/endpoints"
+const listEndpointsServiceUrl string = endpointServiceEndpoint
 const listEndpointsServiceMethod string = http.MethodGet
 const listEndpointsMethodSuccess int = 200
 
@@ -26,8 +26,8 @@ func buildListEndpointsApiRequest(apiToken string) (*http.Request, error) {
 func (c *Endpoints) ListEndpoints() ([]Endpoint, error) {
 	req, _ := buildListEndpointsApiRequest(c.ApiToken)
 
-	var client http.Client
-	resp, err := client.Do(req)
+	httpClient := client.GetHttpClient(req)
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
