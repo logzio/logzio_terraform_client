@@ -6,13 +6,14 @@ import (
 	"fmt"
 	"github.com/jonboydell/logzio_client"
 	"github.com/jonboydell/logzio_client/client"
+	"io/ioutil"
 	"net/http"
 )
 
 const (
-	createUserServiceUrl string = userServiceEndpoint
-	createUserServiceMethod string = http.MethodPost
-	createUserServiceSuccess int = 200
+	createUserServiceUrl     string = userServiceEndpoint
+	createUserServiceMethod  string = http.MethodPost
+	createUserServiceSuccess int    = 200
 )
 
 func validateUserRequest(u User) (error, bool) {
@@ -28,10 +29,10 @@ func validateUserRequest(u User) (error, bool) {
 func createUserApiRequest(apiToken string, u User) (*http.Request, error) {
 	var (
 		createUser = map[string]interface{}{
-		"username": u.Username,
-		"fullName": u.Fullname,
-		"accountID": u.AccountId,
-		"roles": u.Roles,
+			fldUserUsername:  u.Username,
+			fldUserFullname:  u.Fullname,
+			fldUserAccountId: u.AccountId,
+			fldUserRoles:     u.Roles,
 		}
 	)
 
@@ -48,29 +49,45 @@ func createUserApiRequest(apiToken string, u User) (*http.Request, error) {
 	return req, err
 }
 
-func (c *Users) CreateUser(user User) (*User, error) {
-	if jsonBytes, err, ok := c.makeUserRequest(user, validateUserRequest, createUserApiRequest, func(b []byte) error {
-		var data map[string]interface{}
-		json.Unmarshal(b, &data)
-		if val, ok := data["validationErrors"]; ok {
-			return fmt.Errorf("%v", val)
-		}
-		return nil
-	}); !ok {
-		return nil, err
-	} else {
-		var target map[string]interface{}
-		err = json.Unmarshal(jsonBytes, &target)
-		if err != nil {
-			return nil, err
-		}
-
-		if _, ok := target["errorCode"]; ok {
-			return nil, fmt.Errorf("Error creating user; %s", target["message"])
-		}
-
-		user.Id = int32(target["id"].(float64))
-
-		return &user, nil
+func createUserHttpRequest(req *http.Request) (map[string]interface{}, error) {
+	httpClient := client.GetHttpClient(req)
+	resp, _ := httpClient.Do(req)
+	jsonBytes, err := ioutil.ReadAll(resp.Body)
+	if !logzio_client.CheckValidStatus(resp, []int{createUserServiceSuccess}) {
+		return nil, fmt.Errorf("%d %s", resp.StatusCode, jsonBytes)
 	}
+	var target map[string]interface{}
+	err = json.Unmarshal(jsonBytes, &target)
+	if err != nil {
+		return nil, err
+	}
+	return target, nil
+}
+
+func checkCreateUserResponse(response map[string]interface{}) error {
+	if ok, message := client.IsErrorResponse(response); ok {
+		return fmt.Errorf("Error creating user; %s", message)
+	}
+
+	return nil
+}
+
+func (c *Users) CreateUser(user User) (*User, error) {
+	if err, ok := validateUserRequest(user); !ok {
+		return nil, err
+	}
+	req, _ := createUserApiRequest(c.ApiToken, user)
+
+	target, err := createUserHttpRequest(req)
+	if err != nil {
+		return nil, err
+	}
+
+	err = checkCreateUserResponse(target)
+	if err != nil {
+		return nil, err
+	}
+
+	user.Id = int32(target[fldUserId].(float64))
+	return &user, nil
 }

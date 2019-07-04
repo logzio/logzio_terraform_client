@@ -1,17 +1,16 @@
-package users
+package users_test
 
 import (
 	"github.com/jonboydell/logzio_client/test_utils"
-	"strconv"
+	"github.com/jonboydell/logzio_client/users"
 )
 
-var users *Users
+var underTest *users.Users
 var apiToken string
 var accountId int32
 
 func setupUsersTest() {
 	apiToken = test_utils.GetApiToken()
-	users, _ = New(apiToken)
-	accId, _ := strconv.ParseInt(test_utils.GetAccountId(), 10, 32)
-	accountId = int32(accId)
+	underTest, _ = users.New(apiToken)
+	accountId = test_utils.GetAccountId()
 }

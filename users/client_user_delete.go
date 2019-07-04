@@ -6,12 +6,14 @@ import (
 	"fmt"
 	"github.com/jonboydell/logzio_client"
 	"github.com/jonboydell/logzio_client/client"
+	"io/ioutil"
 	"net/http"
 )
 
 const (
-	deleteUserServiceUrl = userServiceEndpoint + "/%d"
-	deleteUserServiceMethod = "DELETE"
+	deleteUserServiceUrl         = userServiceEndpoint + "/%d"
+	deleteUserServiceMethod      = "DELETE"
+	deleteUserServiceSuccess int = 200
 )
 
 func validateDeleteUserRequest(u User) (error, bool) {
@@ -20,7 +22,7 @@ func validateDeleteUserRequest(u User) (error, bool) {
 
 func deleteUserApiRequest(apiToken string, u User) (*http.Request, error) {
 	var deleteUser = map[string]interface{}{
-		"id": u.Id,
+		fldUserId: u.Id,
 	}
 
 	jsonBytes, err := json.Marshal(deleteUser)
@@ -36,21 +38,33 @@ func deleteUserApiRequest(apiToken string, u User) (*http.Request, error) {
 	return req, err
 }
 
+func checkDeleteUserRequest(b []byte) error {
+	return nil
+}
+
+func deleteUserHttpRequest(req *http.Request) error {
+	httpClient := client.GetHttpClient(req)
+	resp, _ := httpClient.Do(req)
+	jsonBytes, err := ioutil.ReadAll(resp.Body)
+	if !logzio_client.CheckValidStatus(resp, []int{deleteUserServiceSuccess}) {
+		return fmt.Errorf("%d %s", resp.StatusCode, jsonBytes)
+	}
+	err = checkDeleteUserRequest(jsonBytes)
+	return err
+}
+
 func (c *Users) DeleteUser(id int32) error {
 
-	if _, err, ok := c.makeUserRequest(User{Id:id}, validateDeleteUserRequest, deleteUserApiRequest, func(b []byte) error {
-		var data map[string]interface{}
-		json.Unmarshal(b, &data)
-
-		if val, ok := data["validationErrors"]; ok {
-			return fmt.Errorf("%v", val)
-		}
-
-		return nil
-	}); !ok {
+	user := User{Id: id}
+	if err, ok := validateDeleteUserRequest(user); !ok {
 		return err
-	} else {
-		return nil
 	}
-	return fmt.Errorf("Not implemented")
+	req, _ := deleteUserApiRequest(c.ApiToken, user)
+
+	err := deleteUserHttpRequest(req)
+	if (err != nil) {
+		return err
+	}
+
+	return nil
 }

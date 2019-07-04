@@ -5,12 +5,15 @@ import (
 	"fmt"
 	"github.com/jonboydell/logzio_client"
 	"github.com/jonboydell/logzio_client/client"
+	"io/ioutil"
 	"net/http"
 )
 
 const (
-	getUserServiceUrl = userServiceEndpoint + "/%d"
+	getUserServiceUrl    = userServiceEndpoint + "/%d"
 	getUserServiceMethod = "GET"
+	getUserServiceSuccess int    = 200
+
 )
 
 func validateGetUserRequest(u User) (error, bool) {
@@ -27,45 +30,36 @@ func getUserApiRequest(apiToken string, u User) (*http.Request, error) {
 	return req, err
 }
 
+func getUserHttpRequest(req *http.Request) (map[string]interface{}, error){
+	httpClient := client.GetHttpClient(req)
+	resp, _ := httpClient.Do(req)
+	jsonBytes, _ := ioutil.ReadAll(resp.Body)
+	if !logzio_client.CheckValidStatus(resp, []int{getUserServiceSuccess}) {
+		return nil, fmt.Errorf("%d %s", resp.StatusCode, jsonBytes)
+	}
+
+	var target map[string]interface{}
+	err := json.Unmarshal(jsonBytes, &target)
+	if err != nil {
+		return nil, err
+	}
+	return target, nil
+}
+
 func (c *Users) GetUser(id int32) (*User, error) {
 
-	if jsonBytes, err, ok := c.makeUserRequest(User {Id: id}, validateGetUserRequest, getUserApiRequest, func(b []byte) error {
-		var data map[string]interface{}
-		json.Unmarshal(b, &data)
-
-		if val, ok := data["validationErrors"]; ok {
-			return fmt.Errorf("%v", val)
-		}
-
-		return nil
-	}); !ok {
+	u := User{Id: id}
+	if err, ok := validateGetUserRequest(u); !ok {
 		return nil, err
-	} else {
-		var target map[string]interface{}
-		err = json.Unmarshal(jsonBytes, &target)
-		if err != nil {
-			return nil, err
-		}
-
-		userId := int32(target["id"].(float64))
-		accountId := int32(target["accountID"].(float64))
-		roles := target["roles"].([]interface{})
-		x := []int32{}
-		for _, role := range roles {
-			r := int32(role.(float64))
-			x = append(x, r)
-		}
-
-		user := User {
-			Id: userId,
-			AccountId: accountId,
-			Username: target["username"].(string),
-			Fullname :target["fullName"].(string),
-			Active :target["active"].(bool),
-			Roles : x,
-		}
-
-		return &user, nil
 	}
-	return nil, fmt.Errorf("Not implemented")
+	req, _ := getUserApiRequest(c.ApiToken, u)
+
+	target, err := getUserHttpRequest(req)
+	if (err != nil) {
+		return nil, err
+	}
+
+	user := jsonToUser(target)
+
+	return &user, nil
 }
