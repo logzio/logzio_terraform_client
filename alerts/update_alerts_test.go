@@ -16,21 +16,10 @@ func TestUpdateAlert(t *testing.T) {
 	assert.NoError(t, err)
 
 	createAlert := createValidAlert()
-
-	alerts := []int64{}
-
 	if assert.NotNil(t, client) {
-
 		alert, err = client.CreateAlert(createAlert)
 		assert.NoError(t, err)
 		assert.NotNil(t, alert)
-
-		alerts = append(alerts, alert.AlertId)
-
-		// clean up any created alerts
-		for x := 0; x < len(alerts); x++ {
-			err = client.DeleteAlert(alerts[x])
-			assert.NoError(t, err)
-		}
+		client.DeleteAlert(alert.AlertId)
 	}
 }
