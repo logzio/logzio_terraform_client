@@ -22,6 +22,9 @@ func validateSuspendUserRequest(userId int32) (error, bool) {
 func suspendUserHttpRequest(req *http.Request) (map[string]interface{}, error) {
 	httpClient := client.GetHttpClient(req)
 	resp, _ := httpClient.Do(req)
+	if resp != nil {
+		defer resp.Body.Close()
+	}
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 	if !logzio_client.CheckValidStatus(resp, []int{suspendUserServiceSuccess}) {
 		return nil, fmt.Errorf("%d %s", resp.StatusCode, jsonBytes)

@@ -45,6 +45,9 @@ func checkDeleteUserRequest(b []byte) error {
 func deleteUserHttpRequest(req *http.Request) error {
 	httpClient := client.GetHttpClient(req)
 	resp, _ := httpClient.Do(req)
+	if resp != nil {
+		defer resp.Body.Close()
+	}
 	jsonBytes, err := ioutil.ReadAll(resp.Body)
 	if !logzio_client.CheckValidStatus(resp, []int{deleteUserServiceSuccess}) {
 		return fmt.Errorf("%d %s", resp.StatusCode, jsonBytes)

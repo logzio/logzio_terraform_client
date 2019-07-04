@@ -26,6 +26,9 @@ func (c *Alerts) ListAlerts() ([]AlertType, error) {
 
 	httpClient := client.GetHttpClient(req)
 	resp, err := httpClient.Do(req)
+	if resp != nil {
+		defer resp.Body.Close()
+	}
 	if err != nil {
 		return nil, err
 	}

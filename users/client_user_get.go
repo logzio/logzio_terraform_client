@@ -33,6 +33,9 @@ func getUserApiRequest(apiToken string, u User) (*http.Request, error) {
 func getUserHttpRequest(req *http.Request) (map[string]interface{}, error){
 	httpClient := client.GetHttpClient(req)
 	resp, _ := httpClient.Do(req)
+	if resp != nil {
+		defer resp.Body.Close()
+	}
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 	if !logzio_client.CheckValidStatus(resp, []int{getUserServiceSuccess}) {
 		return nil, fmt.Errorf("%d %s", resp.StatusCode, jsonBytes)
