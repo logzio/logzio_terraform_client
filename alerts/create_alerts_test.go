@@ -8,7 +8,7 @@ import (
 )
 
 func TestCreateAlert(t *testing.T) {
-	api_token := test_utils.GetApiToken()
+	api_token, _ := test_utils.GetApiToken()
 
 	var client *Alerts
 	client, err := New(api_token)

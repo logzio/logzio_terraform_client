@@ -43,10 +43,11 @@ type Users struct {
 	client.Client
 }
 
-func New(apiToken string) (*Users, error) {
-	var c Users
-	c.ApiToken = apiToken
+func New(apiToken string, accountId int32) (*Users, error) {
 	if len(apiToken) > 0 {
+		var c Users
+		c.ApiToken = apiToken
+		c.AccountId = accountId
 		return &c, nil
 	} else {
 		return nil, fmt.Errorf("API token not defined")

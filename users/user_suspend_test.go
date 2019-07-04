@@ -7,13 +7,13 @@ import (
 )
 
 func TestUsers_SuspendUser(t *testing.T) {
-	setupUsersTest()
+	underTest, err := setupUsersTest()
 
-	if assert.NotNil(t, underTest) {
+	if assert.NoError(t, err) {
 		user, err := underTest.CreateUser(users.User{
 			Username:  test_username,
 			Fullname:  test_fullname,
-			AccountId: accountId,
+			AccountId: underTest.AccountId,
 			Roles:     []int32{users.UserTypeUser},
 			Active:true,
 		})
@@ -36,13 +36,13 @@ func TestUsers_SuspendUser(t *testing.T) {
 }
 
 func TestUsers_UnsuspendUser(t *testing.T) {
-	setupUsersTest()
+	underTest, err := setupUsersTest()
 
-	if assert.NotNil(t, underTest) {
+	if assert.NoError(t, err) {
 		user, err := underTest.CreateUser(users.User{
 			Username:  test_username,
 			Fullname:  test_fullname,
-			AccountId: accountId,
+			AccountId: underTest.AccountId,
 			Roles:     []int32{users.UserTypeUser},
 			Active:true,
 		})
@@ -72,13 +72,13 @@ func TestUsers_UnsuspendUser(t *testing.T) {
 }
 
 func TestUsers_SuspendSuspendedUser(t *testing.T) {
-	setupUsersTest()
+	underTest, err := setupUsersTest()
 
-	if assert.NotNil(t, underTest) {
+	if assert.NoError(t, err) {
 		user, err := underTest.CreateUser(users.User{
 			Username:  test_username,
 			Fullname:  test_fullname,
-			AccountId: accountId,
+			AccountId: underTest.AccountId,
 			Roles:     []int32{users.UserTypeUser},
 			Active:    true,
 		})
@@ -100,13 +100,13 @@ func TestUsers_SuspendSuspendedUser(t *testing.T) {
 }
 
 func TestUsers_UnsuspendActiveUser(t *testing.T) {
-	setupUsersTest()
+	underTest, err := setupUsersTest()
 
-	if assert.NotNil(t, underTest) {
+	if assert.NoError(t, err) {
 		user, err := underTest.CreateUser(users.User{
 			Username:  test_username,
 			Fullname:  test_fullname,
-			AccountId: accountId,
+			AccountId: underTest.AccountId,
 			Roles:     []int32{users.UserTypeUser},
 			Active:    true,
 		})

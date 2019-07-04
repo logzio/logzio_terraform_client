@@ -8,7 +8,8 @@ import (
 
 func TestDeleteAlert(t *testing.T) {
 	var client *Alerts
-	client, err := New(test_utils.GetApiToken())
+	token, err := test_utils.GetApiToken()
+	client, _ = New(token)
 	assert.NoError(t, err)
 
 	if assert.NotNil(t, client) {
@@ -31,7 +32,8 @@ func TestDeleteAlert(t *testing.T) {
 
 func TestDeleteMissingAlert(t *testing.T) {
 	var client *Alerts
-	client, err := New(test_utils.GetApiToken())
+	token, _ := test_utils.GetApiToken()
+	client, err := New(token)
 	assert.NoError(t, err)
 
 	if assert.NotNil(t, client) {

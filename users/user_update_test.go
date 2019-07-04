@@ -7,13 +7,13 @@ import (
 )
 
 func TestUsers_UpdateExistingUser(t *testing.T) {
-	setupUsersTest()
+	underTest, err := setupUsersTest()
 
-	if assert.NotNil(t, underTest) {
+	if assert.NoError(t, err) {
 		user, err := underTest.CreateUser(users.User{
 			Username:  test_username,
 			Fullname:  test_fullname,
-			AccountId: accountId,
+			AccountId: underTest.AccountId,
 			Roles:     []int32{users.UserTypeUser},
 		})
 
@@ -29,7 +29,7 @@ func TestUsers_UpdateExistingUser(t *testing.T) {
 
 			if assert.NoError(t, err) && assert.NotNil(t, v) {
 				assert.Equal(t, "test_updatedfullname", v.Fullname)
-				assert.Equal(t, accountId, v.AccountId)
+				assert.Equal(t, underTest.AccountId, v.AccountId)
 				assert.True(t, v.Active)
 				assert.Equal(t, user.Id, user.Id)
 			}
@@ -41,18 +41,16 @@ func TestUsers_UpdateExistingUser(t *testing.T) {
 }
 
 func TestUsers_UpdateNonExistingUser(t *testing.T) {
-	setupUsersTest()
+	underTest, err := setupUsersTest()
 
-	if assert.NotNil(t, underTest) {
+	if assert.NoError(t, err) {
 		user := users.User{
-			Username:  test_username,
+			Username:  "some@random.user",
 			Fullname:  test_fullname,
-			AccountId: accountId,
+			AccountId: underTest.AccountId,
 			Roles:     []int32{users.UserTypeUser},
 			Id: -1,
 		}
-
-		user.Fullname = "test_updatedfullname"
 
 		_, err := underTest.UpdateUser(user)
 		assert.Error(t, err)
@@ -60,13 +58,13 @@ func TestUsers_UpdateNonExistingUser(t *testing.T) {
 }
 
 func TestUsers_UpdateExistingUserInvalidUpdate(t *testing.T) {
-	setupUsersTest()
+	underTest, err := setupUsersTest()
 
-	if assert.NotNil(t, underTest) {
+	if assert.NoError(t, err) {
 		user, err := underTest.CreateUser(users.User{
 			Username:  test_username,
 			Fullname:  test_fullname,
-			AccountId: accountId,
+			AccountId: underTest.AccountId,
 			Roles:     []int32{users.UserTypeUser},
 		})
 

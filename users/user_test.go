@@ -5,12 +5,18 @@ import (
 	"github.com/jonboydell/logzio_client/users"
 )
 
-var underTest *users.Users
-var apiToken string
-var accountId int32
 
-func setupUsersTest() {
-	apiToken = test_utils.GetApiToken()
-	underTest, _ = users.New(apiToken)
-	accountId = test_utils.GetAccountId()
+func setupUsersTest() (*users.Users, error) {
+	apiToken, err := test_utils.GetApiToken()
+	if err != nil {
+		return nil, err
+	}
+
+	accountId, err := test_utils.GetAccountId()
+	if err != nil {
+		return nil, err
+	}
+
+	underTest, err := users.New(apiToken, accountId)
+	return underTest, nil
 }

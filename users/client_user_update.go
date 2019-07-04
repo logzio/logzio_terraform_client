@@ -53,7 +53,7 @@ func updateUserApiRequest(apiToken string, u User) (*http.Request, error) {
 func updateUserHttpRequest(req *http.Request) (map[string]interface{}, error) {
 	httpClient := client.GetHttpClient(req)
 	resp, err := httpClient.Do(req)
-	if resp != nil {
+	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()

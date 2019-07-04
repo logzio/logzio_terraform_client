@@ -12,13 +12,13 @@ const (
 )
 
 func TestUsers_CreateValidUser(t *testing.T) {
-	setupUsersTest()
+	underTest, err := setupUsersTest()
 
-	if assert.NotNil(t, underTest) {
+	if assert.NoError(t, err) {
 		u := users.User{
 			Username:  test_username,
 			Fullname:  test_fullname,
-			AccountId: accountId,
+			AccountId: underTest.AccountId,
 			Roles:     []int32{users.UserTypeUser},
 		}
 
@@ -30,7 +30,7 @@ func TestUsers_CreateValidUser(t *testing.T) {
 			if assert.NoError(t, err) && assert.NotNil(t, v) {
 				assert.Equal(t, test_username, v.Username)
 				assert.Equal(t, test_fullname, v.Fullname)
-				assert.Equal(t, accountId, v.AccountId)
+				assert.Equal(t, underTest.AccountId, v.AccountId)
 				assert.True(t, v.Active)
 				assert.Equal(t, user.Id, user.Id)
 			}
@@ -42,13 +42,13 @@ func TestUsers_CreateValidUser(t *testing.T) {
 }
 
 func TestUsers_CreateDeleteDuplicateUser(t *testing.T) {
-	setupUsersTest()
+	underTest, err := setupUsersTest()
 
-	if assert.NotNil(t, underTest) {
+	if assert.NoError(t, err) {
 		u := users.User{
 			Username:  test_username,
 			Fullname:  test_fullname,
-			AccountId: accountId,
+			AccountId: underTest.AccountId,
 			Roles:     []int32{users.UserTypeUser},
 		}
 
@@ -62,7 +62,7 @@ func TestUsers_CreateDeleteDuplicateUser(t *testing.T) {
 			if assert.NoError(t, err) && assert.NotNil(t, v) {
 				assert.Equal(t, test_username, v.Username)
 				assert.Equal(t, test_fullname, v.Fullname)
-				assert.Equal(t, accountId, v.AccountId)
+				assert.Equal(t, underTest.AccountId, v.AccountId)
 				assert.True(t, v.Active)
 				assert.Equal(t, user.Id, user.Id)
 			}
@@ -74,13 +74,13 @@ func TestUsers_CreateDeleteDuplicateUser(t *testing.T) {
 }
 
 func TestUsers_CreateInvalidUser_Email(t *testing.T) {
-	setupUsersTest()
+	underTest, err := setupUsersTest()
 
-	if assert.NotNil(t, underTest) {
+	if assert.NoError(t, err) {
 		u := users.User{
 			Username:  "SomeTestUser",
 			Fullname:  "Test User",
-			AccountId: accountId,
+			AccountId: underTest.AccountId,
 			Roles:     []int32{users.UserTypeUser},
 		}
 

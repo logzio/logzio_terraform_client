@@ -10,7 +10,7 @@ func TestUpdateAlert(t *testing.T) {
 	var client *Alerts
 	var alert *AlertType
 
-	api_token := test_utils.GetApiToken()
+	api_token, _ := test_utils.GetApiToken()
 
 	client, err := New(api_token)
 	assert.NoError(t, err)
