@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/jonboydell/logzio_client"
 	"github.com/jonboydell/logzio_client/client"
-	"io/ioutil"
 	"net/http"
 )
 
@@ -19,21 +18,16 @@ func validateSuspendUserRequest(userId int32) (error, bool) {
 	return nil, true
 }
 
-func suspendUserHttpRequest(req *http.Request) (map[string]interface{}, error) {
+func suspendUserHttpRequest(req *http.Request) (error) {
 	httpClient := client.GetHttpClient(req)
-	resp, _ := httpClient.Do(req)
-	if resp != nil {
-		defer resp.Body.Close()
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		return err
 	}
-	jsonBytes, _ := ioutil.ReadAll(resp.Body)
+	defer resp.Body.Close()
 	if !logzio_client.CheckValidStatus(resp, []int{suspendUserServiceSuccess}) {
-		return nil, fmt.Errorf("%d %s", resp.StatusCode, jsonBytes)
+		return fmt.Errorf("%d", resp.StatusCode)
 	}
-	var target map[string]interface{}
-	return target, nil
-}
-
-func checkSuspendUserResponse(response map[string]interface{}) error {
 	return nil
 }
 
@@ -61,12 +55,7 @@ func (c *Users) SuspendUser(userId int32) (bool, error) {
 	}
 	req, _ := suspendUserApiRequest(c.ApiToken, userId)
 
-	target, err := suspendUserHttpRequest(req)
-	if err != nil {
-		return false, err
-	}
-
-	err = checkSuspendUserResponse(target)
+	err := suspendUserHttpRequest(req)
 	if err != nil {
 		return false, err
 	}
@@ -80,12 +69,7 @@ func (c *Users) UnSuspendUser(userId int32) (bool, error) {
 	}
 	req, _ := unsuspendUserApiRequest(c.ApiToken, userId)
 
-	target, err := suspendUserHttpRequest(req)
-	if err != nil {
-		return false, err
-	}
-
-	err = checkSuspendUserResponse(target)
+	err := suspendUserHttpRequest(req)
 	if err != nil {
 		return false, err
 	}

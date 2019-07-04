@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/jonboydell/logzio_client"
 	"github.com/jonboydell/logzio_client/client"
-	"io/ioutil"
 	"net/http"
 )
 
@@ -44,15 +43,14 @@ func checkDeleteUserRequest(b []byte) error {
 
 func deleteUserHttpRequest(req *http.Request) error {
 	httpClient := client.GetHttpClient(req)
-	resp, _ := httpClient.Do(req)
-	if resp != nil {
-		defer resp.Body.Close()
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		return err
 	}
-	jsonBytes, err := ioutil.ReadAll(resp.Body)
+	defer resp.Body.Close()
 	if !logzio_client.CheckValidStatus(resp, []int{deleteUserServiceSuccess}) {
-		return fmt.Errorf("%d %s", resp.StatusCode, jsonBytes)
+		return fmt.Errorf("%d", resp.StatusCode)
 	}
-	err = checkDeleteUserRequest(jsonBytes)
 	return err
 }
 

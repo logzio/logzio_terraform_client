@@ -52,9 +52,10 @@ func createUserApiRequest(apiToken string, u User) (*http.Request, error) {
 func createUserHttpRequest(req *http.Request) (map[string]interface{}, error) {
 	httpClient := client.GetHttpClient(req)
 	resp, err := httpClient.Do(req)
-	if resp != nil {
-		defer resp.Body.Close()
+	if err != nil {
+		return nil, err
 	}
+	defer resp.Body.Close()
 	jsonBytes, err := ioutil.ReadAll(resp.Body)
 	if !logzio_client.CheckValidStatus(resp, []int{createUserServiceSuccess}) {
 		return nil, fmt.Errorf("%d %s", resp.StatusCode, jsonBytes)

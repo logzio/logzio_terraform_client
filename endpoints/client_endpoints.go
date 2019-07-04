@@ -122,15 +122,16 @@ func (c *Endpoints) makeEndpointRequest(endpoint interface{}, validator endpoint
 	}
 	req, _ := builder(c.ApiToken, e.EndpointType, e)
 	httpClient := client.GetHttpClient(req)
-	resp, _ := httpClient.Do(req)
-	if resp != nil {
-		defer resp.Body.Close()
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		return nil, err, false
 	}
+	defer resp.Body.Close()
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 	if !logzio_client.CheckValidStatus(resp, []int{200}) {
 		return nil, fmt.Errorf(errorCreateEndpointApiCallFailed, resp.StatusCode, jsonBytes), false
 	}
-	err := checker(jsonBytes)
+	err = checker(jsonBytes)
 	if err != nil {
 		return nil, err, false
 	}

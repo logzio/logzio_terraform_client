@@ -107,10 +107,11 @@ func (c *Alerts) CreateAlert(alert CreateAlertType) (*AlertType, error) {
 	req, _ := buildCreateApiRequest(c.ApiToken, createAlert)
 
 	httpClient := client.GetHttpClient(req)
-	resp, _ := httpClient.Do(req)
-	if resp != nil {
-		defer resp.Body.Close()
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		return nil, err
 	}
+	defer resp.Body.Close()
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 
 	if !logzio_client.CheckValidStatus(resp, []int{createAlertMethodSuccess}) {

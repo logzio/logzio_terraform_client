@@ -84,8 +84,7 @@ func TestUsers_CreateInvalidUser_Email(t *testing.T) {
 			Roles:     []int32{users.UserTypeUser},
 		}
 
-		user, err := underTest.CreateUser(u)
+		_, err := underTest.CreateUser(u)
 		assert.Error(t, err)
-		assert.Nil(t, user)
 	}
 }

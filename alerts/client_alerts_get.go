@@ -27,12 +27,10 @@ func (c *Alerts) GetAlert(alertId int64) (*AlertType, error) {
 
 	httpClient := client.GetHttpClient(req)
 	resp, err := httpClient.Do(req)
-	if resp != nil {
-		defer resp.Body.Close()
-	}
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 
