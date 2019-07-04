@@ -97,6 +97,7 @@ func buildCreateApiRequest(apiToken string, jsonObject map[string]interface{}) (
 	return req, err
 }
 
+// Create an alert, return the created alert if successful, an error otherwise
 func (c *Alerts) CreateAlert(alert CreateAlertType) (*AlertType, error) {
 	err := validateCreateAlertRequest(alert)
 	if err != nil {

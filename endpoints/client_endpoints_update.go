@@ -11,14 +11,14 @@ import (
 )
 
 const (
-	updateEndpointServiceUrl string = endpointServiceEndpoint + "/%s/%d"
+	updateEndpointServiceUrl    string = endpointServiceEndpoint + "/%s/%d"
 	updateEndpointServiceMethod string = http.MethodPut
-	updateEndpointMethodSuccess int = 200
+	updateEndpointMethodSuccess int    = 200
 )
 
 const (
 	errorUpdateEndpointApiCallFailed = "API call UpdateEndpoint failed with status code:%d, data:%s"
-	errorUpdateEndpointDoesntExist = "API call UpdateEndpoint failed as endpoint with id:%d doesn't exist, data:%s"
+	errorUpdateEndpointDoesntExist   = "API call UpdateEndpoint failed as endpoint with id:%d doesn't exist, data:%s"
 )
 
 func buildUpdateEndpointApiRequest(apiToken string, service string, endpoint Endpoint) (*http.Request, error) {
@@ -73,6 +73,7 @@ func buildUpdateEndpointRequest(endpoint Endpoint) (map[string]interface{}, erro
 	return updateEndpoint, nil
 }
 
+// Updates an existing endpoint, returns the updated endpoint if successful, an error otherwise
 func (c *Endpoints) UpdateEndpoint(id int64, endpoint Endpoint) (*Endpoint, error) {
 
 	endpoint.Id = id

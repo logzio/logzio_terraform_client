@@ -40,6 +40,7 @@ func validVictorOpsEndpoint(endpointType Endpoint) bool {
 		len(endpointType.RoutingKey) > 0 && len(endpointType.MessageType) > 0 && len(endpointType.ServiceApiKey) > 0
 }
 
+// Validates an endpoint request for correctness given it's type, returns an error and FALSE if validation is failed, true otherwise
 func ValidateEndpointRequest(endpoint Endpoint) (error, bool) {
 	if strings.EqualFold(EndpointTypeSlack, endpoint.EndpointType) && validSlackEndpoint(endpoint) {
 		return nil, true

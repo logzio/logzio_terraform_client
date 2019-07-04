@@ -7,24 +7,24 @@ import (
 	"os"
 )
 
-
 const ENV_LOGZIO_BASE_URL = "LOGZIO_BASE_URL"
 const LOGZIO_BASE_URL string = "https://api.logz.io"
 
 const (
-	ERROR_CODE = "errorCode"
+	ERROR_CODE    = "errorCode"
 	ERROR_MESSAGE = "errorMessage"
 )
 
 type Client struct {
-	ApiToken string
+	ApiToken  string
 	AccountId int32
-	BaseUrl  string
-	log      log.Logger
+	BaseUrl   string
+	log       log.Logger
 }
 
 var logzioBaseUrl string = LOGZIO_BASE_URL
 
+// Entry point into the logz.io client
 func New(apiToken string) *Client {
 	var c Client
 	c.ApiToken = apiToken
@@ -64,4 +64,3 @@ func IsErrorResponse(response map[string]interface{}) (bool, string) {
 func (c *Client) SetBaseUrl(BaseUrl string) {
 	c.BaseUrl = BaseUrl
 }
-

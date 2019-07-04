@@ -15,7 +15,7 @@ func TestUsers_SuspendUser(t *testing.T) {
 			Fullname:  test_fullname,
 			AccountId: underTest.AccountId,
 			Roles:     []int32{users.UserTypeUser},
-			Active:true,
+			Active:    true,
 		})
 
 		assert.NoError(t, err)
@@ -44,7 +44,7 @@ func TestUsers_UnsuspendUser(t *testing.T) {
 			Fullname:  test_fullname,
 			AccountId: underTest.AccountId,
 			Roles:     []int32{users.UserTypeUser},
-			Active:true,
+			Active:    true,
 		})
 		assert.NoError(t, err)
 
@@ -120,4 +120,5 @@ func TestUsers_UnsuspendActiveUser(t *testing.T) {
 
 		err = underTest.DeleteUser(user.Id)
 		assert.NoError(t, err)
-	}}
+	}
+}

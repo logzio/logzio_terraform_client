@@ -22,6 +22,7 @@ func buildGetApiRequest(apiToken string, alertId int64) (*http.Request, error) {
 	return req, err
 }
 
+// Returns an alert given it's unique identifier, an error otherwise
 func (c *Alerts) GetAlert(alertId int64) (*AlertType, error) {
 	req, _ := buildGetApiRequest(c.ApiToken, alertId)
 

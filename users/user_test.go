@@ -5,7 +5,6 @@ import (
 	"github.com/jonboydell/logzio_client/users"
 )
 
-
 func setupUsersTest() (*users.Users, error) {
 	apiToken, err := test_utils.GetApiToken()
 	if err != nil {

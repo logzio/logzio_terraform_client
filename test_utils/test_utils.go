@@ -18,11 +18,10 @@ func GetApiToken() (string, error) {
 }
 
 func GetAccountId() (int32, error) {
-	account_id_string := os.Getenv(ENV_LOGZIO_ACCOUNT_ID);
+	account_id_string := os.Getenv(ENV_LOGZIO_ACCOUNT_ID)
 	if len(account_id_string) == 0 {
 		return -1, fmt.Errorf("%s env var not specified", ENV_LOGZIO_ACCOUNT_ID)
 	}
 	account_id, _ := strconv.ParseInt(account_id_string, 10, 32)
 	return int32(account_id), nil
 }
-

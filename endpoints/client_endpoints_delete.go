@@ -9,9 +9,9 @@ import (
 )
 
 const (
-	deleteEndpointServiceUrl string = endpointServiceEndpoint + "/%d"
+	deleteEndpointServiceUrl    string = endpointServiceEndpoint + "/%d"
 	deleteEndpointServiceMethod string = http.MethodDelete
-	deleteEndpointMethodSuccess int = 200
+	deleteEndpointMethodSuccess int    = 200
 )
 
 const (
@@ -31,7 +31,7 @@ func buildDeleteEndpointApiRequest(apiToken string, service string, endpoint End
 
 // Deletes an endpoint with the given id, returns a non nil error otherwise
 func (c *Endpoints) DeleteEndpoint(endpointId int64) error {
-	if _, err, ok := c.makeEndpointRequest(Endpoint{ Id: endpointId, }, validateDeleteEndpoint, buildDeleteEndpointApiRequest, func(body []byte) error {
+	if _, err, ok := c.makeEndpointRequest(Endpoint{Id: endpointId}, validateDeleteEndpoint, buildDeleteEndpointApiRequest, func(body []byte) error {
 		if strings.Contains(fmt.Sprintf("%s", body), "endpoints/FORBIDDEN_OPERATION") {
 			return fmt.Errorf(errorDeleteEndpointDoesntExist, endpointId, body)
 		}

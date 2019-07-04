@@ -16,7 +16,6 @@ const (
 	updateUserServiceSuccess int    = 200
 )
 
-
 func validateUserUpdateRequest(u User) (error, bool) {
 	if len(u.Username) <= 0 {
 		return fmt.Errorf("Not implemented"), false
@@ -58,7 +57,7 @@ func updateUserHttpRequest(req *http.Request) (map[string]interface{}, error) {
 	}
 	defer resp.Body.Close()
 	jsonBytes, err := ioutil.ReadAll(resp.Body)
-	if !logzio_client.CheckValidStatus(resp, []int{createUserServiceSuccess}) {
+	if !logzio_client.CheckValidStatus(resp, []int{updateUserServiceSuccess}) {
 		return nil, fmt.Errorf("%d %s", resp.StatusCode, jsonBytes)
 	}
 	var target map[string]interface{}
@@ -77,6 +76,9 @@ func checkUpdateUserResponse(response map[string]interface{}) error {
 	return nil
 }
 
+// Updates an existing user, the supplied user object must specify their unique id
+// Returns the updated user if successful, an error otherwise
+// NOTE: The logz.io API user update API function will not update the username field (for an unknown reason)
 func (c *Users) UpdateUser(user User) (*User, error) {
 	if err, ok := validateUserUpdateRequest(user); !ok {
 		return nil, err

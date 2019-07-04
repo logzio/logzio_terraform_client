@@ -10,10 +10,9 @@ import (
 )
 
 const (
-	listUserServiceUrl = userServiceEndpoint
-	listUserServiceMethod = "GET"
-	listUserServiceSuccess int    = 200
-
+	listUserServiceUrl         = userServiceEndpoint
+	listUserServiceMethod      = "GET"
+	listUserServiceSuccess int = 200
 )
 
 func listUsersApiRequest(apiToken string) (*http.Request, error) {
@@ -25,7 +24,7 @@ func listUsersApiRequest(apiToken string) (*http.Request, error) {
 	return req, err
 }
 
-func listUsersHttpRequest(req *http.Request) ([]map[string]interface{}, error){
+func listUsersHttpRequest(req *http.Request) ([]map[string]interface{}, error) {
 	httpClient := client.GetHttpClient(req)
 	resp, err := httpClient.Do(req)
 	if err != nil {
@@ -46,11 +45,12 @@ func listUsersHttpRequest(req *http.Request) ([]map[string]interface{}, error){
 	return target, nil
 }
 
+// Lists all the users in an array belonging to the account that the supplied API token belongs to, returns an error otherwise
 func (c *Users) ListUsers() ([]User, error) {
 	req, _ := listUsersApiRequest(c.ApiToken)
 
 	target, err := listUsersHttpRequest(req)
-	if (err != nil) {
+	if err != nil {
 		return nil, err
 	}
 

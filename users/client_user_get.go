@@ -10,10 +10,9 @@ import (
 )
 
 const (
-	getUserServiceUrl    = userServiceEndpoint + "/%d"
-	getUserServiceMethod = "GET"
-	getUserServiceSuccess int    = 200
-
+	getUserServiceUrl         = userServiceEndpoint + "/%d"
+	getUserServiceMethod      = "GET"
+	getUserServiceSuccess int = 200
 )
 
 func validateGetUserRequest(u User) (error, bool) {
@@ -30,7 +29,7 @@ func getUserApiRequest(apiToken string, u User) (*http.Request, error) {
 	return req, err
 }
 
-func getUserHttpRequest(req *http.Request) (map[string]interface{}, error){
+func getUserHttpRequest(req *http.Request) (map[string]interface{}, error) {
 	httpClient := client.GetHttpClient(req)
 	resp, err := httpClient.Do(req)
 	if err != nil {
@@ -50,6 +49,8 @@ func getUserHttpRequest(req *http.Request) (map[string]interface{}, error){
 	return target, nil
 }
 
+// Returns a user given their unique ID (an integer), the user ID supplied must belong to the account that the supplied
+// API token belongs to, returns an error otherwise
 func (c *Users) GetUser(id int32) (*User, error) {
 
 	u := User{Id: id}
@@ -59,7 +60,7 @@ func (c *Users) GetUser(id int32) (*User, error) {
 	req, _ := getUserApiRequest(c.ApiToken, u)
 
 	target, err := getUserHttpRequest(req)
-	if (err != nil) {
+	if err != nil {
 		return nil, err
 	}
 

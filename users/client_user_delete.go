@@ -54,6 +54,8 @@ func deleteUserHttpRequest(req *http.Request) error {
 	return err
 }
 
+// Deletes a user from logz.io given their unique ID (an integer)
+// Returns either nil (success) or an error if the user couldn't be deleted
 func (c *Users) DeleteUser(id int32) error {
 
 	user := User{Id: id}
@@ -63,7 +65,7 @@ func (c *Users) DeleteUser(id int32) error {
 	req, _ := deleteUserApiRequest(c.ApiToken, user)
 
 	err := deleteUserHttpRequest(req)
-	if (err != nil) {
+	if err != nil {
 		return err
 	}
 

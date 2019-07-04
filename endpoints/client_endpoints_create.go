@@ -11,13 +11,13 @@ import (
 )
 
 const (
-	createEndpointServiceUrl string = endpointServiceEndpoint + "/%s"
+	createEndpointServiceUrl    string = endpointServiceEndpoint + "/%s"
 	createEndpointServiceMethod string = http.MethodPost
-	createEndpointMethodSuccess int = 200
+	createEndpointMethodSuccess int    = 200
 )
 
 const (
-	errorInvalidEndpointDefinition = "endpoint definition %v is not valid for service %s"
+	errorInvalidEndpointDefinition   = "endpoint definition %v is not valid for service %s"
 	errorCreateEndpointApiCallFailed = "API call CreateEndpoint failed with status code %d, data: %s"
 )
 
