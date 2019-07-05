@@ -43,7 +43,7 @@ func TestUsers_UnsuspendUser(t *testing.T) {
 
 	if assert.NoError(t, err) {
 		user, err := underTest.CreateUser(users.User{
-			Username:  test_username,
+			Username:  "testunsuspenduser@massive.co",
 			Fullname:  test_fullname,
 			AccountId: accountId,
 			Roles:     []int32{users.UserTypeUser},
@@ -80,7 +80,7 @@ func TestUsers_SuspendSuspendedUser(t *testing.T) {
 
 	if assert.NoError(t, err) {
 		user, err := underTest.CreateUser(users.User{
-			Username:  test_username,
+			Username:  "testsuspenduser@massive.co",
 			Fullname:  test_fullname,
 			AccountId: accountId,
 			Roles:     []int32{users.UserTypeUser},
@@ -109,7 +109,7 @@ func TestUsers_UnsuspendActiveUser(t *testing.T) {
 
 	if assert.NoError(t, err) {
 		user, err := underTest.CreateUser(users.User{
-			Username:  test_username,
+			Username:  "testunsuspenduser@massive.co",
 			Fullname:  test_fullname,
 			AccountId: accountId,
 			Roles:     []int32{users.UserTypeUser},

@@ -18,7 +18,7 @@ func TestUsers_CreateValidUser(t *testing.T) {
 
 	if assert.NoError(t, err) {
 		u := users.User{
-			Username:  test_username,
+			Username:  "testcreateuser@massive.co",
 			Fullname:  test_fullname,
 			AccountId: accountId,
 			Roles:     []int32{users.UserTypeUser},
@@ -30,7 +30,7 @@ func TestUsers_CreateValidUser(t *testing.T) {
 			v, err := underTest.GetUser(user.Id)
 
 			if assert.NoError(t, err) && assert.NotNil(t, v) {
-				assert.Equal(t, test_username, v.Username)
+				assert.Equal(t, "testcreateuser@massive.co", v.Username)
 				assert.Equal(t, test_fullname, v.Fullname)
 				assert.Equal(t, accountId, v.AccountId)
 				assert.True(t, v.Active)
@@ -49,7 +49,7 @@ func TestUsers_CreateDeleteDuplicateUser(t *testing.T) {
 
 	if assert.NoError(t, err) {
 		u := users.User{
-			Username:  test_username,
+			Username:  "testduplicateuser@massive.co",
 			Fullname:  test_fullname,
 			AccountId: accountId,
 			Roles:     []int32{users.UserTypeUser},
@@ -58,21 +58,9 @@ func TestUsers_CreateDeleteDuplicateUser(t *testing.T) {
 		user, err := underTest.CreateUser(u)
 		assert.NoError(t, err)
 		_, err = underTest.CreateUser(u)
+		assert.Error(t, err)
 
-		if assert.Error(t, err) {
-			v, err := underTest.GetUser(user.Id)
-
-			if assert.NoError(t, err) && assert.NotNil(t, v) {
-				assert.Equal(t, test_username, v.Username)
-				assert.Equal(t, test_fullname, v.Fullname)
-				assert.Equal(t, accountId, v.AccountId)
-				assert.True(t, v.Active)
-				assert.Equal(t, user.Id, user.Id)
-			}
-
-			err = underTest.DeleteUser(user.Id)
-			assert.NoError(t, err)
-		}
+		err = underTest.DeleteUser(user.Id)
 	}
 }
 
@@ -82,7 +70,7 @@ func TestUsers_CreateInvalidUser_Email(t *testing.T) {
 
 	if assert.NoError(t, err) {
 		u := users.User{
-			Username:  "SomeTestUser",
+			Username:  "InvalidTestUser",
 			Fullname:  "Test User",
 			AccountId: accountId,
 			Roles:     []int32{users.UserTypeUser},

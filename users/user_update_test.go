@@ -36,9 +36,10 @@ func TestUsers_UpdateExistingUser(t *testing.T) {
 				assert.Equal(t, user.Id, user.Id)
 			}
 
-			err = underTest.DeleteUser(user.Id)
-			assert.NoError(t, err)
+
 		}
+		err = underTest.DeleteUser(user.Id)
+		assert.NoError(t, err)
 	}
 }
 
@@ -80,9 +81,9 @@ func TestUsers_UpdateExistingUserInvalidUpdate(t *testing.T) {
 
 			_, err := underTest.UpdateUser(*user)
 			assert.Error(t, err)
-
-			err = underTest.DeleteUser(user.Id)
-			assert.NoError(t, err)
 		}
+
+		err = underTest.DeleteUser(user.Id)
+		assert.NoError(t, err)
 	}
 }
