@@ -76,6 +76,8 @@ func checkCreateUserResponse(response map[string]interface{}) error {
 	return nil
 }
 
+// Creates a new logz.io user, given a new User object
+// Returns the new user (and nil) and (nil and) any error that occurred during the creation of the user
 func (c *Users) CreateUser(user User) (*User, error) {
 	if err, ok := validateUserRequest(user); !ok {
 		return nil, err

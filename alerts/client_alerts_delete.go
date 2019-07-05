@@ -21,6 +21,7 @@ func buildDeleteApiRequest(apiToken string, alertId int64) (*http.Request, error
 	return req, err
 }
 
+// Delete an alert, specified by it's unique id, returns an error if a problem is encountered
 func (c *Alerts) DeleteAlert(alertId int64) error {
 	req, _ := buildDeleteApiRequest(c.ApiToken, alertId)
 

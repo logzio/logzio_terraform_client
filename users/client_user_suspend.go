@@ -9,7 +9,7 @@ import (
 
 const (
 	suspendUserServiceUrl     string = userServiceEndpoint + "/suspend/%d"
-unsuspendUserServiceUrl     string = userServiceEndpoint + "/unsuspend/%d"
+	unsuspendUserServiceUrl   string = userServiceEndpoint + "/unsuspend/%d"
 	suspendUserServiceMethod  string = http.MethodPost
 	suspendUserServiceSuccess int    = 200
 )
@@ -18,7 +18,7 @@ func validateSuspendUserRequest(userId int32) (error, bool) {
 	return nil, true
 }
 
-func suspendUserHttpRequest(req *http.Request) (error) {
+func suspendUserHttpRequest(req *http.Request) error {
 	httpClient := client.GetHttpClient(req)
 	resp, err := httpClient.Do(req)
 	if err != nil {
@@ -49,6 +49,8 @@ func unsuspendUserApiRequest(apiToken string, userId int32) (*http.Request, erro
 	return req, err
 }
 
+// Suspends a user (sets the ACTIVE flag to false)
+// If the call was successful, true is returned (the status of the call) or an error if otherwise
 func (c *Users) SuspendUser(userId int32) (bool, error) {
 	if err, ok := validateSuspendUserRequest(userId); !ok {
 		return false, err
@@ -63,6 +65,8 @@ func (c *Users) SuspendUser(userId int32) (bool, error) {
 	return true, nil
 }
 
+// Unsuspends a user (sets the ACTIVE flag to true)
+// If the call was successful, true is returned (the status of the call) or an error if otherwise
 func (c *Users) UnSuspendUser(userId int32) (bool, error) {
 	if err, ok := validateSuspendUserRequest(userId); !ok {
 		return false, err

@@ -49,7 +49,7 @@ func TestUsers_UpdateNonExistingUser(t *testing.T) {
 			Fullname:  test_fullname,
 			AccountId: underTest.AccountId,
 			Roles:     []int32{users.UserTypeUser},
-			Id: -1,
+			Id:        -1,
 		}
 
 		_, err := underTest.UpdateUser(user)

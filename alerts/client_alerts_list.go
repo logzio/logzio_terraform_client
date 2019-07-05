@@ -21,6 +21,8 @@ func buildListApiRequest(apiToken string) (*http.Request, error) {
 	return req, err
 }
 
+// Returns all the alerts in an array associated with the account identified by the supplied API token, returns an error if
+// any problem occurs during the API call
 func (c *Alerts) ListAlerts() ([]AlertType, error) {
 	req, _ := buildListApiRequest(c.ApiToken)
 

@@ -49,6 +49,8 @@ func buildUpdateApiRequest(apiToken string, alertId int64, jsonObject map[string
 	return req, err
 }
 
+// Updates an existing alert, based on the supplied alert identifier, using the parameters of the specified alert
+// Returns the updated alert if successful, an error otherwise
 func (c *Alerts) UpdateAlert(alertId int64, alert CreateAlertType) (*AlertType, error) {
 	err := validateCreateAlertRequest(alert)
 	if err != nil {
