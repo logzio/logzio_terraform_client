@@ -42,8 +42,7 @@ func TestEndpointsCreateEndpointAlreadyExists(t *testing.T) {
 
 	if assert.NoError(t, err) {
 		endpoint, err = underTest.CreateEndpoint(createDuplicateEndpoint())
-		assert.Nil(t, err)
-		if assert.NotNil(t, endpoint) {
+		if assert.NoError(t, err) {
 			duplicate, err := underTest.CreateEndpoint(createDuplicateEndpoint())
 			assert.Error(t, err)
 			assert.Nil(t, duplicate)
@@ -79,6 +78,8 @@ func TestEndpointsCreateValidEndpoint(t *testing.T) {
 		assert.Equal(t, updateValidEndpoint().Title, updatedEndpoint.Title)
 		assert.Equal(t, updateValidEndpoint().Url, updatedEndpoint.Url)
 		assert.Equal(t, updateValidEndpoint().Description, updatedEndpoint.Description)
+
+		underTest.DeleteEndpoint(endpoint.Id)
 	}
 }
 
@@ -105,7 +106,7 @@ func TestEndpointsCreateInvalidEndpoint(t *testing.T) {
 
 func createDuplicateEndpoint() endpoints.Endpoint {
 	return endpoints.Endpoint{
-		Title:        "duplicateEndpoint",
+		Title:        "slackduplicateEndpoint",
 		Description:  "my description",
 		Url:          "https://this.is.com/some/webhook",
 		EndpointType: "slack",
@@ -114,7 +115,7 @@ func createDuplicateEndpoint() endpoints.Endpoint {
 
 func createValidEndpoint() endpoints.Endpoint {
 	return endpoints.Endpoint{
-		Title:        "validEndpoint",
+		Title:        "slackvalidEndpoint",
 		Description:  "my description",
 		Url:          "https://this.is.com/some/webhook",
 		EndpointType: "slack",
@@ -123,7 +124,7 @@ func createValidEndpoint() endpoints.Endpoint {
 
 func createInvalidEndpoint() endpoints.Endpoint {
 	return endpoints.Endpoint{
-		Title:        "invalidEndpoint",
+		Title:        "slackinvalidEndpoint",
 		Description:  "my description",
 		Url:          "https://someUrl",
 		EndpointType: "slack",
@@ -132,7 +133,7 @@ func createInvalidEndpoint() endpoints.Endpoint {
 
 func updateValidEndpoint() endpoints.Endpoint {
 	return endpoints.Endpoint{
-		Title:        "updatedEndpoint",
+		Title:        "slackupdatedEndpoint",
 		Description:  "my updated description",
 		Url:          "https://this.is.com/some/other/webhook",
 		EndpointType: "slack",

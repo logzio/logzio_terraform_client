@@ -24,7 +24,7 @@ func TestEndpointsBigPandaCreateUpdate(t *testing.T) {
 
 func createBigPandaEndpoint() endpoints.Endpoint {
 	return endpoints.Endpoint{
-		Title:        "endpoint",
+		Title:        "bigpandaendpoint",
 		Description:  "description",
 		EndpointType: "big-panda",
 		ApiToken:     "api_token",
@@ -34,7 +34,7 @@ func createBigPandaEndpoint() endpoints.Endpoint {
 
 func updateBigPandaEndpoint() endpoints.Endpoint {
 	return endpoints.Endpoint{
-		Title:        "updated endpoint",
+		Title:        "bigpandaupdatedendpoint",
 		Description:  "updated description",
 		EndpointType: "big-panda",
 		ApiToken:     "updated_api_token",

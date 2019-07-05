@@ -10,14 +10,12 @@ func TestEndpointsCustomCreateUpdate(t *testing.T) {
 	underTest, err := setupEndpointsTest()
 	if assert.NoError(t, err) {
 		endpoint, err := underTest.CreateEndpoint(createCustomEndpoint())
-		if assert.NotNil(t, endpoint) {
-			assert.NoError(t, err)
+		if assert.NoError(t, err) {
 			endpoint, err = underTest.UpdateEndpoint(endpoint.Id, createUpdatedCustomEndpoint())
 			assert.NotNil(t, endpoint)
 			assert.NoError(t, err)
-
-			underTest.DeleteEndpoint(endpoint.Id)
 		}
+		underTest.DeleteEndpoint(endpoint.Id)
 	}
 }
 
@@ -25,12 +23,12 @@ func TestEndpointsCustomCreateDuplicate(t *testing.T) {
 	underTest, err := setupEndpointsTest()
 	if assert.NoError(t, err) {
 		endpoint, err := underTest.CreateEndpoint(createCustomEndpoint())
-		if assert.NotNil(t, endpoint) {
-			assert.NoError(t, err)
-			endpoint, err = underTest.CreateEndpoint(createCustomEndpoint())
-			assert.Nil(t, endpoint)
+		if assert.NoError(t, err) {
+			duplicate, err := underTest.CreateEndpoint(createCustomEndpoint())
+			assert.Nil(t, duplicate)
 			assert.Error(t, err)
 		}
+		underTest.DeleteEndpoint(endpoint.Id)
 	}
 }
 
@@ -48,7 +46,7 @@ func createCustomEndpoint() endpoints.Endpoint {
 
 func createUpdatedCustomEndpoint() endpoints.Endpoint {
 	return endpoints.Endpoint{
-		Title:        "customEndpoint",
+		Title:        "customUpdatedEndpoint",
 		Method:       "POST",
 		Description:  "some updated description",
 		Url:          "https://this.is.com/some/other/webhook",

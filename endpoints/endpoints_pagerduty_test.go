@@ -24,7 +24,7 @@ func TestEndpointsPagerDutyCreateUpdate(t *testing.T) {
 
 func createPagerDutyEndpoint() endpoints.Endpoint {
 	return endpoints.Endpoint{
-		Title:        "validEndpoint",
+		Title:        "pagerdutyvalidEndpoint",
 		Description:  "my description",
 		EndpointType: "pager-duty",
 		ServiceKey:   "my_service_key",

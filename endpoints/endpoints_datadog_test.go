@@ -22,7 +22,7 @@ func TestEndpointsDataDogCreateUpdate(t *testing.T) {
 
 func createDataDogEndpoint() endpoints.Endpoint {
 	return endpoints.Endpoint{
-		Title:        "endpoint",
+		Title:        "datadogendpoint",
 		Description:  "description",
 		EndpointType: "data-dog",
 		ApiKey:       "api_key",
@@ -31,7 +31,7 @@ func createDataDogEndpoint() endpoints.Endpoint {
 
 func updateDataDogEndpoint() endpoints.Endpoint {
 	return endpoints.Endpoint{
-		Title:        "updated endpoint",
+		Title:        "datadogupdatedendpoint",
 		Description:  "updated description",
 		EndpointType: "data-dog",
 		ApiKey:       "updated_api_key",

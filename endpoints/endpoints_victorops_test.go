@@ -23,7 +23,7 @@ func TestEndpointsVictorOpsCreateUpdate(t *testing.T) {
 
 func createVictorOpsEndpoint() endpoints.Endpoint {
 	return endpoints.Endpoint{
-		Title:         "vops endpoint",
+		Title:         "vopsendpoint",
 		Description:   "description",
 		EndpointType:  "victorops",
 		RoutingKey:    "routing_key",
@@ -34,7 +34,7 @@ func createVictorOpsEndpoint() endpoints.Endpoint {
 
 func updateVictorOpsEndpoint() endpoints.Endpoint {
 	return endpoints.Endpoint{
-		Title:         "vops updated endpoint",
+		Title:         "vopsupdatedendpoint",
 		Description:   "updated description",
 		EndpointType:  "victorops",
 		RoutingKey:    "updated_routing_key",
