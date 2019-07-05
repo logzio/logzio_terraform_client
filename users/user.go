@@ -72,11 +72,25 @@ func jsonToUser(json map[string]interface{}) User {
 }
 
 func jsonToError(json map[string]interface{}) UserError {
-	userError := UserError{
-		errorCode:  json["errorCode"].(string),
-		message:    json["message"].(string),
-		requestId:  json["requestId"].(string),
-		parameters: json["parameters"].(map[string]interface{}),
+	userError := UserError{}
+	if json["errorMessage"] != nil {
+		userError.message = json["errorMessage"].(string)
 	}
+
+	if json["message"] != nil {
+		userError.message = json["message"].(string)
+	}
+
+	if json["errorCode"] != nil {
+		userError.message = json["errorCode"].(string)
+	}
+
+	if json["parameters"] != nil {
+		userError.parameters = json["parameters"].(map[string]interface{})
+	}
+
+	if json["validationErrors"] != nil {
+	}
+
 	return userError
 }

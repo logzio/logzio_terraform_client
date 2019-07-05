@@ -69,8 +69,9 @@ func createUserHttpRequest(req *http.Request) (map[string]interface{}, error) {
 }
 
 func checkCreateUserResponse(response map[string]interface{}) error {
-	if ok, message := client.IsErrorResponse(response); ok {
-		return fmt.Errorf("Error creating user; %s", message)
+	if ok, _ := client.IsErrorResponse(response); ok {
+		serviceError := jsonToError(response)
+		return fmt.Errorf("Error creating user; %s, %s", serviceError.message, serviceError.errorCode)
 	}
 
 	return nil
