@@ -102,9 +102,9 @@ type Endpoints struct {
 }
 
 func New(apiToken string) (*Endpoints, error) {
-	var c Endpoints
-	c.ApiToken = apiToken
 	if len(apiToken) > 0 {
+		var c Endpoints
+		c.ApiToken = apiToken
 		return &c, nil
 	} else {
 		return nil, fmt.Errorf("API token not defined")

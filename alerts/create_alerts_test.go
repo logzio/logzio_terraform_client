@@ -1,31 +1,24 @@
-package alerts
+package alerts_test
 
 import (
 	"fmt"
-	"github.com/jonboydell/logzio_client/test_utils"
+	"github.com/jonboydell/logzio_client/alerts"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestCreateAlert(t *testing.T) {
-	api_token, _ := test_utils.GetApiToken()
+	underTest, err := setupAlertsTest()
 
-	var client *Alerts
-	client, err := New(api_token)
-	assert.NoError(t, err)
-	assert.NotNil(t, client)
+	var alert *alerts.AlertType
 
-	createAlert := createValidAlert()
+	if assert.NoError(t, err) {
+		createAlert := createValidAlert()
 
-	var alert *AlertType
-	alerts := []int64{}
-
-	if assert.NotNil(t, client) {
-		alert, err = client.CreateAlert(createAlert)
-		if err != nil {
-			t.Fatalf("%q should not have raised an error: %v", "CreateAlert", err)
+		alert, err = underTest.CreateAlert(createAlert)
+		if assert.NoError(t, err) {
+			underTest.DeleteAlert(alert.AlertId)
 		}
-		alerts = append(alerts, alert.AlertId)
 
 		alertId := fmt.Sprintf("%d", alert.AlertId)
 
@@ -35,94 +28,68 @@ func TestCreateAlert(t *testing.T) {
 
 		createAlert = createValidAlert()
 		createAlert.Filter = "{\"bool\":{\"must\":[{\"match\":{\"type\":\"mytype\"}}],\"must_not\":[]}}"
-		alert, err = client.CreateAlert(createAlert)
-		if err != nil {
-			t.Fatalf("%q should not have raised an error: %v", "CreateAlert", err)
+		alert, err = underTest.CreateAlert(createAlert)
+		if assert.NoError(t, err) {
+			underTest.DeleteAlert(alert.AlertId)
 		}
-		alerts = append(alerts, alert.AlertId)
 
 		createAlert = createValidAlert()
 		createAlert.Title = ""
-		alert, err = client.CreateAlert(createAlert)
-		if err == nil {
-			t.Fatalf("should have raised an error for blank title: %v", err)
-		}
+		alert, err = underTest.CreateAlert(createAlert)
+		assert.Error(t, err)
 
 		createAlert = createValidAlert()
 		createAlert.Filter = "This is my filter"
-		alert, err = client.CreateAlert(createAlert)
-		if err == nil {
-			t.Fatalf("should have raised an error for invalid use of filter: %v", err)
-		}
+		alert, err = underTest.CreateAlert(createAlert)
+		assert.Error(t, err)
 
 		createAlert = createValidAlert()
 		createAlert.Operation = ""
-		alert, err = client.CreateAlert(createAlert)
-		if err == nil {
-			t.Fatalf("should have raised an error for invalid use of operation: %v", err)
-		}
+		alert, err = underTest.CreateAlert(createAlert)
+		assert.Error(t, err)
 
 		createAlert = createValidAlert()
 		createAlert.ValueAggregationType = ""
-		alert, err = client.CreateAlert(createAlert)
-		if err == nil {
-			t.Fatalf("should have raised an error for invalid use of valueAggregationType: %v", err)
-		}
+		alert, err = underTest.CreateAlert(createAlert)
+		assert.Error(t, err)
 
 		createAlert = createValidAlert()
 		createAlert.ValueAggregationField = ""
-		alert, err = client.CreateAlert(createAlert)
-		if err == nil {
-			t.Fatalf("should have raised an error for invalid use of valueAggregationField: %v", err)
-		}
+		alert, err = underTest.CreateAlert(createAlert)
+		assert.Error(t, err)
 
 		createAlert = createValidAlert()
-		createAlert.ValueAggregationType = AggregationTypeNone
+		createAlert.ValueAggregationType = alerts.AggregationTypeNone
 		createAlert.ValueAggregationField = nil
 		createAlert.GroupByAggregationFields = []interface{}{"my_field"}
-		alert, err = client.CreateAlert(createAlert)
-		if err == nil {
-			t.Fatalf("should have raised an error for invalid use of groupByAggregationFields: %v", err)
-		}
+		alert, err = underTest.CreateAlert(createAlert)
+		assert.Error(t, err)
 
 		createAlert = createValidAlert()
-		createAlert.ValueAggregationType = AggregationTypeCount
+		createAlert.ValueAggregationType = alerts.AggregationTypeCount
 		createAlert.ValueAggregationField = "hello"
 		createAlert.GroupByAggregationFields = []interface{}{"my_field"}
-		alert, err = client.CreateAlert(createAlert)
-		if err == nil {
-			t.Fatalf("should have raised an error for invalid use of valueAggregationField: %v", err)
-		}
+		alert, err = underTest.CreateAlert(createAlert)
+		assert.Error(t, err)
 
 		createAlert = createValidAlert()
 		createAlert.NotificationEmails = nil
-		alert, err = client.CreateAlert(createAlert)
-		if err == nil {
-			t.Fatalf("should have raised an error for invalid use of notificationEmails: %v", err)
-		}
+		alert, err = underTest.CreateAlert(createAlert)
+		assert.Error(t, err)
 
 		createAlert = createValidAlert()
 		createAlert.QueryString = ""
-		alert, err = client.CreateAlert(createAlert)
-		if err == nil {
-			t.Fatalf("should have raised an error for invalid use of queryString: %v", err)
-		}
+		alert, err = underTest.CreateAlert(createAlert)
+		assert.Error(t, err)
 
 		createAlert = createValidAlert()
-		createAlert.SeverityThresholdTiers = []SeverityThresholdType{
-			SeverityThresholdType{
+		createAlert.SeverityThresholdTiers = []alerts.SeverityThresholdType{
+			alerts.SeverityThresholdType{
 				Severity:  "TEST",
 				Threshold: 10,
 			},
 		}
-		alert, err = client.CreateAlert(createAlert)
-		if err == nil {
-			t.Fatalf("should have raised an error for invalid severity: %v", err)
-		}
-
-		// clean up any created alerts
-		for x := 0; x < len(alerts); x++ {
-			client.DeleteAlert(alerts[x])
-		}
+		alert, err = underTest.CreateAlert(createAlert)
+		assert.Error(t, err)
 	}
 }

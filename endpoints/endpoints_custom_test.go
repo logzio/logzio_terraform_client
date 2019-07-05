@@ -1,42 +1,41 @@
-package endpoints
+package endpoints_test
 
 import (
+	"github.com/jonboydell/logzio_client/endpoints"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestEndpointsCustomCreateUpdate(t *testing.T) {
-	setupEndpointsTest()
-	if assert.NotNil(t, endpoints) {
-		endpoint, err := endpoints.CreateEndpoint(createCustomEndpoint())
+	underTest, err := setupEndpointsTest()
+	if assert.NoError(t, err) {
+		endpoint, err := underTest.CreateEndpoint(createCustomEndpoint())
 		if assert.NotNil(t, endpoint) {
 			assert.NoError(t, err)
-			createdEndpoints = append(createdEndpoints, endpoint.Id)
-			endpoint, err = endpoints.UpdateEndpoint(endpoint.Id, createUpdatedCustomEndpoint())
+			endpoint, err = underTest.UpdateEndpoint(endpoint.Id, createUpdatedCustomEndpoint())
 			assert.NotNil(t, endpoint)
 			assert.NoError(t, err)
+
+			underTest.DeleteEndpoint(endpoint.Id)
 		}
 	}
-	teardownEndpointsTest()
 }
 
 func TestEndpointsCustomCreateDuplicate(t *testing.T) {
-	setupEndpointsTest()
-	if assert.NotNil(t, endpoints) {
-		endpoint, err := endpoints.CreateEndpoint(createCustomEndpoint())
+	underTest, err := setupEndpointsTest()
+	if assert.NoError(t, err) {
+		endpoint, err := underTest.CreateEndpoint(createCustomEndpoint())
 		if assert.NotNil(t, endpoint) {
 			assert.NoError(t, err)
-			createdEndpoints = append(createdEndpoints, endpoint.Id)
-			endpoint, err = endpoints.CreateEndpoint(createCustomEndpoint())
+			endpoint, err = underTest.CreateEndpoint(createCustomEndpoint())
 			assert.Nil(t, endpoint)
 			assert.Error(t, err)
 		}
 	}
-	teardownEndpointsTest()
 }
 
-func createCustomEndpoint() Endpoint {
-	return Endpoint{
+func createCustomEndpoint() endpoints.Endpoint {
+	return endpoints.Endpoint{
 		Title:        "customEndpoint",
 		Method:       "POST",
 		Description:  "my description",
@@ -47,8 +46,8 @@ func createCustomEndpoint() Endpoint {
 	}
 }
 
-func createUpdatedCustomEndpoint() Endpoint {
-	return Endpoint{
+func createUpdatedCustomEndpoint() endpoints.Endpoint {
+	return endpoints.Endpoint{
 		Title:        "customEndpoint",
 		Method:       "POST",
 		Description:  "some updated description",

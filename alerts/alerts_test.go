@@ -1,17 +1,16 @@
-package users_test
+package alerts_test
 
 import (
+	"github.com/jonboydell/logzio_client/alerts"
 	"github.com/jonboydell/logzio_client/test_utils"
-	"github.com/jonboydell/logzio_client/users"
 )
 
-func setupUsersTest() (*users.Users, error) {
+func setupAlertsTest() (*alerts.Alerts, error) {
 	apiToken, err := test_utils.GetApiToken()
 	if err != nil {
 		return nil, err
 	}
 
-	underTest, err := users.New(apiToken)
-
+	underTest, err := alerts.New(apiToken)
 	return underTest, nil
 }

@@ -1,44 +1,37 @@
-package alerts
+package alerts_test
 
 import (
-	"github.com/jonboydell/logzio_client/test_utils"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestDeleteAlert(t *testing.T) {
-	var client *Alerts
-	token, err := test_utils.GetApiToken()
-	client, _ = New(token)
-	assert.NoError(t, err)
+	underTest, err := setupAlertsTest()
 
-	if assert.NotNil(t, client) {
+	if assert.NoError(t, err) {
 		// create alert
 		createAlert := createValidAlert()
-		alert, err := client.CreateAlert(createAlert)
+		alert, err := underTest.CreateAlert(createAlert)
 		assert.NoError(t, err)
 		assert.NotNil(t, alert)
 
 		// delete alert
 		alertId := alert.AlertId
-		client.DeleteAlert(alertId)
+		underTest.DeleteAlert(alertId)
 
 		// make sure alert is really deleted
-		alert, err = client.GetAlert(alertId)
+		alert, err = underTest.GetAlert(alertId)
 		assert.Error(t, err)
 		assert.Nil(t, alert)
 	}
 }
 
 func TestDeleteMissingAlert(t *testing.T) {
-	var client *Alerts
-	token, _ := test_utils.GetApiToken()
-	client, err := New(token)
-	assert.NoError(t, err)
+	underTest, err := setupAlertsTest()
 
-	if assert.NotNil(t, client) {
+	if assert.NoError(t, err) {
 		// delete alert that doesn't exist
-		err = client.DeleteAlert(12345)
+		err = underTest.DeleteAlert(12345)
 		assert.Error(t, err)
 	}
 }

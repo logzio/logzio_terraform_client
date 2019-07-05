@@ -1,15 +1,17 @@
-package alerts
+package alerts_test
 
-func createValidAlert() CreateAlertType {
-	return CreateAlertType{
+import "github.com/jonboydell/logzio_client/alerts"
+
+func createValidAlert() alerts.CreateAlertType {
+	return alerts.CreateAlertType{
 		Title:       "this is my title",
 		Description: "this is my description",
 		QueryString: "loglevel:ERROR",
 		Filter:      "",
-		Operation:   OperatorGreaterThan,
-		SeverityThresholdTiers: []SeverityThresholdType{
-			SeverityThresholdType{
-				SeverityHigh,
+		Operation:   alerts.OperatorGreaterThan,
+		SeverityThresholdTiers: []alerts.SeverityThresholdType{
+			alerts.SeverityThresholdType{
+				alerts.SeverityHigh,
 				10,
 			},
 		},
@@ -17,23 +19,23 @@ func createValidAlert() CreateAlertType {
 		NotificationEmails:           []interface{}{},
 		IsEnabled:                    true,
 		SuppressNotificationsMinutes: 0,
-		ValueAggregationType:         AggregationTypeCount,
+		ValueAggregationType:         alerts.AggregationTypeCount,
 		ValueAggregationField:        nil,
 		GroupByAggregationFields:     []interface{}{"my_field"},
 		AlertNotificationEndpoints:   []interface{}{},
 	}
 }
 
-func createUpdateAlert() CreateAlertType {
-	return CreateAlertType{
+func createUpdateAlert() alerts.CreateAlertType {
+	return alerts.CreateAlertType{
 		Title:       "this is my updated title",
 		Description: "this is my description",
 		QueryString: "loglevel:ERROR",
 		Filter:      "",
-		Operation:   OperatorGreaterThan,
-		SeverityThresholdTiers: []SeverityThresholdType{
-			SeverityThresholdType{
-				SeverityHigh,
+		Operation:   alerts.OperatorGreaterThan,
+		SeverityThresholdTiers: []alerts.SeverityThresholdType{
+			alerts.SeverityThresholdType{
+				alerts.SeverityHigh,
 				10,
 			},
 		},
@@ -41,7 +43,7 @@ func createUpdateAlert() CreateAlertType {
 		NotificationEmails:           []interface{}{},
 		IsEnabled:                    true,
 		SuppressNotificationsMinutes: 0,
-		ValueAggregationType:         AggregationTypeCount,
+		ValueAggregationType:         alerts.AggregationTypeCount,
 		ValueAggregationField:        nil,
 		GroupByAggregationFields:     []interface{}{"my_field"},
 		AlertNotificationEndpoints:   []interface{}{},

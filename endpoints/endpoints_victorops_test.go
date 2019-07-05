@@ -1,29 +1,28 @@
-package endpoints
+package endpoints_test
 
 import (
+	"github.com/jonboydell/logzio_client/endpoints"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestEndpointsVictorOpsCreateUpdate(t *testing.T) {
-	setupEndpointsTest()
-
-	if assert.NotNil(t, endpoints) {
-		endpoint, err := endpoints.CreateEndpoint(createVictorOpsEndpoint())
+	underTest, err := setupEndpointsTest()
+	if assert.NoError(t, err) {
+		endpoint, err := underTest.CreateEndpoint(createVictorOpsEndpoint())
 		assert.NotNil(t, endpoint)
 		assert.NoError(t, err)
-		createdEndpoints = append(createdEndpoints, endpoint.Id)
 
-		endpoint, err = endpoints.UpdateEndpoint(endpoint.Id, updateVictorOpsEndpoint())
+		endpoint, err = underTest.UpdateEndpoint(endpoint.Id, updateVictorOpsEndpoint())
 		assert.NotNil(t, endpoint)
 		assert.NoError(t, err)
+
+		underTest.DeleteEndpoint(endpoint.Id)
 	}
-
-	teardownEndpointsTest()
 }
 
-func createVictorOpsEndpoint() Endpoint {
-	return Endpoint{
+func createVictorOpsEndpoint() endpoints.Endpoint {
+	return endpoints.Endpoint{
 		Title:         "vops endpoint",
 		Description:   "description",
 		EndpointType:  "victorops",
@@ -33,8 +32,8 @@ func createVictorOpsEndpoint() Endpoint {
 	}
 }
 
-func updateVictorOpsEndpoint() Endpoint {
-	return Endpoint{
+func updateVictorOpsEndpoint() endpoints.Endpoint {
+	return endpoints.Endpoint{
 		Title:         "vops updated endpoint",
 		Description:   "updated description",
 		EndpointType:  "victorops",

@@ -153,9 +153,9 @@ type Alerts struct {
 }
 
 func New(apiToken string) (*Alerts, error) {
-	var c Alerts
-	c.ApiToken = apiToken
 	if len(apiToken) > 0 {
+		var c Alerts
+		c.ApiToken = apiToken
 		return &c, nil
 	} else {
 		return nil, fmt.Errorf("API token not defined")

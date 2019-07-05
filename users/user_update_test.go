@@ -1,6 +1,7 @@
 package users_test
 
 import (
+	"github.com/jonboydell/logzio_client/test_utils"
 	"github.com/jonboydell/logzio_client/users"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -8,12 +9,13 @@ import (
 
 func TestUsers_UpdateExistingUser(t *testing.T) {
 	underTest, err := setupUsersTest()
+	accountId, _ := test_utils.GetAccountId()
 
 	if assert.NoError(t, err) {
 		user, err := underTest.CreateUser(users.User{
 			Username:  test_username,
 			Fullname:  test_fullname,
-			AccountId: underTest.AccountId,
+			AccountId: accountId,
 			Roles:     []int32{users.UserTypeUser},
 		})
 
@@ -29,7 +31,7 @@ func TestUsers_UpdateExistingUser(t *testing.T) {
 
 			if assert.NoError(t, err) && assert.NotNil(t, v) {
 				assert.Equal(t, "test_updatedfullname", v.Fullname)
-				assert.Equal(t, underTest.AccountId, v.AccountId)
+				assert.Equal(t, accountId, v.AccountId)
 				assert.True(t, v.Active)
 				assert.Equal(t, user.Id, user.Id)
 			}
@@ -42,12 +44,13 @@ func TestUsers_UpdateExistingUser(t *testing.T) {
 
 func TestUsers_UpdateNonExistingUser(t *testing.T) {
 	underTest, err := setupUsersTest()
+	accountId, _ := test_utils.GetAccountId()
 
 	if assert.NoError(t, err) {
 		user := users.User{
 			Username:  "some@random.user",
 			Fullname:  test_fullname,
-			AccountId: underTest.AccountId,
+			AccountId: accountId,
 			Roles:     []int32{users.UserTypeUser},
 			Id:        -1,
 		}
@@ -59,12 +62,13 @@ func TestUsers_UpdateNonExistingUser(t *testing.T) {
 
 func TestUsers_UpdateExistingUserInvalidUpdate(t *testing.T) {
 	underTest, err := setupUsersTest()
+	accountId, _ := test_utils.GetAccountId()
 
 	if assert.NoError(t, err) {
 		user, err := underTest.CreateUser(users.User{
 			Username:  test_username,
 			Fullname:  test_fullname,
-			AccountId: underTest.AccountId,
+			AccountId: accountId,
 			Roles:     []int32{users.UserTypeUser},
 		})
 

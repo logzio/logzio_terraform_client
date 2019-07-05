@@ -1,28 +1,29 @@
-package endpoints
+package endpoints_test
 
 import (
+	"github.com/jonboydell/logzio_client/endpoints"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestEndpointsBigPandaCreateUpdate(t *testing.T) {
-	setupEndpointsTest()
-	if assert.NotNil(t, endpoints) {
-		endpoint, err := endpoints.CreateEndpoint(createBigPandaEndpoint())
+	underTest, err := setupEndpointsTest()
+	if assert.NoError(t, err) {
+		endpoint, err := underTest.CreateEndpoint(createBigPandaEndpoint())
 
 		if assert.NotNil(t, endpoint) {
 			assert.NoError(t, err)
-			createdEndpoints = append(createdEndpoints, endpoint.Id)
-			endpoint, err = endpoints.UpdateEndpoint(endpoint.Id, updateBigPandaEndpoint())
+			endpoint, err = underTest.UpdateEndpoint(endpoint.Id, updateBigPandaEndpoint())
 			assert.NotNil(t, endpoint)
 			assert.NoError(t, err)
+
+			underTest.DeleteEndpoint(endpoint.Id)
 		}
 	}
-	teardownEndpointsTest()
 }
 
-func createBigPandaEndpoint() Endpoint {
-	return Endpoint{
+func createBigPandaEndpoint() endpoints.Endpoint {
+	return endpoints.Endpoint{
 		Title:        "endpoint",
 		Description:  "description",
 		EndpointType: "big-panda",
@@ -31,8 +32,8 @@ func createBigPandaEndpoint() Endpoint {
 	}
 }
 
-func updateBigPandaEndpoint() Endpoint {
-	return Endpoint{
+func updateBigPandaEndpoint() endpoints.Endpoint {
+	return endpoints.Endpoint{
 		Title:        "updated endpoint",
 		Description:  "updated description",
 		EndpointType: "big-panda",

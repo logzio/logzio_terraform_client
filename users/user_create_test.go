@@ -1,6 +1,7 @@
 package users_test
 
 import (
+	"github.com/jonboydell/logzio_client/test_utils"
 	"github.com/jonboydell/logzio_client/users"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -13,12 +14,13 @@ const (
 
 func TestUsers_CreateValidUser(t *testing.T) {
 	underTest, err := setupUsersTest()
+	accountId, _ := test_utils.GetAccountId()
 
 	if assert.NoError(t, err) {
 		u := users.User{
 			Username:  test_username,
 			Fullname:  test_fullname,
-			AccountId: underTest.AccountId,
+			AccountId: accountId,
 			Roles:     []int32{users.UserTypeUser},
 		}
 
@@ -30,7 +32,7 @@ func TestUsers_CreateValidUser(t *testing.T) {
 			if assert.NoError(t, err) && assert.NotNil(t, v) {
 				assert.Equal(t, test_username, v.Username)
 				assert.Equal(t, test_fullname, v.Fullname)
-				assert.Equal(t, underTest.AccountId, v.AccountId)
+				assert.Equal(t, accountId, v.AccountId)
 				assert.True(t, v.Active)
 				assert.Equal(t, user.Id, user.Id)
 			}
@@ -43,12 +45,13 @@ func TestUsers_CreateValidUser(t *testing.T) {
 
 func TestUsers_CreateDeleteDuplicateUser(t *testing.T) {
 	underTest, err := setupUsersTest()
+	accountId, _ := test_utils.GetAccountId()
 
 	if assert.NoError(t, err) {
 		u := users.User{
 			Username:  test_username,
 			Fullname:  test_fullname,
-			AccountId: underTest.AccountId,
+			AccountId: accountId,
 			Roles:     []int32{users.UserTypeUser},
 		}
 
@@ -62,7 +65,7 @@ func TestUsers_CreateDeleteDuplicateUser(t *testing.T) {
 			if assert.NoError(t, err) && assert.NotNil(t, v) {
 				assert.Equal(t, test_username, v.Username)
 				assert.Equal(t, test_fullname, v.Fullname)
-				assert.Equal(t, underTest.AccountId, v.AccountId)
+				assert.Equal(t, accountId, v.AccountId)
 				assert.True(t, v.Active)
 				assert.Equal(t, user.Id, user.Id)
 			}
@@ -75,12 +78,13 @@ func TestUsers_CreateDeleteDuplicateUser(t *testing.T) {
 
 func TestUsers_CreateInvalidUser_Email(t *testing.T) {
 	underTest, err := setupUsersTest()
+	accountId, _ := test_utils.GetAccountId()
 
 	if assert.NoError(t, err) {
 		u := users.User{
 			Username:  "SomeTestUser",
 			Fullname:  "Test User",
-			AccountId: underTest.AccountId,
+			AccountId: accountId,
 			Roles:     []int32{users.UserTypeUser},
 		}
 

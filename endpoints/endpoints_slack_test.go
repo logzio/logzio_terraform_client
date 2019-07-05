@@ -1,32 +1,31 @@
-package endpoints
+package endpoints_test
 
 import (
+	"github.com/jonboydell/logzio_client/endpoints"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestEndpoints_CreateDeleteValidEndpoint(t *testing.T) {
-	var endpoint *Endpoint
+	var endpoint *endpoints.Endpoint
 	var err error
 
-	setupEndpointsTest()
+	underTest, err := setupEndpointsTest()
 
-	if assert.NotNil(t, endpoints) {
-		endpoint, err = endpoints.CreateEndpoint(deleteValidEndpoint())
+	if assert.NoError(t, err) {
+		endpoint, err = underTest.CreateEndpoint(deleteValidEndpoint())
 		assert.Nil(t, err)
 
-		err = endpoints.DeleteEndpoint(endpoint.Id)
+		err = underTest.DeleteEndpoint(endpoint.Id)
 		assert.NoError(t, err)
 
-		_, err = endpoints.GetEndpoint(endpoint.Id)
+		_, err = underTest.GetEndpoint(endpoint.Id)
 		assert.Error(t, err)
 	}
-
-	teardownEndpointsTest()
 }
 
-func deleteValidEndpoint() Endpoint {
-	return Endpoint{
+func deleteValidEndpoint() endpoints.Endpoint {
+	return endpoints.Endpoint{
 		Title:        "deleteValidEndpoint",
 		Description:  "my description",
 		Url:          "https://this.is.com/some/webhook",
@@ -36,84 +35,76 @@ func deleteValidEndpoint() Endpoint {
 
 // Tests create of an already existing endpoint (same titles)
 func TestEndpointsCreateEndpointAlreadyExists(t *testing.T) {
-	var endpoint *Endpoint
+	var endpoint *endpoints.Endpoint
 	var err error
 
-	setupEndpointsTest()
+	underTest, err := setupEndpointsTest()
 
-	if assert.NotNil(t, endpoints) {
-		endpoint, err = endpoints.CreateEndpoint(createDuplicateEndpoint())
+	if assert.NoError(t, err) {
+		endpoint, err = underTest.CreateEndpoint(createDuplicateEndpoint())
 		assert.Nil(t, err)
 		if assert.NotNil(t, endpoint) {
-			createdEndpoints = append(createdEndpoints, endpoint.Id)
-			endpoint, err = endpoints.CreateEndpoint(createDuplicateEndpoint())
+			duplicate, err := underTest.CreateEndpoint(createDuplicateEndpoint())
 			assert.Error(t, err)
-			assert.Nil(t, endpoint)
+			assert.Nil(t, duplicate)
 		}
+		underTest.DeleteEndpoint(endpoint.Id)
 	}
-
-	teardownEndpointsTest()
 }
 
 func TestEndpointsCreateValidEndpoint(t *testing.T) {
-	var endpoint *Endpoint
+	var endpoint *endpoints.Endpoint
 	var err error
 
-	setupEndpointsTest()
+	underTest, err := setupEndpointsTest()
 
-	assert.NotNil(t, endpoints)
-
-	if endpoints != nil {
-		endpoint, err = endpoints.CreateEndpoint(createValidEndpoint())
+	if assert.NoError(t, err) {
+		endpoint, err = underTest.CreateEndpoint(createValidEndpoint())
 		assert.Nil(t, err)
-		createdEndpoints = append(createdEndpoints, endpoint.Id)
 
-		selectedEndpoint, err := endpoints.GetEndpoint(endpoint.Id)
+		selectedEndpoint, err := underTest.GetEndpoint(endpoint.Id)
 		assert.NoError(t, err)
 		assert.NotNil(t, selectedEndpoint)
 		assert.Equal(t, endpoint.Id, selectedEndpoint.Id)
 
-		_, err = endpoints.GetEndpointByName(createValidEndpoint().Title)
+		_, err = underTest.GetEndpointByName(createValidEndpoint().Title)
 		assert.NoError(t, err)
 
-		_, err = endpoints.UpdateEndpoint(endpoint.Id, updateValidEndpoint())
+		_, err = underTest.UpdateEndpoint(endpoint.Id, updateValidEndpoint())
 		assert.NoError(t, err)
 
-		updatedEndpoint, err := endpoints.GetEndpoint(endpoint.Id)
+		updatedEndpoint, err := underTest.GetEndpoint(endpoint.Id)
 		assert.NoError(t, err)
 		assert.Equal(t, endpoint.Id, updatedEndpoint.Id)
 		assert.Equal(t, updateValidEndpoint().Title, updatedEndpoint.Title)
 		assert.Equal(t, updateValidEndpoint().Url, updatedEndpoint.Url)
 		assert.Equal(t, updateValidEndpoint().Description, updatedEndpoint.Description)
 	}
-
-	teardownEndpointsTest()
 }
 
 func TestEndpointsListEndpoints(t *testing.T) {
-	setupEndpointsTest()
-	if assert.NotNil(t, endpoints) {
-		endpoint, err := endpoints.CreateEndpoint(createValidEndpoint())
-		list, err := endpoints.ListEndpoints()
+	underTest, err := setupEndpointsTest()
+	if assert.NoError(t, err) {
+		endpoint, err := underTest.CreateEndpoint(createValidEndpoint())
+		list, err := underTest.ListEndpoints()
 		assert.NoError(t, err)
 		assert.True(t, len(list) > 0)
-		createdEndpoints = append(createdEndpoints, endpoint.Id)
+		underTest.DeleteEndpoint(endpoint.Id)
 	}
-	teardownEndpointsTest()
 }
 
 func TestEndpointsCreateInvalidEndpoint(t *testing.T) {
-	setupEndpointsTest()
-	if assert.NotNil(t, endpoints) {
+	underTest, err := setupEndpointsTest()
+	if assert.NoError(t, err) {
 		invalidEndpoint := createInvalidEndpoint()
-		endpoint, err := endpoints.CreateEndpoint(invalidEndpoint)
+		endpoint, err := underTest.CreateEndpoint(invalidEndpoint)
 		assert.Nil(t, endpoint)
 		assert.Error(t, err)
 	}
 }
 
-func createDuplicateEndpoint() Endpoint {
-	return Endpoint{
+func createDuplicateEndpoint() endpoints.Endpoint {
+	return endpoints.Endpoint{
 		Title:        "duplicateEndpoint",
 		Description:  "my description",
 		Url:          "https://this.is.com/some/webhook",
@@ -121,8 +112,8 @@ func createDuplicateEndpoint() Endpoint {
 	}
 }
 
-func createValidEndpoint() Endpoint {
-	return Endpoint{
+func createValidEndpoint() endpoints.Endpoint {
+	return endpoints.Endpoint{
 		Title:        "validEndpoint",
 		Description:  "my description",
 		Url:          "https://this.is.com/some/webhook",
@@ -130,8 +121,8 @@ func createValidEndpoint() Endpoint {
 	}
 }
 
-func createInvalidEndpoint() Endpoint {
-	return Endpoint{
+func createInvalidEndpoint() endpoints.Endpoint {
+	return endpoints.Endpoint{
 		Title:        "invalidEndpoint",
 		Description:  "my description",
 		Url:          "https://someUrl",
@@ -139,8 +130,8 @@ func createInvalidEndpoint() Endpoint {
 	}
 }
 
-func updateValidEndpoint() Endpoint {
-	return Endpoint{
+func updateValidEndpoint() endpoints.Endpoint {
+	return endpoints.Endpoint{
 		Title:        "updatedEndpoint",
 		Description:  "my updated description",
 		Url:          "https://this.is.com/some/other/webhook",

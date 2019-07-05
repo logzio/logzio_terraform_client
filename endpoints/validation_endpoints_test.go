@@ -1,12 +1,13 @@
-package endpoints
+package endpoints_test
 
 import (
+	"github.com/jonboydell/logzio_client/endpoints"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestEndpointsInvalidEndpoint(t *testing.T) {
-	if err, ok := ValidateEndpointRequest(Endpoint{
+	if err, ok := endpoints.ValidateEndpointRequest(endpoints.Endpoint{
 		Title: "title",
 	}); ok {
 		assert.Fail(t, "shouldn't be true")
@@ -16,11 +17,11 @@ func TestEndpointsInvalidEndpoint(t *testing.T) {
 }
 
 func TestEndpointsValidateSlackEndpoint(t *testing.T) {
-	if err, ok := ValidateEndpointRequest(Endpoint{
+	if err, ok := endpoints.ValidateEndpointRequest(endpoints.Endpoint{
 		Title:        "title",
 		Description:  "description",
 		Url:          "url",
-		EndpointType: EndpointTypeSlack,
+		EndpointType: endpoints.EndpointTypeSlack,
 	}); ok {
 		assert.NoError(t, err)
 	} else {
@@ -29,14 +30,14 @@ func TestEndpointsValidateSlackEndpoint(t *testing.T) {
 }
 
 func TestEndpointsValidateCustomEndpoint(t *testing.T) {
-	if err, ok := ValidateEndpointRequest(Endpoint{
+	if err, ok := endpoints.ValidateEndpointRequest(endpoints.Endpoint{
 		Title:        "title",
 		Description:  "description",
 		Url:          "url",
 		Method:       "method",
 		Headers:      map[string]string{"key": "value"},
 		BodyTemplate: "{\"hello\":\"there\"}",
-		EndpointType: EndpointTypeCustom,
+		EndpointType: endpoints.EndpointTypeCustom,
 	}); ok {
 		assert.NoError(t, err)
 	} else {
@@ -45,11 +46,11 @@ func TestEndpointsValidateCustomEndpoint(t *testing.T) {
 }
 
 func TestEndpointsValidatePagerDuty(t *testing.T) {
-	if err, ok := ValidateEndpointRequest(Endpoint{
+	if err, ok := endpoints.ValidateEndpointRequest(endpoints.Endpoint{
 		Title:        "title",
 		Description:  "description",
 		ServiceKey:   "serviceKey",
-		EndpointType: EndpointTypePagerDuty,
+		EndpointType: endpoints.EndpointTypePagerDuty,
 	}); ok {
 		assert.NoError(t, err)
 	} else {
@@ -58,12 +59,12 @@ func TestEndpointsValidatePagerDuty(t *testing.T) {
 }
 
 func TestEndpointsValidateBigPanda(t *testing.T) {
-	if err, ok := ValidateEndpointRequest(Endpoint{
+	if err, ok := endpoints.ValidateEndpointRequest(endpoints.Endpoint{
 		Title:        "title",
 		Description:  "description",
 		ApiToken:     "ApiToken",
 		AppKey:       "AppKey",
-		EndpointType: EndpointTypeBigPanda,
+		EndpointType: endpoints.EndpointTypeBigPanda,
 	}); ok {
 		assert.NoError(t, err)
 	} else {
@@ -72,11 +73,11 @@ func TestEndpointsValidateBigPanda(t *testing.T) {
 }
 
 func TestEndpointsValidateDataDog(t *testing.T) {
-	if err, ok := ValidateEndpointRequest(Endpoint{
+	if err, ok := endpoints.ValidateEndpointRequest(endpoints.Endpoint{
 		Title:        "title",
 		Description:  "description",
 		ApiKey:       "ApiKey",
-		EndpointType: EndpointTypeDataDog,
+		EndpointType: endpoints.EndpointTypeDataDog,
 	}); ok {
 		assert.NoError(t, err)
 	} else {
@@ -85,13 +86,13 @@ func TestEndpointsValidateDataDog(t *testing.T) {
 }
 
 func TestEndpointsValidateVictorOps(t *testing.T) {
-	if err, ok := ValidateEndpointRequest(Endpoint{
+	if err, ok := endpoints.ValidateEndpointRequest(endpoints.Endpoint{
 		Title:         "title",
 		Description:   "description",
 		RoutingKey:    "routingKey",
 		MessageType:   "messageType",
 		ServiceApiKey: "serviceApiKey",
-		EndpointType:  EndpointTypeVictorOps,
+		EndpointType:  endpoints.EndpointTypeVictorOps,
 	}); ok {
 		assert.NoError(t, err)
 	} else {

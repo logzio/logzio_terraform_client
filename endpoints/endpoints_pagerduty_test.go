@@ -1,30 +1,29 @@
-package endpoints
+package endpoints_test
 
 import (
+	"github.com/jonboydell/logzio_client/endpoints"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestEndpointsPagerDutyCreateUpdate(t *testing.T) {
-	setupEndpointsTest()
+	underTest, err := setupEndpointsTest()
 
-	if assert.NotNil(t, endpoints) {
-		endpoint, err := endpoints.CreateEndpoint(createPagerDutyEndpoint())
+	if assert.NoError(t, err) {
+		endpoint, err := underTest.CreateEndpoint(createPagerDutyEndpoint())
 		assert.NotNil(t, endpoint)
 
 		if assert.NoError(t, err) {
-			createdEndpoints = append(createdEndpoints, endpoint.Id)
-			endpoint, err = endpoints.UpdateEndpoint(endpoint.Id, createPagerDutyEndpoint())
+			endpoint, err = underTest.UpdateEndpoint(endpoint.Id, createPagerDutyEndpoint())
 			assert.NotNil(t, endpoint)
 			assert.NoError(t, err)
 		}
+		underTest.DeleteEndpoint(endpoint.Id)
 	}
-
-	teardownEndpointsTest()
 }
 
-func createPagerDutyEndpoint() Endpoint {
-	return Endpoint{
+func createPagerDutyEndpoint() endpoints.Endpoint {
+	return endpoints.Endpoint{
 		Title:        "validEndpoint",
 		Description:  "my description",
 		EndpointType: "pager-duty",

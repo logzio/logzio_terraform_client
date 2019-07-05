@@ -44,11 +44,10 @@ type Users struct {
 }
 
 // Creates a new entry point into the users functions, accepts the user's logz.io API token and account Id
-func New(apiToken string, accountId int32) (*Users, error) {
+func New(apiToken string) (*Users, error) {
 	if len(apiToken) > 0 {
 		var c Users
 		c.ApiToken = apiToken
-		c.AccountId = accountId
 		return &c, nil
 	} else {
 		return nil, fmt.Errorf("API token not defined")
