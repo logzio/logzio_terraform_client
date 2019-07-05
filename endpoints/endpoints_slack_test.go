@@ -11,9 +11,7 @@ func TestEndpoints_CreateDeleteValidEndpoint(t *testing.T) {
 
 	setupEndpointsTest()
 
-	assert.NotNil(t, endpoints)
-
-	if endpoints != nil {
+	if assert.NotNil(t, endpoints) {
 		endpoint, err = endpoints.CreateEndpoint(deleteValidEndpoint())
 		assert.Nil(t, err)
 
@@ -43,17 +41,15 @@ func TestEndpointsCreateEndpointAlreadyExists(t *testing.T) {
 
 	setupEndpointsTest()
 
-	assert.NotNil(t, endpoints)
-
-	if endpoints != nil {
+	if assert.NotNil(t, endpoints) {
 		endpoint, err = endpoints.CreateEndpoint(createDuplicateEndpoint())
 		assert.Nil(t, err)
-		assert.NotNil(t, endpoint)
-		createdEndpoints = append(createdEndpoints, endpoint.Id)
-
-		endpoint, err = endpoints.CreateEndpoint(createDuplicateEndpoint())
-		assert.Error(t, err)
-		assert.Nil(t, endpoint)
+		if assert.NotNil(t, endpoint) {
+			createdEndpoints = append(createdEndpoints, endpoint.Id)
+			endpoint, err = endpoints.CreateEndpoint(createDuplicateEndpoint())
+			assert.Error(t, err)
+			assert.Nil(t, endpoint)
+		}
 	}
 
 	teardownEndpointsTest()
@@ -95,23 +91,18 @@ func TestEndpointsCreateValidEndpoint(t *testing.T) {
 }
 
 func TestEndpointsListEndpoints(t *testing.T) {
-	assert.NotNil(t, endpoints)
-
 	setupEndpointsTest()
-
-	if endpoints != nil {
+	if assert.NotNil(t, endpoints) {
 		endpoint, err := endpoints.CreateEndpoint(createValidEndpoint())
 		list, err := endpoints.ListEndpoints()
 		assert.NoError(t, err)
 		assert.True(t, len(list) > 0)
 		createdEndpoints = append(createdEndpoints, endpoint.Id)
 	}
-
 	teardownEndpointsTest()
 }
 
 func TestEndpointsCreateInvalidEndpoint(t *testing.T) {
-
 	setupEndpointsTest()
 	if assert.NotNil(t, endpoints) {
 		invalidEndpoint := createInvalidEndpoint()

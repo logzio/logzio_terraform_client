@@ -7,7 +7,7 @@ var apiToken string
 var createdEndpoints []int64
 
 func setupEndpointsTest() {
-	apiToken = test_utils.GetApiToken()
+	apiToken, _ = test_utils.GetApiToken()
 	endpoints, _ = New(apiToken)
 	createdEndpoints = []int64{}
 }

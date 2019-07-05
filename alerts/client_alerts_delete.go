@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-const deleteAlertServiceUrl string = "%s/v1/alerts/%d"
+const deleteAlertServiceUrl string = alertsServiceEndpoint + "/%d"
 const deleteAlertServiceMethod string = http.MethodDelete
 const deleteAlertMethodSuccess int = 200
 
@@ -21,14 +21,16 @@ func buildDeleteApiRequest(apiToken string, alertId int64) (*http.Request, error
 	return req, err
 }
 
+// Delete an alert, specified by it's unique id, returns an error if a problem is encountered
 func (c *Alerts) DeleteAlert(alertId int64) error {
 	req, _ := buildDeleteApiRequest(c.ApiToken, alertId)
 
-	var client http.Client
-	resp, err := client.Do(req)
+	httpClient := client.GetHttpClient(req)
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		return err
 	}
+	defer resp.Body.Close()
 
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 

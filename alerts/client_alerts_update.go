@@ -10,7 +10,7 @@ import (
 	"net/http"
 )
 
-const updateAlertServiceUrl string = "%s/v1/alerts/%d"
+const updateAlertServiceUrl string = alertsServiceEndpoint + "/%d"
 const updateAlertServiceMethod string = http.MethodPut
 const updateAlertMethodSuccess int = 200
 
@@ -49,6 +49,8 @@ func buildUpdateApiRequest(apiToken string, alertId int64, jsonObject map[string
 	return req, err
 }
 
+// Updates an existing alert, based on the supplied alert identifier, using the parameters of the specified alert
+// Returns the updated alert if successful, an error otherwise
 func (c *Alerts) UpdateAlert(alertId int64, alert CreateAlertType) (*AlertType, error) {
 	err := validateCreateAlertRequest(alert)
 	if err != nil {
@@ -56,10 +58,18 @@ func (c *Alerts) UpdateAlert(alertId int64, alert CreateAlertType) (*AlertType, 
 	}
 
 	createAlert := buildUpdateAlertRequest(alert)
-	req, _ := buildUpdateApiRequest(c.ApiToken, alertId, createAlert)
+	req, err := buildUpdateApiRequest(c.ApiToken, alertId, createAlert)
+	if err != nil {
+		return nil, err
+	}
 
-	var client http.Client
-	resp, _ := client.Do(req)
+	httpClient := client.GetHttpClient(req)
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 
 	if !logzio_client.CheckValidStatus(resp, []int{updateAlertMethodSuccess}) {

@@ -6,6 +6,10 @@ import (
 )
 
 const (
+	alertsServiceEndpoint = "%s/v1/alerts"
+)
+
+const (
 	AggregationTypeUniqueCount string = "UNIQUE_COUNT"
 	AggregationTypeAvg         string = "AVG"
 	AggregationTypeMax         string = "MAX"

@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-const listAlertServiceUrl string = "%s/v1/alerts"
+const listAlertServiceUrl string = alertsServiceEndpoint
 const listAlertServiceMethod string = http.MethodGet
 const listAlertMethodSuccess int = 200
 
@@ -21,14 +21,17 @@ func buildListApiRequest(apiToken string) (*http.Request, error) {
 	return req, err
 }
 
+// Returns all the alerts in an array associated with the account identified by the supplied API token, returns an error if
+// any problem occurs during the API call
 func (c *Alerts) ListAlerts() ([]AlertType, error) {
 	req, _ := buildListApiRequest(c.ApiToken)
 
-	var client http.Client
-	resp, err := client.Do(req)
+	httpClient := client.GetHttpClient(req)
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 

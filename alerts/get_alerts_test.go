@@ -8,45 +8,31 @@ import (
 )
 
 func TestGetAlert(t *testing.T) {
-	api_token := test_utils.GetApiToken()
+	api_token, _ := test_utils.GetApiToken()
 	if len(api_token) == 0 {
 		t.Fatalf("%v could not get an API token from %v", "TestDeleteAlert", client.ENV_LOGZIO_BASE_URL)
 	}
 
-	var client *Alerts
-	client, err := New(api_token)
+	var underTest *Alerts
+	underTest, err := New(api_token)
 	assert.NoError(t, err)
-	assert.NotNil(t, client)
+	assert.NotNil(t, underTest)
 
 	createAlert := createValidAlert()
 
 	var alert *AlertType
-	alerts := []int64{}
 
-	alert, err = client.CreateAlert(createAlert)
-	if err != nil {
-		t.Fatalf("%v should not have raised an error: %v", "CreateAlert", err)
-	}
-	alerts = append(alerts, alert.AlertId)
+	alert, err = underTest.CreateAlert(createAlert)
+	assert.NoError(t, err)
+	assert.NotNil(t, alert)
 
-	if alert.AlertId <= 0 {
-		t.Fatalf("%d have a value > 0: %v", alert.AlertId, err)
-	}
+	alert, err = underTest.GetAlert(alert.AlertId)
+	assert.NoError(t, err)
+	assert.NotNil(t, alert)
 
-	_, err = client.GetAlert(alert.AlertId)
+	err = underTest.DeleteAlert(alert.AlertId)
+	assert.NoError(t, err)
 
-	if err != nil {
-		t.Fatalf("%v should not have raised an error: %v", "GetAlert", err)
-	}
-
-	var alertId int64 = 12345
-	_, err = client.GetAlert(alertId)
-	if err == nil {
-		t.Fatalf("%v should have raised an error, alert %d not found: %v", "GetAlert", alertId, err)
-	}
-
-	// clean up any created alerts
-	for x := 0; x < len(alerts); x++ {
-		client.DeleteAlert(alerts[x])
-	}
+	_, err = underTest.GetAlert(12345)
+	assert.Error(t, err)
 }
