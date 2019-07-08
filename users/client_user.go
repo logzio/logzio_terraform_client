@@ -39,14 +39,14 @@ type UserError struct {
 	parameters map[string]interface{}
 }
 
-type Users struct {
+type UsersClient struct {
 	client.Client
 }
 
 // Creates a new entry point into the users functions, accepts the user's logz.io API token and account Id
-func New(apiToken string) (*Users, error) {
+func New(apiToken string) (*UsersClient, error) {
 	if len(apiToken) > 0 {
-		var c Users
+		var c UsersClient
 		c.ApiToken = apiToken
 		return &c, nil
 	} else {

@@ -36,7 +36,6 @@ func TestUsers_UpdateExistingUser(t *testing.T) {
 				assert.Equal(t, user.Id, user.Id)
 			}
 
-
 		}
 		err = underTest.DeleteUser(user.Id)
 		assert.NoError(t, err)

@@ -16,9 +16,9 @@ const (
 )
 
 type Client struct {
-	ApiToken  string
-	BaseUrl   string
-	log       log.Logger
+	ApiToken string
+	BaseUrl  string
+	log      log.Logger
 }
 
 var logzioBaseUrl string = LOGZIO_BASE_URL

@@ -51,7 +51,7 @@ func unsuspendUserApiRequest(apiToken string, userId int32) (*http.Request, erro
 
 // Suspends a user (sets the ACTIVE flag to false)
 // If the call was successful, true is returned (the status of the call) or an error if otherwise
-func (c *Users) SuspendUser(userId int32) (bool, error) {
+func (c *UsersClient) SuspendUser(userId int32) (bool, error) {
 	if err, ok := validateSuspendUserRequest(userId); !ok {
 		return false, err
 	}
@@ -67,7 +67,7 @@ func (c *Users) SuspendUser(userId int32) (bool, error) {
 
 // Unsuspends a user (sets the ACTIVE flag to true)
 // If the call was successful, true is returned (the status of the call) or an error if otherwise
-func (c *Users) UnSuspendUser(userId int32) (bool, error) {
+func (c *UsersClient) UnSuspendUser(userId int32) (bool, error) {
 	if err, ok := validateSuspendUserRequest(userId); !ok {
 		return false, err
 	}

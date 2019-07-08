@@ -33,23 +33,6 @@ Some of my API methods are inconsistent.  Particularly `New` methods, where I on
 
 ##### Users
 
-```go
-// Creates a new user (a normal type user, as opposed to an admin user)
-import ( 
-	"github.com/jonboydell/logzio_client/users"
-)
-
-func someFunction() {
-	client, _ := users.New(YOUR_API_TOKEN)
-    client.CreateUser(users.User{
-        Username:  "my.email@domain.com",
-        Fullname:  "My Real Name",
-        AccountId: accountId,
-        Roles:     []int32{users.UserTypeUser},
-    })
-}
-
-```
 
 |function|method|logz.io api doc|
 |---|---|---|

@@ -56,9 +56,10 @@ func TestUsers_CreateDeleteDuplicateUser(t *testing.T) {
 		}
 
 		user, err := underTest.CreateUser(u)
-		assert.NoError(t, err)
-		_, err = underTest.CreateUser(u)
-		assert.Error(t, err)
+		if assert.NoError(t, err) {
+			_, err = underTest.CreateUser(u)
+			assert.Error(t, err)
+		}
 
 		err = underTest.DeleteUser(user.Id)
 	}
