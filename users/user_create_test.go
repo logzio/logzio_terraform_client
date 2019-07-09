@@ -81,3 +81,12 @@ func TestUsers_CreateInvalidUser_Email(t *testing.T) {
 		assert.Error(t, err)
 	}
 }
+
+func TestUsers_DeleteNonExistingUser(t *testing.T) {
+	underTest, err := setupUsersTest()
+
+	if assert.NoError(t, err) {
+		err = underTest.DeleteUser(21345)
+		assert.Error(t, err)
+	}
+}

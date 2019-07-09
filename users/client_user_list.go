@@ -20,7 +20,6 @@ func listUsersApiRequest(apiToken string) (*http.Request, error) {
 	url := fmt.Sprintf(listUserServiceUrl, baseUrl)
 	req, err := http.NewRequest(listUserServiceMethod, url, nil)
 	logzio_client.AddHttpHeaders(apiToken, req)
-
 	return req, err
 }
 

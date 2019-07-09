@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/jonboydell/logzio_client"
 	"github.com/jonboydell/logzio_client/client"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -41,17 +42,37 @@ func checkDeleteUserRequest(b []byte) error {
 	return nil
 }
 
-func deleteUserHttpRequest(req *http.Request) error {
+func deleteUserHttpRequest(req *http.Request) (map[string]interface{}, error) {
 	httpClient := client.GetHttpClient(req)
 	resp, err := httpClient.Do(req)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer resp.Body.Close()
 	if !logzio_client.CheckValidStatus(resp, []int{deleteUserServiceSuccess}) {
-		return fmt.Errorf("%d", resp.StatusCode)
+		return nil, fmt.Errorf("%d", resp.StatusCode)
 	}
-	return err
+	jsonBytes, _ := ioutil.ReadAll(resp.Body)
+	var target map[string]interface{}
+
+	// a successful delete requests returns no body, just the 200 status code,
+	// other errors can return a 200 and an error message...
+	if len(jsonBytes) == 0 {
+		return target, nil
+	}
+	err = json.Unmarshal(jsonBytes, &target)
+	if err != nil {
+		return nil, err
+	}
+
+	return target, nil
+}
+
+func checkDeleteUserResponse(response map[string]interface{}) error {
+	if _, ok := response["errorCode"]; ok {
+		return fmt.Errorf("Error creating user; %v", response)
+	}
+	return nil
 }
 
 // Deletes a user from logz.io given their unique ID (an integer)
@@ -64,8 +85,13 @@ func (c *UsersClient) DeleteUser(id int32) error {
 	}
 	req, _ := deleteUserApiRequest(c.ApiToken, user)
 
-	err := deleteUserHttpRequest(req)
+	target, err := deleteUserHttpRequest(req)
 	if err != nil {
+		return err
+	}
+
+	err = checkDeleteUserResponse(target)
+	if (err != nil) {
 		return err
 	}
 
