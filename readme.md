@@ -11,9 +11,14 @@ The primary purpose of this library is to act as the API interface for the logz.
 Logz.io have not written an especially consistent API.  Sometimes, JSON will be presented back from an API call, sometimes not.  Sometimes just a status code, sometimes a 200 status code, but with an error message in the body.  I have attempted to shield the user of this library from those inconsistencies, but as they are laregely not documented, it's 
 pretty diffcult to know if I've got them all.
 
-Some of my API methods are inconsistent.  Particularly `New` methods, where I only discovered that I needed the acount identifier as well as the API token when I was dealing with user accounts.
-
 ##### Usage
+
+Note: the lastest version of the API (1.1) is not backwards compatible with previous versions, specifically the client entrypoint
+names have changed to prevent naming conflicts.
+
+`Users -> UsersClient`
+`Alerts -> AlertsClient`
+`Endpoints -> EndpointsClient`
 
 
 

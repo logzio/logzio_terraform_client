@@ -148,13 +148,13 @@ func jsonAlertToAlert(jsonAlert map[string]interface{}) AlertType {
 	return alert
 }
 
-type Alerts struct {
+type AlertsClient struct {
 	client.Client
 }
 
-func New(apiToken string) (*Alerts, error) {
+func New(apiToken string) (*AlertsClient, error) {
 	if len(apiToken) > 0 {
-		var c Alerts
+		var c AlertsClient
 		c.ApiToken = apiToken
 		return &c, nil
 	} else {

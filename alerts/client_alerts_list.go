@@ -23,7 +23,7 @@ func buildListApiRequest(apiToken string) (*http.Request, error) {
 
 // Returns all the alerts in an array associated with the account identified by the supplied API token, returns an error if
 // any problem occurs during the API call
-func (c *Alerts) ListAlerts() ([]AlertType, error) {
+func (c *AlertsClient) ListAlerts() ([]AlertType, error) {
 	req, _ := buildListApiRequest(c.ApiToken)
 
 	httpClient := client.GetHttpClient(req)
@@ -46,9 +46,7 @@ func (c *Alerts) ListAlerts() ([]AlertType, error) {
 	for x := 0; x < len(jsonResponse); x++ {
 		var jsonAlert map[string]interface{}
 		jsonAlert = jsonResponse[x].(map[string]interface{})
-
 		alert := jsonAlertToAlert(jsonAlert)
-
 		arr = append(arr, alert)
 	}
 

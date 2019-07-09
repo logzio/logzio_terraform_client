@@ -74,7 +74,7 @@ func buildUpdateEndpointRequest(endpoint Endpoint) (map[string]interface{}, erro
 }
 
 // Updates an existing endpoint, returns the updated endpoint if successful, an error otherwise
-func (c *Endpoints) UpdateEndpoint(id int64, endpoint Endpoint) (*Endpoint, error) {
+func (c *EndpointsClient) UpdateEndpoint(id int64, endpoint Endpoint) (*Endpoint, error) {
 
 	endpoint.Id = id
 	if jsonBytes, err, ok := c.makeEndpointRequest(endpoint, ValidateEndpointRequest, buildUpdateEndpointApiRequest, func(b []byte) error {

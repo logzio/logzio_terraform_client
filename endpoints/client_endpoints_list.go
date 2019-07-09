@@ -24,7 +24,7 @@ func buildListEndpointsApiRequest(apiToken string) (*http.Request, error) {
 }
 
 // Lists all the current endpoints in an array, returns an error otherwise
-func (c *Endpoints) ListEndpoints() ([]Endpoint, error) {
+func (c *EndpointsClient) ListEndpoints() ([]Endpoint, error) {
 	req, _ := buildListEndpointsApiRequest(c.ApiToken)
 
 	httpClient := client.GetHttpClient(req)
