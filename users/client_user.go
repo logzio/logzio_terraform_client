@@ -70,27 +70,3 @@ func jsonToUser(json map[string]interface{}) User {
 	user.Roles = rs
 	return user
 }
-
-func jsonToError(json map[string]interface{}) UserError {
-	userError := UserError{}
-	if json["errorMessage"] != nil {
-		userError.message = json["errorMessage"].(string)
-	}
-
-	if json["message"] != nil {
-		userError.message = json["message"].(string)
-	}
-
-	if json["errorCode"] != nil {
-		userError.message = json["errorCode"].(string)
-	}
-
-	if json["parameters"] != nil {
-		userError.parameters = json["parameters"].(map[string]interface{})
-	}
-
-	if json["validationErrors"] != nil {
-	}
-
-	return userError
-}
