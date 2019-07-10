@@ -13,7 +13,7 @@ func TestUsers_UpdateExistingUser(t *testing.T) {
 
 	if assert.NoError(t, err) {
 		user, err := underTest.CreateUser(users.User{
-			Username:  test_username,
+			Username:  "updateexistinguser@massive.co",
 			Fullname:  test_fullname,
 			AccountId: accountId,
 			Roles:     []int32{users.UserTypeUser},
@@ -66,7 +66,7 @@ func TestUsers_UpdateExistingUserInvalidUpdate(t *testing.T) {
 
 	if assert.NoError(t, err) {
 		user, err := underTest.CreateUser(users.User{
-			Username:  test_username,
+			Username:  "updateexistinguser.invalid@massive.co",
 			Fullname:  test_fullname,
 			AccountId: accountId,
 			Roles:     []int32{users.UserTypeUser},

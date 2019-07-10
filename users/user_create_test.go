@@ -8,15 +8,14 @@ import (
 )
 
 const (
-	test_username = "test@massive.co"
 	test_fullname = "Test User"
 )
 
 func TestUsers_CreateValidUser(t *testing.T) {
 	underTest, err := setupUsersTest()
-	accountId, _ := test_utils.GetAccountId()
+	accountId, erx := test_utils.GetAccountId()
 
-	if assert.NoError(t, err) {
+	if assert.NoError(t, err) && assert.NoError(t, erx) && assert.NotZero(t, accountId) {
 		u := users.User{
 			Username:  "testcreateuser@massive.co",
 			Fullname:  test_fullname,
@@ -45,9 +44,9 @@ func TestUsers_CreateValidUser(t *testing.T) {
 
 func TestUsers_CreateDeleteDuplicateUser(t *testing.T) {
 	underTest, err := setupUsersTest()
-	accountId, _ := test_utils.GetAccountId()
+	accountId, erx := test_utils.GetAccountId()
 
-	if assert.NoError(t, err) {
+	if assert.NoError(t, err) && assert.NoError(t, erx) && assert.NotZero(t, accountId) {
 		u := users.User{
 			Username:  "testduplicateuser@massive.co",
 			Fullname:  test_fullname,
@@ -67,9 +66,9 @@ func TestUsers_CreateDeleteDuplicateUser(t *testing.T) {
 
 func TestUsers_CreateInvalidUser_Email(t *testing.T) {
 	underTest, err := setupUsersTest()
-	accountId, _ := test_utils.GetAccountId()
+	accountId, erx := test_utils.GetAccountId()
 
-	if assert.NoError(t, err) {
+	if assert.NoError(t, err) && assert.NoError(t, erx) && assert.NotZero(t, accountId) {
 		u := users.User{
 			Username:  "InvalidTestUser",
 			Fullname:  "Test User",
