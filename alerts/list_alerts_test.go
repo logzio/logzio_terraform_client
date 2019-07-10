@@ -10,7 +10,6 @@ func TestListAlerts(t *testing.T) {
 
 	if assert.NoError(t, err) {
 		_, err = underTest.ListAlerts()
-	} else {
-		t.Fatalf("%q should not have raised an error: %v", "ListAlerts", err)
+		assert.NoError(t, err)
 	}
 }

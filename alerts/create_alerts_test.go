@@ -11,7 +11,7 @@ func TestCreateAlert(t *testing.T) {
 
 	if assert.NoError(t, err) {
 		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
-			Title:       "this is my title",
+			Title:       "test create alert",
 			Description: "this is my description",
 			QueryString: "loglevel:ERROR",
 			Filter:      "",
@@ -31,8 +31,9 @@ func TestCreateAlert(t *testing.T) {
 			GroupByAggregationFields:     []interface{}{"my_field"},
 			AlertNotificationEndpoints:   []interface{}{},
 		})
-		if assert.NoError(t, err) {
-			underTest.DeleteAlert(alert.AlertId)
+		if assert.NoError(t, err) && assert.NotZero(t, alert) {
+			err = underTest.DeleteAlert(alert.AlertId)
+			assert.NoError(t, err)
 		}
 	}
 }
@@ -42,7 +43,7 @@ func TestCreateAlertWithFilter(t *testing.T) {
 
 	if assert.NoError(t, err) {
 		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
-			Title:       "this is my title",
+			Title:       "test create alert with filter",
 			Description: "this is my description",
 			QueryString: "loglevel:ERROR",
 			Filter:      "{\"bool\":{\"must\":[{\"match\":{\"type\":\"mytype\"}}],\"must_not\":[]}}",
@@ -63,8 +64,9 @@ func TestCreateAlertWithFilter(t *testing.T) {
 			AlertNotificationEndpoints:   []interface{}{},
 		})
 
-		if assert.NoError(t, err) {
-			underTest.DeleteAlert(alert.AlertId)
+		if assert.NoError(t, err) && assert.NotZero(t, alert) {
+			err = underTest.DeleteAlert(alert.AlertId)
+			assert.NoError(t, err)
 		}
 	}
 }
@@ -96,10 +98,7 @@ func TestCreateAlertWithNoTitle(t *testing.T) {
 		})
 
 		assert.Error(t, err)
-		if alert != nil {
-			err = underTest.DeleteAlert(alert.AlertId)
-			assert.Nil(t, alert)
-		}
+		assert.Nil(t, alert)
 	}
 }
 
@@ -108,7 +107,7 @@ func TestCreateAlertWithInvalidFilter(t *testing.T) {
 
 	if assert.NoError(t, err) {
 		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
-			Title:       "this is my title",
+			Title:       "test alert with invalid filter",
 			Description: "this is my description",
 			QueryString: "loglevel:ERROR",
 			Filter:      "Invalid Filter",
@@ -130,10 +129,7 @@ func TestCreateAlertWithInvalidFilter(t *testing.T) {
 		})
 
 		assert.Error(t, err)
-		if alert != nil {
-			err = underTest.DeleteAlert(alert.AlertId)
-			assert.Nil(t, alert)
-		}
+		assert.Nil(t, alert)
 	}
 }
 
@@ -142,7 +138,7 @@ func TestCreateAlertWithInvalidValueAggregationType(t *testing.T) {
 
 	if assert.NoError(t, err) {
 		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
-			Title:       "this is my title",
+			Title:       "test alert with invalid agg type",
 			Description: "this is my description",
 			QueryString: "loglevel:ERROR",
 			Filter:      "",
@@ -164,10 +160,7 @@ func TestCreateAlertWithInvalidValueAggregationType(t *testing.T) {
 		})
 
 		assert.Error(t, err)
-		if alert != nil {
-			err = underTest.DeleteAlert(alert.AlertId)
-			assert.Nil(t, alert)
-		}
+		assert.Nil(t, alert)
 	}
 }
 
@@ -177,7 +170,7 @@ func TestCreateAlertWithInvalidValueAggregationField(t *testing.T) {
 
 	if assert.NoError(t, err) {
 		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
-			Title:       "this is my title",
+			Title:       "test alert with invalid agg field",
 			Description: "this is my description",
 			QueryString: "loglevel:ERROR",
 			Filter:      "{\"bool\":{\"must\":[{\"match\":{\"type\":\"mytype\"}}],\"must_not\":[]}}",
@@ -199,10 +192,7 @@ func TestCreateAlertWithInvalidValueAggregationField(t *testing.T) {
 		})
 
 		assert.Error(t, err)
-		if alert != nil {
-			err = underTest.DeleteAlert(alert.AlertId)
-			assert.Nil(t, alert)
-		}
+		assert.Nil(t, alert)
 	}
 }
 
@@ -211,7 +201,7 @@ func TestCreateAlertWithInvalidValueAggregationTypeNone(t *testing.T) {
 
 	if assert.NoError(t, err) {
 		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
-			Title:       "this is my title",
+			Title:       "test alert with none agg type",
 			Description: "this is my description",
 			QueryString: "loglevel:ERROR",
 			Filter:      "{\"bool\":{\"must\":[{\"match\":{\"type\":\"mytype\"}}],\"must_not\":[]}}",
@@ -233,10 +223,7 @@ func TestCreateAlertWithInvalidValueAggregationTypeNone(t *testing.T) {
 		})
 
 		assert.Error(t, err)
-		if alert != nil {
-			err = underTest.DeleteAlert(alert.AlertId)
-			assert.Nil(t, alert)
-		}
+		assert.Nil(t, alert)
 	}
 }
 
@@ -245,7 +232,7 @@ func TestCreateAlertWithInvalidValueAggregationTypeCount(t *testing.T) {
 
 	if assert.NoError(t, err) {
 		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
-			Title:       "this is my title",
+			Title:       "test alert with invalid agg type count",
 			Description: "this is my description",
 			QueryString: "loglevel:ERROR",
 			Filter:      "{\"bool\":{\"must\":[{\"match\":{\"type\":\"mytype\"}}],\"must_not\":[]}}",
@@ -267,10 +254,7 @@ func TestCreateAlertWithInvalidValueAggregationTypeCount(t *testing.T) {
 		})
 
 		assert.Error(t, err)
-		if alert != nil {
-			err = underTest.DeleteAlert(alert.AlertId)
-			assert.Nil(t, alert)
-		}
+		assert.Nil(t, alert)
 	}
 }
 
@@ -280,7 +264,7 @@ func TestCreateAlertWithNoNotifications(t *testing.T) {
 
 	if assert.NoError(t, err) {
 		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
-			Title:       "this is my title",
+			Title:       "test create alert with no notification",
 			Description: "this is my description",
 			QueryString: "loglevel:ERROR",
 			Filter:      "{\"bool\":{\"must\":[{\"match\":{\"type\":\"mytype\"}}],\"must_not\":[]}}",
@@ -302,10 +286,7 @@ func TestCreateAlertWithNoNotifications(t *testing.T) {
 		})
 
 		assert.Error(t, err)
-		if alert != nil {
-			err = underTest.DeleteAlert(alert.AlertId)
-			assert.Nil(t, alert)
-		}
+		assert.Nil(t, alert)
 	}
 }
 
@@ -314,7 +295,7 @@ func TestCreateAlertWithNoQuery(t *testing.T) {
 
 	if assert.NoError(t, err) {
 		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
-			Title:       "this is my title",
+			Title:       "test create alert with no query",
 			Description: "this is my description",
 			QueryString: "",
 			Filter:      "{\"bool\":{\"must\":[{\"match\":{\"type\":\"mytype\"}}],\"must_not\":[]}}",
@@ -336,10 +317,7 @@ func TestCreateAlertWithNoQuery(t *testing.T) {
 		})
 
 		assert.Error(t, err)
-		if alert != nil {
-			err = underTest.DeleteAlert(alert.AlertId)
-			assert.Nil(t, alert)
-		}
+		assert.Nil(t, alert)
 	}
 }
 
@@ -348,7 +326,7 @@ func TestCreateAlertWithInvalidSeverity(t *testing.T) {
 
 	if assert.NoError(t, err) {
 		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
-			Title:       "this is my title",
+			Title:       "test create alert with invalid severity",
 			Description: "this is my description",
 			QueryString: "loglevel:ERROR",
 			Filter:      "{\"bool\":{\"must\":[{\"match\":{\"type\":\"mytype\"}}],\"must_not\":[]}}",
@@ -370,9 +348,6 @@ func TestCreateAlertWithInvalidSeverity(t *testing.T) {
 		})
 
 		assert.Error(t, err)
-		if alert != nil {
-			err = underTest.DeleteAlert(alert.AlertId)
-			assert.Nil(t, alert)
-		}
+		assert.Nil(t, alert)
 	}
 }
