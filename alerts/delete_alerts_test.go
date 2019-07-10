@@ -4,6 +4,7 @@ import (
 	"github.com/jonboydell/logzio_client/alerts"
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"time"
 )
 
 func TestDeleteAlert(t *testing.T) {
@@ -34,6 +35,7 @@ func TestDeleteAlert(t *testing.T) {
 				AlertNotificationEndpoints:   []interface{}{},
 			})
 		if assert.NoError(t, err) {
+		    time.Sleep(3000)
 			err = underTest.DeleteAlert(alert.AlertId)
 			assert.NoError(t, err)
 		}
