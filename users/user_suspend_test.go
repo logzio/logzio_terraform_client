@@ -109,7 +109,7 @@ func TestUsers_UnsuspendActiveUser(t *testing.T) {
 
 	if assert.NoError(t, err) {
 		user, err := underTest.CreateUser(users.User{
-			Username:  "testunsuspenduser@massive.co",
+			Username:  "testunsuspendactiveuser@massive.co",
 			Fullname:  test_fullname,
 			AccountId: accountId,
 			Roles:     []int32{users.UserTypeUser},
