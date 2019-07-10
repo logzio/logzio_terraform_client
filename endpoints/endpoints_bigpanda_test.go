@@ -11,13 +11,13 @@ func TestEndpointsBigPandaCreateUpdate(t *testing.T) {
 	if assert.NoError(t, err) {
 		endpoint, err := underTest.CreateEndpoint(createBigPandaEndpoint())
 
-		if assert.NotNil(t, endpoint) {
-			assert.NoError(t, err)
-			endpoint, err = underTest.UpdateEndpoint(endpoint.Id, updateBigPandaEndpoint())
-			assert.NotNil(t, endpoint)
+		if assert.NoError(t, err) {
+			updatedEndpoint, err := underTest.UpdateEndpoint(endpoint.Id, updateBigPandaEndpoint())
+			assert.NotNil(t, updatedEndpoint)
 			assert.NoError(t, err)
 
-			underTest.DeleteEndpoint(endpoint.Id)
+			err = underTest.DeleteEndpoint(endpoint.Id)
+			assert.NoError(t, err)
 		}
 	}
 }

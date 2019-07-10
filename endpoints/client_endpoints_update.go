@@ -92,7 +92,7 @@ func (c *EndpointsClient) UpdateEndpoint(id int64, endpoint Endpoint) (*Endpoint
 		if err != nil {
 			return nil, err
 		}
-		return &target, nil
+		return &endpoint, nil
 	} else {
 		return nil, err
 	}
