@@ -4,6 +4,7 @@ import (
 	"github.com/jonboydell/logzio_client/alerts"
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"time"
 )
 
 func TestCreateAlert(t *testing.T) {
@@ -31,6 +32,7 @@ func TestCreateAlert(t *testing.T) {
 			GroupByAggregationFields:     []interface{}{"my_field"},
 			AlertNotificationEndpoints:   []interface{}{},
 		})
+		time.Sleep(3000)
 		if assert.NoError(t, err) && assert.NotZero(t, alert) {
 			err = underTest.DeleteAlert(alert.AlertId)
 			assert.NoError(t, err)
@@ -63,6 +65,7 @@ func TestCreateAlertWithFilter(t *testing.T) {
 			GroupByAggregationFields:     []interface{}{"my_field"},
 			AlertNotificationEndpoints:   []interface{}{},
 		})
+		time.Sleep(3000)
 
 		if assert.NoError(t, err) && assert.NotZero(t, alert) {
 			err = underTest.DeleteAlert(alert.AlertId)
