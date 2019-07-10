@@ -32,7 +32,7 @@ func TestCreateAlert(t *testing.T) {
 			GroupByAggregationFields:     []interface{}{"my_field"},
 			AlertNotificationEndpoints:   []interface{}{},
 		})
-		time.Sleep(3000)
+		time.Sleep(3 * time.Seconds)
 		if assert.NoError(t, err) && assert.NotZero(t, alert) {
 			err = underTest.DeleteAlert(alert.AlertId)
 			assert.NoError(t, err)
