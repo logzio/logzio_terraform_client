@@ -9,49 +9,59 @@ import (
 func TestEndpointsCustomCreateUpdate(t *testing.T) {
 	underTest, err := setupEndpointsTest()
 	if assert.NoError(t, err) {
-		endpoint, err := underTest.CreateEndpoint(createCustomEndpoint())
+		endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
+			Title:        "testCreateCustomEndpoint",
+			Method:       "POST",
+			Description:  "my description",
+			Url:          "https://this.is.com/some/other/webhook",
+			EndpointType: "custom",
+			Headers:      map[string]string{"hello": "there", "header": "two"},
+			BodyTemplate: map[string]string{"hello": "there", "header": "two"},
+		})
 		if assert.NoError(t, err) {
-			endpoint, err = underTest.UpdateEndpoint(endpoint.Id, createUpdatedCustomEndpoint())
+			endpoint, err = underTest.UpdateEndpoint(endpoint.Id, endpoints.Endpoint{
+				Title:        "testCreateUpdateCustomEndpoint",
+				Method:       "POST",
+				Description:  "my description update",
+				Url:          "https://this.is.com/some/updated/webhook",
+				EndpointType: "custom",
+				Headers:      map[string]string{"hello": "there", "header": "two"},
+				BodyTemplate: map[string]string{"hello": "there", "header": "two"},
+			})
 			assert.NotNil(t, endpoint)
 			assert.NoError(t, err)
 		}
-		underTest.DeleteEndpoint(endpoint.Id)
+		err = underTest.DeleteEndpoint(endpoint.Id)
+		assert.NoError(t, err)
 	}
 }
 
 func TestEndpointsCustomCreateDuplicate(t *testing.T) {
 	underTest, err := setupEndpointsTest()
 	if assert.NoError(t, err) {
-		endpoint, err := underTest.CreateEndpoint(createCustomEndpoint())
+		endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
+			Title:        "testCustomDuplicateEndpoint",
+			Method:       "POST",
+			Description:  "my description",
+			Url:          "https://this.is.com/some/other/webhook",
+			EndpointType: "custom",
+			Headers:      map[string]string{"hello": "there", "header": "two"},
+			BodyTemplate: map[string]string{"hello": "there", "header": "two"},
+		})
 		if assert.NoError(t, err) {
-			duplicate, err := underTest.CreateEndpoint(createCustomEndpoint())
+			duplicate, err := underTest.CreateEndpoint(endpoints.Endpoint{
+				Title:        "testCustomDuplicateEndpoint",
+				Method:       "POST",
+				Description:  "my description",
+				Url:          "https://this.is.com/some/other/webhook",
+				EndpointType: "custom",
+				Headers:      map[string]string{"hello": "there", "header": "two"},
+				BodyTemplate: map[string]string{"hello": "there", "header": "two"},
+			})
 			assert.Nil(t, duplicate)
 			assert.Error(t, err)
 		}
-		underTest.DeleteEndpoint(endpoint.Id)
-	}
-}
-
-func createCustomEndpoint() endpoints.Endpoint {
-	return endpoints.Endpoint{
-		Title:        "customEndpoint",
-		Method:       "POST",
-		Description:  "my description",
-		Url:          "https://this.is.com/some/other/webhook",
-		EndpointType: "custom",
-		Headers:      map[string]string{"hello": "there", "header": "two"},
-		BodyTemplate: map[string]string{"hello": "there", "header": "two"},
-	}
-}
-
-func createUpdatedCustomEndpoint() endpoints.Endpoint {
-	return endpoints.Endpoint{
-		Title:        "customUpdatedEndpoint",
-		Method:       "POST",
-		Description:  "some updated description",
-		Url:          "https://this.is.com/some/other/webhook",
-		EndpointType: "custom",
-		Headers:      map[string]string{"hello": "there", "header": "two"},
-		BodyTemplate: map[string]string{"hello": "there", "header": "two"},
+		err = underTest.DeleteEndpoint(endpoint.Id)
+		assert.NoError(t, err)
 	}
 }
