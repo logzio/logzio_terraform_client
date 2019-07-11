@@ -98,6 +98,6 @@ func (c *UsersClient) CreateUser(user User) (*User, error) {
 		return nil, err
 	}
 
-	user.Id = int32(target[fldUserId].(float64))
+	user.Id = int64(target[fldUserId].(float64))
 	return &user, nil
 }

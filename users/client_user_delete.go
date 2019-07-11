@@ -77,7 +77,7 @@ func checkDeleteUserResponse(response map[string]interface{}) error {
 
 // Deletes a user from logz.io given their unique ID (an integer)
 // Returns either nil (success) or an error if the user couldn't be deleted
-func (c *UsersClient) DeleteUser(id int32) error {
+func (c *UsersClient) DeleteUser(id int64) error {
 
 	user := User{Id: id}
 	if err, ok := validateDeleteUserRequest(user); !ok {

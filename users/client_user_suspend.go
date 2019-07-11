@@ -14,7 +14,7 @@ const (
 	suspendUserServiceSuccess int    = 200
 )
 
-func validateSuspendUserRequest(userId int32) (error, bool) {
+func validateSuspendUserRequest(userId int64) (error, bool) {
 	return nil, true
 }
 
@@ -31,7 +31,7 @@ func suspendUserHttpRequest(req *http.Request) error {
 	return nil
 }
 
-func suspendUserApiRequest(apiToken string, userId int32) (*http.Request, error) {
+func suspendUserApiRequest(apiToken string, userId int64) (*http.Request, error) {
 	baseUrl := client.GetLogzioBaseUrl()
 	url := fmt.Sprintf(suspendUserServiceUrl, baseUrl, userId)
 	req, err := http.NewRequest(suspendUserServiceMethod, url, nil)
@@ -40,7 +40,7 @@ func suspendUserApiRequest(apiToken string, userId int32) (*http.Request, error)
 	return req, err
 }
 
-func unsuspendUserApiRequest(apiToken string, userId int32) (*http.Request, error) {
+func unsuspendUserApiRequest(apiToken string, userId int64) (*http.Request, error) {
 	baseUrl := client.GetLogzioBaseUrl()
 	url := fmt.Sprintf(unsuspendUserServiceUrl, baseUrl, userId)
 	req, err := http.NewRequest(suspendUserServiceMethod, url, nil)
@@ -51,7 +51,7 @@ func unsuspendUserApiRequest(apiToken string, userId int32) (*http.Request, erro
 
 // Suspends a user (sets the ACTIVE flag to false)
 // If the call was successful, true is returned (the status of the call) or an error if otherwise
-func (c *UsersClient) SuspendUser(userId int32) (bool, error) {
+func (c *UsersClient) SuspendUser(userId int64) (bool, error) {
 	if err, ok := validateSuspendUserRequest(userId); !ok {
 		return false, err
 	}
@@ -67,7 +67,7 @@ func (c *UsersClient) SuspendUser(userId int32) (bool, error) {
 
 // Unsuspends a user (sets the ACTIVE flag to true)
 // If the call was successful, true is returned (the status of the call) or an error if otherwise
-func (c *UsersClient) UnSuspendUser(userId int32) (bool, error) {
+func (c *UsersClient) UnSuspendUser(userId int64) (bool, error) {
 	if err, ok := validateSuspendUserRequest(userId); !ok {
 		return false, err
 	}

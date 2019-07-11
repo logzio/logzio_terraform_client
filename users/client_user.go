@@ -24,10 +24,10 @@ const (
 )
 
 type User struct {
-	Id        int32
+	Id        int64
 	Username  string
 	Fullname  string
-	AccountId int32
+	AccountId int64
 	Roles     []int32
 	Active    bool
 }
@@ -56,10 +56,10 @@ func New(apiToken string) (*UsersClient, error) {
 
 func jsonToUser(json map[string]interface{}) User {
 	user := User{
-		Id:        int32(json[fldUserId].(float64)),
+		Id:        int64(json[fldUserId].(float64)),
 		Username:  json[fldUserUsername].(string),
 		Fullname:  json[fldUserFullname].(string),
-		AccountId: int32(json[fldUserAccountId].(float64)),
+		AccountId: int64(json[fldUserAccountId].(float64)),
 		Active:    json[fldUserActive].(bool),
 	}
 	roles := json[fldUserRoles].([]interface{})

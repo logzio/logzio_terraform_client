@@ -51,7 +51,7 @@ func getUserHttpRequest(req *http.Request) (map[string]interface{}, error) {
 
 // Returns a user given their unique ID (an integer), the user ID supplied must belong to the account that the supplied
 // API token belongs to, returns an error otherwise
-func (c *UsersClient) GetUser(id int32) (*User, error) {
+func (c *UsersClient) GetUser(id int64) (*User, error) {
 
 	u := User{Id: id}
 	if err, ok := validateGetUserRequest(u); !ok {
