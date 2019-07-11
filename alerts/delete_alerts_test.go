@@ -34,10 +34,9 @@ func TestDeleteAlert(t *testing.T) {
 				GroupByAggregationFields:     []interface{}{"my_field"},
 				AlertNotificationEndpoints:   []interface{}{},
 			})
+		time.Sleep(3 * time.Second)
 		if assert.NoError(t, err) {
-		    time.Sleep(3000)
-			err = underTest.DeleteAlert(alert.AlertId)
-			assert.NoError(t, err)
+			defer underTest.DeleteAlert(alert.AlertId)
 		}
 	}
 }
