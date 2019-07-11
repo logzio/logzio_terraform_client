@@ -4,6 +4,7 @@ import (
 	"github.com/jonboydell/logzio_client/alerts"
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"time"
 )
 
 func TestUpdateAlert(t *testing.T) {
@@ -58,8 +59,10 @@ func TestUpdateAlert(t *testing.T) {
 			assert.NoError(t, err)
 			assert.NotNil(t, updatedAlert)
 
-			err = underTest.DeleteAlert(alert.AlertId)
-			assert.NoError(t, err)
+			time.Sleep(3 * time.Second)
+			if assert.NoError(t, err) && assert.NotZero(t, alert) {
+				defer underTest.DeleteAlert(alert.AlertId)
+			}
 		}
 	}
 }
