@@ -1,128 +1,355 @@
-package alerts
+package alerts_test
 
 import (
-	"fmt"
-	"github.com/jonboydell/logzio_client/test_utils"
+	"github.com/jonboydell/logzio_client/alerts"
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"time"
 )
 
 func TestCreateAlert(t *testing.T) {
-	api_token, _ := test_utils.GetApiToken()
+	underTest, err := setupAlertsTest()
 
-	var client *Alerts
-	client, err := New(api_token)
-	assert.NoError(t, err)
-	assert.NotNil(t, client)
-
-	createAlert := createValidAlert()
-
-	var alert *AlertType
-	alerts := []int64{}
-
-	if assert.NotNil(t, client) {
-		alert, err = client.CreateAlert(createAlert)
-		if err != nil {
-			t.Fatalf("%q should not have raised an error: %v", "CreateAlert", err)
-		}
-		alerts = append(alerts, alert.AlertId)
-
-		alertId := fmt.Sprintf("%d", alert.AlertId)
-
-		if len(alertId) == 0 {
-			t.Fatalf("%s should have a length > 0: %v", alertId, err)
-		}
-
-		createAlert = createValidAlert()
-		createAlert.Filter = "{\"bool\":{\"must\":[{\"match\":{\"type\":\"mytype\"}}],\"must_not\":[]}}"
-		alert, err = client.CreateAlert(createAlert)
-		if err != nil {
-			t.Fatalf("%q should not have raised an error: %v", "CreateAlert", err)
-		}
-		alerts = append(alerts, alert.AlertId)
-
-		createAlert = createValidAlert()
-		createAlert.Title = ""
-		alert, err = client.CreateAlert(createAlert)
-		if err == nil {
-			t.Fatalf("should have raised an error for blank title: %v", err)
-		}
-
-		createAlert = createValidAlert()
-		createAlert.Filter = "This is my filter"
-		alert, err = client.CreateAlert(createAlert)
-		if err == nil {
-			t.Fatalf("should have raised an error for invalid use of filter: %v", err)
-		}
-
-		createAlert = createValidAlert()
-		createAlert.Operation = ""
-		alert, err = client.CreateAlert(createAlert)
-		if err == nil {
-			t.Fatalf("should have raised an error for invalid use of operation: %v", err)
-		}
-
-		createAlert = createValidAlert()
-		createAlert.ValueAggregationType = ""
-		alert, err = client.CreateAlert(createAlert)
-		if err == nil {
-			t.Fatalf("should have raised an error for invalid use of valueAggregationType: %v", err)
-		}
-
-		createAlert = createValidAlert()
-		createAlert.ValueAggregationField = ""
-		alert, err = client.CreateAlert(createAlert)
-		if err == nil {
-			t.Fatalf("should have raised an error for invalid use of valueAggregationField: %v", err)
-		}
-
-		createAlert = createValidAlert()
-		createAlert.ValueAggregationType = AggregationTypeNone
-		createAlert.ValueAggregationField = nil
-		createAlert.GroupByAggregationFields = []interface{}{"my_field"}
-		alert, err = client.CreateAlert(createAlert)
-		if err == nil {
-			t.Fatalf("should have raised an error for invalid use of groupByAggregationFields: %v", err)
-		}
-
-		createAlert = createValidAlert()
-		createAlert.ValueAggregationType = AggregationTypeCount
-		createAlert.ValueAggregationField = "hello"
-		createAlert.GroupByAggregationFields = []interface{}{"my_field"}
-		alert, err = client.CreateAlert(createAlert)
-		if err == nil {
-			t.Fatalf("should have raised an error for invalid use of valueAggregationField: %v", err)
-		}
-
-		createAlert = createValidAlert()
-		createAlert.NotificationEmails = nil
-		alert, err = client.CreateAlert(createAlert)
-		if err == nil {
-			t.Fatalf("should have raised an error for invalid use of notificationEmails: %v", err)
-		}
-
-		createAlert = createValidAlert()
-		createAlert.QueryString = ""
-		alert, err = client.CreateAlert(createAlert)
-		if err == nil {
-			t.Fatalf("should have raised an error for invalid use of queryString: %v", err)
-		}
-
-		createAlert = createValidAlert()
-		createAlert.SeverityThresholdTiers = []SeverityThresholdType{
-			SeverityThresholdType{
-				Severity:  "TEST",
-				Threshold: 10,
+	if assert.NoError(t, err) {
+		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
+			Title:       "test create alert",
+			Description: "this is my description",
+			QueryString: "loglevel:ERROR",
+			Filter:      "",
+			Operation:   alerts.OperatorGreaterThan,
+			SeverityThresholdTiers: []alerts.SeverityThresholdType{
+				alerts.SeverityThresholdType{
+					alerts.SeverityHigh,
+					10,
+				},
 			},
-		}
-		alert, err = client.CreateAlert(createAlert)
-		if err == nil {
-			t.Fatalf("should have raised an error for invalid severity: %v", err)
-		}
+			SearchTimeFrameMinutes:       0,
+			NotificationEmails:           []interface{}{},
+			IsEnabled:                    true,
+			SuppressNotificationsMinutes: 0,
+			ValueAggregationType:         alerts.AggregationTypeCount,
+			ValueAggregationField:        nil,
+			GroupByAggregationFields:     []interface{}{"my_field"},
+			AlertNotificationEndpoints:   []interface{}{},
+		})
 
-		// clean up any created alerts
-		for x := 0; x < len(alerts); x++ {
-			client.DeleteAlert(alerts[x])
+		time.Sleep(3 * time.Second)
+		if assert.NoError(t, err) && assert.NotZero(t, alert) {
+			defer underTest.DeleteAlert(alert.AlertId)
 		}
+	}
+}
+
+func TestCreateAlertWithFilter(t *testing.T) {
+	underTest, err := setupAlertsTest()
+
+	if assert.NoError(t, err) {
+		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
+			Title:       "test create alert with filter",
+			Description: "this is my description",
+			QueryString: "loglevel:ERROR",
+			Filter:      "{\"bool\":{\"must\":[{\"match\":{\"type\":\"mytype\"}}],\"must_not\":[]}}",
+			Operation:   alerts.OperatorGreaterThan,
+			SeverityThresholdTiers: []alerts.SeverityThresholdType{
+				alerts.SeverityThresholdType{
+					alerts.SeverityHigh,
+					10,
+				},
+			},
+			SearchTimeFrameMinutes:       0,
+			NotificationEmails:           []interface{}{},
+			IsEnabled:                    true,
+			SuppressNotificationsMinutes: 0,
+			ValueAggregationType:         alerts.AggregationTypeCount,
+			ValueAggregationField:        nil,
+			GroupByAggregationFields:     []interface{}{"my_field"},
+			AlertNotificationEndpoints:   []interface{}{},
+		})
+
+		time.Sleep(3 * time.Second)
+		if assert.NoError(t, err) && assert.NotZero(t, alert) {
+			defer underTest.DeleteAlert(alert.AlertId)
+		}
+	}
+}
+
+func TestCreateAlertWithNoTitle(t *testing.T) {
+	underTest, err := setupAlertsTest()
+
+	if assert.NoError(t, err) {
+		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
+			Title:       "",
+			Description: "this is my description",
+			QueryString: "loglevel:ERROR",
+			Filter:      "{\"bool\":{\"must\":[{\"match\":{\"type\":\"mytype\"}}],\"must_not\":[]}}",
+			Operation:   alerts.OperatorGreaterThan,
+			SeverityThresholdTiers: []alerts.SeverityThresholdType{
+				alerts.SeverityThresholdType{
+					alerts.SeverityHigh,
+					10,
+				},
+			},
+			SearchTimeFrameMinutes:       0,
+			NotificationEmails:           []interface{}{},
+			IsEnabled:                    true,
+			SuppressNotificationsMinutes: 0,
+			ValueAggregationType:         alerts.AggregationTypeCount,
+			ValueAggregationField:        nil,
+			GroupByAggregationFields:     []interface{}{"my_field"},
+			AlertNotificationEndpoints:   []interface{}{},
+		})
+
+		assert.Error(t, err)
+		assert.Nil(t, alert)
+	}
+}
+
+func TestCreateAlertWithInvalidFilter(t *testing.T) {
+	underTest, err := setupAlertsTest()
+
+	if assert.NoError(t, err) {
+		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
+			Title:       "test alert with invalid filter",
+			Description: "this is my description",
+			QueryString: "loglevel:ERROR",
+			Filter:      "Invalid Filter",
+			Operation:   alerts.OperatorGreaterThan,
+			SeverityThresholdTiers: []alerts.SeverityThresholdType{
+				alerts.SeverityThresholdType{
+					alerts.SeverityHigh,
+					10,
+				},
+			},
+			SearchTimeFrameMinutes:       0,
+			NotificationEmails:           []interface{}{},
+			IsEnabled:                    true,
+			SuppressNotificationsMinutes: 0,
+			ValueAggregationType:         alerts.AggregationTypeCount,
+			ValueAggregationField:        nil,
+			GroupByAggregationFields:     []interface{}{"my_field"},
+			AlertNotificationEndpoints:   []interface{}{},
+		})
+
+		assert.Error(t, err)
+		assert.Nil(t, alert)
+	}
+}
+
+func TestCreateAlertWithInvalidValueAggregationType(t *testing.T) {
+	underTest, err := setupAlertsTest()
+
+	if assert.NoError(t, err) {
+		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
+			Title:       "test alert with invalid agg type",
+			Description: "this is my description",
+			QueryString: "loglevel:ERROR",
+			Filter:      "",
+			Operation:   alerts.OperatorGreaterThan,
+			SeverityThresholdTiers: []alerts.SeverityThresholdType{
+				alerts.SeverityThresholdType{
+					alerts.SeverityHigh,
+					10,
+				},
+			},
+			SearchTimeFrameMinutes:       0,
+			NotificationEmails:           []interface{}{},
+			IsEnabled:                    true,
+			SuppressNotificationsMinutes: 0,
+			ValueAggregationType:         "",
+			ValueAggregationField:        nil,
+			GroupByAggregationFields:     []interface{}{"my_field"},
+			AlertNotificationEndpoints:   []interface{}{},
+		})
+
+		assert.Error(t, err)
+		assert.Nil(t, alert)
+	}
+}
+
+
+func TestCreateAlertWithInvalidValueAggregationField(t *testing.T) {
+	underTest, err := setupAlertsTest()
+
+	if assert.NoError(t, err) {
+		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
+			Title:       "test alert with invalid agg field",
+			Description: "this is my description",
+			QueryString: "loglevel:ERROR",
+			Filter:      "{\"bool\":{\"must\":[{\"match\":{\"type\":\"mytype\"}}],\"must_not\":[]}}",
+			Operation:   alerts.OperatorGreaterThan,
+			SeverityThresholdTiers: []alerts.SeverityThresholdType{
+				alerts.SeverityThresholdType{
+					alerts.SeverityHigh,
+					10,
+				},
+			},
+			SearchTimeFrameMinutes:       0,
+			NotificationEmails:           []interface{}{},
+			IsEnabled:                    true,
+			SuppressNotificationsMinutes: 0,
+			ValueAggregationType:         alerts.AggregationTypeCount,
+			ValueAggregationField:        "",
+			GroupByAggregationFields:     []interface{}{"my_field"},
+			AlertNotificationEndpoints:   []interface{}{},
+		})
+
+		assert.Error(t, err)
+		assert.Nil(t, alert)
+	}
+}
+
+func TestCreateAlertWithInvalidValueAggregationTypeNone(t *testing.T) {
+	underTest, err := setupAlertsTest()
+
+	if assert.NoError(t, err) {
+		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
+			Title:       "test alert with none agg type",
+			Description: "this is my description",
+			QueryString: "loglevel:ERROR",
+			Filter:      "{\"bool\":{\"must\":[{\"match\":{\"type\":\"mytype\"}}],\"must_not\":[]}}",
+			Operation:   alerts.OperatorGreaterThan,
+			SeverityThresholdTiers: []alerts.SeverityThresholdType{
+				alerts.SeverityThresholdType{
+					alerts.SeverityHigh,
+					10,
+				},
+			},
+			SearchTimeFrameMinutes:       0,
+			NotificationEmails:           []interface{}{},
+			IsEnabled:                    true,
+			SuppressNotificationsMinutes: 0,
+			ValueAggregationType:         alerts.AggregationTypeNone,
+			ValueAggregationField:        nil,
+			GroupByAggregationFields:     []interface{}{"my_field"},
+			AlertNotificationEndpoints:   []interface{}{},
+		})
+
+		assert.Error(t, err)
+		assert.Nil(t, alert)
+	}
+}
+
+func TestCreateAlertWithInvalidValueAggregationTypeCount(t *testing.T) {
+	underTest, err := setupAlertsTest()
+
+	if assert.NoError(t, err) {
+		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
+			Title:       "test alert with invalid agg type count",
+			Description: "this is my description",
+			QueryString: "loglevel:ERROR",
+			Filter:      "{\"bool\":{\"must\":[{\"match\":{\"type\":\"mytype\"}}],\"must_not\":[]}}",
+			Operation:   alerts.OperatorGreaterThan,
+			SeverityThresholdTiers: []alerts.SeverityThresholdType{
+				alerts.SeverityThresholdType{
+					alerts.SeverityHigh,
+					10,
+				},
+			},
+			SearchTimeFrameMinutes:       0,
+			NotificationEmails:           []interface{}{},
+			IsEnabled:                    true,
+			SuppressNotificationsMinutes: 0,
+			ValueAggregationType:         alerts.AggregationTypeCount,
+			ValueAggregationField:        "hello",
+			GroupByAggregationFields:     []interface{}{"my_field"},
+			AlertNotificationEndpoints:   []interface{}{},
+		})
+
+		assert.Error(t, err)
+		assert.Nil(t, alert)
+	}
+}
+
+
+func TestCreateAlertWithNoNotifications(t *testing.T) {
+	underTest, err := setupAlertsTest()
+
+	if assert.NoError(t, err) {
+		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
+			Title:       "test create alert with no notification",
+			Description: "this is my description",
+			QueryString: "loglevel:ERROR",
+			Filter:      "{\"bool\":{\"must\":[{\"match\":{\"type\":\"mytype\"}}],\"must_not\":[]}}",
+			Operation:   alerts.OperatorGreaterThan,
+			SeverityThresholdTiers: []alerts.SeverityThresholdType{
+				alerts.SeverityThresholdType{
+					alerts.SeverityHigh,
+					10,
+				},
+			},
+			SearchTimeFrameMinutes:       0,
+			NotificationEmails:           nil,
+			IsEnabled:                    true,
+			SuppressNotificationsMinutes: 0,
+			ValueAggregationType:         alerts.AggregationTypeCount,
+			ValueAggregationField:        nil,
+			GroupByAggregationFields:     []interface{}{"my_field"},
+			AlertNotificationEndpoints:   []interface{}{},
+		})
+
+		assert.Error(t, err)
+		assert.Nil(t, alert)
+	}
+}
+
+func TestCreateAlertWithNoQuery(t *testing.T) {
+	underTest, err := setupAlertsTest()
+
+	if assert.NoError(t, err) {
+		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
+			Title:       "test create alert with no query",
+			Description: "this is my description",
+			QueryString: "",
+			Filter:      "{\"bool\":{\"must\":[{\"match\":{\"type\":\"mytype\"}}],\"must_not\":[]}}",
+			Operation:   alerts.OperatorGreaterThan,
+			SeverityThresholdTiers: []alerts.SeverityThresholdType{
+				alerts.SeverityThresholdType{
+					alerts.SeverityHigh,
+					10,
+				},
+			},
+			SearchTimeFrameMinutes:       0,
+			NotificationEmails:           []interface{}{},
+			IsEnabled:                    true,
+			SuppressNotificationsMinutes: 0,
+			ValueAggregationType:         alerts.AggregationTypeCount,
+			ValueAggregationField:        nil,
+			GroupByAggregationFields:     []interface{}{"my_field"},
+			AlertNotificationEndpoints:   []interface{}{},
+		})
+
+		assert.Error(t, err)
+		assert.Nil(t, alert)
+	}
+}
+
+func TestCreateAlertWithInvalidSeverity(t *testing.T) {
+	underTest, err := setupAlertsTest()
+
+	if assert.NoError(t, err) {
+		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
+			Title:       "test create alert with invalid severity",
+			Description: "this is my description",
+			QueryString: "loglevel:ERROR",
+			Filter:      "{\"bool\":{\"must\":[{\"match\":{\"type\":\"mytype\"}}],\"must_not\":[]}}",
+			Operation:   alerts.OperatorGreaterThan,
+			SeverityThresholdTiers: []alerts.SeverityThresholdType{
+				alerts.SeverityThresholdType{
+					"TEST",
+					10,
+				},
+			},
+			SearchTimeFrameMinutes:       0,
+			NotificationEmails:           []interface{}{},
+			IsEnabled:                    true,
+			SuppressNotificationsMinutes: 0,
+			ValueAggregationType:         alerts.AggregationTypeCount,
+			ValueAggregationField:        nil,
+			GroupByAggregationFields:     []interface{}{"my_field"},
+			AlertNotificationEndpoints:   []interface{}{},
+		})
+
+		assert.Error(t, err)
+		assert.Nil(t, alert)
 	}
 }

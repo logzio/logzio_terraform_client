@@ -23,7 +23,7 @@ func buildGetApiRequest(apiToken string, alertId int64) (*http.Request, error) {
 }
 
 // Returns an alert given it's unique identifier, an error otherwise
-func (c *Alerts) GetAlert(alertId int64) (*AlertType, error) {
+func (c *AlertsClient) GetAlert(alertId int64) (*AlertType, error) {
 	req, _ := buildGetApiRequest(c.ApiToken, alertId)
 
 	httpClient := client.GetHttpClient(req)

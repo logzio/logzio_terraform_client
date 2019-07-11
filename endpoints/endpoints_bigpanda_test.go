@@ -1,29 +1,30 @@
-package endpoints
+package endpoints_test
 
 import (
+	"github.com/jonboydell/logzio_client/endpoints"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestEndpointsBigPandaCreateUpdate(t *testing.T) {
-	setupEndpointsTest()
-	if assert.NotNil(t, endpoints) {
-		endpoint, err := endpoints.CreateEndpoint(createBigPandaEndpoint())
+	underTest, err := setupEndpointsTest()
+	if assert.NoError(t, err) {
+		endpoint, err := underTest.CreateEndpoint(createBigPandaEndpoint())
 
-		if assert.NotNil(t, endpoint) {
+		if assert.NoError(t, err) {
+			updatedEndpoint, err := underTest.UpdateEndpoint(endpoint.Id, updateBigPandaEndpoint())
+			assert.NotNil(t, updatedEndpoint)
 			assert.NoError(t, err)
-			createdEndpoints = append(createdEndpoints, endpoint.Id)
-			endpoint, err = endpoints.UpdateEndpoint(endpoint.Id, updateBigPandaEndpoint())
-			assert.NotNil(t, endpoint)
+
+			err = underTest.DeleteEndpoint(endpoint.Id)
 			assert.NoError(t, err)
 		}
 	}
-	teardownEndpointsTest()
 }
 
-func createBigPandaEndpoint() Endpoint {
-	return Endpoint{
-		Title:        "endpoint",
+func createBigPandaEndpoint() endpoints.Endpoint {
+	return endpoints.Endpoint{
+		Title:        "bigpandaendpoint",
 		Description:  "description",
 		EndpointType: "big-panda",
 		ApiToken:     "api_token",
@@ -31,9 +32,9 @@ func createBigPandaEndpoint() Endpoint {
 	}
 }
 
-func updateBigPandaEndpoint() Endpoint {
-	return Endpoint{
-		Title:        "updated endpoint",
+func updateBigPandaEndpoint() endpoints.Endpoint {
+	return endpoints.Endpoint{
+		Title:        "bigpandaupdatedendpoint",
 		Description:  "updated description",
 		EndpointType: "big-panda",
 		ApiToken:     "updated_api_token",

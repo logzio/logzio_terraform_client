@@ -79,7 +79,7 @@ func checkUpdateUserResponse(response map[string]interface{}) error {
 // Updates an existing user, the supplied user object must specify their unique id
 // Returns the updated user if successful, an error otherwise
 // NOTE: The logz.io API user update API function will not update the username field (for an unknown reason)
-func (c *Users) UpdateUser(user User) (*User, error) {
+func (c *UsersClient) UpdateUser(user User) (*User, error) {
 	if err, ok := validateUserUpdateRequest(user); !ok {
 		return nil, err
 	}

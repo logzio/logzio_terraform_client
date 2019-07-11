@@ -22,7 +22,7 @@ func buildDeleteApiRequest(apiToken string, alertId int64) (*http.Request, error
 }
 
 // Delete an alert, specified by it's unique id, returns an error if a problem is encountered
-func (c *Alerts) DeleteAlert(alertId int64) error {
+func (c *AlertsClient) DeleteAlert(alertId int64) error {
 	req, _ := buildDeleteApiRequest(c.ApiToken, alertId)
 
 	httpClient := client.GetHttpClient(req)
@@ -30,7 +30,6 @@ func (c *Alerts) DeleteAlert(alertId int64) error {
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
 
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 

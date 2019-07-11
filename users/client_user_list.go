@@ -20,7 +20,6 @@ func listUsersApiRequest(apiToken string) (*http.Request, error) {
 	url := fmt.Sprintf(listUserServiceUrl, baseUrl)
 	req, err := http.NewRequest(listUserServiceMethod, url, nil)
 	logzio_client.AddHttpHeaders(apiToken, req)
-
 	return req, err
 }
 
@@ -46,7 +45,7 @@ func listUsersHttpRequest(req *http.Request) ([]map[string]interface{}, error) {
 }
 
 // Lists all the users in an array belonging to the account that the supplied API token belongs to, returns an error otherwise
-func (c *Users) ListUsers() ([]User, error) {
+func (c *UsersClient) ListUsers() ([]User, error) {
 	req, _ := listUsersApiRequest(c.ApiToken)
 
 	target, err := listUsersHttpRequest(req)

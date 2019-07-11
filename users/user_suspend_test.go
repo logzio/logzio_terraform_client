@@ -1,6 +1,7 @@
 package users_test
 
 import (
+	"github.com/jonboydell/logzio_client/test_utils"
 	"github.com/jonboydell/logzio_client/users"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -8,12 +9,13 @@ import (
 
 func TestUsers_SuspendUser(t *testing.T) {
 	underTest, err := setupUsersTest()
+	accountId, _ := test_utils.GetAccountId()
 
 	if assert.NoError(t, err) {
 		user, err := underTest.CreateUser(users.User{
-			Username:  test_username,
+			Username:  "testsuspenduser@massive.co",
 			Fullname:  test_fullname,
-			AccountId: underTest.AccountId,
+			AccountId: accountId,
 			Roles:     []int32{users.UserTypeUser},
 			Active:    true,
 		})
@@ -37,12 +39,13 @@ func TestUsers_SuspendUser(t *testing.T) {
 
 func TestUsers_UnsuspendUser(t *testing.T) {
 	underTest, err := setupUsersTest()
+	accountId, _ := test_utils.GetAccountId()
 
 	if assert.NoError(t, err) {
 		user, err := underTest.CreateUser(users.User{
-			Username:  test_username,
+			Username:  "testunsuspenduser@massive.co",
 			Fullname:  test_fullname,
-			AccountId: underTest.AccountId,
+			AccountId: accountId,
 			Roles:     []int32{users.UserTypeUser},
 			Active:    true,
 		})
@@ -73,12 +76,13 @@ func TestUsers_UnsuspendUser(t *testing.T) {
 
 func TestUsers_SuspendSuspendedUser(t *testing.T) {
 	underTest, err := setupUsersTest()
+	accountId, _ := test_utils.GetAccountId()
 
 	if assert.NoError(t, err) {
 		user, err := underTest.CreateUser(users.User{
-			Username:  test_username,
+			Username:  "testsuspenduser@massive.co",
 			Fullname:  test_fullname,
-			AccountId: underTest.AccountId,
+			AccountId: accountId,
 			Roles:     []int32{users.UserTypeUser},
 			Active:    true,
 		})
@@ -101,12 +105,13 @@ func TestUsers_SuspendSuspendedUser(t *testing.T) {
 
 func TestUsers_UnsuspendActiveUser(t *testing.T) {
 	underTest, err := setupUsersTest()
+	accountId, _ := test_utils.GetAccountId()
 
 	if assert.NoError(t, err) {
 		user, err := underTest.CreateUser(users.User{
-			Username:  test_username,
+			Username:  "testunsuspendactiveuser@massive.co",
 			Fullname:  test_fullname,
-			AccountId: underTest.AccountId,
+			AccountId: accountId,
 			Roles:     []int32{users.UserTypeUser},
 			Active:    true,
 		})

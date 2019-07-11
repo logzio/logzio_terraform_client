@@ -1,25 +1,65 @@
-package alerts
+package alerts_test
 
 import (
-	"github.com/jonboydell/logzio_client/test_utils"
+	"github.com/jonboydell/logzio_client/alerts"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestUpdateAlert(t *testing.T) {
-	var client *Alerts
-	var alert *AlertType
+	underTest, err := setupAlertsTest()
 
-	api_token, _ := test_utils.GetApiToken()
+	if assert.NoError(t, err) {
+		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
+			Title:       "test update alert",
+			Description: "this is my description",
+			QueryString: "loglevel:ERROR",
+			Filter:      "",
+			Operation:   alerts.OperatorGreaterThan,
+			SeverityThresholdTiers: []alerts.SeverityThresholdType{
+				alerts.SeverityThresholdType{
+					alerts.SeverityHigh,
+					10,
+				},
+			},
+			SearchTimeFrameMinutes:       0,
+			NotificationEmails:           []interface{}{},
+			IsEnabled:                    true,
+			SuppressNotificationsMinutes: 0,
+			ValueAggregationType:         alerts.AggregationTypeCount,
+			ValueAggregationField:        nil,
+			GroupByAggregationFields:     []interface{}{"my_field"},
+			AlertNotificationEndpoints:   []interface{}{},
+		})
 
-	client, err := New(api_token)
-	assert.NoError(t, err)
+		if assert.NoError(t, err) && assert.NotNil(t, alert) {
+			updatedAlert, err := underTest.UpdateAlert(alert.AlertId, alerts.CreateAlertType{
+				Title:       "test update alert updated ",
+				Description: "this is my description updated",
+				QueryString: "loglevel:ERROR",
+				Filter:      "",
+				Operation:   alerts.OperatorGreaterThan,
+				SeverityThresholdTiers: []alerts.SeverityThresholdType{
+					alerts.SeverityThresholdType{
+						alerts.SeverityHigh,
+						10,
+					},
+				},
+				SearchTimeFrameMinutes:       0,
+				NotificationEmails:           []interface{}{},
+				IsEnabled:                    true,
+				SuppressNotificationsMinutes: 0,
+				ValueAggregationType:         alerts.AggregationTypeCount,
+				ValueAggregationField:        nil,
+				GroupByAggregationFields:     []interface{}{"my_field"},
+				AlertNotificationEndpoints:   []interface{}{},
+			})
 
-	createAlert := createValidAlert()
-	if assert.NotNil(t, client) {
-		alert, err = client.CreateAlert(createAlert)
-		assert.NoError(t, err)
-		assert.NotNil(t, alert)
-		client.DeleteAlert(alert.AlertId)
+			assert.NoError(t, err)
+			assert.NotNil(t, updatedAlert)
+
+			err = underTest.DeleteAlert(alert.AlertId)
+			assert.NoError(t, err)
+		}
 	}
 }

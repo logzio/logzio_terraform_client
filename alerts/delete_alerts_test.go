@@ -1,44 +1,51 @@
-package alerts
+package alerts_test
 
 import (
-	"github.com/jonboydell/logzio_client/test_utils"
+	"github.com/jonboydell/logzio_client/alerts"
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"time"
 )
 
 func TestDeleteAlert(t *testing.T) {
-	var client *Alerts
-	token, err := test_utils.GetApiToken()
-	client, _ = New(token)
-	assert.NoError(t, err)
+	underTest, err := setupAlertsTest()
 
-	if assert.NotNil(t, client) {
+	if assert.NoError(t, err) {
 		// create alert
-		createAlert := createValidAlert()
-		alert, err := client.CreateAlert(createAlert)
-		assert.NoError(t, err)
-		assert.NotNil(t, alert)
-
-		// delete alert
-		alertId := alert.AlertId
-		client.DeleteAlert(alertId)
-
-		// make sure alert is really deleted
-		alert, err = client.GetAlert(alertId)
-		assert.Error(t, err)
-		assert.Nil(t, alert)
+		alert, err := underTest.CreateAlert(
+			alerts.CreateAlertType{
+				Title:       "this is my deletable alert",
+				Description: "this is my description",
+				QueryString: "loglevel:ERROR",
+				Filter:      "",
+				Operation:   alerts.OperatorGreaterThan,
+				SeverityThresholdTiers: []alerts.SeverityThresholdType{
+					alerts.SeverityThresholdType{
+						alerts.SeverityHigh,
+						10,
+					},
+				},
+				SearchTimeFrameMinutes:       0,
+				NotificationEmails:           []interface{}{},
+				IsEnabled:                    true,
+				SuppressNotificationsMinutes: 0,
+				ValueAggregationType:         alerts.AggregationTypeCount,
+				ValueAggregationField:        nil,
+				GroupByAggregationFields:     []interface{}{"my_field"},
+				AlertNotificationEndpoints:   []interface{}{},
+			})
+		time.Sleep(3 * time.Second)
+		if assert.NoError(t, err) {
+			defer underTest.DeleteAlert(alert.AlertId)
+		}
 	}
 }
 
 func TestDeleteMissingAlert(t *testing.T) {
-	var client *Alerts
-	token, _ := test_utils.GetApiToken()
-	client, err := New(token)
-	assert.NoError(t, err)
+	underTest, err := setupAlertsTest()
 
-	if assert.NotNil(t, client) {
-		// delete alert that doesn't exist
-		err = client.DeleteAlert(12345)
+	if assert.NoError(t, err) {
+		err = underTest.DeleteAlert(12345)
 		assert.Error(t, err)
 	}
 }
