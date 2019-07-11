@@ -97,14 +97,14 @@ func jsonEndpointToEndpoint(jsonEndpoint map[string]interface{}) Endpoint {
 	return endpoint
 }
 
-type Endpoints struct {
+type EndpointsClient struct {
 	client.Client
 }
 
-func New(apiToken string) (*Endpoints, error) {
-	var c Endpoints
-	c.ApiToken = apiToken
+func New(apiToken string) (*EndpointsClient, error) {
 	if len(apiToken) > 0 {
+		var c EndpointsClient
+		c.ApiToken = apiToken
 		return &c, nil
 	} else {
 		return nil, fmt.Errorf("API token not defined")
@@ -115,7 +115,7 @@ type endpointValidator = func(e Endpoint) (error, bool)
 type endpointBuilder = func(a string, t string, e Endpoint) (*http.Request, error)
 type endpointChecker = func(b []byte) error
 
-func (c *Endpoints) makeEndpointRequest(endpoint interface{}, validator endpointValidator, builder endpointBuilder, checker endpointChecker) ([]byte, error, bool) {
+func (c *EndpointsClient) makeEndpointRequest(endpoint interface{}, validator endpointValidator, builder endpointBuilder, checker endpointChecker) ([]byte, error, bool) {
 	e := endpoint.(Endpoint)
 	if err, ok := validator(e); !ok {
 		return nil, err, false

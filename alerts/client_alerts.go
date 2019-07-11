@@ -148,14 +148,14 @@ func jsonAlertToAlert(jsonAlert map[string]interface{}) AlertType {
 	return alert
 }
 
-type Alerts struct {
+type AlertsClient struct {
 	client.Client
 }
 
-func New(apiToken string) (*Alerts, error) {
-	var c Alerts
-	c.ApiToken = apiToken
+func New(apiToken string) (*AlertsClient, error) {
 	if len(apiToken) > 0 {
+		var c AlertsClient
+		c.ApiToken = apiToken
 		return &c, nil
 	} else {
 		return nil, fmt.Errorf("API token not defined")

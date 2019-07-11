@@ -39,16 +39,15 @@ type UserError struct {
 	parameters map[string]interface{}
 }
 
-type Users struct {
+type UsersClient struct {
 	client.Client
 }
 
 // Creates a new entry point into the users functions, accepts the user's logz.io API token and account Id
-func New(apiToken string, accountId int32) (*Users, error) {
+func New(apiToken string) (*UsersClient, error) {
 	if len(apiToken) > 0 {
-		var c Users
+		var c UsersClient
 		c.ApiToken = apiToken
-		c.AccountId = accountId
 		return &c, nil
 	} else {
 		return nil, fmt.Errorf("API token not defined")
@@ -70,14 +69,4 @@ func jsonToUser(json map[string]interface{}) User {
 	}
 	user.Roles = rs
 	return user
-}
-
-func jsonToError(json map[string]interface{}) UserError {
-	userError := UserError{
-		errorCode:  json["errorCode"].(string),
-		message:    json["message"].(string),
-		requestId:  json["requestId"].(string),
-		parameters: json["parameters"].(map[string]interface{}),
-	}
-	return userError
 }

@@ -1,37 +1,37 @@
-package endpoints
+package endpoints_test
 
 import (
+	"github.com/jonboydell/logzio_client/endpoints"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestEndpointsDataDogCreateUpdate(t *testing.T) {
-	setupEndpointsTest()
-	if assert.NotNil(t, endpoints) {
-		endpoint, err := endpoints.CreateEndpoint(createDataDogEndpoint())
+	underTest, err := setupEndpointsTest()
+	if assert.NoError(t, err) {
+		endpoint, err := underTest.CreateEndpoint(createDataDogEndpoint())
 		assert.NotNil(t, endpoint)
-		createdEndpoints = append(createdEndpoints, endpoint.Id)
 		if assert.NoError(t, err) {
-			endpoint, err = endpoints.UpdateEndpoint(endpoint.Id, updateDataDogEndpoint())
+			endpoint, err = underTest.UpdateEndpoint(endpoint.Id, updateDataDogEndpoint())
 			assert.NotNil(t, endpoint)
 			assert.NoError(t, err)
 		}
+		underTest.DeleteEndpoint(endpoint.Id)
 	}
-	teardownEndpointsTest()
 }
 
-func createDataDogEndpoint() Endpoint {
-	return Endpoint{
-		Title:        "endpoint",
+func createDataDogEndpoint() endpoints.Endpoint {
+	return endpoints.Endpoint{
+		Title:        "datadogendpoint",
 		Description:  "description",
 		EndpointType: "data-dog",
 		ApiKey:       "api_key",
 	}
 }
 
-func updateDataDogEndpoint() Endpoint {
-	return Endpoint{
-		Title:        "updated endpoint",
+func updateDataDogEndpoint() endpoints.Endpoint {
+	return endpoints.Endpoint{
+		Title:        "datadogupdatedendpoint",
 		Description:  "updated description",
 		EndpointType: "data-dog",
 		ApiKey:       "updated_api_key",

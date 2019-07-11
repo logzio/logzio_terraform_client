@@ -28,7 +28,7 @@ func buildGetEnpointApiRequest(apiToken string, notificationId int64) (*http.Req
 }
 
 // Returns an endpoint, given it's name.  Returns nil (and an error) if an endpoint with the specified name can't be found
-func (c *Endpoints) GetEndpointByName(endpointName string) (*Endpoint, error) {
+func (c *EndpointsClient) GetEndpointByName(endpointName string) (*Endpoint, error) {
 	list, err := c.ListEndpoints()
 	if err != nil {
 		return nil, err
@@ -44,7 +44,7 @@ func (c *Endpoints) GetEndpointByName(endpointName string) (*Endpoint, error) {
 }
 
 // Returns an endpoint, given it's identity.  Returns nul (and an error) if an endpoint with the specified id can't be found
-func (c *Endpoints) GetEndpoint(endpointId int64) (*Endpoint, error) {
+func (c *EndpointsClient) GetEndpoint(endpointId int64) (*Endpoint, error) {
 	req, _ := buildGetEnpointApiRequest(c.ApiToken, endpointId)
 
 	httpClient := client.GetHttpClient(req)

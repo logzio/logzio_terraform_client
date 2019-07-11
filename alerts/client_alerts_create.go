@@ -98,7 +98,7 @@ func buildCreateApiRequest(apiToken string, jsonObject map[string]interface{}) (
 }
 
 // Create an alert, return the created alert if successful, an error otherwise
-func (c *Alerts) CreateAlert(alert CreateAlertType) (*AlertType, error) {
+func (c *AlertsClient) CreateAlert(alert CreateAlertType) (*AlertType, error) {
 	err := validateCreateAlertRequest(alert)
 	if err != nil {
 		return nil, err
@@ -113,14 +113,20 @@ func (c *Alerts) CreateAlert(alert CreateAlertType) (*AlertType, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 
+	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 	if !logzio_client.CheckValidStatus(resp, []int{createAlertMethodSuccess}) {
 		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "CreateAlert", resp.StatusCode, jsonBytes)
 	}
 
-	var target AlertType
-	json.Unmarshal(jsonBytes, &target)
+	var jsonResponse map[string]interface{}
+	err = json.Unmarshal(jsonBytes, &jsonResponse)
 
-	return &target, nil
+	retVal := jsonAlertToAlert(jsonResponse)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &retVal, nil
 }
