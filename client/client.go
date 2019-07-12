@@ -21,20 +21,21 @@ type Client struct {
 	log      log.Logger
 }
 
-var logzioBaseUrl string = LOGZIO_BASE_URL
+var logzIoBaseUrl string = LOGZIO_BASE_URL
 
 // Entry point into the logz.io client
 func New(apiToken string) *Client {
 	var c Client
 	c.ApiToken = apiToken
+	c.BaseUrl = GetLogzIoBaseUrl()
 	return &c
 }
 
-func GetLogzioBaseUrl() string {
+func GetLogzIoBaseUrl() string {
 	if len(os.Getenv(ENV_LOGZIO_BASE_URL)) > 0 {
-		logzioBaseUrl = os.Getenv(ENV_LOGZIO_BASE_URL)
+		logzIoBaseUrl = os.Getenv(ENV_LOGZIO_BASE_URL)
 	}
-	return logzioBaseUrl
+	return logzIoBaseUrl
 }
 
 func GetHttpClient(req *http.Request) *http.Client {
@@ -58,8 +59,4 @@ func IsErrorResponse(response map[string]interface{}) (bool, string) {
 		return true, response[ERROR_MESSAGE].(string)
 	}
 	return false, ""
-}
-
-func (c *Client) SetBaseUrl(BaseUrl string) {
-	c.BaseUrl = BaseUrl
 }

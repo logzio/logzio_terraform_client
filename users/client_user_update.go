@@ -26,7 +26,7 @@ func validateUserUpdateRequest(u User) (error, bool) {
 	return nil, true
 }
 
-func updateUserApiRequest(apiToken string, u User) (*http.Request, error) {
+func (c *UsersClient) updateUserApiRequest(apiToken string, u User) (*http.Request, error) {
 	var (
 		updateUser = map[string]interface{}{
 			fldUserUsername:  u.Username,
@@ -41,7 +41,7 @@ func updateUserApiRequest(apiToken string, u User) (*http.Request, error) {
 		return nil, err
 	}
 
-	baseUrl := client.GetLogzioBaseUrl()
+	baseUrl := c.BaseUrl
 	url := fmt.Sprintf(updateUserServiceUrl, baseUrl, u.Id)
 	req, err := http.NewRequest(updateUserServiceMethod, url, bytes.NewBuffer(jsonBytes))
 	logzio_client.AddHttpHeaders(apiToken, req)
@@ -83,7 +83,7 @@ func (c *UsersClient) UpdateUser(user User) (*User, error) {
 	if err, ok := validateUserUpdateRequest(user); !ok {
 		return nil, err
 	}
-	req, _ := updateUserApiRequest(c.ApiToken, user)
+	req, _ := c.updateUserApiRequest(c.ApiToken, user)
 
 	target, err := updateUserHttpRequest(req)
 	if err != nil {

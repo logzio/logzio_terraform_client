@@ -1,0 +1,6 @@
+{
+  "errorCode": "user-management/UNAUTHORIZED_TO_DELETE_USER",
+  "message": "Unauthorized to delete this user",
+  "requestId": "75a0ff16-d04c-48aa-adf8-f797dac82b83",
+  "parameters": {}
+}

@@ -19,9 +19,9 @@ func validateGetUserRequest(u User) (error, bool) {
 	return nil, true
 }
 
-func getUserApiRequest(apiToken string, u User) (*http.Request, error) {
+func (c *UsersClient) getUserApiRequest(apiToken string, u User) (*http.Request, error) {
 
-	baseUrl := client.GetLogzioBaseUrl()
+	baseUrl := c.BaseUrl
 	url := fmt.Sprintf(getUserServiceUrl, baseUrl, u.Id)
 	req, err := http.NewRequest(getUserServiceMethod, url, nil)
 	logzio_client.AddHttpHeaders(apiToken, req)
@@ -57,7 +57,7 @@ func (c *UsersClient) GetUser(id int64) (*User, error) {
 	if err, ok := validateGetUserRequest(u); !ok {
 		return nil, err
 	}
-	req, _ := getUserApiRequest(c.ApiToken, u)
+	req, _ := c.getUserApiRequest(c.ApiToken, u)
 
 	target, err := getUserHttpRequest(req)
 	if err != nil {
