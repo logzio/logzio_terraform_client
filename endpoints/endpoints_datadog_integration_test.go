@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestEndpointsDataDogCreateUpdate(t *testing.T) {
+func TestIntegrationEndpoints_DataDogCreateUpdate(t *testing.T) {
 	underTest, err := setupEndpointsIntegrationTest()
 	if assert.NoError(t, err) {
 		endpoint, err := underTest.CreateEndpoint(createDataDogEndpoint())

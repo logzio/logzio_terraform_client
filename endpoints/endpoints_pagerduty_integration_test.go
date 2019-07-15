@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestEndpointsPagerDutyCreateUpdate(t *testing.T) {
+func TestIntegrationEndpoints_PagerDutyCreateUpdate(t *testing.T) {
 	underTest, err := setupEndpointsIntegrationTest()
 
 	if assert.NoError(t, err) {

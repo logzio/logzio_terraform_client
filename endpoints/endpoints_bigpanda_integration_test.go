@@ -8,17 +8,15 @@ import (
 	"testing"
 )
 
-func TestEndpointsBigPandaCreateUpdate(t *testing.T) {
+func TestIntegrationEndpoints_BigPandaCreateUpdate(t *testing.T) {
 	underTest, err := setupEndpointsIntegrationTest()
 	if assert.NoError(t, err) {
 		endpoint, err := underTest.CreateEndpoint(createBigPandaEndpoint())
-
 		if assert.NoError(t, err) {
+			defer underTest.DeleteEndpoint(endpoint.Id)
+
 			updatedEndpoint, err := underTest.UpdateEndpoint(endpoint.Id, updateBigPandaEndpoint())
 			assert.NotNil(t, updatedEndpoint)
-			assert.NoError(t, err)
-
-			err = underTest.DeleteEndpoint(endpoint.Id)
 			assert.NoError(t, err)
 		}
 	}

@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestEndpointsVictorOpsCreateUpdate(t *testing.T) {
+func TestIntegrationEndpoints_VictorOpsCreateUpdate(t *testing.T) {
 	underTest, err := setupEndpointsIntegrationTest()
 	if assert.NoError(t, err) {
 		endpoint, err := underTest.CreateEndpoint(createVictorOpsEndpoint())

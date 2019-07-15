@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestEndpoints_CreateDeleteGetValidEndpoint(t *testing.T) {
+func TestIntegrationEndpoints_CreateDeleteGetValidEndpoint(t *testing.T) {
 	var endpoint *endpoints.Endpoint
 	var err error
 
@@ -32,7 +32,7 @@ func TestEndpoints_CreateDeleteGetValidEndpoint(t *testing.T) {
 }
 
 // Tests create of an already existing endpoint (same titles)
-func TestEndpointsClient_CreateDuplicateEndpoint(t *testing.T) {
+func TestIntegrationEndpoints_CreateDuplicateEndpoint(t *testing.T) {
 	var endpoint *endpoints.Endpoint
 	var err error
 
@@ -60,7 +60,7 @@ func TestEndpointsClient_CreateDuplicateEndpoint(t *testing.T) {
 	}
 }
 
-func TestEndpointsClient_ListEndpoints(t *testing.T) {
+func TestIntegrationEndpoints_ListEndpoints(t *testing.T) {
 	underTest, err := setupEndpointsIntegrationTest()
 	if assert.NoError(t, err) {
 		endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
@@ -77,7 +77,7 @@ func TestEndpointsClient_ListEndpoints(t *testing.T) {
 	}
 }
 
-func TestEndpointsClient_CreateInvalidEndpoint(t *testing.T) {
+func TestIntegrationEndpoints_CreateInvalidEndpoint(t *testing.T) {
 	underTest, err := setupEndpointsIntegrationTest()
 	if assert.NoError(t, err) {
 		endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
@@ -91,7 +91,7 @@ func TestEndpointsClient_CreateInvalidEndpoint(t *testing.T) {
 	}
 }
 
-func TestEndpointsClient_UpdateEndpoint(t *testing.T) {
+func TestIntegrationEndpoints_UpdateEndpoint(t *testing.T) {
 	var endpoint *endpoints.Endpoint
 	var err error
 

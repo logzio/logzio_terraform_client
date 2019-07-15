@@ -12,10 +12,10 @@ func TestUsers_ListUsers(t *testing.T) {
 	defer teardown()
 
 	mux.HandleFunc("/v1/user-management", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
 		assert.Equal(t, http.MethodGet, r.Method)
-		fmt.Fprint(w, fixture("list_users.json"))
 		w.WriteHeader(http.StatusOK)
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprint(w, fixture("list_users.json"))
 	})
 
 	if assert.NoError(t, err) {

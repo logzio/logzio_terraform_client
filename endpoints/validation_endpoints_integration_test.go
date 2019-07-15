@@ -1,5 +1,3 @@
-// +build integration
-
 package endpoints_test
 
 import (
@@ -8,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestEndpointsInvalidEndpoint(t *testing.T) {
+func TestEndpoints_InvalidEndpoint(t *testing.T) {
 	if err, ok := endpoints.ValidateEndpointRequest(endpoints.Endpoint{
 		Title: "title",
 	}); ok {
@@ -18,7 +16,7 @@ func TestEndpointsInvalidEndpoint(t *testing.T) {
 	}
 }
 
-func TestEndpointsValidateSlackEndpoint(t *testing.T) {
+func TestEndpoints_ValidateSlackEndpoint(t *testing.T) {
 	if err, ok := endpoints.ValidateEndpointRequest(endpoints.Endpoint{
 		Title:        "title",
 		Description:  "description",
@@ -31,7 +29,7 @@ func TestEndpointsValidateSlackEndpoint(t *testing.T) {
 	}
 }
 
-func TestEndpointsValidateCustomEndpoint(t *testing.T) {
+func TestEndpoints_ValidateCustomEndpoint(t *testing.T) {
 	if err, ok := endpoints.ValidateEndpointRequest(endpoints.Endpoint{
 		Title:        "title",
 		Description:  "description",
@@ -47,7 +45,7 @@ func TestEndpointsValidateCustomEndpoint(t *testing.T) {
 	}
 }
 
-func TestEndpointsValidatePagerDuty(t *testing.T) {
+func TestEndpoints_ValidatePagerDuty(t *testing.T) {
 	if err, ok := endpoints.ValidateEndpointRequest(endpoints.Endpoint{
 		Title:        "title",
 		Description:  "description",
