@@ -1,0 +1,6 @@
+{
+  "errorCode": "user-management/USER_DOES_NOT_EXIST",
+  "message": "User {{{username}}} User doesn't exist.",
+  "requestId": "0889dc69-6cb4-4f75-a555-5d113fb92e85",
+  "parameters": {}
+}

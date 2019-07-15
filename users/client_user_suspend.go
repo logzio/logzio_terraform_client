@@ -31,8 +31,8 @@ func suspendUserHttpRequest(req *http.Request) error {
 	return nil
 }
 
-func suspendUserApiRequest(apiToken string, userId int64) (*http.Request, error) {
-	baseUrl := client.GetLogzioBaseUrl()
+func (c *UsersClient) suspendUserApiRequest(apiToken string, userId int64) (*http.Request, error) {
+	baseUrl := c.BaseUrl
 	url := fmt.Sprintf(suspendUserServiceUrl, baseUrl, userId)
 	req, err := http.NewRequest(suspendUserServiceMethod, url, nil)
 	logzio_client.AddHttpHeaders(apiToken, req)
@@ -40,8 +40,8 @@ func suspendUserApiRequest(apiToken string, userId int64) (*http.Request, error)
 	return req, err
 }
 
-func unsuspendUserApiRequest(apiToken string, userId int64) (*http.Request, error) {
-	baseUrl := client.GetLogzioBaseUrl()
+func (c *UsersClient) unsuspendUserApiRequest(apiToken string, userId int64) (*http.Request, error) {
+	baseUrl := c.BaseUrl
 	url := fmt.Sprintf(unsuspendUserServiceUrl, baseUrl, userId)
 	req, err := http.NewRequest(suspendUserServiceMethod, url, nil)
 	logzio_client.AddHttpHeaders(apiToken, req)
@@ -55,7 +55,7 @@ func (c *UsersClient) SuspendUser(userId int64) (bool, error) {
 	if err, ok := validateSuspendUserRequest(userId); !ok {
 		return false, err
 	}
-	req, _ := suspendUserApiRequest(c.ApiToken, userId)
+	req, _ := c.suspendUserApiRequest(c.ApiToken, userId)
 
 	err := suspendUserHttpRequest(req)
 	if err != nil {
@@ -71,7 +71,7 @@ func (c *UsersClient) UnSuspendUser(userId int64) (bool, error) {
 	if err, ok := validateSuspendUserRequest(userId); !ok {
 		return false, err
 	}
-	req, _ := unsuspendUserApiRequest(c.ApiToken, userId)
+	req, _ := c.unsuspendUserApiRequest(c.ApiToken, userId)
 
 	err := suspendUserHttpRequest(req)
 	if err != nil {

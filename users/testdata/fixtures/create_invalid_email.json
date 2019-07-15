@@ -1,0 +1,11 @@
+{
+  "errorMessage": "Request cannot be processed due to validation errors",
+  "path": "/user-management",
+  "validationErrors": [
+    {
+      "type": "request_body",
+      "name": "username",
+      "message": "must match \"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$\""
+    }
+  ]
+}

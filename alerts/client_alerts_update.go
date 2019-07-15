@@ -8,6 +8,7 @@ import (
 	"github.com/jonboydell/logzio_client/client"
 	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
 const updateAlertServiceUrl string = alertsServiceEndpoint + "/%d"
@@ -36,13 +37,13 @@ func buildUpdateAlertRequest(alert CreateAlertType) map[string]interface{} {
 	return createAlert
 }
 
-func buildUpdateApiRequest(apiToken string, alertId int64, jsonObject map[string]interface{}) (*http.Request, error) {
+func (c *AlertsClient) buildUpdateApiRequest(apiToken string, alertId int64, jsonObject map[string]interface{}) (*http.Request, error) {
 	jsonBytes, err := json.Marshal(jsonObject)
 	if err != nil {
 		return nil, err
 	}
 
-	baseUrl := client.GetLogzioBaseUrl()
+	baseUrl := c.BaseUrl
 	req, err := http.NewRequest(updateAlertServiceMethod, fmt.Sprintf(updateAlertServiceUrl, baseUrl, alertId), bytes.NewBuffer(jsonBytes))
 	logzio_client.AddHttpHeaders(apiToken, req)
 
@@ -58,7 +59,7 @@ func (c *AlertsClient) UpdateAlert(alertId int64, alert CreateAlertType) (*Alert
 	}
 
 	createAlert := buildUpdateAlertRequest(alert)
-	req, err := buildUpdateApiRequest(c.ApiToken, alertId, createAlert)
+	req, err := c.buildUpdateApiRequest(c.ApiToken, alertId, createAlert)
 	if err != nil {
 		return nil, err
 	}
@@ -74,6 +75,11 @@ func (c *AlertsClient) UpdateAlert(alertId int64, alert CreateAlertType) (*Alert
 
 	if !logzio_client.CheckValidStatus(resp, []int{updateAlertMethodSuccess}) {
 		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "UpdateAlert", resp.StatusCode, jsonBytes)
+	}
+
+	str := fmt.Sprintf("%s", jsonBytes)
+	if strings.Contains(str, "no alert id") {
+		return nil, fmt.Errorf("API call %s failed with missing alert %d, data: %s", "UpdateAlert", alertId, jsonBytes)
 	}
 
 	var target AlertType

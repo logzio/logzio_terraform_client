@@ -1,3 +1,5 @@
+// +build integration
+
 package endpoints_test
 
 import (
@@ -7,7 +9,7 @@ import (
 )
 
 func TestEndpointsPagerDutyCreateUpdate(t *testing.T) {
-	underTest, err := setupEndpointsTest()
+	underTest, err := setupEndpointsIntegrationTest()
 
 	if assert.NoError(t, err) {
 		endpoint, err := underTest.CreateEndpoint(createPagerDutyEndpoint())

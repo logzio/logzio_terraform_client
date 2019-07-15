@@ -14,8 +14,8 @@ const getAlertServiceUrl string = alertsServiceEndpoint + "/%d"
 const getAlertServiceMethod string = http.MethodGet
 const getAlertMethodSuccess int = 200
 
-func buildGetApiRequest(apiToken string, alertId int64) (*http.Request, error) {
-	baseUrl := client.GetLogzioBaseUrl()
+func (c *AlertsClient) buildGetApiRequest(apiToken string, alertId int64) (*http.Request, error) {
+	baseUrl := c.BaseUrl
 	req, err := http.NewRequest(getAlertServiceMethod, fmt.Sprintf(getAlertServiceUrl, baseUrl, alertId), nil)
 	logzio_client.AddHttpHeaders(apiToken, req)
 
@@ -24,7 +24,7 @@ func buildGetApiRequest(apiToken string, alertId int64) (*http.Request, error) {
 
 // Returns an alert given it's unique identifier, an error otherwise
 func (c *AlertsClient) GetAlert(alertId int64) (*AlertType, error) {
-	req, _ := buildGetApiRequest(c.ApiToken, alertId)
+	req, _ := c.buildGetApiRequest(c.ApiToken, alertId)
 
 	httpClient := client.GetHttpClient(req)
 	resp, err := httpClient.Do(req)
