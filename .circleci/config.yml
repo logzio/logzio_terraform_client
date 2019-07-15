@@ -20,3 +20,11 @@ jobs:
       - checkout
       - run: go get -v -t ./...
       - run: go test -v -tags integration ./... -covermode=count -coverprofile=coverage.out
+workflows:
+  version: 2
+  workflow:
+    jobs:
+      - build
+  integration_test:
+    jobs:
+      - integration
