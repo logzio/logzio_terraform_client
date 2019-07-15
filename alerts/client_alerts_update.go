@@ -8,6 +8,7 @@ import (
 	"github.com/jonboydell/logzio_client/client"
 	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
 const updateAlertServiceUrl string = alertsServiceEndpoint + "/%d"
@@ -74,6 +75,11 @@ func (c *AlertsClient) UpdateAlert(alertId int64, alert CreateAlertType) (*Alert
 
 	if !logzio_client.CheckValidStatus(resp, []int{updateAlertMethodSuccess}) {
 		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "UpdateAlert", resp.StatusCode, jsonBytes)
+	}
+
+	str := fmt.Sprintf("%s", jsonBytes)
+	if strings.Contains(str, "no alert id") {
+		return nil, fmt.Errorf("API call %s failed with missing alert %d, data: %s", "UpdateAlert", alertId, jsonBytes)
 	}
 
 	var target AlertType
