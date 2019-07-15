@@ -19,8 +19,8 @@ const apiGetEndpointNoEndpoint = "The endpoint doesn't exist"
 const errorGetEndpointApiCallFailed = "API call GetEndpoint failed with status code:%d, data:%s"
 const errorGetEndpointDoesntExist = "API call GetEndpoint failed as endpoint with id:%d doesn't exist, data:%s"
 
-func buildGetEnpointApiRequest(apiToken string, notificationId int64) (*http.Request, error) {
-	baseUrl := client.GetLogzIoBaseUrl()
+func (c *EndpointsClient)  buildGetEnpointApiRequest(apiToken string, notificationId int64) (*http.Request, error) {
+	baseUrl := c.BaseUrl
 	req, err := http.NewRequest(getEndpointsServiceMethod, fmt.Sprintf(getEndpointsServiceUrl, baseUrl, notificationId), nil)
 	logzio_client.AddHttpHeaders(apiToken, req)
 
@@ -45,7 +45,7 @@ func (c *EndpointsClient) GetEndpointByName(endpointName string) (*Endpoint, err
 
 // Returns an endpoint, given it's identity.  Returns nul (and an error) if an endpoint with the specified id can't be found
 func (c *EndpointsClient) GetEndpoint(endpointId int64) (*Endpoint, error) {
-	req, _ := buildGetEnpointApiRequest(c.ApiToken, endpointId)
+	req, _ := c.buildGetEnpointApiRequest(c.ApiToken, endpointId)
 
 	httpClient := client.GetHttpClient(req)
 	resp, err := httpClient.Do(req)

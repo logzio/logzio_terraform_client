@@ -21,14 +21,14 @@ const (
 	errorUpdateEndpointDoesntExist   = "API call UpdateEndpoint failed as endpoint with id:%d doesn't exist, data:%s"
 )
 
-func buildUpdateEndpointApiRequest(apiToken string, service string, endpoint Endpoint) (*http.Request, error) {
+func (c *EndpointsClient) buildUpdateEndpointApiRequest(apiToken string, service string, endpoint Endpoint) (*http.Request, error) {
 	jsonObject, err := buildUpdateEndpointRequest(endpoint)
 	jsonBytes, err := json.Marshal(jsonObject)
 	if err != nil {
 		return nil, err
 	}
 
-	baseUrl := client.GetLogzIoBaseUrl()
+	baseUrl := c.BaseUrl
 	id := endpoint.Id
 	req, err := http.NewRequest(updateEndpointServiceMethod, fmt.Sprintf(updateEndpointServiceUrl, baseUrl, strings.ToLower(service), id), bytes.NewBuffer(jsonBytes))
 	logzio_client.AddHttpHeaders(apiToken, req)
@@ -77,7 +77,7 @@ func buildUpdateEndpointRequest(endpoint Endpoint) (map[string]interface{}, erro
 func (c *EndpointsClient) UpdateEndpoint(id int64, endpoint Endpoint) (*Endpoint, error) {
 
 	endpoint.Id = id
-	if jsonBytes, err, ok := c.makeEndpointRequest(endpoint, ValidateEndpointRequest, buildUpdateEndpointApiRequest, func(b []byte) error {
+	if jsonBytes, err, ok := c.makeEndpointRequest(endpoint, ValidateEndpointRequest, c.buildUpdateEndpointApiRequest, func(b []byte) error {
 		if strings.Contains(fmt.Sprintf("%s", b), "Insufficient privileges") {
 			return fmt.Errorf("API call %s failed for endpoint %d, data: %s", "UpdateEndpoint", id, b)
 		}

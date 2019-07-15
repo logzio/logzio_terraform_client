@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/jonboydell/logzio_client"
-	"github.com/jonboydell/logzio_client/client"
 	"net/http"
 	"strings"
 )
@@ -66,7 +65,7 @@ func buildCreateEndpointRequest(endpoint Endpoint) map[string]interface{} {
 	return createEndpoint
 }
 
-func buildCreateEndpointApiRequest(apiToken string, service string, endpoint Endpoint) (*http.Request, error) {
+func (c *EndpointsClient) buildCreateEndpointApiRequest(apiToken string, service string, endpoint Endpoint) (*http.Request, error) {
 	createEndpoint := buildCreateEndpointRequest(endpoint)
 
 	jsonBytes, err := json.Marshal(createEndpoint)
@@ -74,7 +73,7 @@ func buildCreateEndpointApiRequest(apiToken string, service string, endpoint End
 		return nil, err
 	}
 
-	baseUrl := client.GetLogzIoBaseUrl()
+	baseUrl := c.BaseUrl
 	url := fmt.Sprintf(createEndpointServiceUrl, baseUrl, service)
 	req, err := http.NewRequest(createEndpointServiceMethod, url, bytes.NewBuffer(jsonBytes))
 	logzio_client.AddHttpHeaders(apiToken, req)
@@ -85,7 +84,7 @@ func buildCreateEndpointApiRequest(apiToken string, service string, endpoint End
 // Creates an endpoint, given the endpoint definition and the service to create the endpoint against
 // Returns the endpoint object if successful (hopefully with an ID) and a non-nil error if not
 func (c *EndpointsClient) CreateEndpoint(endpoint Endpoint) (*Endpoint, error) {
-	if jsonBytes, err, ok := c.makeEndpointRequest(endpoint, ValidateEndpointRequest, buildCreateEndpointApiRequest, func(b []byte) error {
+	if jsonBytes, err, ok := c.makeEndpointRequest(endpoint, ValidateEndpointRequest, c.buildCreateEndpointApiRequest, func(b []byte) error {
 		var data map[string]interface{}
 		json.Unmarshal(b, &data)
 
