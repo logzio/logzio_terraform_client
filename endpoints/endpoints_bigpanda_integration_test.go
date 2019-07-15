@@ -9,7 +9,7 @@ import (
 )
 
 func TestEndpointsBigPandaCreateUpdate(t *testing.T) {
-	underTest, err := setupEndpointsTest()
+	underTest, err := setupEndpointsIntegrationTest()
 	if assert.NoError(t, err) {
 		endpoint, err := underTest.CreateEndpoint(createBigPandaEndpoint())
 

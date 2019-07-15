@@ -9,7 +9,7 @@ import (
 )
 
 func TestEndpointsVictorOpsCreateUpdate(t *testing.T) {
-	underTest, err := setupEndpointsTest()
+	underTest, err := setupEndpointsIntegrationTest()
 	if assert.NoError(t, err) {
 		endpoint, err := underTest.CreateEndpoint(createVictorOpsEndpoint())
 		assert.NotNil(t, endpoint)

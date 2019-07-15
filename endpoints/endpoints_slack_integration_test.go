@@ -12,7 +12,7 @@ func TestEndpoints_CreateDeleteGetValidEndpoint(t *testing.T) {
 	var endpoint *endpoints.Endpoint
 	var err error
 
-	underTest, err := setupEndpointsTest()
+	underTest, err := setupEndpointsIntegrationTest()
 
 	if assert.NoError(t, err) {
 		endpoint, err = underTest.CreateEndpoint(endpoints.Endpoint{
@@ -36,7 +36,7 @@ func TestEndpointsClient_CreateDuplicateEndpoint(t *testing.T) {
 	var endpoint *endpoints.Endpoint
 	var err error
 
-	underTest, err := setupEndpointsTest()
+	underTest, err := setupEndpointsIntegrationTest()
 
 	if assert.NoError(t, err) {
 		endpoint, err = underTest.CreateEndpoint(endpoints.Endpoint{
@@ -61,7 +61,7 @@ func TestEndpointsClient_CreateDuplicateEndpoint(t *testing.T) {
 }
 
 func TestEndpointsClient_ListEndpoints(t *testing.T) {
-	underTest, err := setupEndpointsTest()
+	underTest, err := setupEndpointsIntegrationTest()
 	if assert.NoError(t, err) {
 		endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
 			Title:        "slacklistendpoints",
@@ -78,7 +78,7 @@ func TestEndpointsClient_ListEndpoints(t *testing.T) {
 }
 
 func TestEndpointsClient_CreateInvalidEndpoint(t *testing.T) {
-	underTest, err := setupEndpointsTest()
+	underTest, err := setupEndpointsIntegrationTest()
 	if assert.NoError(t, err) {
 		endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
 			Title:        "slackinvalidEndpoint",
@@ -95,7 +95,7 @@ func TestEndpointsClient_UpdateEndpoint(t *testing.T) {
 	var endpoint *endpoints.Endpoint
 	var err error
 
-	underTest, err := setupEndpointsTest()
+	underTest, err := setupEndpointsIntegrationTest()
 
 	if assert.NoError(t, err) && assert.NotNil(t, underTest) {
 		endpoint, err = underTest.CreateEndpoint(endpoints.Endpoint{

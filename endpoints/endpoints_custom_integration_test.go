@@ -9,7 +9,7 @@ import (
 )
 
 func TestEndpointsCustomCreateUpdate(t *testing.T) {
-	underTest, err := setupEndpointsTest()
+	underTest, err := setupEndpointsIntegrationTest()
 	if assert.NoError(t, err) {
 		endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
 			Title:        "testCreateCustomEndpoint",
@@ -39,7 +39,7 @@ func TestEndpointsCustomCreateUpdate(t *testing.T) {
 }
 
 func TestEndpointsCustomCreateDuplicate(t *testing.T) {
-	underTest, err := setupEndpointsTest()
+	underTest, err := setupEndpointsIntegrationTest()
 	if assert.NoError(t, err) {
 		endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
 			Title:        "testCustomDuplicateEndpoint",

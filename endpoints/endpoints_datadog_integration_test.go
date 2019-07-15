@@ -9,7 +9,7 @@ import (
 )
 
 func TestEndpointsDataDogCreateUpdate(t *testing.T) {
-	underTest, err := setupEndpointsTest()
+	underTest, err := setupEndpointsIntegrationTest()
 	if assert.NoError(t, err) {
 		endpoint, err := underTest.CreateEndpoint(createDataDogEndpoint())
 		assert.NotNil(t, endpoint)
