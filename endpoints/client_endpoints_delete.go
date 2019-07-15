@@ -3,7 +3,6 @@ package endpoints
 import (
 	"fmt"
 	"github.com/jonboydell/logzio_client"
-	"github.com/jonboydell/logzio_client/client"
 	"net/http"
 	"strings"
 )
