@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestListAlerts(t *testing.T) {
+func TestIntegrationAlerts_ListAlerts(t *testing.T) {
 	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {

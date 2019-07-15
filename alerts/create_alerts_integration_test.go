@@ -1,5 +1,3 @@
-// +build integration
-
 package alerts_test
 
 import (
@@ -9,7 +7,7 @@ import (
 	"time"
 )
 
-func TestCreateAlert(t *testing.T) {
+func TestIntegrationAlerts_CreateAlert(t *testing.T) {
 	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {
@@ -42,7 +40,7 @@ func TestCreateAlert(t *testing.T) {
 	}
 }
 
-func TestCreateAlertWithFilter(t *testing.T) {
+func TestIntegrationAlerts_CreateAlertWithFilter(t *testing.T) {
 	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {
@@ -75,38 +73,7 @@ func TestCreateAlertWithFilter(t *testing.T) {
 	}
 }
 
-func TestCreateAlertWithNoTitle(t *testing.T) {
-	underTest, err := setupAlertsIntegrationTest()
-
-	if assert.NoError(t, err) {
-		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
-			Title:       "",
-			Description: "this is my description",
-			QueryString: "loglevel:ERROR",
-			Filter:      "{\"bool\":{\"must\":[{\"match\":{\"type\":\"mytype\"}}],\"must_not\":[]}}",
-			Operation:   alerts.OperatorGreaterThan,
-			SeverityThresholdTiers: []alerts.SeverityThresholdType{
-				alerts.SeverityThresholdType{
-					alerts.SeverityHigh,
-					10,
-				},
-			},
-			SearchTimeFrameMinutes:       0,
-			NotificationEmails:           []interface{}{},
-			IsEnabled:                    true,
-			SuppressNotificationsMinutes: 0,
-			ValueAggregationType:         alerts.AggregationTypeCount,
-			ValueAggregationField:        nil,
-			GroupByAggregationFields:     []interface{}{"my_field"},
-			AlertNotificationEndpoints:   []interface{}{},
-		})
-
-		assert.Error(t, err)
-		assert.Nil(t, alert)
-	}
-}
-
-func TestCreateAlertWithInvalidFilter(t *testing.T) {
+func TestIntegrationAlerts_CreateAlertInvalidFilter(t *testing.T) {
 	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {
@@ -137,7 +104,7 @@ func TestCreateAlertWithInvalidFilter(t *testing.T) {
 	}
 }
 
-func TestCreateAlertWithInvalidValueAggregationType(t *testing.T) {
+func TestIntegrationAlerts_CreateAlertInvalidAggregationType(t *testing.T) {
 	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {
@@ -169,7 +136,7 @@ func TestCreateAlertWithInvalidValueAggregationType(t *testing.T) {
 }
 
 
-func TestCreateAlertWithInvalidValueAggregationField(t *testing.T) {
+func TestIntegrationAlerts_CreateAlertInvaldValueAggregationField(t *testing.T) {
 	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {
@@ -200,7 +167,7 @@ func TestCreateAlertWithInvalidValueAggregationField(t *testing.T) {
 	}
 }
 
-func TestCreateAlertWithInvalidValueAggregationTypeNone(t *testing.T) {
+func TestIntegrationAlerts_CreateAlertInvalidValueAggregationTypeNone(t *testing.T) {
 	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {
@@ -231,7 +198,7 @@ func TestCreateAlertWithInvalidValueAggregationTypeNone(t *testing.T) {
 	}
 }
 
-func TestCreateAlertWithInvalidValueAggregationTypeCount(t *testing.T) {
+func TestIntegrationAlerts_CreateAlertInvalidValueAggregationTypeCount(t *testing.T) {
 	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {
@@ -263,7 +230,7 @@ func TestCreateAlertWithInvalidValueAggregationTypeCount(t *testing.T) {
 }
 
 
-func TestCreateAlertWithNoNotifications(t *testing.T) {
+func TestIntegrationAlerts_CreateAlertNoNotifications(t *testing.T) {
 	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {
@@ -294,7 +261,7 @@ func TestCreateAlertWithNoNotifications(t *testing.T) {
 	}
 }
 
-func TestCreateAlertWithNoQuery(t *testing.T) {
+func TestIntegrationAlerts_CreateAlertNoQueryString(t *testing.T) {
 	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {
@@ -325,7 +292,7 @@ func TestCreateAlertWithNoQuery(t *testing.T) {
 	}
 }
 
-func TestCreateAlertWithInvalidSeverity(t *testing.T) {
+func TestIntegrationAlerts_CreateAlertInvalidSeverity(t *testing.T) {
 	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {

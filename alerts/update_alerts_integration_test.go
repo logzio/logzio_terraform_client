@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func TestUpdateAlert(t *testing.T) {
+func TestIntegrationAlerts_UpdateAlert(t *testing.T) {
 	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {

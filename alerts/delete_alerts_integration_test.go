@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func TestDeleteAlert(t *testing.T) {
+func TestIntegrationAlerts_DeleteAlert(t *testing.T) {
 	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {
@@ -43,11 +43,11 @@ func TestDeleteAlert(t *testing.T) {
 	}
 }
 
-func TestDeleteMissingAlert(t *testing.T) {
+func TestIntegrationAlerts_DeleteMissingAlert(t *testing.T) {
 	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {
-		err = underTest.DeleteAlert(12345)
+		err = underTest.DeleteAlert(int64(1234567))
 		assert.Error(t, err)
 	}
 }
