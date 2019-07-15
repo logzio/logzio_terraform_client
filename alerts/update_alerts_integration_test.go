@@ -8,7 +8,7 @@ import (
 )
 
 func TestUpdateAlert(t *testing.T) {
-	underTest, err := setupAlertsTest()
+	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {
 		alert, err := underTest.CreateAlert(alerts.CreateAlertType{

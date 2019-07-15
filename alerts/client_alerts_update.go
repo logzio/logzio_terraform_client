@@ -36,13 +36,13 @@ func buildUpdateAlertRequest(alert CreateAlertType) map[string]interface{} {
 	return createAlert
 }
 
-func buildUpdateApiRequest(apiToken string, alertId int64, jsonObject map[string]interface{}) (*http.Request, error) {
+func (c *AlertsClient) buildUpdateApiRequest(apiToken string, alertId int64, jsonObject map[string]interface{}) (*http.Request, error) {
 	jsonBytes, err := json.Marshal(jsonObject)
 	if err != nil {
 		return nil, err
 	}
 
-	baseUrl := client.GetLogzioBaseUrl()
+	baseUrl := c.BaseUrl
 	req, err := http.NewRequest(updateAlertServiceMethod, fmt.Sprintf(updateAlertServiceUrl, baseUrl, alertId), bytes.NewBuffer(jsonBytes))
 	logzio_client.AddHttpHeaders(apiToken, req)
 
@@ -58,7 +58,7 @@ func (c *AlertsClient) UpdateAlert(alertId int64, alert CreateAlertType) (*Alert
 	}
 
 	createAlert := buildUpdateAlertRequest(alert)
-	req, err := buildUpdateApiRequest(c.ApiToken, alertId, createAlert)
+	req, err := c.buildUpdateApiRequest(c.ApiToken, alertId, createAlert)
 	if err != nil {
 		return nil, err
 	}

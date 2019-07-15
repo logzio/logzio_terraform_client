@@ -8,7 +8,7 @@ import (
 )
 
 func TestDeleteAlert(t *testing.T) {
-	underTest, err := setupAlertsTest()
+	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {
 		// create alert
@@ -42,7 +42,7 @@ func TestDeleteAlert(t *testing.T) {
 }
 
 func TestDeleteMissingAlert(t *testing.T) {
-	underTest, err := setupAlertsTest()
+	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {
 		err = underTest.DeleteAlert(12345)

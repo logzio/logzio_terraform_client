@@ -2,15 +2,17 @@ package alerts_test
 
 import (
 	"github.com/jonboydell/logzio_client/alerts"
+	"github.com/jonboydell/logzio_client/client"
 	"github.com/jonboydell/logzio_client/test_utils"
 )
 
-func setupAlertsTest() (*alerts.AlertsClient, error) {
+func setupAlertsIntegrationTest() (*alerts.AlertsClient, error) {
 	apiToken, err := test_utils.GetApiToken()
 	if err != nil {
 		return nil, err
 	}
 	underTest, err := alerts.New(apiToken)
+	underTest.BaseUrl = client.GetLogzIoBaseUrl()
 	return underTest, nil
 }
 

@@ -6,7 +6,7 @@ import (
 )
 
 func TestListAlerts(t *testing.T) {
-	underTest, err := setupAlertsTest()
+	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {
 		_, err = underTest.ListAlerts()

@@ -13,8 +13,8 @@ const deleteAlertServiceUrl string = alertsServiceEndpoint + "/%d"
 const deleteAlertServiceMethod string = http.MethodDelete
 const deleteAlertMethodSuccess int = 200
 
-func buildDeleteApiRequest(apiToken string, alertId int64) (*http.Request, error) {
-	baseUrl := client.GetLogzioBaseUrl()
+func (c *AlertsClient) buildDeleteApiRequest(apiToken string, alertId int64) (*http.Request, error) {
+	baseUrl := c.BaseUrl
 	req, err := http.NewRequest(deleteAlertServiceMethod, fmt.Sprintf(deleteAlertServiceUrl, baseUrl, alertId), nil)
 	logzio_client.AddHttpHeaders(apiToken, req)
 
@@ -23,7 +23,7 @@ func buildDeleteApiRequest(apiToken string, alertId int64) (*http.Request, error
 
 // Delete an alert, specified by it's unique id, returns an error if a problem is encountered
 func (c *AlertsClient) DeleteAlert(alertId int64) error {
-	req, _ := buildDeleteApiRequest(c.ApiToken, alertId)
+	req, _ := c.buildDeleteApiRequest(c.ApiToken, alertId)
 
 	httpClient := client.GetHttpClient(req)
 	resp, err := httpClient.Do(req)

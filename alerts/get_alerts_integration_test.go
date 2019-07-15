@@ -7,7 +7,7 @@ import (
 )
 
 func TestGetAlert(t *testing.T) {
-	underTest, err := setupAlertsTest()
+	underTest, err := setupAlertsIntegrationTest()
 
 	alert, err := underTest.CreateAlert(alerts.CreateAlertType{
 		Title:       "test get alert",
@@ -46,7 +46,7 @@ func TestGetAlert(t *testing.T) {
 }
 
 func TestGetAlert_DeleteAlertNotExisting(t *testing.T) {
-	underTest, err := setupAlertsTest()
+	underTest, err := setupAlertsIntegrationTest()
 	_, err = underTest.GetAlert(12345)
 	assert.Error(t, err)
 }

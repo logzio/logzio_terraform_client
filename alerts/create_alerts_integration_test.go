@@ -8,7 +8,7 @@ import (
 )
 
 func TestCreateAlert(t *testing.T) {
-	underTest, err := setupAlertsTest()
+	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {
 		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
@@ -41,7 +41,7 @@ func TestCreateAlert(t *testing.T) {
 }
 
 func TestCreateAlertWithFilter(t *testing.T) {
-	underTest, err := setupAlertsTest()
+	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {
 		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
@@ -74,7 +74,7 @@ func TestCreateAlertWithFilter(t *testing.T) {
 }
 
 func TestCreateAlertWithNoTitle(t *testing.T) {
-	underTest, err := setupAlertsTest()
+	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {
 		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
@@ -105,7 +105,7 @@ func TestCreateAlertWithNoTitle(t *testing.T) {
 }
 
 func TestCreateAlertWithInvalidFilter(t *testing.T) {
-	underTest, err := setupAlertsTest()
+	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {
 		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
@@ -136,7 +136,7 @@ func TestCreateAlertWithInvalidFilter(t *testing.T) {
 }
 
 func TestCreateAlertWithInvalidValueAggregationType(t *testing.T) {
-	underTest, err := setupAlertsTest()
+	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {
 		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
@@ -168,7 +168,7 @@ func TestCreateAlertWithInvalidValueAggregationType(t *testing.T) {
 
 
 func TestCreateAlertWithInvalidValueAggregationField(t *testing.T) {
-	underTest, err := setupAlertsTest()
+	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {
 		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
@@ -199,7 +199,7 @@ func TestCreateAlertWithInvalidValueAggregationField(t *testing.T) {
 }
 
 func TestCreateAlertWithInvalidValueAggregationTypeNone(t *testing.T) {
-	underTest, err := setupAlertsTest()
+	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {
 		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
@@ -230,7 +230,7 @@ func TestCreateAlertWithInvalidValueAggregationTypeNone(t *testing.T) {
 }
 
 func TestCreateAlertWithInvalidValueAggregationTypeCount(t *testing.T) {
-	underTest, err := setupAlertsTest()
+	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {
 		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
@@ -262,7 +262,7 @@ func TestCreateAlertWithInvalidValueAggregationTypeCount(t *testing.T) {
 
 
 func TestCreateAlertWithNoNotifications(t *testing.T) {
-	underTest, err := setupAlertsTest()
+	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {
 		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
@@ -293,7 +293,7 @@ func TestCreateAlertWithNoNotifications(t *testing.T) {
 }
 
 func TestCreateAlertWithNoQuery(t *testing.T) {
-	underTest, err := setupAlertsTest()
+	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {
 		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
@@ -324,7 +324,7 @@ func TestCreateAlertWithNoQuery(t *testing.T) {
 }
 
 func TestCreateAlertWithInvalidSeverity(t *testing.T) {
-	underTest, err := setupAlertsTest()
+	underTest, err := setupAlertsIntegrationTest()
 
 	if assert.NoError(t, err) {
 		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
