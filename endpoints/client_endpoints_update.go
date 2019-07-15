@@ -28,7 +28,7 @@ func buildUpdateEndpointApiRequest(apiToken string, service string, endpoint End
 		return nil, err
 	}
 
-	baseUrl := client.GetLogzioBaseUrl()
+	baseUrl := client.GetLogzIoBaseUrl()
 	id := endpoint.Id
 	req, err := http.NewRequest(updateEndpointServiceMethod, fmt.Sprintf(updateEndpointServiceUrl, baseUrl, strings.ToLower(service), id), bytes.NewBuffer(jsonBytes))
 	logzio_client.AddHttpHeaders(apiToken, req)

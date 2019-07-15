@@ -74,7 +74,7 @@ func buildCreateEndpointApiRequest(apiToken string, service string, endpoint End
 		return nil, err
 	}
 
-	baseUrl := client.GetLogzioBaseUrl()
+	baseUrl := client.GetLogzIoBaseUrl()
 	url := fmt.Sprintf(createEndpointServiceUrl, baseUrl, service)
 	req, err := http.NewRequest(createEndpointServiceMethod, url, bytes.NewBuffer(jsonBytes))
 	logzio_client.AddHttpHeaders(apiToken, req)

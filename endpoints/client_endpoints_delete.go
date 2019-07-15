@@ -23,7 +23,7 @@ func validateDeleteEndpoint(endpoint Endpoint) (error, bool) {
 }
 
 func buildDeleteEndpointApiRequest(apiToken string, service string, endpoint Endpoint) (*http.Request, error) {
-	baseUrl := client.GetLogzioBaseUrl()
+	baseUrl := client.GetLogzIoBaseUrl()
 	req, err := http.NewRequest(deleteEndpointServiceMethod, fmt.Sprintf(deleteEndpointServiceUrl, baseUrl, endpoint.Id), nil)
 	logzio_client.AddHttpHeaders(apiToken, req)
 	return req, err
