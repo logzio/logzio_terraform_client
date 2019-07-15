@@ -13,7 +13,7 @@ jobs:
       - run: go get github.com/mattn/goveralls
       - run: go get -v -t ./...
       - run: go test -v ./... -covermode=count -coverprofile=coverage.out
-      - run: goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN
+      - run: goveralls -coverprofile=coverage.out -service=circle-ci -repotoken $COVERALLS_TOKEN
   integration:
     docker:
       - image: circleci/golang:1.12
@@ -25,7 +25,7 @@ jobs:
       - run: go get github.com/mattn/goveralls
       - run: go get -v -t ./...
       - run: go test -v -tags integration ./... -covermode=count -coverprofile=coverage.out
-      - run: goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN
+      - run: goveralls -coverprofile=coverage.out -service=circle-ci -repotoken $COVERALLS_TOKEN
 workflows:
   version: 2
   workflow:
