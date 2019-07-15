@@ -23,12 +23,8 @@ func fixture(path string) string {
 }
 
 func setupUsersTest() (*users.UsersClient, error, func()) {
-	apiToken, err := test_utils.GetApiToken()
-	if err != nil {
-		return nil, err, nil
-	}
-
-	underTest, err := users.New(apiToken)
+	apiToken := "SOME_API_TOKEN"
+	underTest, _ := users.New(apiToken)
 
 	mux = http.NewServeMux()
 	server = httptest.NewServer(mux)

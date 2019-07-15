@@ -14,12 +14,8 @@ var (
 )
 
 func setupEndpointsTest() (*endpoints.EndpointsClient, error, func()) {
-	apiToken, err := test_utils.GetApiToken()
-	if err != nil {
-		return nil, err, nil
-	}
-
-	underTest, err := endpoints.New(apiToken)
+	apiToken := "SOME_API_TOKEN"
+	underTest, _ := endpoints.New(apiToken)
 
 	mux = http.NewServeMux()
 	server = httptest.NewServer(mux)

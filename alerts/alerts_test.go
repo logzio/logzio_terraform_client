@@ -23,12 +23,8 @@ func fixture(path string) string {
 }
 
 func setupAlertsTest() (*alerts.AlertsClient, error, func()) {
-	apiToken, err := test_utils.GetApiToken()
-	if err != nil {
-		return nil, err, nil
-	}
-
-	underTest, err := alerts.New(apiToken)
+	apiToken := "SOME_API_TOKEN"
+	underTest, _ := alerts.New(apiToken)
 
 	mux = http.NewServeMux()
 	server = httptest.NewServer(mux)
