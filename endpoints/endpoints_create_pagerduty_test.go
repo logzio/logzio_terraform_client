@@ -1,4 +1,3 @@
-
 package endpoints_test
 
 import (
@@ -36,7 +35,7 @@ func TestEndpoints_CreatePagerDutyEndpoint(t *testing.T) {
 		endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
 			Title:        "some_endpoint",
 			Description:  "my description",
-			ServiceKey: "SomeServiceKey",
+			ServiceKey:   "SomeServiceKey",
 			EndpointType: endpoints.EndpointTypePagerDuty,
 		})
 		assert.NoError(t, err)

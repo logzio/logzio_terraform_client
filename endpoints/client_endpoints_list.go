@@ -15,7 +15,7 @@ const listEndpointsMethodSuccess int = 200
 
 const errorListEndpointApiCallFailed = "API call ListEndpoints failed with status code:%d, data:%s"
 
-func (c *EndpointsClient)  buildListEndpointsApiRequest(apiToken string) (*http.Request, error) {
+func (c *EndpointsClient) buildListEndpointsApiRequest(apiToken string) (*http.Request, error) {
 	baseUrl := c.BaseUrl
 	req, err := http.NewRequest(listEndpointsServiceMethod, fmt.Sprintf(listEndpointsServiceUrl, baseUrl), nil)
 	logzio_client.AddHttpHeaders(apiToken, req)

@@ -91,7 +91,7 @@ func (c *UsersClient) DeleteUser(id int64) error {
 	}
 
 	err = checkDeleteUserResponse(target)
-	if (err != nil) {
+	if err != nil {
 		return err
 	}
 

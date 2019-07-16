@@ -1,4 +1,3 @@
-
 package endpoints_test
 
 import (
@@ -36,7 +35,7 @@ func TestEndpoints_CreateDataDogEndpoint(t *testing.T) {
 		endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
 			Title:        "some_endpoint",
 			Description:  "my description",
-			ApiKey: "someApiKey",
+			ApiKey:       "someApiKey",
 			EndpointType: endpoints.EndpointTypeDataDog,
 		})
 		assert.NoError(t, err)

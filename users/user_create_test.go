@@ -55,7 +55,7 @@ func TestUsers_CreateDuplicateUser(t *testing.T) {
 		err = json.Unmarshal(jsonBytes, &target)
 		assert.Contains(t, target, "username")
 		assert.Contains(t, target, "accountID")
-		assert.Contains(t, target, 	"fullName")
+		assert.Contains(t, target, "fullName")
 		assert.Contains(t, target, "roles")
 
 		w.Header().Set("Content-Type", "application/json")
