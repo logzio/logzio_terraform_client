@@ -2,6 +2,7 @@ package alerts
 
 import (
 	"fmt"
+
 	"github.com/jonboydell/logzio_client/client"
 )
 
@@ -102,8 +103,6 @@ func jsonAlertToAlert(jsonAlert map[string]interface{}) AlertType {
 	alert := AlertType{
 		AlertId:                    int64(jsonAlert[fldAlertId].(float64)),
 		AlertNotificationEndpoints: jsonAlert[fldAlertNotificationEndpoints].([]interface{}),
-		CreatedAt:                  jsonAlert[fldCreatedAt].(string),
-		CreatedBy:                  jsonAlert[fldCreatedBy].(string),
 		Description:                jsonAlert[fldDescription].(string),
 		Filter:                     jsonAlert[fldFilter].(string),
 		IsEnabled:                  jsonAlert[fldIsEnabled].(bool),
@@ -121,6 +120,14 @@ func jsonAlertToAlert(jsonAlert map[string]interface{}) AlertType {
 
 	if jsonAlert[fldGroupByAggregationFields] != nil {
 		alert.GroupByAggregationFields = jsonAlert[fldGroupByAggregationFields].([]interface{})
+	}
+
+	if jsonAlert[fldCreatedAt] != nil {
+		alert.CreatedAt = jsonAlert[fldCreatedAt].(string)
+	}
+
+	if jsonAlert[fldCreatedBy] != nil {
+		alert.CreatedBy = jsonAlert[fldCreatedBy].(string)
 	}
 
 	if jsonAlert[fldLastTriggeredAt] != nil {
