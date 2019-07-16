@@ -80,10 +80,10 @@ func (c *EndpointsClient) UpdateEndpoint(id int64, endpoint Endpoint) (*Endpoint
 		if strings.Contains(fmt.Sprintf("%s", b), "Insufficient privileges") {
 			return fmt.Errorf("API call %s failed for endpoint %d, data: %s", "UpdateEndpoint", id, b)
 		}
-
-		if strings.Contains(fmt.Sprintf("%s", b), "already exists") {
+		if strings.Contains(fmt.Sprintf("%s", b), "errorCode") {
 			return fmt.Errorf("API call %s failed for endpoint %d, data: %s", "UpdateEndpoint", id, b)
 		}
+
 		return nil
 	}); ok {
 		var target Endpoint

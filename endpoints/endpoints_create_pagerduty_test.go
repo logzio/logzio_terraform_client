@@ -11,13 +11,13 @@ import (
 	"testing"
 )
 
-func TestEndpoints_CreateEndpoint(t *testing.T) {
+func TestEndpoints_CreatePagerDutyEndpoint(t *testing.T) {
 	underTest, err, teardown := setupEndpointsTest()
 	defer teardown()
 
 	endpointId := int64(1234567)
 
-	mux.HandleFunc("/v1/endpoints/slack", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/v1/endpoints/pager-duty", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		assert.Equal(t, http.MethodPost, r.Method)
 		jsonBytes, _ := ioutil.ReadAll(r.Body)
@@ -25,7 +25,7 @@ func TestEndpoints_CreateEndpoint(t *testing.T) {
 		err = json.Unmarshal(jsonBytes, &target)
 		assert.Contains(t, target, "title")
 		assert.Contains(t, target, "description")
-		assert.Contains(t, target, "url")
+		assert.Contains(t, target, "serviceKey")
 
 		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Type", "application/json")
@@ -36,33 +36,11 @@ func TestEndpoints_CreateEndpoint(t *testing.T) {
 		endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
 			Title:        "some_endpoint",
 			Description:  "my description",
-			Url:          "https://this.is.com/some/webhook",
-			EndpointType: "slack",
+			ServiceKey: "SomeServiceKey",
+			EndpointType: endpoints.EndpointTypePagerDuty,
 		})
 		assert.NoError(t, err)
 		assert.NotNil(t, endpoint)
 		assert.Equal(t, endpointId, endpoint.Id)
-	}
-}
-
-func TestEndpoints_CreateDuplicateEndpoint(t *testing.T) {
-	underTest, err, teardown := setupEndpointsTest()
-	defer teardown()
-
-	mux.HandleFunc("/v1/endpoints/slack", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprint(w, fixture("create_duplicate_endpoint.json"))
-	})
-
-	if assert.NoError(t, err) {
-		endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
-			Title:        "some_endpoint",
-			Description:  "my description",
-			Url:          "https://this.is.com/some/webhook",
-			EndpointType: "slack",
-		})
-		assert.Error(t, err)
-		assert.Nil(t, endpoint)
 	}
 }
