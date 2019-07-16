@@ -54,7 +54,7 @@ func TestAlerts_CreateAlert(t *testing.T) {
 		})
 
 		assert.NoError(t, err)
-		assert.Equal(t,int64(1234567), alert.AlertId)
+		assert.Equal(t, int64(1234567), alert.AlertId)
 	}
 }
 

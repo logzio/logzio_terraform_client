@@ -137,7 +137,6 @@ func TestIntegrationAlerts_CreateAlertInvalidAggregationType(t *testing.T) {
 	}
 }
 
-
 func TestIntegrationAlerts_CreateAlertInvaldValueAggregationField(t *testing.T) {
 	underTest, err := setupAlertsIntegrationTest()
 
@@ -230,7 +229,6 @@ func TestIntegrationAlerts_CreateAlertInvalidValueAggregationTypeCount(t *testin
 		assert.Nil(t, alert)
 	}
 }
-
 
 func TestIntegrationAlerts_CreateAlertNoNotifications(t *testing.T) {
 	underTest, err := setupAlertsIntegrationTest()

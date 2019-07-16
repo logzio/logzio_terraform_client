@@ -13,7 +13,7 @@ func TestIntegrationUsers_CreateValidUser(t *testing.T) {
 	underTest, err := setupUsersIntegrationTest()
 	accountId, _ := test_utils.GetAccountId()
 
-		if assert.NoError(t, err) && assert.NotZero(t, accountId) {
+	if assert.NoError(t, err) && assert.NotZero(t, accountId) {
 		u := users.User{
 			Username:  "test_create_user@test.co",
 			Fullname:  "test create user",
@@ -63,7 +63,7 @@ func TestIntegrationUsers_CreateDeleteDuplicateUser(t *testing.T) {
 }
 
 func TestIntegrationUsers_CreateInvalidUser_Email(t *testing.T) {
-	underTest, err  := setupUsersIntegrationTest()
+	underTest, err := setupUsersIntegrationTest()
 	accountId, erx := test_utils.GetAccountId()
 
 	if assert.NoError(t, err) && assert.NoError(t, erx) && assert.NotZero(t, accountId) {

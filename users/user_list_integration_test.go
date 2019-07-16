@@ -2,7 +2,6 @@
 
 package users_test
 
-
 import (
 	"github.com/stretchr/testify/assert"
 	"testing"

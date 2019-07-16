@@ -1,4 +1,3 @@
-
 package alerts_test
 
 import (

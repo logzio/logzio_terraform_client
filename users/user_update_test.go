@@ -35,7 +35,7 @@ func TestUsers_UpdateUser(t *testing.T) {
 	})
 
 	u := users.User{
-		Id: accountId,
+		Id:        accountId,
 		Username:  "test_create_user@test.co",
 		Fullname:  "test create user",
 		AccountId: accountId,

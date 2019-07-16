@@ -1,4 +1,3 @@
-
 package endpoints_test
 
 import (
@@ -37,8 +36,8 @@ func TestEndpoints_CreateBigPandaEndpoint(t *testing.T) {
 		endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
 			Title:        "some_endpoint",
 			Description:  "my description",
-			ApiToken: "someApiToken",
-			AppKey: "someAppKey",
+			ApiToken:     "someApiToken",
+			AppKey:       "someAppKey",
 			EndpointType: endpoints.EndpointTypeBigPanda,
 		})
 		assert.NoError(t, err)

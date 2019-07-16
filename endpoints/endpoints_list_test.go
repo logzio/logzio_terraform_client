@@ -1,4 +1,3 @@
-
 package endpoints_test
 
 import (
