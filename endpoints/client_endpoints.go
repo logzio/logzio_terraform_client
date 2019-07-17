@@ -105,6 +105,7 @@ func New(apiToken string) (*EndpointsClient, error) {
 	if len(apiToken) > 0 {
 		var c EndpointsClient
 		c.ApiToken = apiToken
+		c.BaseUrl = client.GetLogzIoBaseUrl()
 		return &c, nil
 	} else {
 		return nil, fmt.Errorf("API token not defined")
