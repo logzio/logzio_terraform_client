@@ -163,6 +163,7 @@ func New(apiToken string) (*AlertsClient, error) {
 	if len(apiToken) > 0 {
 		var c AlertsClient
 		c.ApiToken = apiToken
+		c.BaseUrl = client.GetLogzIoBaseUrl()
 		return &c, nil
 	} else {
 		return nil, fmt.Errorf("API token not defined")
