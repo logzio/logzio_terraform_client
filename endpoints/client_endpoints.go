@@ -63,7 +63,10 @@ func jsonEndpointToEndpoint(jsonEndpoint map[string]interface{}) Endpoint {
 		Id:           int64(jsonEndpoint[fldEndpointId].(float64)),
 		EndpointType: jsonEndpoint[fldEndpointType].(string),
 		Title:        jsonEndpoint[fldEndpointTitle].(string),
-		Description:  jsonEndpoint[fldEndpointDescription].(string),
+	}
+
+	if jsonEndpoint[fldEndpointDescription] != nil {
+		endpoint.Description = jsonEndpoint[fldEndpointDescription].(string)
 	}
 
 	switch strings.ToLower(endpoint.EndpointType) {
