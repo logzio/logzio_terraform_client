@@ -24,6 +24,7 @@ const (
 )
 
 type SubAccount struct {
+	Id                    int32
 	Email                 string
 	AccountName           string
 	MaxDailyGB            float32

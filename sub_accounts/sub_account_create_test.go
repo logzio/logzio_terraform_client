@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/jonboydell/logzio_client/sub_accounts"
-	"github.com/jonboydell/logzio_client/users"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
@@ -37,10 +36,20 @@ func TestSubAccount_CreateValidSubAccount(t *testing.T) {
 		w.WriteHeader(http.StatusOK)
 	})
 
-	subAccount := sub_accounts.SubAccount {
+	s := sub_accounts.SubAccount{
+		Email:                 "test.user@test.user",
+		AccountName:           "some account name",
+		MaxDailyGB:            10.5,
+		RetentionDays:         10,
+		Searchable:            true,
+		Accessible:            false,
+		SharingObjectAccounts: []int32{1, 2},
+		DocSizeSetting:        true,
+		UtilizationSettings:   map[string]string{"a": "v"},
 	}
 
-	user, err := underTest.CreateSubAccount(subAccount)
+	subAccount, err := underTest.CreateSubAccount(s)
 	assert.NoError(t, err)
-	assert.NotNil(t, user)
+	assert.NotNil(t, subAccount)
+	assert.NotZero(t, subAccount.Id)
 }
