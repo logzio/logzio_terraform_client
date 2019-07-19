@@ -11,7 +11,7 @@ import (
 
 const (
 	getUserServiceUrl         = userServiceEndpoint + "/%d"
-	getUserServiceMethod      = "GET"
+	getUserServiceMethod      = http.MethodGet
 	getUserServiceSuccess int = 200
 )
 
@@ -62,6 +62,10 @@ func (c *UsersClient) GetUser(id int64) (*User, error) {
 	target, err := getUserHttpRequest(req)
 	if err != nil {
 		return nil, err
+	}
+
+	if errorCode, ok := target[client.ERROR_CODE]; ok {
+		return nil, fmt.Errorf("%s", errorCode)
 	}
 
 	user := jsonToUser(target)
