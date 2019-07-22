@@ -40,19 +40,21 @@ type UserError struct {
 }
 
 type UsersClient struct {
-	client.Client
+	*client.Client
 }
 
 // Creates a new entry point into the users functions, accepts the user's logz.io API token and account Id
-func New(apiToken string) (*UsersClient, error) {
-	if len(apiToken) > 0 {
-		var c UsersClient
-		c.ApiToken = apiToken
-		c.BaseUrl = client.GetLogzIoBaseUrl()
-		return &c, nil
-	} else {
+func New(apiToken, baseUrl string) (*UsersClient, error) {
+	if len(apiToken) == 0 {
 		return nil, fmt.Errorf("API token not defined")
 	}
+	if len(baseUrl) == 0 {
+		return nil, fmt.Errorf("Base URL not defined")
+	}
+	c := &UsersClient{
+		Client: client.New(apiToken, baseUrl),
+	}
+	return c, nil
 }
 
 func jsonToUser(json map[string]interface{}) User {

@@ -156,16 +156,18 @@ func jsonAlertToAlert(jsonAlert map[string]interface{}) AlertType {
 }
 
 type AlertsClient struct {
-	client.Client
+	*client.Client
 }
 
-func New(apiToken string) (*AlertsClient, error) {
-	if len(apiToken) > 0 {
-		var c AlertsClient
-		c.ApiToken = apiToken
-		c.BaseUrl = client.GetLogzIoBaseUrl()
-		return &c, nil
-	} else {
+func New(apiToken, baseUrl string) (*AlertsClient, error) {
+	if len(apiToken) == 0 {
 		return nil, fmt.Errorf("API token not defined")
 	}
+	if len(baseUrl) == 0 {
+		return nil, fmt.Errorf("Base URL not defined")
+	}
+	c := &AlertsClient{
+		Client: client.New(apiToken, baseUrl),
+	}
+	return c, nil
 }
