@@ -1,10 +1,5 @@
 package endpoints
 
-import (
-	"fmt"
-	"strings"
-)
-
 func validSlackEndpoint(endpointType Endpoint) bool {
 	return len(endpointType.Title) > 0 &&
 		len(endpointType.Url) > 0 && len(endpointType.Description) > 0
@@ -40,31 +35,23 @@ func validVictorOpsEndpoint(endpointType Endpoint) bool {
 		len(endpointType.RoutingKey) > 0 && len(endpointType.MessageType) > 0 && len(endpointType.ServiceApiKey) > 0
 }
 
-// Validates an endpoint request for correctness given it's type, returns an error and FALSE if validation is failed, true otherwise
-func ValidateEndpointRequest(endpoint Endpoint) (error, bool) {
-	if strings.EqualFold(EndpointTypeSlack, endpoint.EndpointType) && validSlackEndpoint(endpoint) {
-		return nil, true
+// ValidateEndpointRequest validates an endpoint request for correctness given its type,
+// returns FALSE if validation failed, true otherwise
+func ValidateEndpointRequest(endpoint Endpoint) bool {
+	switch endpoint.EndpointType {
+	case EndpointTypeSlack:
+		return validSlackEndpoint(endpoint)
+	case EndpointTypeCustom:
+		return validCustomEndpoint(endpoint)
+	case EndpointTypePagerDuty:
+		return validPagerDutyEndpoint(endpoint)
+	case EndpointTypeBigPanda:
+		return validBigPandaEndpoint(endpoint)
+	case EndpointTypeDataDog:
+		return validDataDogEndpoint(endpoint)
+	case EndpointTypeVictorOps:
+		return validVictorOpsEndpoint(endpoint)
+	default:
+		return false
 	}
-
-	if strings.EqualFold(EndpointTypeCustom, endpoint.EndpointType) && validCustomEndpoint(endpoint) {
-		return nil, true
-	}
-
-	if strings.EqualFold(EndpointTypePagerDuty, endpoint.EndpointType) && validPagerDutyEndpoint(endpoint) {
-		return nil, true
-	}
-
-	if strings.EqualFold(EndpointTypeBigPanda, endpoint.EndpointType) && validBigPandaEndpoint(endpoint) {
-		return nil, true
-	}
-
-	if strings.EqualFold(EndpointTypeDataDog, endpoint.EndpointType) && validDataDogEndpoint(endpoint) {
-		return nil, true
-	}
-
-	if strings.EqualFold(EndpointTypeVictorOps, endpoint.EndpointType) && validVictorOpsEndpoint(endpoint) {
-		return nil, true
-	}
-
-	return fmt.Errorf(errorInvalidEndpointDefinition, endpoint, endpoint.EndpointType), false
 }
