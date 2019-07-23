@@ -10,31 +10,38 @@ const (
 )
 
 const (
-	fldId                    string = "id"          //required
+	fldAccountId                    string = "accountId"          //required
 	fldEmail                 string = "email"       //required
 	fldAccountName           string = "accountName" //required
 	fldMaxDailyGB            string = "maxDailyGB"
 	fldRetentionDays         string = "retentionDays" //required
 	fldAccessible            string = "accessible"
+	fldSearchable            string = "searchable"
 	fldSharingAccountObjects string = "sharingObjectsAccounts" //required
 	fldDocSizeSetting        string = "docSizeSetting"
 	fldUtilizationSettings   string = "utilizationSettings"
 	fldFrequencyMinutes      string = "frequencyMinutes"
 	fldUtilizationEnabled    string = "utilizationEnabled"
+	fldAccountToken          string = "accountToken"
+	fldDailyUsagesList       string = "dailyUsagesList"
 )
 
 type SubAccount struct {
-	Id                    int32
+	Id                    int64
 	Email                 string
 	AccountName           string
 	MaxDailyGB            float32
 	RetentionDays         int32
 	Searchable            bool
 	Accessible            bool
-	SharingObjectAccounts []int32
+	SharingObjectAccounts []interface{}
 	DocSizeSetting        bool
-	UtilizationSettings   map[string]string
+	UtilizationSettings   map[string]interface{}
+	AccountToken          string
+	DailyUsagesList       interface{}
 }
+
+
 
 type SubAccountClient struct {
 	client.Client
@@ -50,4 +57,22 @@ func New(apiToken string) (*SubAccountClient, error) {
 	} else {
 		return nil, fmt.Errorf("API token not defined")
 	}
+}
+
+func jsonToSubAccount(json map[string]interface{}) SubAccount {
+	subAccount := SubAccount{
+ 		Id:                    int64(json[fldAccountId].(float64)),
+		Email:                 json[fldEmail].(string),
+		AccountName:           json[fldAccountName].(string),
+		AccountToken:          json[fldAccountToken].(string),
+		MaxDailyGB:            float32(json[fldMaxDailyGB].(float64)),
+		RetentionDays:         int32(json[fldRetentionDays].(float64)),
+		Searchable:            json[fldSearchable].(bool),
+		Accessible:            json[fldAccessible].(bool),
+		DocSizeSetting:        json[fldDocSizeSetting].(bool),
+		SharingObjectAccounts: json[fldSharingAccountObjects].([]interface{}),
+		UtilizationSettings:   json[fldUtilizationSettings].(map[string]interface{}),
+		DailyUsagesList:       json[fldDailyUsagesList],
+	}
+	return subAccount
 }

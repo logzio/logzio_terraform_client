@@ -31,10 +31,17 @@ func TestSubAccount_CreateValidSubAccount(t *testing.T) {
 		assert.Contains(t, target, "docSizeSetting")
 		assert.Contains(t, target, "utilizationSettings")
 
+		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprint(w, fixture("create_subaccount.json"))
-		w.WriteHeader(http.StatusOK)
 	})
+
+	sharingAccounts := make([]interface{}, 2)
+	sharingAccounts[0] = 1
+	sharingAccounts[1] = 2
+
+	utilizationSettings := make(map[string]interface{}, 2)
+	utilizationSettings["a"] = "v"
 
 	s := sub_accounts.SubAccount{
 		Email:                 "test.user@test.user",
@@ -43,9 +50,9 @@ func TestSubAccount_CreateValidSubAccount(t *testing.T) {
 		RetentionDays:         10,
 		Searchable:            true,
 		Accessible:            false,
-		SharingObjectAccounts: []int32{1, 2},
+		SharingObjectAccounts: sharingAccounts,
 		DocSizeSetting:        true,
-		UtilizationSettings:   map[string]string{"a": "v"},
+		UtilizationSettings:   utilizationSettings,
 	}
 
 	subAccount, err := underTest.CreateSubAccount(s)

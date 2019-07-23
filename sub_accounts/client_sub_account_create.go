@@ -16,7 +16,7 @@ const (
 	serviceSuccess int    = http.StatusOK
 )
 
-func (c *SubAccountClient) validateRequest(s SubAccount) (error, bool) {
+func (c *SubAccountClient) createValidateRequest(s SubAccount) (error, bool) {
 	return nil, true
 }
 
@@ -67,12 +67,12 @@ func (c *SubAccountClient) createHttpRequest(req *http.Request) (map[string]inte
 	return target, nil
 }
 
-func (c *SubAccountClient) checkResponse(response map[string]interface{}) error {
+func (c *SubAccountClient) createCheckResponse(response map[string]interface{}) error {
 	return nil
 }
 
 func (c *SubAccountClient) CreateSubAccount(subAccount SubAccount) (*SubAccount, error) {
-	if err, ok := c.validateRequest(subAccount); !ok {
+	if err, ok := c.createValidateRequest(subAccount); !ok {
 		return nil, err
 	}
 	req, _ := c.createApiRequest(c.ApiToken, subAccount)
@@ -82,11 +82,11 @@ func (c *SubAccountClient) CreateSubAccount(subAccount SubAccount) (*SubAccount,
 		return nil, err
 	}
 
-	err = c.checkResponse(target)
+	err = c.createCheckResponse(target)
 	if err != nil {
 		return nil, err
 	}
 
-	subAccount.Id = int32(target["accountId"].(float64))
+	subAccount.Id = int64(target["accountId"].(float64))
 	return &subAccount, nil
 }
