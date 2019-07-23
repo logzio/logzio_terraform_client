@@ -4,19 +4,18 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/jonboydell/logzio_client"
 	"net/http"
 	"strings"
+
+	"github.com/jonboydell/logzio_client"
 )
 
 const (
 	createEndpointServiceUrl    string = endpointServiceEndpoint + "/%s"
 	createEndpointServiceMethod string = http.MethodPost
-	createEndpointMethodSuccess int    = 200
 )
 
 const (
-	errorInvalidEndpointDefinition   = "endpoint definition %v is not valid for service %s"
 	errorCreateEndpointApiCallFailed = "API call CreateEndpoint failed with status code %d, data: %s"
 )
 
@@ -65,7 +64,7 @@ func buildCreateEndpointRequest(endpoint Endpoint) map[string]interface{} {
 	return createEndpoint
 }
 
-func (c *EndpointsClient) buildCreateEndpointApiRequest(apiToken string, service string, endpoint Endpoint) (*http.Request, error) {
+func (c *EndpointsClient) buildCreateEndpointApiRequest(apiToken string, endpointType endpointType, endpoint Endpoint) (*http.Request, error) {
 	createEndpoint := buildCreateEndpointRequest(endpoint)
 
 	jsonBytes, err := json.Marshal(createEndpoint)
@@ -74,7 +73,7 @@ func (c *EndpointsClient) buildCreateEndpointApiRequest(apiToken string, service
 	}
 
 	baseUrl := c.BaseUrl
-	url := fmt.Sprintf(createEndpointServiceUrl, baseUrl, service)
+	url := fmt.Sprintf(createEndpointServiceUrl, baseUrl, c.getURLByType(endpointType))
 	req, err := http.NewRequest(createEndpointServiceMethod, url, bytes.NewBuffer(jsonBytes))
 	logzio_client.AddHttpHeaders(apiToken, req)
 

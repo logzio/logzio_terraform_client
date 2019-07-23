@@ -3,11 +3,12 @@ package endpoints_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/jonboydell/logzio_client/endpoints"
-	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
 	"testing"
+
+	"github.com/jonboydell/logzio_client/endpoints"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestEndpoints_CreateBigPandaEndpoint(t *testing.T) {
