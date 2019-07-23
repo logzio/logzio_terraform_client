@@ -1,12 +1,14 @@
 package endpoints
 
 import (
+	"errors"
 	"fmt"
-	"github.com/jonboydell/logzio_client"
-	"github.com/jonboydell/logzio_client/client"
 	"io/ioutil"
 	"net/http"
 	"strings"
+
+	"github.com/jonboydell/logzio_client"
+	"github.com/jonboydell/logzio_client/client"
 )
 
 const (
@@ -30,18 +32,23 @@ const (
 	fldEndpointMessageType   string = "messageType"
 	fldEndpointServiceApiKey string = "serviceApiKey"
 )
+
 const (
-	EndpointTypeSlack     string = "slack"
-	EndpointTypeCustom    string = "custom"
-	EndpointTypePagerDuty string = "pager-duty"
-	EndpointTypeBigPanda  string = "big-panda"
-	EndpointTypeDataDog   string = "data-dog"
-	EndpointTypeVictorOps string = "victorops"
+	EndpointTypeSlack     endpointType = "Slack"
+	EndpointTypeCustom    endpointType = "Custom"
+	EndpointTypePagerDuty endpointType = "PagerDuty"
+	EndpointTypeBigPanda  endpointType = "BigPanda"
+	EndpointTypeDataDog   endpointType = "Datadog"
+	EndpointTypeVictorOps endpointType = "VictorOps"
+)
+
+type (
+	endpointType string
 )
 
 type Endpoint struct {
 	Id            int64             // all
-	EndpointType  string            // all
+	EndpointType  endpointType      // all
 	Title         string            // all
 	Description   string            // all
 	Url           string            // custom & slack
@@ -59,9 +66,11 @@ type Endpoint struct {
 }
 
 func jsonEndpointToEndpoint(jsonEndpoint map[string]interface{}) Endpoint {
+	t := jsonEndpoint[fldEndpointType].(string)
+
 	endpoint := Endpoint{
 		Id:           int64(jsonEndpoint[fldEndpointId].(float64)),
-		EndpointType: jsonEndpoint[fldEndpointType].(string),
+		EndpointType: endpointType(t),
 		Title:        jsonEndpoint[fldEndpointTitle].(string),
 	}
 
@@ -69,7 +78,7 @@ func jsonEndpointToEndpoint(jsonEndpoint map[string]interface{}) Endpoint {
 		endpoint.Description = jsonEndpoint[fldEndpointDescription].(string)
 	}
 
-	switch strings.ToLower(endpoint.EndpointType) {
+	switch endpoint.EndpointType {
 	case EndpointTypeSlack:
 		endpoint.Url = jsonEndpoint[fldEndpointUrl].(string)
 	case EndpointTypeCustom:
@@ -95,6 +104,8 @@ func jsonEndpointToEndpoint(jsonEndpoint map[string]interface{}) Endpoint {
 		endpoint.RoutingKey = jsonEndpoint[fldEndpointRoutingKey].(string)
 		endpoint.MessageType = jsonEndpoint[fldEndpointMessageType].(string)
 		endpoint.ServiceApiKey = jsonEndpoint[fldEndpointServiceApiKey].(string)
+	default:
+		panic(fmt.Sprintf("unsupported endpoint type %s", endpoint.EndpointType))
 	}
 
 	return endpoint
@@ -115,14 +126,14 @@ func New(apiToken string) (*EndpointsClient, error) {
 	}
 }
 
-type endpointValidator = func(e Endpoint) (error, bool)
-type endpointBuilder = func(a string, t string, e Endpoint) (*http.Request, error)
+type endpointValidator = func(e Endpoint) bool
+type endpointBuilder = func(a string, t endpointType, e Endpoint) (*http.Request, error)
 type endpointChecker = func(b []byte) error
 
 func (c *EndpointsClient) makeEndpointRequest(endpoint interface{}, validator endpointValidator, builder endpointBuilder, checker endpointChecker) ([]byte, error, bool) {
 	e := endpoint.(Endpoint)
-	if err, ok := validator(e); !ok {
-		return nil, err, false
+	if !validator(e) {
+		return nil, errors.New("the passed in endpoint is not valid"), false
 	}
 	req, _ := builder(c.ApiToken, e.EndpointType, e)
 	httpClient := client.GetHttpClient(req)
@@ -140,4 +151,23 @@ func (c *EndpointsClient) makeEndpointRequest(endpoint interface{}, validator en
 		return nil, err, false
 	}
 	return jsonBytes, nil, true
+}
+
+func (c *EndpointsClient) getURLByType(t endpointType) string {
+	switch t {
+	case EndpointTypeSlack:
+		return "slack"
+	case EndpointTypeCustom:
+		return "custom"
+	case EndpointTypePagerDuty:
+		return "pager-duty"
+	case EndpointTypeBigPanda:
+		return "big-panda"
+	case EndpointTypeDataDog:
+		return "data-dog"
+	case EndpointTypeVictorOps:
+		return "victorops"
+	default:
+		panic(fmt.Sprintf("unsupported endpoint type %s", t))
+	}
 }

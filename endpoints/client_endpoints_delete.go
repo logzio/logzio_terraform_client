@@ -2,9 +2,10 @@ package endpoints
 
 import (
 	"fmt"
-	"github.com/jonboydell/logzio_client"
 	"net/http"
 	"strings"
+
+	"github.com/jonboydell/logzio_client"
 )
 
 const (
@@ -17,11 +18,11 @@ const (
 	errorDeleteEndpointDoesntExist = "API call DeleteEndpoint failed as endpoint with id:%d doesn't exist, data:%s"
 )
 
-func validateDeleteEndpoint(endpoint Endpoint) (error, bool) {
-	return nil, true
+func validateDeleteEndpoint(endpoint Endpoint) bool {
+	return true
 }
 
-func (c *EndpointsClient) buildDeleteEndpointApiRequest(apiToken string, service string, endpoint Endpoint) (*http.Request, error) {
+func (c *EndpointsClient) buildDeleteEndpointApiRequest(apiToken string, service endpointType, endpoint Endpoint) (*http.Request, error) {
 	baseUrl := c.BaseUrl
 	req, err := http.NewRequest(deleteEndpointServiceMethod, fmt.Sprintf(deleteEndpointServiceUrl, baseUrl, endpoint.Id), nil)
 	logzio_client.AddHttpHeaders(apiToken, req)
