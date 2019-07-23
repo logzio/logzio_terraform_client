@@ -112,18 +112,20 @@ func jsonEndpointToEndpoint(jsonEndpoint map[string]interface{}) Endpoint {
 }
 
 type EndpointsClient struct {
-	client.Client
+	*client.Client
 }
 
-func New(apiToken string) (*EndpointsClient, error) {
-	if len(apiToken) > 0 {
-		var c EndpointsClient
-		c.ApiToken = apiToken
-		c.BaseUrl = client.GetLogzIoBaseUrl()
-		return &c, nil
-	} else {
+func New(apiToken, baseUrl string) (*EndpointsClient, error) {
+	if len(apiToken) == 0 {
 		return nil, fmt.Errorf("API token not defined")
 	}
+	if len(baseUrl) == 0 {
+		return nil, fmt.Errorf("Base URL not defined")
+	}
+	c := &EndpointsClient{
+		Client: client.New(apiToken, baseUrl),
+	}
+	return c, nil
 }
 
 type endpointValidator = func(e Endpoint) bool

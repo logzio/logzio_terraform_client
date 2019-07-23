@@ -2,12 +2,14 @@ package alerts_test
 
 import (
 	"github.com/jonboydell/logzio_client/alerts"
-	"github.com/jonboydell/logzio_client/client"
 	"github.com/jonboydell/logzio_client/test_utils"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"testing"
 )
+
+
 
 var (
 	mux    *http.ServeMux
@@ -24,12 +26,10 @@ func fixture(path string) string {
 
 func setupAlertsTest() (*alerts.AlertsClient, error, func()) {
 	apiToken := "SOME_API_TOKEN"
-	underTest, _ := alerts.New(apiToken)
 
 	mux = http.NewServeMux()
 	server = httptest.NewServer(mux)
-	underTest.BaseUrl = server.URL
-	underTest.Client.BaseUrl = server.URL
+	underTest, _ := alerts.New(apiToken, server.URL)
 
 	return underTest, nil, func() {
 		server.Close()
@@ -41,8 +41,7 @@ func setupAlertsIntegrationTest() (*alerts.AlertsClient, error) {
 	if err != nil {
 		return nil, err
 	}
-	underTest, err := alerts.New(apiToken)
-	underTest.BaseUrl = client.GetLogzIoBaseUrl()
+	underTest, err := alerts.New(apiToken, test_utils.GetLogzIoBaseUrl())
 	return underTest, nil
 }
 
@@ -91,5 +90,28 @@ func createUpdateAlert() alerts.CreateAlertType {
 		ValueAggregationField:        nil,
 		GroupByAggregationFields:     []interface{}{"my_field"},
 		AlertNotificationEndpoints:   []interface{}{},
+	}
+}
+
+func TestNewWithEmptyBaseUrl(t *testing.T) {
+	_, err := alerts.New("any-api-token", "")
+	if err == nil {
+		t.Fatal("Expected error when baseUrl is empty")
+	}
+	if err.Error() != "Base URL not defined" {
+		t.Fatalf("The expected error message to be '%s' but was '%s'",
+			"Base URL not defined", err.Error())
+	}
+}
+
+func TestNewWithEmptyApiToken(t *testing.T) {
+	_, err := alerts.New("", "any-base-url")
+
+	if err == nil {
+		t.Fatal("Expected error when API token is empty")
+	}
+	if err.Error() != "API token not defined" {
+		t.Fatalf("The expected error message to be '%s' but was '%s'",
+			"API token not defined", err.Error())
 	}
 }
