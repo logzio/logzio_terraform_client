@@ -41,22 +41,23 @@ type SubAccount struct {
 	DailyUsagesList       interface{}
 }
 
-
-
 type SubAccountClient struct {
-	client.Client
+	*client.Client
 }
 
 // Creates a new entry point into the sub-account functions, accepts the user's logz.io API token and account Id
-func New(apiToken string) (*SubAccountClient, error) {
-	if len(apiToken) > 0 {
-		var c SubAccountClient
-		c.ApiToken = apiToken
-		c.BaseUrl = client.GetLogzIoBaseUrl()
-		return &c, nil
-	} else {
+func New(apiToken string, baseUrl string) (*SubAccountClient, error) {
+	if len(apiToken) == 0 {
 		return nil, fmt.Errorf("API token not defined")
 	}
+	if len(baseUrl) == 0 {
+		return nil, fmt.Errorf("Base URL not defined")
+	}
+
+	c := &SubAccountClient{
+		Client: client.New(apiToken, baseUrl),
+	}
+	return c, nil
 }
 
 func jsonToSubAccount(json map[string]interface{}) SubAccount {
