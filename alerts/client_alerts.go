@@ -26,9 +26,11 @@ const (
 	OperatorNotEquals           string = "NOT_EQUALS"
 	OperatorEquals              string = "EQUALS"
 
+	SeveritySevere string = "SEVERE"
 	SeverityHigh   string = "HIGH"
-	SeverityLow    string = "LOW"
 	SeverityMedium string = "MEDIUM"
+	SeverityLow    string = "LOW"
+	SeverityInfo   string = "INFO"
 
 	fldAlertId                      string = "alertId"
 	fldAlertNotificationEndpoints   string = "alertNotificationEndpoints"

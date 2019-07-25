@@ -3,11 +3,12 @@ package alerts_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/jonboydell/logzio_client/alerts"
-	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
 	"testing"
+
+	"github.com/jonboydell/logzio_client/alerts"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestAlerts_CreateAlert(t *testing.T) {
@@ -31,7 +32,7 @@ func TestAlerts_CreateAlert(t *testing.T) {
 			w.WriteHeader(http.StatusOK)
 		})
 
-		alert, err := underTest.CreateAlert(alerts.CreateAlertType{
+		testAlert := alerts.CreateAlertType{
 			Title:       "test create alert",
 			Description: "this is my description",
 			QueryString: "loglevel:ERROR",
@@ -40,6 +41,10 @@ func TestAlerts_CreateAlert(t *testing.T) {
 			SeverityThresholdTiers: []alerts.SeverityThresholdType{
 				alerts.SeverityThresholdType{
 					alerts.SeverityHigh,
+					10,
+				},
+				alerts.SeverityThresholdType{
+					alerts.SeverityInfo,
 					10,
 				},
 			},
@@ -51,10 +56,13 @@ func TestAlerts_CreateAlert(t *testing.T) {
 			ValueAggregationField:        nil,
 			GroupByAggregationFields:     []interface{}{"my_field"},
 			AlertNotificationEndpoints:   []interface{}{},
-		})
+		}
 
+		alert, err := underTest.CreateAlert(testAlert)
 		assert.NoError(t, err)
 		assert.Equal(t, int64(1234567), alert.AlertId)
+		assert.Equal(t, alerts.SeverityHigh, alert.SeverityThresholdTiers[0].Severity)
+		assert.Equal(t, alerts.SeverityInfo, alert.SeverityThresholdTiers[1].Severity)
 	}
 }
 

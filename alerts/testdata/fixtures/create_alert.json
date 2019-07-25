@@ -25,6 +25,10 @@
     {
       "severity": "HIGH",
       "threshold": 10
+    },
+    {
+      "severity": "INFO",
+      "threshold": 10
     }
   ],
   "lastTriggeredAt": null,

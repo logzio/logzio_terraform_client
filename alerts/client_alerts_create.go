@@ -4,10 +4,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/jonboydell/logzio_client"
-	"github.com/jonboydell/logzio_client/client"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/jonboydell/logzio_client"
+	"github.com/jonboydell/logzio_client/client"
 )
 
 const createAlertServiceUrl string = alertsServiceEndpoint
@@ -47,10 +48,15 @@ func validateCreateAlertRequest(alert CreateAlertType) error {
 		return fmt.Errorf("operation must be one of %s", validOperations)
 	}
 
-	validSeverities := []string{SeverityHigh, SeverityLow, SeverityMedium}
-	for x := 0; x < len(alert.SeverityThresholdTiers); x++ {
-		s := alert.SeverityThresholdTiers[x]
-		if !logzio_client.Contains(validSeverities, s.Severity) {
+	validSeverities := []string{
+		SeveritySevere,
+		SeverityHigh,
+		SeverityMedium,
+		SeverityLow,
+		SeverityInfo,
+	}
+	for _, tier := range alert.SeverityThresholdTiers {
+		if !logzio_client.Contains(validSeverities, tier.Severity) {
 			return fmt.Errorf("severity must be one of %s", validSeverities)
 		}
 	}
