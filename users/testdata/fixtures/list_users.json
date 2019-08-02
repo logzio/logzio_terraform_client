@@ -1,0 +1,32 @@
+[
+  {
+    "id": 123414890,
+    "username": "dave.user@test.co",
+    "fullName": "dave user",
+    "accountID": 123456,
+    "roles": [
+      3
+    ],
+    "active": true
+  },
+  {
+    "id": 123439697,
+    "username": "harry.user@test.co",
+    "fullName": "harry user",
+    "accountID": 123456,
+    "roles": [
+      2
+    ],
+    "active": true
+  },
+  {
+    "id": 123412345,
+    "username": "mavis.user@test.co",
+    "fullName": "mavis user",
+    "accountID": 123456,
+    "roles": [
+      2
+    ],
+    "active": true
+  }
+]

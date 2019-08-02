@@ -1,88 +1,48 @@
 package users_test
 
 import (
-	"github.com/jonboydell/logzio_client/test_utils"
+	"encoding/json"
+	"fmt"
 	"github.com/jonboydell/logzio_client/users"
 	"github.com/stretchr/testify/assert"
+	"io/ioutil"
+	"net/http"
+	"strconv"
 	"testing"
 )
 
-func TestUsers_UpdateExistingUser(t *testing.T) {
-	underTest, err := setupUsersTest()
-	accountId, _ := test_utils.GetAccountId()
+func TestUsers_UpdateUser(t *testing.T) {
+	underTest, err, teardown := setupUsersTest()
+	defer teardown()
 
-	if assert.NoError(t, err) {
-		user, err := underTest.CreateUser(users.User{
-			Username:  "updateexistinguser@massive.co",
-			Fullname:  test_fullname,
-			AccountId: accountId,
-			Roles:     []int32{users.UserTypeUser},
-		})
+	accountId := int64(1234567)
 
-		assert.NoError(t, err)
-		if assert.NotNil(t, user) {
-			user.Fullname = "test_updatedfullname"
-			user.Active = true
+	mux.HandleFunc("/v1/user-management/", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPut, r.Method)
+		assert.Contains(t, r.URL.String(), strconv.FormatInt(accountId, 10))
 
-			v, err := underTest.UpdateUser(*user)
-			assert.NoError(t, err)
+		jsonBytes, _ := ioutil.ReadAll(r.Body)
+		var target map[string]interface{}
+		err = json.Unmarshal(jsonBytes, &target)
+		assert.Contains(t, target, "username")
+		assert.Contains(t, target, "accountID")
+		assert.Contains(t, target, "fullName")
+		assert.Contains(t, target, "roles")
 
-			v, err = underTest.GetUser(user.Id)
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprint(w, fixture("update_user.json"))
+		w.WriteHeader(http.StatusOK)
+	})
 
-			if assert.NoError(t, err) && assert.NotNil(t, v) {
-				assert.Equal(t, "test_updatedfullname", v.Fullname)
-				assert.Equal(t, accountId, v.AccountId)
-				assert.True(t, v.Active)
-				assert.Equal(t, user.Id, user.Id)
-			}
-
-		}
-		err = underTest.DeleteUser(user.Id)
-		assert.NoError(t, err)
+	u := users.User{
+		Id:        accountId,
+		Username:  "test_create_user@test.co",
+		Fullname:  "test create user",
+		AccountId: accountId,
+		Roles:     []int32{users.UserTypeUser},
 	}
-}
 
-func TestUsers_UpdateNonExistingUser(t *testing.T) {
-	underTest, err := setupUsersTest()
-	accountId, _ := test_utils.GetAccountId()
-
-	if assert.NoError(t, err) {
-		user := users.User{
-			Username:  "some@random.user",
-			Fullname:  test_fullname,
-			AccountId: accountId,
-			Roles:     []int32{users.UserTypeUser},
-			Id:        -1,
-		}
-
-		_, err := underTest.UpdateUser(user)
-		assert.Error(t, err)
-	}
-}
-
-func TestUsers_UpdateExistingUserInvalidUpdate(t *testing.T) {
-	underTest, err := setupUsersTest()
-	accountId, _ := test_utils.GetAccountId()
-
-	if assert.NoError(t, err) {
-		user, err := underTest.CreateUser(users.User{
-			Username:  "updateexistinguser.invalid@massive.co",
-			Fullname:  test_fullname,
-			AccountId: accountId,
-			Roles:     []int32{users.UserTypeUser},
-		})
-
-		assert.NoError(t, err)
-		if assert.NotNil(t, user) {
-			user.Username = "test_invalidusername"
-			user.Fullname = "test_updatedfullname"
-			user.Active = true
-
-			_, err := underTest.UpdateUser(*user)
-			assert.Error(t, err)
-		}
-
-		err = underTest.DeleteUser(user.Id)
-		assert.NoError(t, err)
-	}
+	updated, err := underTest.UpdateUser(u)
+	assert.NoError(t, err)
+	assert.NotNil(t, updated)
 }

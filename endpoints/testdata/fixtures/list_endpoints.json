@@ -1,0 +1,22 @@
+[
+  {
+    "endpointType": "Custom",
+    "id": 7996,
+    "title": "my endpoint",
+    "description": "my description",
+    "url": "https://this.is.com/some/webhook",
+    "method": "POST",
+    "headers": "authKey=6e30-60a9-3591",
+    "bodyTemplate": {
+      "subject": "Alert from Logz.io",
+      "message": {}
+    }
+  },
+  {
+    "endpointType": "Slack",
+    "id": 7997,
+    "title": "my slack endpoint",
+    "description": "my description",
+    "url": "https://this.is.com/some/webhook"
+  }
+]

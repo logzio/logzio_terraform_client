@@ -4,11 +4,8 @@ import (
 	"crypto/tls"
 	"log"
 	"net/http"
-	"os"
 )
 
-const ENV_LOGZIO_BASE_URL = "LOGZIO_BASE_URL"
-const LOGZIO_BASE_URL string = "https://api.logz.io"
 
 const (
 	ERROR_CODE    = "errorCode"
@@ -21,20 +18,12 @@ type Client struct {
 	log      log.Logger
 }
 
-var logzioBaseUrl string = LOGZIO_BASE_URL
-
 // Entry point into the logz.io client
-func New(apiToken string) *Client {
+func New(apiToken, baseUrl string) *Client {
 	var c Client
 	c.ApiToken = apiToken
+	c.BaseUrl = baseUrl
 	return &c
-}
-
-func GetLogzioBaseUrl() string {
-	if len(os.Getenv(ENV_LOGZIO_BASE_URL)) > 0 {
-		logzioBaseUrl = os.Getenv(ENV_LOGZIO_BASE_URL)
-	}
-	return logzioBaseUrl
 }
 
 func GetHttpClient(req *http.Request) *http.Client {
@@ -58,8 +47,4 @@ func IsErrorResponse(response map[string]interface{}) (bool, string) {
 		return true, response[ERROR_MESSAGE].(string)
 	}
 	return false, ""
-}
-
-func (c *Client) SetBaseUrl(BaseUrl string) {
-	c.BaseUrl = BaseUrl
 }

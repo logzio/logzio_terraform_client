@@ -2,6 +2,7 @@ package alerts
 
 import (
 	"fmt"
+
 	"github.com/jonboydell/logzio_client/client"
 )
 
@@ -25,9 +26,11 @@ const (
 	OperatorNotEquals           string = "NOT_EQUALS"
 	OperatorEquals              string = "EQUALS"
 
+	SeveritySevere string = "SEVERE"
 	SeverityHigh   string = "HIGH"
-	SeverityLow    string = "LOW"
 	SeverityMedium string = "MEDIUM"
+	SeverityLow    string = "LOW"
+	SeverityInfo   string = "INFO"
 
 	fldAlertId                      string = "alertId"
 	fldAlertNotificationEndpoints   string = "alertNotificationEndpoints"
@@ -102,8 +105,6 @@ func jsonAlertToAlert(jsonAlert map[string]interface{}) AlertType {
 	alert := AlertType{
 		AlertId:                    int64(jsonAlert[fldAlertId].(float64)),
 		AlertNotificationEndpoints: jsonAlert[fldAlertNotificationEndpoints].([]interface{}),
-		CreatedAt:                  jsonAlert[fldCreatedAt].(string),
-		CreatedBy:                  jsonAlert[fldCreatedBy].(string),
 		Description:                jsonAlert[fldDescription].(string),
 		Filter:                     jsonAlert[fldFilter].(string),
 		IsEnabled:                  jsonAlert[fldIsEnabled].(bool),
@@ -121,6 +122,14 @@ func jsonAlertToAlert(jsonAlert map[string]interface{}) AlertType {
 
 	if jsonAlert[fldGroupByAggregationFields] != nil {
 		alert.GroupByAggregationFields = jsonAlert[fldGroupByAggregationFields].([]interface{})
+	}
+
+	if jsonAlert[fldCreatedAt] != nil {
+		alert.CreatedAt = jsonAlert[fldCreatedAt].(string)
+	}
+
+	if jsonAlert[fldCreatedBy] != nil {
+		alert.CreatedBy = jsonAlert[fldCreatedBy].(string)
 	}
 
 	if jsonAlert[fldLastTriggeredAt] != nil {
@@ -149,15 +158,18 @@ func jsonAlertToAlert(jsonAlert map[string]interface{}) AlertType {
 }
 
 type AlertsClient struct {
-	client.Client
+	*client.Client
 }
 
-func New(apiToken string) (*AlertsClient, error) {
-	if len(apiToken) > 0 {
-		var c AlertsClient
-		c.ApiToken = apiToken
-		return &c, nil
-	} else {
+func New(apiToken, baseUrl string) (*AlertsClient, error) {
+	if len(apiToken) == 0 {
 		return nil, fmt.Errorf("API token not defined")
 	}
+	if len(baseUrl) == 0 {
+		return nil, fmt.Errorf("Base URL not defined")
+	}
+	c := &AlertsClient{
+		Client: client.New(apiToken, baseUrl),
+	}
+	return c, nil
 }

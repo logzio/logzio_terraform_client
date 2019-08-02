@@ -1,0 +1,10 @@
+{
+  "id": 123456,
+  "username": "test_create_user@test.co",
+  "fullName": "test create user",
+  "accountID": 123456,
+  "roles": [
+    2
+  ],
+  "active": true
+}

@@ -24,10 +24,10 @@ const (
 )
 
 type User struct {
-	Id        int32
+	Id        int64
 	Username  string
 	Fullname  string
-	AccountId int32
+	AccountId int64
 	Roles     []int32
 	Active    bool
 }
@@ -40,26 +40,29 @@ type UserError struct {
 }
 
 type UsersClient struct {
-	client.Client
+	*client.Client
 }
 
 // Creates a new entry point into the users functions, accepts the user's logz.io API token and account Id
-func New(apiToken string) (*UsersClient, error) {
-	if len(apiToken) > 0 {
-		var c UsersClient
-		c.ApiToken = apiToken
-		return &c, nil
-	} else {
+func New(apiToken, baseUrl string) (*UsersClient, error) {
+	if len(apiToken) == 0 {
 		return nil, fmt.Errorf("API token not defined")
 	}
+	if len(baseUrl) == 0 {
+		return nil, fmt.Errorf("Base URL not defined")
+	}
+	c := &UsersClient{
+		Client: client.New(apiToken, baseUrl),
+	}
+	return c, nil
 }
 
 func jsonToUser(json map[string]interface{}) User {
 	user := User{
-		Id:        int32(json[fldUserId].(float64)),
+		Id:        int64(json[fldUserId].(float64)),
 		Username:  json[fldUserUsername].(string),
 		Fullname:  json[fldUserFullname].(string),
-		AccountId: int32(json[fldUserAccountId].(float64)),
+		AccountId: int64(json[fldUserAccountId].(float64)),
 		Active:    json[fldUserActive].(bool),
 	}
 	roles := json[fldUserRoles].([]interface{})

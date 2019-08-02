@@ -20,7 +20,7 @@ func validateDeleteUserRequest(u User) (error, bool) {
 	return nil, true
 }
 
-func deleteUserApiRequest(apiToken string, u User) (*http.Request, error) {
+func (c *UsersClient) deleteUserApiRequest(apiToken string, u User) (*http.Request, error) {
 	var deleteUser = map[string]interface{}{
 		fldUserId: u.Id,
 	}
@@ -30,7 +30,7 @@ func deleteUserApiRequest(apiToken string, u User) (*http.Request, error) {
 		return nil, err
 	}
 
-	baseUrl := client.GetLogzioBaseUrl()
+	baseUrl := c.BaseUrl
 	url := fmt.Sprintf(deleteUserServiceUrl, baseUrl, u.Id)
 	req, err := http.NewRequest(deleteUserServiceMethod, url, bytes.NewBuffer(jsonBytes))
 	logzio_client.AddHttpHeaders(apiToken, req)
@@ -77,13 +77,13 @@ func checkDeleteUserResponse(response map[string]interface{}) error {
 
 // Deletes a user from logz.io given their unique ID (an integer)
 // Returns either nil (success) or an error if the user couldn't be deleted
-func (c *UsersClient) DeleteUser(id int32) error {
+func (c *UsersClient) DeleteUser(id int64) error {
 
 	user := User{Id: id}
 	if err, ok := validateDeleteUserRequest(user); !ok {
 		return err
 	}
-	req, _ := deleteUserApiRequest(c.ApiToken, user)
+	req, _ := c.deleteUserApiRequest(c.ApiToken, user)
 
 	target, err := deleteUserHttpRequest(req)
 	if err != nil {
@@ -91,7 +91,7 @@ func (c *UsersClient) DeleteUser(id int32) error {
 	}
 
 	err = checkDeleteUserResponse(target)
-	if (err != nil) {
+	if err != nil {
 		return err
 	}
 

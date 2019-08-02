@@ -11,7 +11,7 @@ import (
 
 const (
 	getUserServiceUrl         = userServiceEndpoint + "/%d"
-	getUserServiceMethod      = "GET"
+	getUserServiceMethod      = http.MethodGet
 	getUserServiceSuccess int = 200
 )
 
@@ -19,9 +19,9 @@ func validateGetUserRequest(u User) (error, bool) {
 	return nil, true
 }
 
-func getUserApiRequest(apiToken string, u User) (*http.Request, error) {
+func (c *UsersClient) getUserApiRequest(apiToken string, u User) (*http.Request, error) {
 
-	baseUrl := client.GetLogzioBaseUrl()
+	baseUrl := c.BaseUrl
 	url := fmt.Sprintf(getUserServiceUrl, baseUrl, u.Id)
 	req, err := http.NewRequest(getUserServiceMethod, url, nil)
 	logzio_client.AddHttpHeaders(apiToken, req)
@@ -51,17 +51,21 @@ func getUserHttpRequest(req *http.Request) (map[string]interface{}, error) {
 
 // Returns a user given their unique ID (an integer), the user ID supplied must belong to the account that the supplied
 // API token belongs to, returns an error otherwise
-func (c *UsersClient) GetUser(id int32) (*User, error) {
+func (c *UsersClient) GetUser(id int64) (*User, error) {
 
 	u := User{Id: id}
 	if err, ok := validateGetUserRequest(u); !ok {
 		return nil, err
 	}
-	req, _ := getUserApiRequest(c.ApiToken, u)
+	req, _ := c.getUserApiRequest(c.ApiToken, u)
 
 	target, err := getUserHttpRequest(req)
 	if err != nil {
 		return nil, err
+	}
+
+	if errorCode, ok := target[client.ERROR_CODE]; ok {
+		return nil, fmt.Errorf("%s", errorCode)
 	}
 
 	user := jsonToUser(target)

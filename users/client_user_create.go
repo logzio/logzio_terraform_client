@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	createUserServiceUrl     string = userServiceEndpoint
+	CreateUserServiceUrl     string = userServiceEndpoint
 	createUserServiceMethod  string = http.MethodPost
 	createUserServiceSuccess int    = 200
 )
@@ -26,7 +26,7 @@ func validateUserRequest(u User) (error, bool) {
 	return nil, true
 }
 
-func createUserApiRequest(apiToken string, u User) (*http.Request, error) {
+func (c *UsersClient) createUserApiRequest(apiToken string, u User) (*http.Request, error) {
 	var (
 		createUser = map[string]interface{}{
 			fldUserUsername:  u.Username,
@@ -41,8 +41,8 @@ func createUserApiRequest(apiToken string, u User) (*http.Request, error) {
 		return nil, err
 	}
 
-	baseUrl := client.GetLogzioBaseUrl()
-	url := fmt.Sprintf(createUserServiceUrl, baseUrl)
+	baseUrl := c.BaseUrl
+	url := fmt.Sprintf(CreateUserServiceUrl, baseUrl)
 	req, err := http.NewRequest(createUserServiceMethod, url, bytes.NewBuffer(jsonBytes))
 	logzio_client.AddHttpHeaders(apiToken, req)
 
@@ -77,7 +77,11 @@ func checkCreateUserResponse(response map[string]interface{}) error {
 		return fmt.Errorf("Error creating user; %v", response)
 	}
 
-	return nil
+	if _, ok := response["id"]; ok {
+		return nil
+	}
+
+	return fmt.Errorf("Error creating user; %v", response)
 }
 
 // Creates a new logz.io user, given a new User object
@@ -86,7 +90,7 @@ func (c *UsersClient) CreateUser(user User) (*User, error) {
 	if err, ok := validateUserRequest(user); !ok {
 		return nil, err
 	}
-	req, _ := createUserApiRequest(c.ApiToken, user)
+	req, _ := c.createUserApiRequest(c.ApiToken, user)
 
 	target, err := createUserHttpRequest(req)
 	if err != nil {
@@ -98,6 +102,6 @@ func (c *UsersClient) CreateUser(user User) (*User, error) {
 		return nil, err
 	}
 
-	user.Id = int32(target[fldUserId].(float64))
+	user.Id = int64(target[fldUserId].(float64))
 	return &user, nil
 }

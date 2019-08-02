@@ -13,8 +13,8 @@ const listAlertServiceUrl string = alertsServiceEndpoint
 const listAlertServiceMethod string = http.MethodGet
 const listAlertMethodSuccess int = 200
 
-func buildListApiRequest(apiToken string) (*http.Request, error) {
-	baseUrl := client.GetLogzioBaseUrl()
+func (c *AlertsClient) buildListApiRequest(apiToken string) (*http.Request, error) {
+	baseUrl := c.BaseUrl
 	req, err := http.NewRequest(listAlertServiceMethod, fmt.Sprintf(listAlertServiceUrl, baseUrl), nil)
 	logzio_client.AddHttpHeaders(apiToken, req)
 
@@ -24,7 +24,7 @@ func buildListApiRequest(apiToken string) (*http.Request, error) {
 // Returns all the alerts in an array associated with the account identified by the supplied API token, returns an error if
 // any problem occurs during the API call
 func (c *AlertsClient) ListAlerts() ([]AlertType, error) {
-	req, _ := buildListApiRequest(c.ApiToken)
+	req, _ := c.buildListApiRequest(c.ApiToken)
 
 	httpClient := client.GetHttpClient(req)
 	resp, err := httpClient.Do(req)

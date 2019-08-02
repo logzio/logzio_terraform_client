@@ -1,0 +1,36 @@
+{
+  "alertId": 1234567,
+  "lastUpdated": "2019-07-15T08:55:00.000Z",
+  "createdAt": "2019-07-15T08:55:00.000Z",
+  "lastUpdatedBy": "test.user@test.co",
+  "createdBy": "test.user@test.co",
+  "severity": "HIGH",
+  "title": "hello",
+  "description": "",
+  "query_string": "loglevel:ERROR",
+  "filter": "{\"bool\":{\"must\":[], \"must_not\":[]}}",
+  "operation": "GREATER_THAN",
+  "threshold": 10,
+  "searchTimeFrameMinutes": 5,
+  "notificationEmails": [
+    "test.user@test.co"
+  ],
+  "isEnabled": true,
+  "suppressNotificationsMinutes": 0,
+  "valueAggregationType": "NONE",
+  "valueAggregationField": null,
+  "groupByAggregationFields": null,
+  "alertNotificationEndpoints": [],
+  "severityThresholdTiers": [
+    {
+      "severity": "HIGH",
+      "threshold": 10
+    },
+    {
+      "severity": "INFO",
+      "threshold": 10
+    }
+  ],
+  "lastTriggeredAt": null,
+  "tags": []
+}

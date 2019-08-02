@@ -4,10 +4,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/jonboydell/logzio_client"
-	"github.com/jonboydell/logzio_client/client"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/jonboydell/logzio_client"
+	"github.com/jonboydell/logzio_client/client"
 )
 
 const createAlertServiceUrl string = alertsServiceEndpoint
@@ -47,10 +48,15 @@ func validateCreateAlertRequest(alert CreateAlertType) error {
 		return fmt.Errorf("operation must be one of %s", validOperations)
 	}
 
-	validSeverities := []string{SeverityHigh, SeverityLow, SeverityMedium}
-	for x := 0; x < len(alert.SeverityThresholdTiers); x++ {
-		s := alert.SeverityThresholdTiers[x]
-		if !logzio_client.Contains(validSeverities, s.Severity) {
+	validSeverities := []string{
+		SeveritySevere,
+		SeverityHigh,
+		SeverityMedium,
+		SeverityLow,
+		SeverityInfo,
+	}
+	for _, tier := range alert.SeverityThresholdTiers {
+		if !logzio_client.Contains(validSeverities, tier.Severity) {
 			return fmt.Errorf("severity must be one of %s", validSeverities)
 		}
 	}
@@ -84,13 +90,13 @@ func buildCreateAlertRequest(alert CreateAlertType) map[string]interface{} {
 	return createAlert
 }
 
-func buildCreateApiRequest(apiToken string, jsonObject map[string]interface{}) (*http.Request, error) {
+func (c *AlertsClient) buildCreateApiRequest(apiToken string, jsonObject map[string]interface{}) (*http.Request, error) {
 	jsonBytes, err := json.Marshal(jsonObject)
 	if err != nil {
 		return nil, err
 	}
 
-	baseUrl := client.GetLogzioBaseUrl()
+	baseUrl := c.BaseUrl
 	req, err := http.NewRequest(createAlertServiceMethod, fmt.Sprintf(createAlertServiceUrl, baseUrl), bytes.NewBuffer(jsonBytes))
 	logzio_client.AddHttpHeaders(apiToken, req)
 
@@ -105,7 +111,7 @@ func (c *AlertsClient) CreateAlert(alert CreateAlertType) (*AlertType, error) {
 	}
 
 	createAlert := buildCreateAlertRequest(alert)
-	req, _ := buildCreateApiRequest(c.ApiToken, createAlert)
+	req, _ := c.buildCreateApiRequest(c.ApiToken, createAlert)
 
 	httpClient := client.GetHttpClient(req)
 	resp, err := httpClient.Do(req)

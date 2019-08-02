@@ -2,10 +2,10 @@ package endpoints
 
 import (
 	"fmt"
-	"github.com/jonboydell/logzio_client"
-	"github.com/jonboydell/logzio_client/client"
 	"net/http"
 	"strings"
+
+	"github.com/jonboydell/logzio_client"
 )
 
 const (
@@ -18,12 +18,12 @@ const (
 	errorDeleteEndpointDoesntExist = "API call DeleteEndpoint failed as endpoint with id:%d doesn't exist, data:%s"
 )
 
-func validateDeleteEndpoint(endpoint Endpoint) (error, bool) {
-	return nil, true
+func validateDeleteEndpoint(endpoint Endpoint) bool {
+	return true
 }
 
-func buildDeleteEndpointApiRequest(apiToken string, service string, endpoint Endpoint) (*http.Request, error) {
-	baseUrl := client.GetLogzioBaseUrl()
+func (c *EndpointsClient) buildDeleteEndpointApiRequest(apiToken string, service endpointType, endpoint Endpoint) (*http.Request, error) {
+	baseUrl := c.BaseUrl
 	req, err := http.NewRequest(deleteEndpointServiceMethod, fmt.Sprintf(deleteEndpointServiceUrl, baseUrl, endpoint.Id), nil)
 	logzio_client.AddHttpHeaders(apiToken, req)
 	return req, err
@@ -31,7 +31,7 @@ func buildDeleteEndpointApiRequest(apiToken string, service string, endpoint End
 
 // Deletes an endpoint with the given id, returns a non nil error otherwise
 func (c *EndpointsClient) DeleteEndpoint(endpointId int64) error {
-	if _, err, ok := c.makeEndpointRequest(Endpoint{Id: endpointId}, validateDeleteEndpoint, buildDeleteEndpointApiRequest, func(body []byte) error {
+	if _, err, ok := c.makeEndpointRequest(Endpoint{Id: endpointId}, validateDeleteEndpoint, c.buildDeleteEndpointApiRequest, func(body []byte) error {
 		if strings.Contains(fmt.Sprintf("%s", body), "endpoints/FORBIDDEN_OPERATION") {
 			return fmt.Errorf(errorDeleteEndpointDoesntExist, endpointId, body)
 		}

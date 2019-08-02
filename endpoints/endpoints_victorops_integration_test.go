@@ -1,3 +1,5 @@
+// +build integration
+
 package endpoints_test
 
 import (
@@ -6,8 +8,8 @@ import (
 	"testing"
 )
 
-func TestEndpointsVictorOpsCreateUpdate(t *testing.T) {
-	underTest, err := setupEndpointsTest()
+func TestIntegrationEndpoints_VictorOpsCreateUpdate(t *testing.T) {
+	underTest, err := setupEndpointsIntegrationTest()
 	if assert.NoError(t, err) {
 		endpoint, err := underTest.CreateEndpoint(createVictorOpsEndpoint())
 		assert.NotNil(t, endpoint)

@@ -1,51 +1,42 @@
 package alerts_test
 
 import (
-	"github.com/jonboydell/logzio_client/alerts"
+	"fmt"
 	"github.com/stretchr/testify/assert"
+	"net/http"
+	"strconv"
 	"testing"
-	"time"
 )
 
-func TestDeleteAlert(t *testing.T) {
-	underTest, err := setupAlertsTest()
+func TestAlerts_DeleteAlert(t *testing.T) {
+	underTest, err, teardown := setupAlertsTest()
+	defer teardown()
 
-	if assert.NoError(t, err) {
-		// create alert
-		alert, err := underTest.CreateAlert(
-			alerts.CreateAlertType{
-				Title:       "this is my deletable alert",
-				Description: "this is my description",
-				QueryString: "loglevel:ERROR",
-				Filter:      "",
-				Operation:   alerts.OperatorGreaterThan,
-				SeverityThresholdTiers: []alerts.SeverityThresholdType{
-					alerts.SeverityThresholdType{
-						alerts.SeverityHigh,
-						10,
-					},
-				},
-				SearchTimeFrameMinutes:       0,
-				NotificationEmails:           []interface{}{},
-				IsEnabled:                    true,
-				SuppressNotificationsMinutes: 0,
-				ValueAggregationType:         alerts.AggregationTypeCount,
-				ValueAggregationField:        nil,
-				GroupByAggregationFields:     []interface{}{"my_field"},
-				AlertNotificationEndpoints:   []interface{}{},
-			})
-		time.Sleep(3 * time.Second)
-		if assert.NoError(t, err) {
-			defer underTest.DeleteAlert(alert.AlertId)
-		}
-	}
+	alertId := int64(1234567)
+
+	mux.HandleFunc("/v1/alerts/", func(w http.ResponseWriter, r *http.Request) {
+		assert.Contains(t, r.URL.String(), strconv.FormatInt(alertId, 10))
+		assert.Equal(t, http.MethodDelete, r.Method)
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprint(w, fixture("delete_alert.txt"))
+		w.WriteHeader(http.StatusOK)
+	})
+
+	err = underTest.DeleteAlert(alertId)
+	assert.NoError(t, err)
 }
 
-func TestDeleteMissingAlert(t *testing.T) {
-	underTest, err := setupAlertsTest()
+func TestAlerts_DeleteMissingAlert(t *testing.T) {
+	underTest, err, teardown := setupAlertsTest()
+	defer teardown()
 
-	if assert.NoError(t, err) {
-		err = underTest.DeleteAlert(12345)
-		assert.Error(t, err)
-	}
+	mux.HandleFunc("/v1/alerts/", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodDelete, r.Method)
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprint(w, fixture("delete_alert_not_exist.txt"))
+		w.WriteHeader(http.StatusOK)
+	})
+
+	err = underTest.DeleteAlert(int64(1234567))
+	assert.Error(t, err)
 }
