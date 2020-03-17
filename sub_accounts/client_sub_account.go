@@ -51,7 +51,7 @@ type SubAccountRelation struct {
 	Type				string
 }
 
-type  Account struct {
+type Account struct {
 	AccountId 			int64
 	AccountToken 		string
 	AccountName 		string
@@ -62,7 +62,12 @@ type  Account struct {
 }
 
 type SubAccountDetailed struct {
-
+	SubAccountRelation		SubAccountRelation
+	Account					Account
+	SharingObjectAccounts 	[]interface{}
+	UtilizationSettings  	map[string]interface{}
+	DailyUsagesList			map[string]interface{}
+	DocSizeSetting        	bool
 }
 
 type SubAccountClient struct {
