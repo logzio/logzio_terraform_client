@@ -38,7 +38,31 @@ type SubAccount struct {
 	DocSizeSetting        bool
 	UtilizationSettings   map[string]interface{}
 	AccountToken          string
-	DailyUsagesList       interface{}
+}
+
+type SubAccountRelation struct {
+	OwnerAccountId		int64
+	SubAccountId		int64
+	Searchable			bool
+	Accessible			bool
+	CreatedDate			int64
+	LastUpdatedDate		int64
+	LastUpdaterUserId	int64
+	Type				string
+}
+
+type  Account struct {
+	AccountId 			int64
+	AccountToken 		string
+	AccountName 		string
+	Active 				bool
+	EsIndexPrefix 		string
+	MaxDailyGB 			int64
+	RetentionDays 		int64
+}
+
+type SubAccountDetailed struct {
+
 }
 
 type SubAccountClient struct {
@@ -73,7 +97,6 @@ func jsonToSubAccount(json map[string]interface{}) SubAccount {
 		DocSizeSetting:        json[fldDocSizeSetting].(bool),
 		SharingObjectAccounts: json[fldSharingAccountObjects].([]interface{}),
 		UtilizationSettings:   json[fldUtilizationSettings].(map[string]interface{}),
-		DailyUsagesList:       json[fldDailyUsagesList],
 	}
 	return subAccount
 }
