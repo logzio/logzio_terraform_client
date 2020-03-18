@@ -49,7 +49,7 @@ func (c *SubAccountClient) detailedCheckResponse(response []map[string]interface
 	return nil
 }
 
-func (c *SubAccountClient) DetailedSubAccounts() ([]SubAccount, error) {
+func (c *SubAccountClient) DetailedSubAccounts() ([]SubAccountDetailed, error) {
 
 	req, _ := c.detailedApiRequest(c.ApiToken)
 
@@ -63,11 +63,14 @@ func (c *SubAccountClient) DetailedSubAccounts() ([]SubAccount, error) {
 		return nil, err
 	}
 
-	var subAccounts []SubAccount
-	for _, json := range target {
-		subAccount := jsonToSubAccount(json)
-		subAccounts = append(subAccounts, subAccount)
+	var subAccountsDetailed []SubAccountDetailed
+	for _, jsonObject := range target {
+		subAccount, err := jsonToDetailedSubAccount(jsonObject)
+		if err != nil {
+			return  nil, err
+		}
+		subAccountsDetailed = append(subAccountsDetailed, *subAccount)
 	}
 
-	return subAccounts, nil
+	return subAccountsDetailed, nil
 }

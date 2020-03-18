@@ -1,6 +1,7 @@
 package sub_accounts
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/jonboydell/logzio_client/client"
 )
@@ -41,33 +42,33 @@ type SubAccount struct {
 }
 
 type SubAccountRelation struct {
-	OwnerAccountId		int64
-	SubAccountId		int64
-	Searchable			bool
-	Accessible			bool
-	CreatedDate			int64
-	LastUpdatedDate		int64
-	LastUpdaterUserId	int64
-	Type				string
+	OwnerAccountId		int64	`json:"ownerAccountId"`
+	SubAccountId		int64	`json:"subAccountId"`
+	Searchable			bool	`json:"searchable"`
+	Accessible			bool	`json:"accessible"`
+	CreatedDate			int64	`json:"createdDate"`
+	LastUpdatedDate		int64	`json:"lastUpdatedDate"`
+	LastUpdaterUserId	int64	`json:"lastUpdaterUserId"`
+	Type				string	`json:"type"`
 }
 
 type Account struct {
-	AccountId 			int64
-	AccountToken 		string
-	AccountName 		string
-	Active 				bool
-	EsIndexPrefix 		string
-	MaxDailyGB 			int64
-	RetentionDays 		int64
+	AccountId 			int64	`json:"accountId"`
+	AccountToken 		string	`json:"accountToken"`
+	AccountName 		string	`json:"accountName"`
+	Active 				bool	`json:"active"`
+	EsIndexPrefix 		string	`json:"esIndexPrefix"`
+	MaxDailyGB 			int64	`json:"maxDailyGB"`
+	RetentionDays 		int64	`json:"retentionDays"`
 }
 
 type SubAccountDetailed struct {
-	SubAccountRelation		SubAccountRelation
-	Account					Account
-	SharingObjectAccounts 	[]interface{}
-	UtilizationSettings  	map[string]interface{}
-	DailyUsagesList			map[string]interface{}
-	DocSizeSetting        	bool
+	SubAccountRelation		SubAccountRelation		`json:"subAccountRelation"`
+	Account					Account					`json:"account"`
+	SharingObjectAccounts 	[]interface{}			`json:"sharingObjectsAccounts"`
+	UtilizationSettings  	map[string]interface{}	`json:"utilizationSettings"`
+	DailyUsagesList			map[string]interface{}	`json:"dailyUsagesList"`
+	DocSizeSetting        	bool					`json:"docSizeSetting"`
 }
 
 type SubAccountClient struct {
@@ -104,4 +105,17 @@ func jsonToSubAccount(json map[string]interface{}) SubAccount {
 		UtilizationSettings:   json[fldUtilizationSettings].(map[string]interface{}),
 	}
 	return subAccount
+}
+
+func jsonToDetailedSubAccount(jsonMap map[string]interface{}) (*SubAccountDetailed, error) {
+	jsonBytes, err := json.Marshal(jsonMap)
+	if err != nil {
+		return nil, err
+	}
+
+	var subAccount SubAccountDetailed
+	if err := json.Unmarshal(jsonBytes, &subAccount); err != nil {
+		return nil, err
+	}
+	return &subAccount, nil
 }
