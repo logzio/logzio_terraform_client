@@ -1,0 +1,47 @@
+[
+  {
+    "subAccountRelation": {
+      "ownerAccountId": 88765,
+      "subAccountId": 1234567,
+      "searchable": true,
+      "accessible": false,
+      "createdDate": 1584532201,
+      "lastUpdatedDate": 1584532201,
+      "lastUpdaterUserId": 33342,
+      "type": "SUB_ACCOUNT"
+    },
+    "account": {
+      "accountId": 12345,
+      "accountName": "string",
+      "accountToken": "string",
+      "active": true,
+      "esIndexPrefix": "string",
+      "maxDailyGB": 12,
+      "retentionDays": 123
+    },
+    "sharingObjectsAccounts": [
+      {
+        "accountId": 12345,
+        "accountName": "string",
+        "accountToken": "string",
+        "active": true,
+        "esIndexPrefix": "string",
+        "maxDailyGB": 12,
+        "retentionDays": 123
+      }
+    ],
+    "utilizationSettings": {
+      "frequencyMinutes": 5,
+      "utilizationEnabled": true
+    },
+    "dailyUsagesList": {
+      "usage": [
+        {
+          "date": 0,
+          "bytes": 0
+        }
+      ]
+    },
+    "docSizeSetting": true
+  }
+]
