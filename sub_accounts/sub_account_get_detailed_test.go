@@ -35,6 +35,8 @@ func TestSubAccount_GetDetailedValidSubAccount(t *testing.T) {
 	assert.Equal(t, int64(123), subAccount.Account.RetentionDays)
 	assert.Equal(t, float64(5), subAccount.UtilizationSettings["frequencyMinutes"])
 	assert.True(t, subAccount.SubAccountRelation.Searchable)
+	assert.Equal(t, int64(1584532201), subAccount.SubAccountRelation.CreatedDate)
+	assert.Equal(t, int64(1584532202), subAccount.SubAccountRelation.LastUpdatedDate)
 	assert.True(t, subAccount.DocSizeSetting)
 	assert.False(t, subAccount.SubAccountRelation.Accessible)
 	sharingAccountObjects := subAccount.SharingObjectAccounts[0].(map[string]interface{})
