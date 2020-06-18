@@ -4,29 +4,29 @@
     "subAccountId": 1234567,
     "searchable": true,
     "accessible": false,
-    "createdDate": 1584532201,
-    "lastUpdatedDate": 1584532202,
+    "createdDate": "2019-07-23T11:51:23.110Z",
+    "lastUpdatedDate": "2019-07-23T11:51:23.110Z",
     "lastUpdaterUserId": 33342,
     "type": "SUB_ACCOUNT"
   },
   "account": {
-    "accountId": 12345,
-    "accountName": "testAccount",
-    "accountToken": "testToken",
+    "accountId": 0,
+    "accountName": "string",
+    "accountToken": "string",
     "active": true,
-    "esIndexPrefix": "testIndex",
-    "maxDailyGB": 12,
-    "retentionDays": 123
+    "esIndexPrefix": "string",
+    "maxDailyGB": 0,
+    "retentionDays": 0
   },
   "sharingObjectsAccounts": [
     {
-      "accountId": 12345,
-      "accountName": "testAccount",
-      "accountToken": "testToken",
+      "accountId": 0,
+      "accountName": "string",
+      "accountToken": "string",
       "active": true,
-      "esIndexPrefix": "testIndex",
-      "maxDailyGB": 12,
-      "retentionDays": 123
+      "esIndexPrefix": "string",
+      "maxDailyGB": 0,
+      "retentionDays": 0
     }
   ],
   "utilizationSettings": {
