@@ -1,4 +1,4 @@
-module github.com/jonboydell/logzio_client
+module github.com/logzio/logzio_terraform_client
 
 go 1.12
 

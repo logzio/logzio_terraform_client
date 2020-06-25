@@ -3,7 +3,7 @@ package endpoints_test
 import (
 	"testing"
 
-	"github.com/jonboydell/logzio_client/endpoints"
+	"github.com/logzio/logzio_terraform_client/endpoints"
 	"github.com/stretchr/testify/assert"
 )
 

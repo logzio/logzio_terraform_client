@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/jonboydell/logzio_client"
-	"github.com/jonboydell/logzio_client/client"
+	"github.com/logzio/logzio_terraform_client"
+	"github.com/logzio/logzio_terraform_client/client"
 )
 
 const (

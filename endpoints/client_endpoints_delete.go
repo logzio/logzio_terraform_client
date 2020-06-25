@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/jonboydell/logzio_client"
+	"github.com/logzio/logzio_terraform_client"
 )
 
 const (

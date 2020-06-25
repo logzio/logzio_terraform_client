@@ -3,7 +3,7 @@ package alerts_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/jonboydell/logzio_client/alerts"
+	"github.com/logzio/logzio_terraform_client/alerts"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"

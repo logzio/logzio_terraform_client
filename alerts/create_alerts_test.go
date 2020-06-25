@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/jonboydell/logzio_client/alerts"
+	"github.com/logzio/logzio_terraform_client/alerts"
 	"github.com/stretchr/testify/assert"
 )
 

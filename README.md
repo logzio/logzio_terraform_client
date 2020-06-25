@@ -1,8 +1,8 @@
 # Logz.io Terraform client library
 
-DEVELOP - [![Build Status](https://travis-ci.org/jonboydell/logzio_client.svg?branch=develop)](https://travis-ci.org/jonboydell/logzio_client) [![Coverage Status](https://coveralls.io/repos/github/jonboydell/logzio_client/badge.svg?branch=develop)](https://coveralls.io/github/jonboydell/logzio_client?branch=develop)
+DEVELOP - [![Build Status](https://travis-ci.org/logzio/logzio_terraform_client.svg?branch=develop)](https://travis-ci.org/logzio/logzio_terraform_client) [![Coverage Status](https://coveralls.io/repos/github/logzio/logzio_terraform_client/badge.svg?branch=develop)](https://coveralls.io/github/logzio/logzio_terraform_client?branch=develop)
 
-MASTER - [![Build Status](https://travis-ci.org/jonboydell/logzio_client.svg?branch=master)](https://travis-ci.org/jonboydell/logzio_client)
+MASTER - [![Build Status](https://travis-ci.org/logzio/logzio_terraform_client.svg?branch=master)](https://travis-ci.org/logzio/logzio_terraform_client)
 
 Client library for logz.io API, see below for supported endpoints.
 

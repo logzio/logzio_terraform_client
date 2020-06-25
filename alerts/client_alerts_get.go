@@ -3,8 +3,8 @@ package alerts
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/jonboydell/logzio_client"
-	"github.com/jonboydell/logzio_client/client"
+	"github.com/logzio/logzio_terraform_client"
+	"github.com/logzio/logzio_terraform_client/client"
 	"io/ioutil"
 	"net/http"
 	"strings"

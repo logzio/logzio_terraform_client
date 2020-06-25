@@ -1,8 +1,8 @@
 package sub_accounts_test
 
 import (
-	"github.com/jonboydell/logzio_client/sub_accounts"
-	"github.com/jonboydell/logzio_client/test_utils"
+	"github.com/logzio/logzio_terraform_client/sub_accounts"
+	"github.com/logzio/logzio_terraform_client/test_utils"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
