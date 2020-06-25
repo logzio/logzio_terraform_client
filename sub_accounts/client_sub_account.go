@@ -41,6 +41,20 @@ type SubAccount struct {
 	DailyUsagesList       interface{}
 }
 
+type SubAccountCreate struct {
+	Email                 string
+	AccountName           string
+	MaxDailyGB            float32
+	RetentionDays         int32
+	Searchable            bool
+	Accessible            bool
+	SharingObjectAccounts []int32
+	DocSizeSetting        bool
+	UtilizationSettings   map[string]interface{}
+	AccountToken          string
+	DailyUsagesList       interface{}
+}
+
 type SubAccountClient struct {
 	*client.Client
 }
