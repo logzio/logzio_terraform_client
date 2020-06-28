@@ -4,11 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 
 	"github.com/logzio/logzio_terraform_client"
-	"github.com/logzio/logzio_terraform_client/client"
 )
 
 const createAlertServiceUrl string = alertsServiceEndpoint
@@ -112,27 +110,13 @@ func (c *AlertsClient) CreateAlert(alert CreateAlertType) (*AlertType, error) {
 
 	createAlert := buildCreateAlertRequest(alert)
 	req, _ := c.buildCreateApiRequest(c.ApiToken, createAlert)
-
-	httpClient := client.GetHttpClient(req)
-	resp, err := httpClient.Do(req)
+	jsonResponse, err := logzio_client.CreateHttpRequest(req)
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
-
-	jsonBytes, _ := ioutil.ReadAll(resp.Body)
-	if !logzio_client.CheckValidStatus(resp, []int{createAlertMethodSuccess}) {
-		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "CreateAlert", resp.StatusCode, jsonBytes)
-	}
-
-	var jsonResponse map[string]interface{}
-	err = json.Unmarshal(jsonBytes, &jsonResponse)
 
 	retVal := jsonAlertToAlert(jsonResponse)
 
-	if err != nil {
-		return nil, err
-	}
 
 	return &retVal, nil
 }
