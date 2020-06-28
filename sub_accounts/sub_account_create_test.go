@@ -36,14 +36,14 @@ func TestSubAccount_CreateValidSubAccount(t *testing.T) {
 		fmt.Fprint(w, fixture("create_subaccount.json"))
 	})
 
-	sharingAccounts := make([]interface{}, 2)
+	sharingAccounts := make([]int32, 2)
 	sharingAccounts[0] = 1
 	sharingAccounts[1] = 2
 
 	utilizationSettings := make(map[string]interface{}, 2)
 	utilizationSettings["a"] = "v"
 
-	s := sub_accounts.SubAccount{
+	s := sub_accounts.SubAccountCreate{
 		Email:                 "test.user@test.user",
 		AccountName:           "some account name",
 		MaxDailyGB:            10.5,
