@@ -3,11 +3,13 @@ package sub_accounts
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/hashicorp/go-hclog"
 	"github.com/logzio/logzio_terraform_client/client"
 )
 
 const (
 	subAccountServiceEndpoint = "%s/v1/account-management/time-based-accounts"
+	loggerName = "logzio-client"
 )
 
 const (
@@ -86,6 +88,7 @@ type SubAccountCreate struct {
 
 type SubAccountClient struct {
 	*client.Client
+	logger                  hclog.Logger
 }
 
 // Creates a new entry point into the sub-account functions, accepts the user's logz.io API token and account Id
@@ -99,16 +102,31 @@ func New(apiToken string, baseUrl string) (*SubAccountClient, error) {
 
 	c := &SubAccountClient{
 		Client: client.New(apiToken, baseUrl),
+		logger: hclog.New(&hclog.LoggerOptions{
+			Level:      hclog.Debug,
+			Name:       loggerName,
+			JSONFormat: true,
+		}),
 	}
 	return c, nil
 }
 
 func jsonToSubAccount(json map[string]interface{}) SubAccount {
+	email := json[fldEmail]
+	if email == nil {
+		email = "fake@mail.com"
+	}
+
+	token := json[fldAccountToken]
+	if token == nil {
+		token = "fAkEtOkEn"
+	}
+
 	subAccount := SubAccount{
 		Id:                    int64(json[fldAccountId].(float64)),
-		Email:                 json[fldEmail].(string),
+		Email:                 email.(string),
 		AccountName:           json[fldAccountName].(string),
-		AccountToken:          json[fldAccountToken].(string),
+		AccountToken:          token.(string),
 		MaxDailyGB:            float32(json[fldMaxDailyGB].(float64)),
 		RetentionDays:         int32(json[fldRetentionDays].(float64)),
 		Searchable:            json[fldSearchable].(bool),

@@ -66,6 +66,14 @@ func (c *SubAccountClient) GetSubAccount(id int64) (*SubAccount, error) {
 		return nil, err
 	}
 
+
+	pretty, err := json.MarshalIndent(target,"","	")
+	if err != nil {
+		c.logger.Error("Error parsing subaccount: ", err)
+	} else {
+		c.logger.Trace("subaccount:", string(pretty))
+	}
+
 	subAccount := jsonToSubAccount(target)
 	return &subAccount, nil
 }
