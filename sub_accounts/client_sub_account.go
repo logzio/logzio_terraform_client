@@ -112,16 +112,6 @@ func New(apiToken string, baseUrl string) (*SubAccountClient, error) {
 }
 
 func jsonToSubAccount(json map[string]interface{}) SubAccount {
-	email := json[fldEmail]
-	if email == nil {
-		email = "fake@mail.com"
-	}
-
-	token := json[fldAccountToken]
-	if token == nil {
-		token = "fAkEtOkEn"
-	}
-
 	subAccount := SubAccount{
 		Id:                    int64(json[fldAccountId].(float64)),
 		//Email:                 email.(string),
