@@ -49,11 +49,21 @@ func (c *SubAccountClient) CreateSubAccount(subAccount SubAccountCreate) (*SubAc
 		return nil, err
 	}
 
+	var sharingAccounts []interface{}
+	for _, obj := range subAccount.SharingObjectAccounts {
+		sharingAccounts = append(sharingAccounts, obj)
+	}
+
 	createdSubAccount := SubAccount{
 		Id:		int64(target["accountId"].(float64)),
-		AccountToken:	subAccount.AccountToken,
 		MaxDailyGB:		subAccount.MaxDailyGB,
-
+		AccountName:	subAccount.AccountName,
+		UtilizationSettings:	subAccount.UtilizationSettings,
+		DocSizeSetting:			subAccount.DocSizeSetting,
+		Accessible:				subAccount.Accessible,
+		Searchable:				subAccount.Searchable,
+		RetentionDays:			subAccount.RetentionDays,
+		SharingObjectAccounts:	sharingAccounts,
 
 	}
 	return &createdSubAccount, nil
