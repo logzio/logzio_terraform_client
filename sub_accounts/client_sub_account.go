@@ -128,6 +128,11 @@ func jsonToSubAccount(json map[string]interface{}) SubAccount {
 
 		if json[fldUtilizationSettings] != nil {
 			subAccount.UtilizationSettings = json[fldUtilizationSettings].(map[string]interface{})
+			for key, value := range subAccount.UtilizationSettings {
+				if value == nil {
+					delete(subAccount.UtilizationSettings, key)
+				}
+			}
 		}
 	return subAccount
 }
