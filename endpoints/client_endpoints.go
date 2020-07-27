@@ -145,7 +145,7 @@ func (c *EndpointsClient) makeEndpointRequest(endpoint interface{}, validator en
 	}
 	defer resp.Body.Close()
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
-	if !logzio_client.CheckValidStatus(resp, []int{http.StatusOK}) {
+	if !logzio_client.CheckValidStatus(resp, []int{http.StatusOK, http.StatusNoContent}) {
 		return nil, fmt.Errorf(errorCreateEndpointApiCallFailed, resp.StatusCode, jsonBytes), false
 	}
 	err = checker(jsonBytes)
