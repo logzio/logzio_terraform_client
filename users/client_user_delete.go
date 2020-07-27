@@ -15,7 +15,7 @@ const (
 	deleteUserServiceMethod      = "DELETE"
 
 )
-var deleteUserServiceSuccess = []int {200, 204}
+var deleteUserServiceSuccess = []int {http.StatusOK, http.StatusNoContent}
 
 func validateDeleteUserRequest(u User) (error, bool) {
 	return nil, true

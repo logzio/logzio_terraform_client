@@ -13,7 +13,7 @@ import (
 const (
 	updateEndpointServiceUrl    string = endpointServiceEndpoint + "/%s/%d"
 	updateEndpointServiceMethod string = http.MethodPut
-	updateEndpointMethodSuccess int    = 200
+	updateEndpointMethodSuccess int    = http.StatusOK
 )
 
 const (

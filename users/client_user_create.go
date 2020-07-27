@@ -13,7 +13,7 @@ import (
 const (
 	CreateUserServiceUrl     string = userServiceEndpoint
 	createUserServiceMethod  string = http.MethodPost
-	createUserServiceSuccess int    = 200
+	createUserServiceSuccess int    = http.StatusOK
 )
 
 func validateUserRequest(u User) (error, bool) {

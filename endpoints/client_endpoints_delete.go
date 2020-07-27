@@ -11,7 +11,7 @@ import (
 const (
 	deleteEndpointServiceUrl    string = endpointServiceEndpoint + "/%d"
 	deleteEndpointServiceMethod string = http.MethodDelete
-	deleteEndpointMethodSuccess int    = 200
+	deleteEndpointMethodSuccess int    = http.StatusOK
 )
 
 const (

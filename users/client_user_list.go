@@ -12,7 +12,7 @@ import (
 const (
 	listUserServiceUrl         = userServiceEndpoint
 	listUserServiceMethod      = "GET"
-	listUserServiceSuccess int = 200
+	listUserServiceSuccess int = http.StatusOK
 )
 
 func (c *UsersClient) listUsersApiRequest(apiToken string) (*http.Request, error) {

@@ -12,7 +12,7 @@ import (
 const (
 	getUserServiceUrl         = userServiceEndpoint + "/%d"
 	getUserServiceMethod      = http.MethodGet
-	getUserServiceSuccess int = 200
+	getUserServiceSuccess int = http.StatusOK
 )
 
 func validateGetUserRequest(u User) (error, bool) {

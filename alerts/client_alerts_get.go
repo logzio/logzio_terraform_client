@@ -12,7 +12,7 @@ import (
 
 const getAlertServiceUrl string = alertsServiceEndpoint + "/%d"
 const getAlertServiceMethod string = http.MethodGet
-const getAlertMethodSuccess int = 200
+const getAlertMethodSuccess int = http.StatusOK
 
 func (c *AlertsClient) buildGetApiRequest(apiToken string, alertId int64) (*http.Request, error) {
 	baseUrl := c.BaseUrl

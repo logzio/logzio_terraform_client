@@ -13,7 +13,7 @@ import (
 
 const updateAlertServiceUrl string = alertsServiceEndpoint + "/%d"
 const updateAlertServiceMethod string = http.MethodPut
-const updateAlertMethodSuccess int = 200
+const updateAlertMethodSuccess int = http.StatusOK
 
 func buildUpdateAlertRequest(alert CreateAlertType) map[string]interface{} {
 	var createAlert = map[string]interface{}{}

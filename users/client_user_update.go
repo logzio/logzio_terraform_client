@@ -13,7 +13,7 @@ import (
 const (
 	updateUserServiceUrl     string = userServiceEndpoint + "/%d"
 	updateUserServiceMethod  string = http.MethodPut
-	updateUserServiceSuccess int    = 200
+	updateUserServiceSuccess int    = http.StatusOK
 )
 
 func validateUserUpdateRequest(u User) (error, bool) {

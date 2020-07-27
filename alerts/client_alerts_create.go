@@ -11,7 +11,7 @@ import (
 
 const createAlertServiceUrl string = alertsServiceEndpoint
 const createAlertServiceMethod string = http.MethodPost
-const createAlertMethodSuccess int = 200
+const createAlertMethodSuccess int = http.StatusOK
 
 type FieldError struct {
 	Field   string

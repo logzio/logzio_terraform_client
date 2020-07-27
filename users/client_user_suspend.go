@@ -11,7 +11,7 @@ const (
 	suspendUserServiceUrl     string = userServiceEndpoint + "/suspend/%d"
 	unsuspendUserServiceUrl   string = userServiceEndpoint + "/unsuspend/%d"
 	suspendUserServiceMethod  string = http.MethodPost
-	suspendUserServiceSuccess int    = 200
+	suspendUserServiceSuccess int    = http.StatusOK
 )
 
 func validateSuspendUserRequest(userId int64) (error, bool) {

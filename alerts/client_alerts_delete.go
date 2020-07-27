@@ -11,7 +11,7 @@ import (
 
 const deleteAlertServiceUrl string = alertsServiceEndpoint + "/%d"
 const deleteAlertServiceMethod string = http.MethodDelete
-const deleteAlertMethodSuccess int = 200
+const deleteAlertMethodSuccess int = http.StatusOK
 
 func (c *AlertsClient) buildDeleteApiRequest(apiToken string, alertId int64) (*http.Request, error) {
 	baseUrl := c.BaseUrl

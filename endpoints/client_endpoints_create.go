@@ -96,7 +96,7 @@ func (c *EndpointsClient) CreateEndpoint(endpoint Endpoint) (*Endpoint, error) {
 		}
 
 		if strings.Contains(fmt.Sprintf("%s", b), errorCreateEndpointApiCallFailed) {
-			return fmt.Errorf(errorCreateEndpointApiCallFailed, 200, errorCreateEndpointApiCallFailed)
+			return fmt.Errorf(errorCreateEndpointApiCallFailed, http.StatusOK, errorCreateEndpointApiCallFailed)
 		}
 		return nil
 	}); !ok {

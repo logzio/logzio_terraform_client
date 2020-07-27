@@ -12,7 +12,7 @@ import (
 
 const getEndpointsServiceUrl string = endpointServiceEndpoint + "/%d"
 const getEndpointsServiceMethod string = http.MethodGet
-const getEndpointsMethodSuccess int = 200
+const getEndpointsMethodSuccess int = http.StatusOK
 
 const apiGetEndpointNoEndpoint = "The endpoint doesn't exist"
 
