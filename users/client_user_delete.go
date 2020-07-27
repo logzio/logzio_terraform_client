@@ -13,8 +13,9 @@ import (
 const (
 	deleteUserServiceUrl         = userServiceEndpoint + "/%d"
 	deleteUserServiceMethod      = "DELETE"
-	deleteUserServiceSuccess int = 200
+
 )
+var deleteUserServiceSuccess = []int {200, 204}
 
 func validateDeleteUserRequest(u User) (error, bool) {
 	return nil, true
@@ -49,7 +50,7 @@ func deleteUserHttpRequest(req *http.Request) (map[string]interface{}, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	if !logzio_client.CheckValidStatus(resp, []int{deleteUserServiceSuccess}) {
+	if !logzio_client.CheckValidStatus(resp, deleteUserServiceSuccess) {
 		return nil, fmt.Errorf("%d", resp.StatusCode)
 	}
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
