@@ -59,8 +59,8 @@ func validateCreateAlertRequest(alert CreateAlertType) error {
 		}
 	}
 
-	if AggregationTypeNone == alert.ValueAggregationType && (alert.ValueAggregationField != nil || alert.GroupByAggregationFields != nil) {
-		message := fmt.Sprintf("if ValueAggregaionType is %s then ValueAggregationField and GroupByAggregationFields must be nil", AggregationTypeNone)
+	if AggregationTypeNone == alert.ValueAggregationType && (alert.ValueAggregationField != nil) {
+		message := fmt.Sprintf("if ValueAggregaionType is %s then ValueAggregationField must be nil", AggregationTypeNone)
 		return FieldError{"valueAggregationTypeComposite", message}
 	}
 
