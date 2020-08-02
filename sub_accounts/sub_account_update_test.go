@@ -25,7 +25,6 @@ func TestSubAccount_UpdateValidSubAccount(t *testing.T) {
 		jsonBytes, _ := ioutil.ReadAll(r.Body)
 		var target map[string]interface{}
 		err = json.Unmarshal(jsonBytes, &target)
-		//assert.Contains(t, target, "email")
 		assert.Contains(t, target, "accountName")
 		assert.Contains(t, target, "maxDailyGB")
 		assert.Contains(t, target, "retentionDays")
@@ -48,7 +47,6 @@ func TestSubAccount_UpdateValidSubAccount(t *testing.T) {
 	utilizationSettings["a"] = "v"
 
 	s := sub_accounts.SubAccount{
-		//Email:                 "test.user@test.user",
 		AccountName:           "some account name",
 		MaxDailyGB:            10.5,
 		RetentionDays:         10,

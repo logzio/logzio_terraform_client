@@ -31,7 +31,6 @@ const (
 
 type SubAccount struct {
 	Id                    int64
-	//Email                 string
 	AccountName           string
 	MaxDailyGB            float32
 	RetentionDays         int32
@@ -40,7 +39,6 @@ type SubAccount struct {
 	SharingObjectAccounts []interface{}
 	DocSizeSetting        bool
 	UtilizationSettings   map[string]interface{}
-	//AccountToken          string
 }
 
 type SubAccountRelation struct {
@@ -114,9 +112,7 @@ func New(apiToken string, baseUrl string) (*SubAccountClient, error) {
 func jsonToSubAccount(json map[string]interface{}) SubAccount {
 	subAccount := SubAccount{
 		Id:                    int64(json[fldAccountId].(float64)),
-		//Email:                 email.(string),
 		AccountName:           json[fldAccountName].(string),
-		//AccountToken:          token.(string),
 		MaxDailyGB:            float32(json[fldMaxDailyGB].(float64)),
 		RetentionDays:         int32(json[fldRetentionDays].(float64)),
 		Searchable:            json[fldSearchable].(bool),
