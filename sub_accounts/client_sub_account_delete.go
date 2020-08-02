@@ -43,7 +43,7 @@ func (c *SubAccountClient) deleteHttpRequest(req *http.Request) error {
 	return nil
 }
 
-func (c *SubAccountClient) DeleteSubAccount(id int64) (error) {
+func (c *SubAccountClient) DeleteSubAccount(id int64) error {
 	if err, ok := c.deleteValidateRequest(id); !ok {
 		return err
 	}
