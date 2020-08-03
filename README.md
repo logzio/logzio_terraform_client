@@ -52,7 +52,7 @@ alert := client.CreateAlert(alerts.CreateAlertType{
 
 ##### Users
 
-To create a new user, on a specific account or sub-account (you can get your account id from the logz.io console)
+To create a new user, on a specific account or sub-account. you'll need [your account Id](https://docs.logz.io/user-guide/accounts/finding-your-account-id.html).
 
 ```go
 client, _ := users.New(apiToken, apiServerAddress)
@@ -76,7 +76,7 @@ user := client.User{
 
 ##### Sub-accounts
 
-To create a new sub-account, on a main account  
+To create a new sub-account, on a main account.
 ```go
 client, _ := sub_accounts.New(apiToken, apiServerAddress)
 subaccount := sub_accounts.SubAccountCreate{
@@ -127,7 +127,6 @@ endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
 
 ### Changelog
 - v1.3
-    - bug fixes, more stable.
     - bug fixes, more stable.
 - v1.2
     - Add subaccount support
