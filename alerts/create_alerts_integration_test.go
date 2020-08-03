@@ -33,6 +33,7 @@ func TestIntegrationAlerts_CreateAlert(t *testing.T) {
 			ValueAggregationField:        nil,
 			GroupByAggregationFields:     []interface{}{"my_field"},
 			AlertNotificationEndpoints:   []interface{}{},
+			Tags:						  []string{"some", "words"},
 		})
 
 		time.Sleep(3 * time.Second)

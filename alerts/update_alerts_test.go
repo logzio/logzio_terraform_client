@@ -41,9 +41,9 @@ func TestAlerts_UpdateAlert(t *testing.T) {
 		Filter:      "",
 		Operation:   alerts.OperatorGreaterThan,
 		SeverityThresholdTiers: []alerts.SeverityThresholdType{
-			alerts.SeverityThresholdType{
-				alerts.SeverityHigh,
-				10,
+			{
+				Severity:  alerts.SeverityHigh,
+				Threshold: 10,
 			},
 		},
 		SearchTimeFrameMinutes:       0,
@@ -79,9 +79,9 @@ func TestAlerts_UpdateAlert_NotExist(t *testing.T) {
 		Filter:      "",
 		Operation:   alerts.OperatorGreaterThan,
 		SeverityThresholdTiers: []alerts.SeverityThresholdType{
-			alerts.SeverityThresholdType{
-				alerts.SeverityHigh,
-				10,
+			{
+				Severity:  alerts.SeverityHigh,
+				Threshold: 10,
 			},
 		},
 		SearchTimeFrameMinutes:       0,

@@ -26,6 +26,8 @@ func TestAlerts_CreateAlert(t *testing.T) {
 			assert.Contains(t, target, "description")
 			assert.Contains(t, target, "query_string")
 			assert.Contains(t, target, "severityThresholdTiers")
+			assert.Contains(t, target, "tags")
+			assert.Equal(t, 2, len(target["tags"].([]interface{})))
 
 			w.Header().Set("Content-Type", "application/json")
 			fmt.Fprint(w, fixture("create_alert.json"))
@@ -39,13 +41,13 @@ func TestAlerts_CreateAlert(t *testing.T) {
 			Filter:      "",
 			Operation:   alerts.OperatorGreaterThan,
 			SeverityThresholdTiers: []alerts.SeverityThresholdType{
-				alerts.SeverityThresholdType{
-					alerts.SeverityHigh,
-					10,
+				{
+					Severity:  alerts.SeverityHigh,
+					Threshold: 10,
 				},
-				alerts.SeverityThresholdType{
-					alerts.SeverityInfo,
-					10,
+				{
+					Severity:  alerts.SeverityInfo,
+					Threshold: 10,
 				},
 			},
 			SearchTimeFrameMinutes:       0,
@@ -56,6 +58,7 @@ func TestAlerts_CreateAlert(t *testing.T) {
 			ValueAggregationField:        nil,
 			GroupByAggregationFields:     []interface{}{"my_field"},
 			AlertNotificationEndpoints:   []interface{}{},
+			Tags:						  []string{"some", "words"},
 		}
 
 		alert, err := underTest.CreateAlert(testAlert)
@@ -63,6 +66,8 @@ func TestAlerts_CreateAlert(t *testing.T) {
 		assert.Equal(t, int64(1234567), alert.AlertId)
 		assert.Equal(t, alerts.SeverityHigh, alert.SeverityThresholdTiers[0].Severity)
 		assert.Equal(t, alerts.SeverityInfo, alert.SeverityThresholdTiers[1].Severity)
+		assert.Equal(t, "some", alert.Tags[0])
+		assert.Equal(t, "words", alert.Tags[1])
 	}
 }
 
@@ -85,9 +90,9 @@ func TestAlerts_CreateAlertAPIFail(t *testing.T) {
 		Filter:      "",
 		Operation:   alerts.OperatorGreaterThan,
 		SeverityThresholdTiers: []alerts.SeverityThresholdType{
-			alerts.SeverityThresholdType{
-				alerts.SeverityHigh,
-				10,
+			{
+				Severity:  alerts.SeverityHigh,
+				Threshold: 10,
 			},
 		},
 		SearchTimeFrameMinutes:       0,
@@ -112,9 +117,9 @@ func TestAlerts_CreateAlertNoTitle(t *testing.T) {
 		Filter:      "",
 		Operation:   alerts.OperatorGreaterThan,
 		SeverityThresholdTiers: []alerts.SeverityThresholdType{
-			alerts.SeverityThresholdType{
-				alerts.SeverityHigh,
-				10,
+			{
+				Severity:  alerts.SeverityHigh,
+				Threshold: 10,
 			},
 		},
 		SearchTimeFrameMinutes:       0,

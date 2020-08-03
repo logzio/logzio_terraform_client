@@ -58,7 +58,7 @@ func TestIntegrationUsers_CreateDeleteDuplicateUser(t *testing.T) {
 			assert.Error(t, err)
 		}
 
-		err = underTest.DeleteUser(user.Id)
+		defer underTest.DeleteUser(user.Id)
 	}
 }
 
