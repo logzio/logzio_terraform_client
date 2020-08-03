@@ -33,6 +33,7 @@ func buildUpdateAlertRequest(alert CreateAlertType) map[string]interface{} {
 	createAlert[fldTitle] = alert.Title
 	createAlert[fldValueAggregationField] = alert.ValueAggregationField
 	createAlert[fldValueAggregationType] = alert.ValueAggregationType
+	createAlert[fldTags] = alert.Tags
 
 	return createAlert
 }

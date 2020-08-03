@@ -127,7 +127,8 @@ endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
 
 ### Changelog
 - v1.3
-    - bug fixes, more stable.
+    - unnecessary resource updates bug fix.
+    - support tags in alerts
 - v1.2
     - Add subaccount support
 
