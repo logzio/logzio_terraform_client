@@ -82,18 +82,19 @@ func buildUpdateEndpointRequest(endpoint Endpoint) (map[string]interface{}, erro
 func (c *EndpointsClient) UpdateEndpoint(id int64, endpoint Endpoint) (*Endpoint, error) {
 
 	endpoint.Id = id
-	if jsonBytes, err, ok := c.makeEndpointRequest(endpoint, ValidateEndpointRequest, c.buildUpdateEndpointApiRequest, func(b []byte) error {
-		if strings.Contains(fmt.Sprintf("%s", b), "Insufficient privileges") {
-			return fmt.Errorf("API call %s failed for endpoint %d, data: %s", "UpdateEndpoint", id, b)
+	if target, err, ok := c.makeEndpointRequest(endpoint, ValidateEndpointRequest, c.buildUpdateEndpointApiRequest, func(data map[string]interface{}) error {
+		if strings.Contains(fmt.Sprintf("%s", data), "Insufficient privileges") {
+			return fmt.Errorf("API call %s failed for endpoint %d, data: %s", "UpdateEndpoint", id, data)
 		}
-		if strings.Contains(fmt.Sprintf("%s", b), "errorCode") {
-			return fmt.Errorf("API call %s failed for endpoint %d, data: %s", "UpdateEndpoint", id, b)
+		if strings.Contains(fmt.Sprintf("%s", data), "errorCode") {
+			return fmt.Errorf("API call %s failed for endpoint %d, data: %s", "UpdateEndpoint", id, data)
 		}
 
 		return nil
 	}); ok {
-		var target Endpoint
-		err = json.Unmarshal(jsonBytes, &target)
+		endpointBytes, _ := json.Marshal(target)
+		var endpoint Endpoint
+		err = json.Unmarshal(endpointBytes, &endpoint)
 		if err != nil {
 			return nil, err
 		}

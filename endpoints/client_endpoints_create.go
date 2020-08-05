@@ -83,10 +83,7 @@ func (c *EndpointsClient) buildCreateEndpointApiRequest(apiToken string, endpoin
 // Creates an endpoint, given the endpoint definition and the service to create the endpoint against
 // Returns the endpoint object if successful (hopefully with an ID) and a non-nil error if not
 func (c *EndpointsClient) CreateEndpoint(endpoint Endpoint) (*Endpoint, error) {
-	if jsonBytes, err, ok := c.makeEndpointRequest(endpoint, ValidateEndpointRequest, c.buildCreateEndpointApiRequest, func(b []byte) error {
-		var data map[string]interface{}
-		json.Unmarshal(b, &data)
-
+	if target, err, ok := c.makeEndpointRequest(endpoint, ValidateEndpointRequest, c.buildCreateEndpointApiRequest, func(data map[string]interface{}) error {
 		if val, ok := data["errorCode"]; ok {
 			return fmt.Errorf("%v", val)
 		}
@@ -95,19 +92,16 @@ func (c *EndpointsClient) CreateEndpoint(endpoint Endpoint) (*Endpoint, error) {
 			return fmt.Errorf("%v", val)
 		}
 
-		if strings.Contains(fmt.Sprintf("%s", b), errorCreateEndpointApiCallFailed) {
+		if strings.Contains(fmt.Sprintf("%s", data), errorCreateEndpointApiCallFailed) {
 			return fmt.Errorf(errorCreateEndpointApiCallFailed, http.StatusOK, errorCreateEndpointApiCallFailed)
 		}
 		return nil
 	}); !ok {
 		return nil, err
 	} else {
-		var target Endpoint
-		err = json.Unmarshal(jsonBytes, &target)
-		if err != nil {
-			return nil, err
-		}
-
-		return &target, nil
+		var endpoint Endpoint
+		jsonBytes, _ := json.Marshal(target)
+		json.Unmarshal(jsonBytes, &endpoint)
+		return &endpoint, nil
 	}
 }

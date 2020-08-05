@@ -47,9 +47,11 @@ func CreateHttpRequest(req *http.Request) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("%d %s", resp.StatusCode, jsonBytes)
 	}
 	var target map[string]interface{}
-	err = json.Unmarshal(jsonBytes, &target)
-	if err != nil {
-		return nil, err
+	if len(jsonBytes) > 0 {
+		err = json.Unmarshal(jsonBytes, &target)
+		if err != nil {
+			return nil, err
+		}
 	}
 	return target, nil
 }

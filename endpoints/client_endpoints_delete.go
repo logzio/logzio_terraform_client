@@ -31,12 +31,12 @@ func (c *EndpointsClient) buildDeleteEndpointApiRequest(apiToken string, service
 
 // Deletes an endpoint with the given id, returns a non nil error otherwise
 func (c *EndpointsClient) DeleteEndpoint(endpointId int64) error {
-	if _, err, ok := c.makeEndpointRequest(Endpoint{Id: endpointId}, validateDeleteEndpoint, c.buildDeleteEndpointApiRequest, func(body []byte) error {
-		if strings.Contains(fmt.Sprintf("%s", body), "endpoints/FORBIDDEN_OPERATION") {
-			return fmt.Errorf(errorDeleteEndpointDoesntExist, endpointId, body)
+	if _, err, ok := c.makeEndpointRequest(Endpoint{Id: endpointId}, validateDeleteEndpoint, c.buildDeleteEndpointApiRequest, func(data map[string]interface{}) error {
+		if strings.Contains(fmt.Sprintf("%s", data), "endpoints/FORBIDDEN_OPERATION") {
+			return fmt.Errorf(errorDeleteEndpointDoesntExist, endpointId, data)
 		}
-		if strings.Contains(fmt.Sprintf("%s", body), "endpoints/UNKNOWN_ENDPOINT") {
-			return fmt.Errorf(errorDeleteEndpointDoesntExist, endpointId, body)
+		if strings.Contains(fmt.Sprintf("%s", data), "endpoints/UNKNOWN_ENDPOINT") {
+			return fmt.Errorf(errorDeleteEndpointDoesntExist, endpointId, data)
 		}
 		return nil
 	}); !ok {
