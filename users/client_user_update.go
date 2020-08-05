@@ -85,7 +85,7 @@ func (c *UsersClient) UpdateUser(user User) (*User, error) {
 	}
 	req, _ := c.updateUserApiRequest(c.ApiToken, user)
 
-	target, err := updateUserHttpRequest(req)
+	target, err := logzio_client.CreateHttpRequest(req)
 	if err != nil {
 		return nil, err
 	}
