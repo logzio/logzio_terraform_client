@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/jonboydell/logzio_client"
-	"github.com/jonboydell/logzio_client/client"
+	"github.com/logzio/logzio_terraform_client"
+	"github.com/logzio/logzio_terraform_client/client"
 	"io/ioutil"
 	"net/http"
 )
@@ -13,7 +13,7 @@ import (
 const (
 	updateUserServiceUrl     string = userServiceEndpoint + "/%d"
 	updateUserServiceMethod  string = http.MethodPut
-	updateUserServiceSuccess int    = 200
+	updateUserServiceSuccess int    = http.StatusOK
 )
 
 func validateUserUpdateRequest(u User) (error, bool) {
@@ -85,7 +85,7 @@ func (c *UsersClient) UpdateUser(user User) (*User, error) {
 	}
 	req, _ := c.updateUserApiRequest(c.ApiToken, user)
 
-	target, err := updateUserHttpRequest(req)
+	target, err := logzio_client.CreateHttpRequest(req)
 	if err != nil {
 		return nil, err
 	}

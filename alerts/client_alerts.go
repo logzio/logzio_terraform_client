@@ -3,7 +3,7 @@ package alerts
 import (
 	"fmt"
 
-	"github.com/jonboydell/logzio_client/client"
+	"github.com/logzio/logzio_terraform_client/client"
 )
 
 const (
@@ -53,6 +53,7 @@ const (
 	fldTitle                        string = "title"
 	fldValueAggregationField        string = "valueAggregationField"
 	fldValueAggregationType         string = "valueAggregationType"
+	fldTags							string = "tags"
 )
 
 type CreateAlertType struct {
@@ -70,6 +71,7 @@ type CreateAlertType struct {
 	Title                        string
 	ValueAggregationField        interface{}
 	ValueAggregationType         string
+	Tags						 []string
 }
 
 type AlertType struct {
@@ -94,6 +96,7 @@ type AlertType struct {
 	Title                        string
 	ValueAggregationField        interface{}
 	ValueAggregationType         string
+	Tags						 []string
 }
 
 type SeverityThresholdType struct {
@@ -118,6 +121,7 @@ func jsonAlertToAlert(jsonAlert map[string]interface{}) AlertType {
 		Threshold:                  int(jsonAlert[fldThreshold].(float64)),
 		Title:                      jsonAlert[fldTitle].(string),
 		ValueAggregationType:       jsonAlert[fldValueAggregationType].(string),
+		Tags:						[]string{},
 	}
 
 	if jsonAlert[fldGroupByAggregationFields] != nil {
@@ -134,6 +138,11 @@ func jsonAlertToAlert(jsonAlert map[string]interface{}) AlertType {
 
 	if jsonAlert[fldLastTriggeredAt] != nil {
 		alert.LastTriggeredAt = jsonAlert[fldLastTriggeredAt].(interface{})
+	}
+
+	tags := jsonAlert[fldTags].([]interface{})
+	for _, tag := range tags {
+		alert.Tags = append(alert.Tags, tag.(string))
 	}
 
 	tiers := jsonAlert[fldSeverityThresholdTiers].([]interface{})

@@ -3,7 +3,7 @@
 package alerts_test
 
 import (
-	"github.com/jonboydell/logzio_client/alerts"
+	"github.com/logzio/logzio_terraform_client/alerts"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
@@ -33,6 +33,7 @@ func TestIntegrationAlerts_CreateAlert(t *testing.T) {
 			ValueAggregationField:        nil,
 			GroupByAggregationFields:     []interface{}{"my_field"},
 			AlertNotificationEndpoints:   []interface{}{},
+			Tags:						  []string{"some", "words"},
 		})
 
 		time.Sleep(3 * time.Second)

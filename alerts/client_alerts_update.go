@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/jonboydell/logzio_client"
-	"github.com/jonboydell/logzio_client/client"
+	"github.com/logzio/logzio_terraform_client"
+	"github.com/logzio/logzio_terraform_client/client"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -13,7 +13,7 @@ import (
 
 const updateAlertServiceUrl string = alertsServiceEndpoint + "/%d"
 const updateAlertServiceMethod string = http.MethodPut
-const updateAlertMethodSuccess int = 200
+const updateAlertMethodSuccess int = http.StatusOK
 
 func buildUpdateAlertRequest(alert CreateAlertType) map[string]interface{} {
 	var createAlert = map[string]interface{}{}
@@ -33,6 +33,7 @@ func buildUpdateAlertRequest(alert CreateAlertType) map[string]interface{} {
 	createAlert[fldTitle] = alert.Title
 	createAlert[fldValueAggregationField] = alert.ValueAggregationField
 	createAlert[fldValueAggregationType] = alert.ValueAggregationType
+	createAlert[fldTags] = alert.Tags
 
 	return createAlert
 }

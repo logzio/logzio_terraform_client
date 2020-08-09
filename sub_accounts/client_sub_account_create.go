@@ -4,9 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/jonboydell/logzio_client"
-	"github.com/jonboydell/logzio_client/client"
-	"io/ioutil"
+	"github.com/logzio/logzio_terraform_client"
 	"net/http"
 )
 
@@ -16,13 +14,9 @@ const (
 	serviceSuccess int    = http.StatusOK
 )
 
-func (c *SubAccountClient) createValidateRequest(s SubAccount) (error, bool) {
-	return nil, true
-}
-
-func (c *SubAccountClient) createApiRequest(apiToken string, s SubAccount) (*http.Request, error) {
+func (c *SubAccountClient) createApiRequest(apiToken string, s SubAccountCreate) (*http.Request, error) {
 	var (
-		createUser = map[string]interface{}{
+		createSubAccount = map[string]interface{}{
 			"email":                  s.Email,
 			"accountName":            s.AccountName,
 			"maxDailyGB":             s.MaxDailyGB,
@@ -35,7 +29,7 @@ func (c *SubAccountClient) createApiRequest(apiToken string, s SubAccount) (*htt
 		}
 	)
 
-	jsonBytes, err := json.Marshal(createUser)
+	jsonBytes, err := json.Marshal(createSubAccount)
 	if err != nil {
 		return nil, err
 	}
@@ -48,45 +42,29 @@ func (c *SubAccountClient) createApiRequest(apiToken string, s SubAccount) (*htt
 	return req, err
 }
 
-func (c *SubAccountClient) createHttpRequest(req *http.Request) (map[string]interface{}, error) {
-	httpClient := client.GetHttpClient(req)
-	resp, err := httpClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-	jsonBytes, err := ioutil.ReadAll(resp.Body)
-	if !logzio_client.CheckValidStatus(resp, []int{serviceSuccess}) {
-		return nil, fmt.Errorf("%d %s", resp.StatusCode, jsonBytes)
-	}
-	var target map[string]interface{}
-	err = json.Unmarshal(jsonBytes, &target)
-	if err != nil {
-		return nil, err
-	}
-	return target, nil
-}
-
-func (c *SubAccountClient) createCheckResponse(response map[string]interface{}) error {
-	return nil
-}
-
-func (c *SubAccountClient) CreateSubAccount(subAccount SubAccount) (*SubAccount, error) {
-	if err, ok := c.createValidateRequest(subAccount); !ok {
-		return nil, err
-	}
+func (c *SubAccountClient) CreateSubAccount(subAccount SubAccountCreate) (*SubAccount, error) {
 	req, _ := c.createApiRequest(c.ApiToken, subAccount)
-
-	target, err := c.createHttpRequest(req)
+	target, err := logzio_client.CreateHttpRequest(req)
 	if err != nil {
 		return nil, err
 	}
 
-	err = c.createCheckResponse(target)
-	if err != nil {
-		return nil, err
+	var sharingAccounts []interface{}
+	for _, obj := range subAccount.SharingObjectAccounts {
+		sharingAccounts = append(sharingAccounts, obj)
 	}
 
-	subAccount.Id = int64(target["accountId"].(float64))
-	return &subAccount, nil
+	createdSubAccount := SubAccount{
+		Id:		int64(target["accountId"].(float64)),
+		MaxDailyGB:		subAccount.MaxDailyGB,
+		AccountName:	subAccount.AccountName,
+		UtilizationSettings:	subAccount.UtilizationSettings,
+		DocSizeSetting:			subAccount.DocSizeSetting,
+		Accessible:				subAccount.Accessible,
+		Searchable:				subAccount.Searchable,
+		RetentionDays:			subAccount.RetentionDays,
+		SharingObjectAccounts:	sharingAccounts,
+
+	}
+	return &createdSubAccount, nil
 }

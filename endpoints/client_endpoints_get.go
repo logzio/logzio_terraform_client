@@ -1,18 +1,15 @@
 package endpoints
 
 import (
-	"encoding/json"
 	"fmt"
-	"github.com/jonboydell/logzio_client"
-	"github.com/jonboydell/logzio_client/client"
-	"io/ioutil"
+	"github.com/logzio/logzio_terraform_client"
 	"net/http"
 	"strings"
 )
 
 const getEndpointsServiceUrl string = endpointServiceEndpoint + "/%d"
 const getEndpointsServiceMethod string = http.MethodGet
-const getEndpointsMethodSuccess int = 200
+const getEndpointsMethodSuccess int = http.StatusOK
 
 const apiGetEndpointNoEndpoint = "The endpoint doesn't exist"
 
@@ -47,33 +44,16 @@ func (c *EndpointsClient) GetEndpointByName(endpointName string) (*Endpoint, err
 func (c *EndpointsClient) GetEndpoint(endpointId int64) (*Endpoint, error) {
 	req, _ := c.buildGetEnpointApiRequest(c.ApiToken, endpointId)
 
-	httpClient := client.GetHttpClient(req)
-	resp, err := httpClient.Do(req)
+	jsonEndpoint, err := logzio_client.CreateHttpRequest(req)
 	if err != nil {
 		return nil, err
 	}
 
-	// @todo: this isn't the idiomatic way to read a response body
-	jsonBytes, _ := ioutil.ReadAll(resp.Body)
-
-	if !logzio_client.CheckValidStatus(resp, []int{getEndpointsMethodSuccess}) {
-		return nil, fmt.Errorf(errorGetEndpointApiCallFailed, resp.StatusCode, jsonBytes)
-	}
-
-	// sometimes logz.io returns a string rather than a json object (and a 200 status code), even though the call has failed
-	// @todo: can this be refactored?
-	str := fmt.Sprintf("%s", jsonBytes)
+	str := fmt.Sprintf("%s", jsonEndpoint)
 	if strings.Contains(str, apiGetEndpointNoEndpoint) {
 		return nil, fmt.Errorf(errorGetEndpointDoesntExist, endpointId, str)
 	}
 
-	var jsonEndpoint map[string]interface{}
-	err = json.Unmarshal([]byte(jsonBytes), &jsonEndpoint)
-	if err != nil {
-		return nil, err
-	}
-
 	endpoint := jsonEndpointToEndpoint(jsonEndpoint)
-
 	return &endpoint, nil
 }

@@ -3,8 +3,8 @@
 package users_test
 
 import (
-	"github.com/jonboydell/logzio_client/test_utils"
-	"github.com/jonboydell/logzio_client/users"
+	"github.com/logzio/logzio_terraform_client/test_utils"
+	"github.com/logzio/logzio_terraform_client/users"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -58,7 +58,7 @@ func TestIntegrationUsers_CreateDeleteDuplicateUser(t *testing.T) {
 			assert.Error(t, err)
 		}
 
-		err = underTest.DeleteUser(user.Id)
+		defer underTest.DeleteUser(user.Id)
 	}
 }
 

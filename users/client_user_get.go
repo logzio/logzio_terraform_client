@@ -1,18 +1,16 @@
 package users
 
 import (
-	"encoding/json"
 	"fmt"
-	"github.com/jonboydell/logzio_client"
-	"github.com/jonboydell/logzio_client/client"
-	"io/ioutil"
+	"github.com/logzio/logzio_terraform_client"
+	"github.com/logzio/logzio_terraform_client/client"
 	"net/http"
 )
 
 const (
 	getUserServiceUrl         = userServiceEndpoint + "/%d"
 	getUserServiceMethod      = http.MethodGet
-	getUserServiceSuccess int = 200
+	getUserServiceSuccess int = http.StatusOK
 )
 
 func validateGetUserRequest(u User) (error, bool) {
@@ -29,26 +27,6 @@ func (c *UsersClient) getUserApiRequest(apiToken string, u User) (*http.Request,
 	return req, err
 }
 
-func getUserHttpRequest(req *http.Request) (map[string]interface{}, error) {
-	httpClient := client.GetHttpClient(req)
-	resp, err := httpClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-	jsonBytes, _ := ioutil.ReadAll(resp.Body)
-	if !logzio_client.CheckValidStatus(resp, []int{getUserServiceSuccess}) {
-		return nil, fmt.Errorf("%d %s", resp.StatusCode, jsonBytes)
-	}
-
-	var target map[string]interface{}
-	err = json.Unmarshal(jsonBytes, &target)
-	if err != nil {
-		return nil, err
-	}
-	return target, nil
-}
-
 // Returns a user given their unique ID (an integer), the user ID supplied must belong to the account that the supplied
 // API token belongs to, returns an error otherwise
 func (c *UsersClient) GetUser(id int64) (*User, error) {
@@ -59,7 +37,7 @@ func (c *UsersClient) GetUser(id int64) (*User, error) {
 	}
 	req, _ := c.getUserApiRequest(c.ApiToken, u)
 
-	target, err := getUserHttpRequest(req)
+	target, err := logzio_client.CreateHttpRequest(req)
 	if err != nil {
 		return nil, err
 	}

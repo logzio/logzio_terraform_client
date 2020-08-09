@@ -3,8 +3,8 @@ package users
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/jonboydell/logzio_client"
-	"github.com/jonboydell/logzio_client/client"
+	"github.com/logzio/logzio_terraform_client"
+	"github.com/logzio/logzio_terraform_client/client"
 	"io/ioutil"
 	"net/http"
 )
@@ -12,7 +12,7 @@ import (
 const (
 	listUserServiceUrl         = userServiceEndpoint
 	listUserServiceMethod      = "GET"
-	listUserServiceSuccess int = 200
+	listUserServiceSuccess int = http.StatusOK
 )
 
 func (c *UsersClient) listUsersApiRequest(apiToken string) (*http.Request, error) {

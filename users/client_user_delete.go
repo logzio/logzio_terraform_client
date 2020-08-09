@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/jonboydell/logzio_client"
-	"github.com/jonboydell/logzio_client/client"
+	"github.com/logzio/logzio_terraform_client"
+	"github.com/logzio/logzio_terraform_client/client"
 	"io/ioutil"
 	"net/http"
 )
@@ -13,8 +13,9 @@ import (
 const (
 	deleteUserServiceUrl         = userServiceEndpoint + "/%d"
 	deleteUserServiceMethod      = "DELETE"
-	deleteUserServiceSuccess int = 200
+
 )
+var deleteUserServiceSuccess = []int {http.StatusOK, http.StatusNoContent}
 
 func validateDeleteUserRequest(u User) (error, bool) {
 	return nil, true
@@ -49,7 +50,7 @@ func deleteUserHttpRequest(req *http.Request) (map[string]interface{}, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	if !logzio_client.CheckValidStatus(resp, []int{deleteUserServiceSuccess}) {
+	if !logzio_client.CheckValidStatus(resp, deleteUserServiceSuccess) {
 		return nil, fmt.Errorf("%d", resp.StatusCode)
 	}
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)

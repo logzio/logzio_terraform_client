@@ -3,8 +3,8 @@ package sub_accounts
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/jonboydell/logzio_client"
-	"github.com/jonboydell/logzio_client/client"
+	"github.com/logzio/logzio_terraform_client"
+	"github.com/logzio/logzio_terraform_client/client"
 	"io/ioutil"
 	"net/http"
 )
@@ -64,6 +64,14 @@ func (c *SubAccountClient) GetSubAccount(id int64) (*SubAccount, error) {
 	err = c.getCheckResponse(target)
 	if err != nil {
 		return nil, err
+	}
+
+
+	pretty, err := json.MarshalIndent(target,"","	")
+	if err != nil {
+		c.logger.Error("Error parsing subaccount: ", err)
+	} else {
+		c.logger.Trace("subaccount:", string(pretty))
 	}
 
 	subAccount := jsonToSubAccount(target)

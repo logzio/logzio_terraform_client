@@ -3,8 +3,8 @@ package alerts
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/jonboydell/logzio_client"
-	"github.com/jonboydell/logzio_client/client"
+	"github.com/logzio/logzio_terraform_client"
+	"github.com/logzio/logzio_terraform_client/client"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -12,7 +12,7 @@ import (
 
 const getAlertServiceUrl string = alertsServiceEndpoint + "/%d"
 const getAlertServiceMethod string = http.MethodGet
-const getAlertMethodSuccess int = 200
+const getAlertMethodSuccess int = http.StatusOK
 
 func (c *AlertsClient) buildGetApiRequest(apiToken string, alertId int64) (*http.Request, error) {
 	baseUrl := c.BaseUrl

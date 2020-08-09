@@ -27,7 +27,6 @@ func TestSubAccount_GetValidSubAccount(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, subAccount)
 
-	assert.Equal(t, "them@mycompany.com", subAccount.Email)
 	assert.Equal(t, "404 errors", subAccount.AccountName)
 	assert.Equal(t, float32(100), subAccount.MaxDailyGB)
 	assert.Equal(t, int32(5), subAccount.RetentionDays)

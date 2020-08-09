@@ -4,16 +4,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/jonboydell/logzio_client"
-	"github.com/jonboydell/logzio_client/client"
-	"io/ioutil"
+	"github.com/logzio/logzio_terraform_client"
 	"net/http"
 )
 
 const (
 	CreateUserServiceUrl     string = userServiceEndpoint
 	createUserServiceMethod  string = http.MethodPost
-	createUserServiceSuccess int    = 200
+	createUserServiceSuccess int    = http.StatusOK
 )
 
 func validateUserRequest(u User) (error, bool) {
@@ -49,25 +47,6 @@ func (c *UsersClient) createUserApiRequest(apiToken string, u User) (*http.Reque
 	return req, err
 }
 
-func createUserHttpRequest(req *http.Request) (map[string]interface{}, error) {
-	httpClient := client.GetHttpClient(req)
-	resp, err := httpClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-	jsonBytes, err := ioutil.ReadAll(resp.Body)
-	if !logzio_client.CheckValidStatus(resp, []int{createUserServiceSuccess}) {
-		return nil, fmt.Errorf("%d %s", resp.StatusCode, jsonBytes)
-	}
-	var target map[string]interface{}
-	err = json.Unmarshal(jsonBytes, &target)
-	if err != nil {
-		return nil, err
-	}
-	return target, nil
-}
-
 func checkCreateUserResponse(response map[string]interface{}) error {
 	if _, ok := response["errorCode"]; ok {
 		return fmt.Errorf("Error creating user; %v", response)
@@ -92,7 +71,7 @@ func (c *UsersClient) CreateUser(user User) (*User, error) {
 	}
 	req, _ := c.createUserApiRequest(c.ApiToken, user)
 
-	target, err := createUserHttpRequest(req)
+	target, err := logzio_client.CreateHttpRequest(req)
 	if err != nil {
 		return nil, err
 	}

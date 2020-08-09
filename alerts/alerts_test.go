@@ -1,8 +1,8 @@
 package alerts_test
 
 import (
-	"github.com/jonboydell/logzio_client/alerts"
-	"github.com/jonboydell/logzio_client/test_utils"
+	"github.com/logzio/logzio_terraform_client/alerts"
+	"github.com/logzio/logzio_terraform_client/test_utils"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"

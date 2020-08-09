@@ -4,16 +4,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 
-	"github.com/jonboydell/logzio_client"
-	"github.com/jonboydell/logzio_client/client"
+	"github.com/logzio/logzio_terraform_client"
 )
 
 const createAlertServiceUrl string = alertsServiceEndpoint
 const createAlertServiceMethod string = http.MethodPost
-const createAlertMethodSuccess int = 200
+const createAlertMethodSuccess int = http.StatusOK
 
 type FieldError struct {
 	Field   string
@@ -61,8 +59,8 @@ func validateCreateAlertRequest(alert CreateAlertType) error {
 		}
 	}
 
-	if AggregationTypeNone == alert.ValueAggregationType && (alert.ValueAggregationField != nil || alert.GroupByAggregationFields != nil) {
-		message := fmt.Sprintf("if ValueAggregaionType is %s then ValueAggregationField and GroupByAggregationFields must be nil", AggregationTypeNone)
+	if AggregationTypeNone == alert.ValueAggregationType && (alert.ValueAggregationField != nil) {
+		message := fmt.Sprintf("if ValueAggregaionType is %s then ValueAggregationField must be nil", AggregationTypeNone)
 		return FieldError{"valueAggregationTypeComposite", message}
 	}
 
@@ -87,6 +85,7 @@ func buildCreateAlertRequest(alert CreateAlertType) map[string]interface{} {
 	createAlert[fldTitle] = alert.Title
 	createAlert[fldValueAggregationField] = alert.ValueAggregationField
 	createAlert[fldValueAggregationType] = alert.ValueAggregationType
+	createAlert[fldTags] = alert.Tags
 	return createAlert
 }
 
@@ -112,27 +111,13 @@ func (c *AlertsClient) CreateAlert(alert CreateAlertType) (*AlertType, error) {
 
 	createAlert := buildCreateAlertRequest(alert)
 	req, _ := c.buildCreateApiRequest(c.ApiToken, createAlert)
-
-	httpClient := client.GetHttpClient(req)
-	resp, err := httpClient.Do(req)
+	jsonResponse, err := logzio_client.CreateHttpRequest(req)
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
-
-	jsonBytes, _ := ioutil.ReadAll(resp.Body)
-	if !logzio_client.CheckValidStatus(resp, []int{createAlertMethodSuccess}) {
-		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "CreateAlert", resp.StatusCode, jsonBytes)
-	}
-
-	var jsonResponse map[string]interface{}
-	err = json.Unmarshal(jsonBytes, &jsonResponse)
 
 	retVal := jsonAlertToAlert(jsonResponse)
 
-	if err != nil {
-		return nil, err
-	}
 
 	return &retVal, nil
 }

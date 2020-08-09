@@ -1,20 +1,13 @@
 # Logz.io Terraform client library
 
-DEVELOP - [![Build Status](https://travis-ci.org/jonboydell/logzio_client.svg?branch=develop)](https://travis-ci.org/jonboydell/logzio_client) [![Coverage Status](https://coveralls.io/repos/github/jonboydell/logzio_client/badge.svg?branch=develop)](https://coveralls.io/github/jonboydell/logzio_client?branch=develop)
-
-MASTER - [![Build Status](https://travis-ci.org/jonboydell/logzio_client.svg?branch=master)](https://travis-ci.org/jonboydell/logzio_client)
-
-Client library for logz.io API, see below for supported endpoints.
+Client library for Logz.io API, see below for supported endpoints.
 
 The primary purpose of this library is to act as the API interface for the logz.io Terraform provider.
-
-Logz.io have not written an especially consistent API. Sometimes, JSON will be presented back from an API call, sometimes not. Sometimes just a status code, sometimes a 200 status code, but with an error message in the body. I have attempted to shield the user of this library from those inconsistencies, but as they are laregely not documented, it's pretty diffcult to know if I've got them all.
-
-[Roadmap](#roadmap)
+To use it, you'll need to [create an API token](https://app.logz.io/#/dashboard/settings/api-tokens) and provide it to the client library along with your logz.io regional [API server address](https://docs.logz.io/user-guide/accounts/account-region.html#regions-and-urls).
 
 ##### Usage
 
-Note: the lastest version of the API (1.1) is not backwards compatible with previous versions, specifically the client entrypoint names have changed to prevent naming conflicts. Use `UsersClient` ([Users API](#users)) , `AlertsClient` ([Alerts API](#alerts)) and `EndpointsClient` ([Endpoints API](#endpoints)) rather than `Users`, `Alerts` and `Endpoints`.
+Note: the lastest version of the API (1.3) is not backwards compatible with previous versions, specifically the client entrypoint names have changed to prevent naming conflicts. Use `UsersClient` ([Users API](#users)) ,`SubaccountClient` ([Sub-accounts API](#sub-accounts)), `AlertsClient` ([Alerts API](#alerts)) and `EndpointsClient` ([Endpoints API](#endpoints)) rather than `Users`, `Alerts` and `Endpoints`.
 
 
 ##### Alerts
@@ -24,8 +17,8 @@ To create an alert where the type field = 'mytype' and the loglevel field = ERRO
 https://support.logz.io/hc/en-us/articles/209487329-How-do-I-create-an-Alert-
 
 ```go
-client, _ := alerts.New(apiToken)
-client.CreateAlert(alerts.CreateAlertType{
+client, _ := alerts.New(apiToken, apiServerAddress)
+alert := client.CreateAlert(alerts.CreateAlertType{
     Title:       "this is my alert",
     Description: "this is my description",
     QueryString: "loglevel:ERROR",
@@ -59,10 +52,10 @@ client.CreateAlert(alerts.CreateAlertType{
 
 ##### Users
 
-To create a new user, on a specific account or sub-account (you can get your account id from the logz.io console)
+To create a new user, on a specific account or sub-account. you'll need [your account Id](https://docs.logz.io/user-guide/accounts/finding-your-account-id.html).
 
 ```go
-client, _ := users.New(apiToken)
+client, _ := users.New(apiToken, apiServerAddress)
 user := client.User{
     Username:  "createa@test.user",
     Fullname:  "my username",
@@ -81,11 +74,47 @@ user := client.User{
 |suspend user|`func (c *UsersClient) SuspendUser(userId int32) (bool, error)`|
 |unsuspend user|`func (c *UsersClient) UnSuspendUser(userId int32) (bool, error)`|
 
+##### Sub-accounts
+
+To create a new sub-account, on a main account.
+```go
+client, _ := sub_accounts.New(apiToken, apiServerAddress)
+subaccount := sub_accounts.SubAccountCreate{
+    Email:                 "test.user@email.com",
+    AccountName:           "my account name",
+    MaxDailyGB:            6.5,
+    RetentionDays:         4,
+    Searchable:            true,
+    Accessible:            false,
+    SharingObjectAccounts: []int32{accountId1, accountId2}, //Id's of the accounts who will be able to access this account
+    DocSizeSetting:        true,
+}
+```
+
+|function|func name|
+|---|---|
+|create sub-account|`func (c *SubAccountClient) CreateSubAccount(subAccount SubAccountCreate) (*SubAccount, error) `|
+|update sub-account|`func (c *SubAccountClient) UpdateSubAccount(id int64, subAccount SubAccount) error`|
+|delete sub-account|`func (c *SubAccountClient) DeleteSubAccount(id int64) error`|
+|get sub-account|`func (c *SubAccountClient) GetSubAccount(id int64) (*SubAccount, error)`|
+|get detailed sub-account|`func (c *SubAccountClient) GetDetailedSubAccount(id int64) (*SubAccountDetailed, error)`|
+|list sub-accounts|`func (c *SubAccountClient) ListSubAccounts() ([]SubAccount, error)`|
+|list detailed sub-accounts|`func (c *SubAccountClient) DetailedSubAccounts() ([]SubAccountDetailed, error) `|
+
 ##### Endpoints
 
-There's no 1-1 mapping between this library and the logz.io API functions, logz.io provide one API endpoint per *type* of notification endpoint being created.  I have abstracted this so that depending on how you create your `Endpoints` variable that you pass to `CreateEndpoint` the `CreateEndpoint` function will work out which API call to make. 
+For each type of endpoint there is a different structure, below you can find an example for creating a Slack endpoint.
+For more info, see: https://docs.logz.io/api/#tag/Manage-notification-endpoints or check our endpoints tests for more examples.
 
-For more info, see: https://docs.logz.io/api/#tag/Manage-notification-endpoints
+```go
+client, _ := endpoints.New(apiToken, apiServerAddress)
+endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
+			Title:        "some_endpoint",
+			Description:  "my description",
+			Url:          "https://this.is.com/some/webhook",
+			EndpointType: endpoints.EndpointTypeSlack,
+		})
+```
 
 #### Contributing
 
@@ -95,5 +124,12 @@ For more info, see: https://docs.logz.io/api/#tag/Manage-notification-endpoints
 ##### Run tests
 `go test -v -race ./...`
 
+
+### Changelog
+- v1.3
+    - unnecessary resource updates bug fix.
+    - support tags in alerts
+- v1.2
+    - Add subaccount support
 
 

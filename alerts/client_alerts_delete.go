@@ -2,8 +2,8 @@ package alerts
 
 import (
 	"fmt"
-	"github.com/jonboydell/logzio_client"
-	"github.com/jonboydell/logzio_client/client"
+	"github.com/logzio/logzio_terraform_client"
+	"github.com/logzio/logzio_terraform_client/client"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -11,7 +11,7 @@ import (
 
 const deleteAlertServiceUrl string = alertsServiceEndpoint + "/%d"
 const deleteAlertServiceMethod string = http.MethodDelete
-const deleteAlertMethodSuccess int = 200
+const deleteAlertMethodSuccess int = http.StatusOK
 
 func (c *AlertsClient) buildDeleteApiRequest(apiToken string, alertId int64) (*http.Request, error) {
 	baseUrl := c.BaseUrl

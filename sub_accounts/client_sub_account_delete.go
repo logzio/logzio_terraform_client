@@ -2,8 +2,8 @@ package sub_accounts
 
 import (
 	"fmt"
-	"github.com/jonboydell/logzio_client"
-	"github.com/jonboydell/logzio_client/client"
+	"github.com/logzio/logzio_terraform_client"
+	"github.com/logzio/logzio_terraform_client/client"
 	"io/ioutil"
 	"net/http"
 )
@@ -43,7 +43,7 @@ func (c *SubAccountClient) deleteHttpRequest(req *http.Request) error {
 	return nil
 }
 
-func (c *SubAccountClient) DeleteSubAccount(id int64) (error) {
+func (c *SubAccountClient) DeleteSubAccount(id int64) error {
 	if err, ok := c.deleteValidateRequest(id); !ok {
 		return err
 	}

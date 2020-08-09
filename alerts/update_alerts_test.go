@@ -3,7 +3,7 @@ package alerts_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/jonboydell/logzio_client/alerts"
+	"github.com/logzio/logzio_terraform_client/alerts"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
@@ -41,9 +41,9 @@ func TestAlerts_UpdateAlert(t *testing.T) {
 		Filter:      "",
 		Operation:   alerts.OperatorGreaterThan,
 		SeverityThresholdTiers: []alerts.SeverityThresholdType{
-			alerts.SeverityThresholdType{
-				alerts.SeverityHigh,
-				10,
+			{
+				Severity:  alerts.SeverityHigh,
+				Threshold: 10,
 			},
 		},
 		SearchTimeFrameMinutes:       0,
@@ -79,9 +79,9 @@ func TestAlerts_UpdateAlert_NotExist(t *testing.T) {
 		Filter:      "",
 		Operation:   alerts.OperatorGreaterThan,
 		SeverityThresholdTiers: []alerts.SeverityThresholdType{
-			alerts.SeverityThresholdType{
-				alerts.SeverityHigh,
-				10,
+			{
+				Severity:  alerts.SeverityHigh,
+				Threshold: 10,
 			},
 		},
 		SearchTimeFrameMinutes:       0,

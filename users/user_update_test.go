@@ -3,7 +3,7 @@ package users_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/jonboydell/logzio_client/users"
+	"github.com/logzio/logzio_terraform_client/users"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"

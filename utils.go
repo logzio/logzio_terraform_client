@@ -1,7 +1,15 @@
 package logzio_client
 
 import (
+	"encoding/json"
+	"fmt"
+	"github.com/logzio/logzio_terraform_client/client"
+	"io/ioutil"
 	"net/http"
+)
+
+const (
+	serviceSuccess int   = http.StatusOK
 )
 
 func AddHttpHeaders(apiToken string, req *http.Request) {
@@ -25,4 +33,25 @@ func CheckValidStatus(response *http.Response, status []int) bool {
 		}
 	}
 	return false
+}
+
+func CreateHttpRequest(req *http.Request) (map[string]interface{}, error) {
+	httpClient := client.GetHttpClient(req)
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	jsonBytes, err := ioutil.ReadAll(resp.Body)
+	if !CheckValidStatus(resp, []int{serviceSuccess}) {
+		return nil, fmt.Errorf("%d %s", resp.StatusCode, jsonBytes)
+	}
+	var target map[string]interface{}
+	if len(jsonBytes) > 0 {
+		err = json.Unmarshal(jsonBytes, &target)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return target, nil
 }

@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/jonboydell/logzio_client"
-	"github.com/jonboydell/logzio_client/client"
+	"github.com/logzio/logzio_terraform_client"
+	"github.com/logzio/logzio_terraform_client/client"
 	"io/ioutil"
 	"net/http"
 )
@@ -22,8 +22,8 @@ func (c *SubAccountClient) updateValidateRequest(id int64) (error, bool) {
 
 func (c *SubAccountClient) updateApiRequest(apiToken string, id int64, subAccount SubAccount) (*http.Request, error) {
 	var (
-		createUser = map[string]interface{}{
-			"email":                  subAccount.Email,
+		updateUser = map[string]interface{}{
+			//"email":                  subAccount.Email,
 			"accountName":            subAccount.AccountName,
 			"maxDailyGB":             subAccount.MaxDailyGB,
 			"retentionDays":          subAccount.RetentionDays,
@@ -35,7 +35,7 @@ func (c *SubAccountClient) updateApiRequest(apiToken string, id int64, subAccoun
 		}
 	)
 
-	jsonBytes, err := json.Marshal(createUser)
+	jsonBytes, err := json.Marshal(updateUser)
 	if err != nil {
 		return nil, err
 	}

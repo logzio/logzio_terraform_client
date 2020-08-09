@@ -3,15 +3,15 @@ package endpoints
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/jonboydell/logzio_client"
-	"github.com/jonboydell/logzio_client/client"
+	"github.com/logzio/logzio_terraform_client"
+	"github.com/logzio/logzio_terraform_client/client"
 	"io/ioutil"
 	"net/http"
 )
 
 const listEndpointsServiceUrl string = endpointServiceEndpoint
 const listEndpointsServiceMethod string = http.MethodGet
-const listEndpointsMethodSuccess int = 200
+const listEndpointsMethodSuccess int = http.StatusOK
 
 const errorListEndpointApiCallFailed = "API call ListEndpoints failed with status code:%d, data:%s"
 

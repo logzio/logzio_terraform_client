@@ -3,12 +3,11 @@ package endpoints
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"strings"
 
-	"github.com/jonboydell/logzio_client"
-	"github.com/jonboydell/logzio_client/client"
+	"github.com/logzio/logzio_terraform_client"
+	"github.com/logzio/logzio_terraform_client/client"
 )
 
 const (
@@ -130,29 +129,24 @@ func New(apiToken, baseUrl string) (*EndpointsClient, error) {
 
 type endpointValidator = func(e Endpoint) bool
 type endpointBuilder = func(a string, t endpointType, e Endpoint) (*http.Request, error)
-type endpointChecker = func(b []byte) error
+type endpointChecker = func(data map[string]interface{}) error
 
-func (c *EndpointsClient) makeEndpointRequest(endpoint interface{}, validator endpointValidator, builder endpointBuilder, checker endpointChecker) ([]byte, error, bool) {
+func (c *EndpointsClient) makeEndpointRequest(endpoint interface{}, validator endpointValidator, builder endpointBuilder, checker endpointChecker) (map[string]interface{}, error, bool) {
 	e := endpoint.(Endpoint)
 	if !validator(e) {
 		return nil, errors.New("the passed in endpoint is not valid"), false
 	}
 	req, _ := builder(c.ApiToken, e.EndpointType, e)
-	httpClient := client.GetHttpClient(req)
-	resp, err := httpClient.Do(req)
+	jsonResponse, err := logzio_client.CreateHttpRequest(req)
 	if err != nil {
 		return nil, err, false
 	}
-	defer resp.Body.Close()
-	jsonBytes, _ := ioutil.ReadAll(resp.Body)
-	if !logzio_client.CheckValidStatus(resp, []int{http.StatusOK}) {
-		return nil, fmt.Errorf(errorCreateEndpointApiCallFailed, resp.StatusCode, jsonBytes), false
-	}
-	err = checker(jsonBytes)
+
+	err = checker(jsonResponse)
 	if err != nil {
 		return nil, err, false
 	}
-	return jsonBytes, nil, true
+	return jsonResponse, err, true
 }
 
 func (c *EndpointsClient) getURLByType(t endpointType) string {

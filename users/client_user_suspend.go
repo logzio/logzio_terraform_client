@@ -2,8 +2,8 @@ package users
 
 import (
 	"fmt"
-	"github.com/jonboydell/logzio_client"
-	"github.com/jonboydell/logzio_client/client"
+	"github.com/logzio/logzio_terraform_client"
+	"github.com/logzio/logzio_terraform_client/client"
 	"net/http"
 )
 
@@ -11,7 +11,7 @@ const (
 	suspendUserServiceUrl     string = userServiceEndpoint + "/suspend/%d"
 	unsuspendUserServiceUrl   string = userServiceEndpoint + "/unsuspend/%d"
 	suspendUserServiceMethod  string = http.MethodPost
-	suspendUserServiceSuccess int    = 200
+	suspendUserServiceSuccess int    = http.StatusOK
 )
 
 func validateSuspendUserRequest(userId int64) (error, bool) {
