@@ -1,4 +1,4 @@
-package log_shipping
+package logshipping
 
 import (
 	"fmt"
@@ -8,19 +8,18 @@ import (
 
 const (
 	serviceEndpoint = "%s/v1/log-shipping"
-)
 
-const (
-	fldId       string = "id"
+	fldID       string = "id"
 	fldLogsType string = "logsType"
 )
 
-type LogShippingClient struct {
+// Client is the client used to talk to the logzio log shipping API
+type Client struct {
 	*client.Client
 }
 
-// Creates a new entry point into the users functions, accepts the user's logz.io API token and account Id
-func New(apiToken, baseUrl string) (*LogShippingClient, error) {
+// New creates an entry point into the logshipping functions. It accepts the user's logz.io API token and account Id
+func New(apiToken, baseURL string) (*Client, error) {
 	if len(apiToken) == 0 {
 		return nil, fmt.Errorf("API token not defined")
 	}

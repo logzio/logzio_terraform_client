@@ -1,4 +1,4 @@
-package log_shipping
+package logshipping
 
 const (
 	fldAwsAccessKey                string = "accessKey"
@@ -10,11 +10,12 @@ const (
 	fldAwsAddS3ObjectKeyAsLogField string = "addS3ObjectKeyAsLogField"
 	fldAwsRegion                   string = "region"
 
-	createS3BucketServiceUrl string = serviceEndpoint + "/s3-buckets"
+	s3BucketServiceURLBase string = serviceEndpoint + "/s3-buckets"
 )
 
+// S3Bucket Represents an S3 Bucket resource from logzio API
 type S3Bucket struct {
-	Id                       int64
+	ID                       int64
 	AccessKey                string
 	SecretKey                string
 	Arn                      string
