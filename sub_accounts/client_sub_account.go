@@ -110,10 +110,14 @@ func New(apiToken string, baseUrl string) (*SubAccountClient, error) {
 }
 
 func jsonToSubAccount(json map[string]interface{}) SubAccount {
+	var maxDailyGB float32 = 0
+	if json[fldMaxDailyGB] != nil {
+		maxDailyGB = float32(json[fldMaxDailyGB].(float64))
+	}
 	subAccount := SubAccount{
 		Id:                    int64(json[fldAccountId].(float64)),
 		AccountName:           json[fldAccountName].(string),
-		MaxDailyGB:            float32(json[fldMaxDailyGB].(float64)),
+		MaxDailyGB:            maxDailyGB,
 		RetentionDays:         int32(json[fldRetentionDays].(float64)),
 		Searchable:            json[fldSearchable].(bool),
 		Accessible:            json[fldAccessible].(bool),
