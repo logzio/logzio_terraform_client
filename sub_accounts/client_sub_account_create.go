@@ -55,16 +55,15 @@ func (c *SubAccountClient) CreateSubAccount(subAccount SubAccountCreate) (*SubAc
 	}
 
 	createdSubAccount := SubAccount{
-		Id:		int64(target["accountId"].(float64)),
-		MaxDailyGB:		subAccount.MaxDailyGB,
-		AccountName:	subAccount.AccountName,
-		UtilizationSettings:	subAccount.UtilizationSettings,
-		DocSizeSetting:			subAccount.DocSizeSetting,
-		Accessible:				subAccount.Accessible,
-		Searchable:				subAccount.Searchable,
-		RetentionDays:			subAccount.RetentionDays,
-		SharingObjectAccounts:	sharingAccounts,
-
+		Id:                    int64(target["accountId"].(float64)),
+		MaxDailyGB:            subAccount.MaxDailyGB,
+		AccountName:           subAccount.AccountName,
+		UtilizationSettings:   subAccount.UtilizationSettings,
+		DocSizeSetting:        subAccount.DocSizeSetting,
+		Accessible:            subAccount.Accessible,
+		Searchable:            subAccount.Searchable,
+		RetentionDays:         subAccount.RetentionDays,
+		SharingObjectAccounts: sharingAccounts,
 	}
 	return &createdSubAccount, nil
 }

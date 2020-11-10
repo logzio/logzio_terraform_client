@@ -58,7 +58,7 @@ func TestAlerts_CreateAlert(t *testing.T) {
 			ValueAggregationField:        nil,
 			GroupByAggregationFields:     []interface{}{"my_field"},
 			AlertNotificationEndpoints:   []interface{}{},
-			Tags:						  []string{"some", "words"},
+			Tags:                         []string{"some", "words"},
 		}
 
 		alert, err := underTest.CreateAlert(testAlert)
