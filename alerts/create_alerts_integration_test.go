@@ -20,7 +20,7 @@ func TestIntegrationAlerts_CreateAlert(t *testing.T) {
 			Filter:      "",
 			Operation:   alerts.OperatorGreaterThan,
 			SeverityThresholdTiers: []alerts.SeverityThresholdType{
-				alerts.SeverityThresholdType{
+				{
 					alerts.SeverityHigh,
 					10,
 				},
@@ -33,7 +33,7 @@ func TestIntegrationAlerts_CreateAlert(t *testing.T) {
 			ValueAggregationField:        nil,
 			GroupByAggregationFields:     []interface{}{"my_field"},
 			AlertNotificationEndpoints:   []interface{}{},
-			Tags:						  []string{"some", "words"},
+			Tags:                         []string{"some", "words"},
 		})
 
 		time.Sleep(3 * time.Second)
@@ -54,7 +54,7 @@ func TestIntegrationAlerts_CreateAlertWithFilter(t *testing.T) {
 			Filter:      "{\"bool\":{\"must\":[{\"match\":{\"type\":\"mytype\"}}],\"must_not\":[]}}",
 			Operation:   alerts.OperatorGreaterThan,
 			SeverityThresholdTiers: []alerts.SeverityThresholdType{
-				alerts.SeverityThresholdType{
+				{
 					alerts.SeverityHigh,
 					10,
 				},
@@ -87,7 +87,7 @@ func TestIntegrationAlerts_CreateAlertInvalidFilter(t *testing.T) {
 			Filter:      "Invalid Filter",
 			Operation:   alerts.OperatorGreaterThan,
 			SeverityThresholdTiers: []alerts.SeverityThresholdType{
-				alerts.SeverityThresholdType{
+				{
 					alerts.SeverityHigh,
 					10,
 				},
@@ -118,7 +118,7 @@ func TestIntegrationAlerts_CreateAlertInvalidAggregationType(t *testing.T) {
 			Filter:      "",
 			Operation:   alerts.OperatorGreaterThan,
 			SeverityThresholdTiers: []alerts.SeverityThresholdType{
-				alerts.SeverityThresholdType{
+				{
 					alerts.SeverityHigh,
 					10,
 				},
@@ -149,7 +149,7 @@ func TestIntegrationAlerts_CreateAlertInvaldValueAggregationField(t *testing.T) 
 			Filter:      "{\"bool\":{\"must\":[{\"match\":{\"type\":\"mytype\"}}],\"must_not\":[]}}",
 			Operation:   alerts.OperatorGreaterThan,
 			SeverityThresholdTiers: []alerts.SeverityThresholdType{
-				alerts.SeverityThresholdType{
+				{
 					alerts.SeverityHigh,
 					10,
 				},
@@ -180,7 +180,7 @@ func TestIntegrationAlerts_CreateAlertInvalidValueAggregationTypeNone(t *testing
 			Filter:      "{\"bool\":{\"must\":[{\"match\":{\"type\":\"mytype\"}}],\"must_not\":[]}}",
 			Operation:   alerts.OperatorGreaterThan,
 			SeverityThresholdTiers: []alerts.SeverityThresholdType{
-				alerts.SeverityThresholdType{
+				{
 					alerts.SeverityHigh,
 					10,
 				},
@@ -211,7 +211,7 @@ func TestIntegrationAlerts_CreateAlertInvalidValueAggregationTypeCount(t *testin
 			Filter:      "{\"bool\":{\"must\":[{\"match\":{\"type\":\"mytype\"}}],\"must_not\":[]}}",
 			Operation:   alerts.OperatorGreaterThan,
 			SeverityThresholdTiers: []alerts.SeverityThresholdType{
-				alerts.SeverityThresholdType{
+				{
 					alerts.SeverityHigh,
 					10,
 				},
@@ -242,7 +242,7 @@ func TestIntegrationAlerts_CreateAlertNoNotifications(t *testing.T) {
 			Filter:      "{\"bool\":{\"must\":[{\"match\":{\"type\":\"mytype\"}}],\"must_not\":[]}}",
 			Operation:   alerts.OperatorGreaterThan,
 			SeverityThresholdTiers: []alerts.SeverityThresholdType{
-				alerts.SeverityThresholdType{
+				{
 					alerts.SeverityHigh,
 					10,
 				},
@@ -273,7 +273,7 @@ func TestIntegrationAlerts_CreateAlertNoQueryString(t *testing.T) {
 			Filter:      "{\"bool\":{\"must\":[{\"match\":{\"type\":\"mytype\"}}],\"must_not\":[]}}",
 			Operation:   alerts.OperatorGreaterThan,
 			SeverityThresholdTiers: []alerts.SeverityThresholdType{
-				alerts.SeverityThresholdType{
+				{
 					alerts.SeverityHigh,
 					10,
 				},
@@ -304,7 +304,7 @@ func TestIntegrationAlerts_CreateAlertInvalidSeverity(t *testing.T) {
 			Filter:      "{\"bool\":{\"must\":[{\"match\":{\"type\":\"mytype\"}}],\"must_not\":[]}}",
 			Operation:   alerts.OperatorGreaterThan,
 			SeverityThresholdTiers: []alerts.SeverityThresholdType{
-				alerts.SeverityThresholdType{
+				{
 					"TEST",
 					10,
 				},

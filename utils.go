@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	serviceSuccess int   = http.StatusOK
-	serviceNoContest int = http.StatusNoContent	// This is like StatusOK with no body in response
+	serviceSuccess   int = http.StatusOK
+	serviceNoContest int = http.StatusNoContent // This is like StatusOK with no body in response
 )
 
 func AddHttpHeaders(apiToken string, req *http.Request) {

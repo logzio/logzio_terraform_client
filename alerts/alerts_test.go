@@ -9,8 +9,6 @@ import (
 	"testing"
 )
 
-
-
 var (
 	mux    *http.ServeMux
 	server *httptest.Server
@@ -53,7 +51,7 @@ func createValidAlert() alerts.CreateAlertType {
 		Filter:      "",
 		Operation:   alerts.OperatorGreaterThan,
 		SeverityThresholdTiers: []alerts.SeverityThresholdType{
-			alerts.SeverityThresholdType{
+			{
 				alerts.SeverityHigh,
 				10,
 			},
@@ -77,7 +75,7 @@ func createUpdateAlert() alerts.CreateAlertType {
 		Filter:      "",
 		Operation:   alerts.OperatorGreaterThan,
 		SeverityThresholdTiers: []alerts.SeverityThresholdType{
-			alerts.SeverityThresholdType{
+			{
 				alerts.SeverityHigh,
 				10,
 			},

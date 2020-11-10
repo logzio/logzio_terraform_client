@@ -6,7 +6,6 @@ import (
 	"net/http"
 )
 
-
 const (
 	ERROR_CODE    = "errorCode"
 	ERROR_MESSAGE = "errorMessage"

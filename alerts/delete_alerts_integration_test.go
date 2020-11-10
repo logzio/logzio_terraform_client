@@ -22,7 +22,7 @@ func TestIntegrationAlerts_DeleteAlert(t *testing.T) {
 				Filter:      "",
 				Operation:   alerts.OperatorGreaterThan,
 				SeverityThresholdTiers: []alerts.SeverityThresholdType{
-					alerts.SeverityThresholdType{
+					{
 						alerts.SeverityHigh,
 						10,
 					},

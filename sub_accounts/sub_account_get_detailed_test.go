@@ -1,11 +1,11 @@
 package sub_accounts_test
 
 import (
-"fmt"
-"github.com/stretchr/testify/assert"
-"net/http"
-"strconv"
-"testing"
+	"fmt"
+	"github.com/stretchr/testify/assert"
+	"net/http"
+	"strconv"
+	"testing"
 )
 
 func TestSubAccount_GetDetailedValidSubAccount(t *testing.T) {
