@@ -15,7 +15,7 @@ func TestSubAccount_CreateValidSubAccount(t *testing.T) {
 	assert.NoError(t, err)
 	defer teardown()
 
-	mux.HandleFunc("/v1/shared-tokens/", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/v1/shared-tokens", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodPost, r.Method)
 
 		jsonBytes, _ := ioutil.ReadAll(r.Body)
@@ -27,7 +27,7 @@ func TestSubAccount_CreateValidSubAccount(t *testing.T) {
 
 		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprint(w, fixture("create_sharedtoken.json"))
+		fmt.Fprint(w, fixture("create_shared_token.json"))
 	})
 
 	filterIds := make([]int32, 2)

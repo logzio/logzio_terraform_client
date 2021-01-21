@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	sharedTokenServiceEndpoint = "%s/v1/shared-tokens/"
+	sharedTokenServiceEndpoint = "%s/v1/shared-tokens"
 	loggerName = "logzio-client"
 	fldSharedTokenId = "id"
 	fldSharedTokenName = "name"
