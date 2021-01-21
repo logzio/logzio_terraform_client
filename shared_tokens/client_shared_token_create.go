@@ -44,7 +44,7 @@ func (c *SharedTokenClient) CreateSharedToken(sharedToken SharedToken) (*SharedT
 	}
 
 	createdSharedToken := SharedToken{
-		Id:                    int32(target["accountId"].(float64)),
+		Id:                    int32(target["id"].(float64)),
 		Token:            sharedToken.Token,
 		Name:           sharedToken.Name,
 		FilterIds:   sharedToken.FilterIds,
