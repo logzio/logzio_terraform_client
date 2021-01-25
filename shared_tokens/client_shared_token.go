@@ -47,11 +47,16 @@ func New(apiToken string, baseUrl string) (*SharedTokenClient, error) {
 }
 
 func jsonToSharedToken(json map[string]interface{}) SharedToken {
+	filters := json[fldSharedTokenFilters].([]interface{})
+	var intFilters []int32
+	for _, num := range filters {
+		intFilters = append(intFilters, int32(num.(float64)))
+	}
 	sharedToken := SharedToken{
-		Id:        json[fldSharedTokenId].(int32),
+		Id:        int32(json[fldSharedTokenId].(float64)),
 		Name:      json[fldSharedTokenName].(string),
 		Token:     json[fldToken].(string),
-		FilterIds: json[fldSharedTokenFilters].([]int32),
+		FilterIds: intFilters,
 	}
 	return sharedToken
 }
