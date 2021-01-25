@@ -22,7 +22,7 @@ func (c *SubAccountClient) updateValidateRequest(id int64) (error, bool) {
 
 func (c *SubAccountClient) updateApiRequest(apiToken string, id int64, subAccount SubAccount) (*http.Request, error) {
 	var (
-		updateUser = map[string]interface{}{
+		updateSubAccount = map[string]interface{}{
 			//"email":                  subAccount.Email,
 			"accountName":            subAccount.AccountName,
 			"maxDailyGB":             subAccount.MaxDailyGB,
@@ -35,7 +35,7 @@ func (c *SubAccountClient) updateApiRequest(apiToken string, id int64, subAccoun
 		}
 	)
 
-	jsonBytes, err := json.Marshal(updateUser)
+	jsonBytes, err := json.Marshal(updateSubAccount)
 	if err != nil {
 		return nil, err
 	}

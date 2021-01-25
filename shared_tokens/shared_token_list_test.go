@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestSharedToken_ListSharedtokens(t *testing.T) {
+func TestSharedToken_ListSharedTokens(t *testing.T) {
 	underTest, err, teardown := setupSharedTokensTest()
 	assert.NoError(t, err)
 	defer teardown()
