@@ -8,12 +8,13 @@ import (
 
 const (
 	sharedTokenServiceEndpoint = "%s/v1/shared-tokens"
-	loggerName = "logzio-client"
-	fldSharedTokenId = "id"
-	fldSharedTokenName = "name"
-	fldToken = "token"
-	fldSharedTokenFilters = "filters"
+	loggerName                 = "logzio-client"
+	fldSharedTokenId           = "id"
+	fldSharedTokenName         = "name"
+	fldToken                   = "token"
+	fldSharedTokenFilters      = "filters"
 )
+
 type SharedToken struct {
 	Id        int32
 	Name      string
@@ -23,7 +24,7 @@ type SharedToken struct {
 
 type SharedTokenClient struct {
 	*client.Client
-	logger                  hclog.Logger
+	logger hclog.Logger
 }
 
 // Creates a new entry point into the shared token functions, accepts the user's logz.io API token and account Id

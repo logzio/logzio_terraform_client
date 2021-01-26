@@ -50,7 +50,7 @@ func (c *SharedTokenClient) GetSharedToken(id int32) (*SharedToken, error) {
 		return nil, err
 	}
 
-	pretty, err := json.MarshalIndent(target,"","	")
+	pretty, err := json.MarshalIndent(target, "", "	")
 	if err != nil {
 		c.logger.Error("Error parsing shared token: ", err)
 	} else {

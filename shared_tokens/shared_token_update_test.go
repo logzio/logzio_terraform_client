@@ -34,8 +34,8 @@ func TestSharedToken_UpdateValidSharedToken(t *testing.T) {
 	})
 
 	s := shared_tokens.SharedToken{
-		Name:           "new test",
-		FilterIds:		[]int32{2345, 6789},
+		Name:      "new test",
+		FilterIds: []int32{2345, 6789},
 	}
 
 	err = underTest.UpdateSharedToken(sharedTokenId, s)

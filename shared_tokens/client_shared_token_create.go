@@ -17,9 +17,9 @@ const (
 func (c *SharedTokenClient) createApiRequest(apiToken string, s SharedToken) (*http.Request, error) {
 	var (
 		createSharedToken = map[string]interface{}{
-			"name":                  s.Name,
-			"token":            	 s.Token,
-			"filters":               s.FilterIds,
+			"name":    s.Name,
+			"token":   s.Token,
+			"filters": s.FilterIds,
 		}
 	)
 
@@ -44,10 +44,10 @@ func (c *SharedTokenClient) CreateSharedToken(sharedToken SharedToken) (*SharedT
 	}
 
 	createdSharedToken := SharedToken{
-		Id:                    int32(target["id"].(float64)),
-		Token:            sharedToken.Token,
-		Name:           sharedToken.Name,
-		FilterIds:   sharedToken.FilterIds,
+		Id:        int32(target["id"].(float64)),
+		Token:     sharedToken.Token,
+		Name:      sharedToken.Name,
+		FilterIds: sharedToken.FilterIds,
 	}
 	return &createdSharedToken, nil
 }

@@ -19,8 +19,8 @@ const (
 func (c *SharedTokenClient) updateApiRequest(apiToken string, id int64, sharedToken SharedToken) (*http.Request, error) {
 	var (
 		updateSharedToken = map[string]interface{}{
-			"name":                  sharedToken.Name,
-			"filters":               sharedToken.FilterIds,
+			"name":    sharedToken.Name,
+			"filters": sharedToken.FilterIds,
 		}
 	)
 	jsonBytes, err := json.Marshal(updateSharedToken)

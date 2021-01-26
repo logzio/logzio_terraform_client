@@ -35,9 +35,9 @@ func TestSubAccount_CreateValidSubAccount(t *testing.T) {
 	filterIds[1] = 456
 
 	s := shared_tokens.SharedToken{
-		Name:                 "test token",
-		Token: "6c36edf51-cf93883aa35-5bc6ce6-7bcfe60d87",
-		Id: 1234,
+		Name:      "test token",
+		Token:     "6c36edf51-cf93883aa35-5bc6ce6-7bcfe60d87",
+		Id:        1234,
 		FilterIds: filterIds,
 	}
 
