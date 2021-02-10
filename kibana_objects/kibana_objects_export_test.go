@@ -19,7 +19,6 @@ func exportMockHandler(t *testing.T) func(http.ResponseWriter, *http.Request) {
 			fmt.Fprintln(w, "this endpoint only supports the POST method")
 			return
 		}
-		assert.Equal(t, http.MethodPost, r.Method)
 
 		jsonBytes, _ := ioutil.ReadAll(r.Body)
 		payload := struct {
@@ -46,7 +45,8 @@ func exportMockHandler(t *testing.T) func(http.ResponseWriter, *http.Request) {
 			w.Header().Set("Content-Type", "application/json")
 			fmt.Fprint(w, fixture("export_visualization.json"))
 		default:
-			assert.Failf(t, "expected type to be 'search', 'dashboard' or 'visualization'", "got '%s'", payload.T)
+			w.WriteHeader(http.StatusBadRequest)
+			fmt.Fprintf(w, "invalid value for type")
 		}
 	}
 }
