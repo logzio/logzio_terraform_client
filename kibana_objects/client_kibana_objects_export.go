@@ -24,7 +24,14 @@ func (s exportType) String() string {
 	return string(s)
 }
 
-func (c *KibanaObjectsClient) Export(t exportType) (*KibanaObjects, error) {
+type ExportResults struct {
+	KibanaVersion string                   `json:"kibanaVersion"`
+	Hits          []map[string]interface{} `json:"hits"`
+}
+
+// Export allows export of the Kibana objects configuration.
+// https://docs.logz.io/api/#operation/exportSavedObjects
+func (c *KibanaObjectsClient) Export(t exportType) (*ExportResults, error) {
 	exportPayload := struct {
 		T exportType `json:"type"`
 	}{
@@ -59,7 +66,7 @@ func (c *KibanaObjectsClient) Export(t exportType) (*KibanaObjects, error) {
 		return nil, fmt.Errorf("%d %s", resp.StatusCode, jsonBytes)
 	}
 
-	results := &KibanaObjects{}
+	results := &ExportResults{}
 	err = json.Unmarshal(jsonBytes, results)
 	if err != nil {
 		return nil, fmt.Errorf("could not unmarshal response body into KibanaObjects: %w", err)

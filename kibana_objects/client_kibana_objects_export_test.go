@@ -93,7 +93,7 @@ func TestKibanaObjects_ExportVisualization(t *testing.T) {
 	assert.Equal(t, "visualization_2", objects.Hits[1]["name"])
 }
 
-func TestKibanaObjects_BadResponseStatus(t *testing.T) {
+func TestKibanaObjects_ExportWithBadResponseStatus(t *testing.T) {
 	underTest, err, teardown := setupKibanaObjectsTest()
 	assert.NoError(t, err)
 	defer teardown()

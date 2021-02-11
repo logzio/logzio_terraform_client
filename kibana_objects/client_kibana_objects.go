@@ -13,11 +13,6 @@ const (
 	loggerName                         = "logzio-client"
 )
 
-type KibanaObjects struct {
-	KibanaVersion string                   `json:"kibanaVersion"`
-	Hits          []map[string]interface{} `json:"hits"`
-}
-
 type KibanaObjectsClient struct {
 	*client.Client
 	logger hclog.Logger
