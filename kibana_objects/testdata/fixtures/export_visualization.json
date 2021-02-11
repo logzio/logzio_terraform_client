@@ -1,10 +1,10 @@
 {
-	"kibanaVersion": "4.0.0-beta3",
-	"hits": [
-		{
-			"name": "visualization_1"
-		},
-		{ "name": "visualization_2"
-		}
-	]
+  "kibanaVersion": "4.0.0-beta3",
+  "hits": [
+    {
+      "name": "visualization_1"
+    },
+    { "name": "visualization_2"
+    }
+  ]
 }
