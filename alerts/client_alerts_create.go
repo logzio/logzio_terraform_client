@@ -118,6 +118,5 @@ func (c *AlertsClient) CreateAlert(alert CreateAlertType) (*AlertType, error) {
 
 	retVal := jsonAlertToAlert(jsonResponse)
 
-
 	return &retVal, nil
 }

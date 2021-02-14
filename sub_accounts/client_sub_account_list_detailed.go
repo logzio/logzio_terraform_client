@@ -67,7 +67,7 @@ func (c *SubAccountClient) DetailedSubAccounts() ([]SubAccountDetailed, error) {
 	for _, jsonObject := range target {
 		subAccount, err := jsonToDetailedSubAccount(jsonObject)
 		if err != nil {
-			return  nil, err
+			return nil, err
 		}
 		subAccountsDetailed = append(subAccountsDetailed, *subAccount)
 	}

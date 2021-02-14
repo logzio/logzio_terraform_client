@@ -53,7 +53,7 @@ const (
 	fldTitle                        string = "title"
 	fldValueAggregationField        string = "valueAggregationField"
 	fldValueAggregationType         string = "valueAggregationType"
-	fldTags							string = "tags"
+	fldTags                         string = "tags"
 )
 
 type CreateAlertType struct {
@@ -71,7 +71,7 @@ type CreateAlertType struct {
 	Title                        string
 	ValueAggregationField        interface{}
 	ValueAggregationType         string
-	Tags						 []string
+	Tags                         []string
 }
 
 type AlertType struct {
@@ -96,7 +96,7 @@ type AlertType struct {
 	Title                        string
 	ValueAggregationField        interface{}
 	ValueAggregationType         string
-	Tags						 []string
+	Tags                         []string
 }
 
 type SeverityThresholdType struct {
@@ -121,7 +121,7 @@ func jsonAlertToAlert(jsonAlert map[string]interface{}) AlertType {
 		Threshold:                  int(jsonAlert[fldThreshold].(float64)),
 		Title:                      jsonAlert[fldTitle].(string),
 		ValueAggregationType:       jsonAlert[fldValueAggregationType].(string),
-		Tags:						[]string{},
+		Tags:                       []string{},
 	}
 
 	if jsonAlert[fldGroupByAggregationFields] != nil {

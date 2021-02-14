@@ -33,12 +33,12 @@ const (
 )
 
 const (
-	EndpointTypeSlack     endpointType = "Slack"
-	EndpointTypeCustom    endpointType = "Custom"
-	EndpointTypePagerDuty endpointType = "PagerDuty"
-	EndpointTypeBigPanda  endpointType = "BigPanda"
-	EndpointTypeDataDog   endpointType = "Datadog"
-	EndpointTypeVictorOps endpointType = "VictorOps"
+	EndpointTypeSlack     endpointType = "slack"
+	EndpointTypeCustom    endpointType = "custom"
+	EndpointTypePagerDuty endpointType = "pagerduty"
+	EndpointTypeBigPanda  endpointType = "bigpanda"
+	EndpointTypeDataDog   endpointType = "datadog"
+	EndpointTypeVictorOps endpointType = "victorops"
 )
 
 type (
@@ -65,7 +65,7 @@ type Endpoint struct {
 }
 
 func jsonEndpointToEndpoint(jsonEndpoint map[string]interface{}) Endpoint {
-	t := jsonEndpoint[fldEndpointType].(string)
+	t := strings.ToLower(jsonEndpoint[fldEndpointType].(string))
 
 	endpoint := Endpoint{
 		Id:           int64(jsonEndpoint[fldEndpointId].(float64)),

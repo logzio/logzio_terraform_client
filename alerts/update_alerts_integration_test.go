@@ -20,7 +20,7 @@ func TestIntegrationAlerts_UpdateAlert(t *testing.T) {
 			Filter:      "",
 			Operation:   alerts.OperatorGreaterThan,
 			SeverityThresholdTiers: []alerts.SeverityThresholdType{
-				alerts.SeverityThresholdType{
+				{
 					alerts.SeverityHigh,
 					10,
 				},
@@ -43,7 +43,7 @@ func TestIntegrationAlerts_UpdateAlert(t *testing.T) {
 				Filter:      "",
 				Operation:   alerts.OperatorGreaterThan,
 				SeverityThresholdTiers: []alerts.SeverityThresholdType{
-					alerts.SeverityThresholdType{
+					{
 						alerts.SeverityHigh,
 						10,
 					},

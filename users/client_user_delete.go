@@ -11,11 +11,11 @@ import (
 )
 
 const (
-	deleteUserServiceUrl         = userServiceEndpoint + "/%d"
-	deleteUserServiceMethod      = "DELETE"
-
+	deleteUserServiceUrl    = userServiceEndpoint + "/%d"
+	deleteUserServiceMethod = "DELETE"
 )
-var deleteUserServiceSuccess = []int {http.StatusOK, http.StatusNoContent}
+
+var deleteUserServiceSuccess = []int{http.StatusOK, http.StatusNoContent}
 
 func validateDeleteUserRequest(u User) (error, bool) {
 	return nil, true

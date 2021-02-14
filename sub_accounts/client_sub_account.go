@@ -9,11 +9,11 @@ import (
 
 const (
 	subAccountServiceEndpoint = "%s/v1/account-management/time-based-accounts"
-	loggerName = "logzio-client"
+	loggerName                = "logzio-client"
 )
 
 const (
-	fldAccountId                    string = "accountId"          //required
+	fldAccountId             string = "accountId"   //required
 	fldEmail                 string = "email"       //required
 	fldAccountName           string = "accountName" //required
 	fldMaxDailyGB            string = "maxDailyGB"
@@ -42,33 +42,34 @@ type SubAccount struct {
 }
 
 type SubAccountRelation struct {
-	OwnerAccountId		int64	`json:"ownerAccountId"`
-	SubAccountId		int64	`json:"subAccountId"`
-	Searchable			bool	`json:"searchable"`
-	Accessible			bool	`json:"accessible"`
-	CreatedDate			int64	`json:"createdDate"`
-	LastUpdatedDate		int64	`json:"lastUpdatedDate"`
-	LastUpdaterUserId	int64	`json:"lastUpdaterUserId"`
-	Type				string	`json:"type"`
+	OwnerAccountId    int64  `json:"ownerAccountId"`
+	SubAccountId      int64  `json:"subAccountId"`
+	Searchable        bool   `json:"searchable"`
+	Accessible        bool   `json:"accessible"`
+	CreatedDate       int64  `json:"createdDate"`
+	LastUpdatedDate   int64  `json:"lastUpdatedDate"`
+	LastUpdaterUserId int64  `json:"lastUpdaterUserId"`
+	Type              string `json:"type"`
 }
 
 type Account struct {
-	AccountId 			int64	`json:"accountId"`
-	AccountToken 		string	`json:"accountToken"`
-	AccountName 		string	`json:"accountName"`
-	Active 				bool	`json:"active"`
-	EsIndexPrefix 		string	`json:"esIndexPrefix"`
-	MaxDailyGB 			int64	`json:"maxDailyGB"`
-	RetentionDays 		int64	`json:"retentionDays"`
+	AccountId     int64  `json:"accountId"`
+	AccountToken  string `json:"accountToken"`
+	AccountName   string `json:"accountName"`
+	Active        bool   `json:"active"`
+	EsIndexPrefix string `json:"esIndexPrefix"`
+	MaxDailyGB    int64  `json:"maxDailyGB"`
+	RetentionDays int64  `json:"retentionDays"`
 }
 
 type SubAccountDetailed struct {
-	SubAccountRelation		SubAccountRelation		`json:"subAccountRelation"`
-	Account					Account					`json:"account"`
-	SharingObjectAccounts 	[]interface{}			`json:"sharingObjectsAccounts"`
-	UtilizationSettings  	map[string]interface{}	`json:"utilizationSettings"`
-	DailyUsagesList			map[string]interface{}	`json:"dailyUsagesList"`
-	DocSizeSetting        	bool					`json:"docSizeSetting"`}
+	SubAccountRelation    SubAccountRelation     `json:"subAccountRelation"`
+	Account               Account                `json:"account"`
+	SharingObjectAccounts []interface{}          `json:"sharingObjectsAccounts"`
+	UtilizationSettings   map[string]interface{} `json:"utilizationSettings"`
+	DailyUsagesList       map[string]interface{} `json:"dailyUsagesList"`
+	DocSizeSetting        bool                   `json:"docSizeSetting"`
+}
 
 type SubAccountCreate struct {
 	Email                 string
@@ -86,7 +87,7 @@ type SubAccountCreate struct {
 
 type SubAccountClient struct {
 	*client.Client
-	logger                  hclog.Logger
+	logger hclog.Logger
 }
 
 // Creates a new entry point into the sub-account functions, accepts the user's logz.io API token and account Id
@@ -110,10 +111,14 @@ func New(apiToken string, baseUrl string) (*SubAccountClient, error) {
 }
 
 func jsonToSubAccount(json map[string]interface{}) SubAccount {
+	var maxDailyGB float32 = 0
+	if json[fldMaxDailyGB] != nil {
+		maxDailyGB = float32(json[fldMaxDailyGB].(float64))
+	}
 	subAccount := SubAccount{
 		Id:                    int64(json[fldAccountId].(float64)),
 		AccountName:           json[fldAccountName].(string),
-		MaxDailyGB:            float32(json[fldMaxDailyGB].(float64)),
+		MaxDailyGB:            maxDailyGB,
 		RetentionDays:         int32(json[fldRetentionDays].(float64)),
 		Searchable:            json[fldSearchable].(bool),
 		Accessible:            json[fldAccessible].(bool),
@@ -122,17 +127,16 @@ func jsonToSubAccount(json map[string]interface{}) SubAccount {
 		UtilizationSettings:   json[fldUtilizationSettings].(map[string]interface{}),
 	}
 
-		if json[fldUtilizationSettings] != nil {
-			subAccount.UtilizationSettings = json[fldUtilizationSettings].(map[string]interface{})
-			for key, value := range subAccount.UtilizationSettings {
-				if value == nil {
-					delete(subAccount.UtilizationSettings, key)
-				}
+	if json[fldUtilizationSettings] != nil {
+		subAccount.UtilizationSettings = json[fldUtilizationSettings].(map[string]interface{})
+		for key, value := range subAccount.UtilizationSettings {
+			if value == nil {
+				delete(subAccount.UtilizationSettings, key)
 			}
 		}
+	}
 	return subAccount
 }
-
 
 func jsonToDetailedSubAccount(jsonMap map[string]interface{}) (*SubAccountDetailed, error) {
 	jsonBytes, err := json.Marshal(jsonMap)
