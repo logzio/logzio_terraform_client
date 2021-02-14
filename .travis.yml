@@ -1,6 +1,6 @@
 language: go
 go:
-  - "1.12.7"
+  - "1.15"
 env:
   global:
   - GO111MODULE=on
@@ -9,4 +9,3 @@ before_install:
   - go get github.com/mattn/goveralls
 script:
   - go test -v -race ./... -covermode=atomic -coverprofile=coverage.out
-  - goveralls -coverprofile=coverage.out -service=travis-ci -repotoken=$COVERALLS_TOKEN
