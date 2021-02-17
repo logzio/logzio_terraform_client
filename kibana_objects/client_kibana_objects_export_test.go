@@ -106,7 +106,7 @@ func TestKibanaObjects_ExportWithBadResponseStatus(t *testing.T) {
 	})
 
 	_, err = underTest.Export(kibana_objects.ExportTypeSearch)
-	assert.EqualError(t, err, "500 bad response")
+	assert.Error(t, err, "error expected")
 }
 
 func TestKibanaObjects_BadResponse(t *testing.T) {
