@@ -90,6 +90,7 @@ func TestKibanaObjects_ExportVisualization(t *testing.T) {
 	objects, err := underTest.Export(kibana_objects.ExportTypeVisualization)
 	assert.NoError(t, err)
 	require.NotNil(t, objects)
+	assert.Equal(t, 2, len(objects.Hits))
 	assert.Equal(t, "visualization_1", objects.Hits[0]["name"])
 	assert.Equal(t, "visualization_2", objects.Hits[1]["name"])
 }
