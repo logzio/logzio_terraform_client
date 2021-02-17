@@ -61,11 +61,11 @@ func (c *KibanaObjectsClient) Import(payload ImportPayload) (*ImportResults, err
 		return nil, fmt.Errorf("%d %s", resp.StatusCode, jsonBytes)
 	}
 
-	results := &ImportResults{}
-	err = json.Unmarshal(jsonBytes, results)
+	var results ImportResults
+	err = json.Unmarshal(jsonBytes, &results)
 	if err != nil {
 		return nil, fmt.Errorf("could not unmarshal response body into ImportResults: %w", err)
 	}
 
-	return results, nil
+	return &results, nil
 }
