@@ -66,8 +66,8 @@ func (c *KibanaObjectsClient) Export(t exportType) (*ExportResults, error) {
 		return nil, fmt.Errorf("%d %s", resp.StatusCode, jsonBytes)
 	}
 
-	results := &ExportResults{}
-	err = json.Unmarshal(jsonBytes, results)
+	var results ExportResults
+	err = json.Unmarshal(jsonBytes, &results)
 	if err != nil {
 		return nil, fmt.Errorf("could not unmarshal response body into KibanaObjects: %w", err)
 	}
