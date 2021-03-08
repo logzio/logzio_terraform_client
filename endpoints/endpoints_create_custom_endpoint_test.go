@@ -31,7 +31,7 @@ func TestEndpoints_CreateCustomEndpoint(t *testing.T) {
 		assert.Contains(t, target, "headers")
 		Headers := strings.Split(fmt.Sprint(target["headers"]), ",")
 		assert.Equal(t, 2, len(Headers))
-		assert.Equal(t, strings.Split(Headers[1],"=")[1] , "two words")
+		assert.Equal(t, strings.Split(Headers[1], "=")[1], "two words")
 
 		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Type", "application/json")
@@ -40,11 +40,11 @@ func TestEndpoints_CreateCustomEndpoint(t *testing.T) {
 
 	if assert.NoError(t, err) {
 		endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
-			Title:         "testCreateCustomEndpoint",
+			Title:        "testCreateCustomEndpoint",
 			Method:       "POST",
-			Description:   "my description",
+			Description:  "my description",
 			Url:          "https://this.is.com/some/other/webhook",
-			EndpointType:  endpoints.EndpointTypeCustom,
+			EndpointType: endpoints.EndpointTypeCustom,
 			Headers:      map[string]string{"hello": "there", "header": "two words"},
 			BodyTemplate: map[string]string{"hello": "there", "header": "two"},
 		})
