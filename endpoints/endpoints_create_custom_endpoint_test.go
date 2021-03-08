@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"testing"
 
 	"github.com/logzio/logzio_terraform_client/endpoints"
@@ -23,11 +24,14 @@ func TestEndpoints_CreateCustomEndpoint(t *testing.T) {
 		jsonBytes, _ := ioutil.ReadAll(r.Body)
 		var target map[string]interface{}
 		err = json.Unmarshal(jsonBytes, &target)
+		assert.NoError(t, err)
 		assert.Contains(t, target, "title")
 		assert.Contains(t, target, "description")
 		assert.Contains(t, target, "url")
 		assert.Contains(t, target, "headers")
-		assert.Contains(t, target, "two words")
+		Headers := strings.Split(fmt.Sprint(target["headers"]), ",")
+		assert.Equal(t, 2, len(Headers))
+		assert.Equal(t, strings.Split(Headers[1],"=")[1] , "two words")
 
 		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Type", "application/json")
