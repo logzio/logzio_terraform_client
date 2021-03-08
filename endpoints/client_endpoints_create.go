@@ -38,7 +38,6 @@ func buildCreateEndpointRequest(endpoint Endpoint) map[string]interface{} {
 			headerStrings = append(headerStrings, fmt.Sprintf("%s=%s", k, v))
 		}
 		headerString := strings.Join(headerStrings, ",")
-		//headerString := strings.Trim(strings.Join(strings.Fields(fmt.Sprint(headerStrings)), ","), "[]")
 		createEndpoint[fldEndpointHeaders] = headerString
 		createEndpoint[fldEndpointBodyTemplate] = endpoint.BodyTemplate
 	}
