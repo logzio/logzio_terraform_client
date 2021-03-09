@@ -43,7 +43,7 @@ func TestEndpoints_CreateCustomEndpoint(t *testing.T) {
 			Title:        "testCreateCustomEndpoint",
 			Method:       "POST",
 			Description:  "my description",
-			Url:          "https://this.is.com/some/other/webhook",
+			Url:          "https://jsonplaceholder.typicode.com/todos/1",
 			EndpointType: endpoints.EndpointTypeCustom,
 			Headers:      map[string]string{"hello": "there", "header": "two words"},
 			BodyTemplate: map[string]string{"hello": "there", "header": "two"},
