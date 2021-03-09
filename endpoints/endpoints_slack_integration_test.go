@@ -1,5 +1,3 @@
-// +build integration
-
 package endpoints_test
 
 import (
@@ -18,7 +16,7 @@ func TestIntegrationEndpoints_CreateDeleteGetValidEndpoint(t *testing.T) {
 		endpoint, err = underTest.CreateEndpoint(endpoints.Endpoint{
 			Title:        "slackcreatedeletevalidendpoint",
 			Description:  "my description",
-			Url:          "https://this.is.com/some/webhook",
+			Url:          "https://jsonplaceholder.typicode.com/todos/1",
 			EndpointType: "slack",
 		})
 		assert.Nil(t, err)
@@ -42,14 +40,14 @@ func TestIntegrationEndpoints_CreateDuplicateEndpoint(t *testing.T) {
 		endpoint, err = underTest.CreateEndpoint(endpoints.Endpoint{
 			Title:        "slackcreateduplicateendpoint",
 			Description:  "my description",
-			Url:          "https://this.is.com/some/webhook",
+			Url:          "https://jsonplaceholder.typicode.com/todos/1",
 			EndpointType: "slack",
 		})
 		if assert.NoError(t, err) {
 			duplicate, err := underTest.CreateEndpoint(endpoints.Endpoint{
 				Title:        "slackcreateduplicateendpoint",
 				Description:  "my description",
-				Url:          "https://this.is.com/some/webhook",
+				Url:          "https://jsonplaceholder.typicode.com/todos/1",
 				EndpointType: "slack",
 			})
 			assert.Error(t, err)
@@ -66,7 +64,7 @@ func TestIntegrationEndpoints_ListEndpoints(t *testing.T) {
 		endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
 			Title:        "slacklistendpoints",
 			Description:  "my description",
-			Url:          "https://this.is.com/some/webhook",
+			Url:          "https://jsonplaceholder.typicode.com/todos/1",
 			EndpointType: "slack",
 		})
 		list, err := underTest.ListEndpoints()
@@ -101,7 +99,7 @@ func TestIntegrationEndpoints_UpdateEndpoint(t *testing.T) {
 		endpoint, err = underTest.CreateEndpoint(endpoints.Endpoint{
 			Title:        "slackupdatedendpoint",
 			Description:  "my description",
-			Url:          "https://this.is.com/some/webhook",
+			Url:          "https://jsonplaceholder.typicode.com/todos/1",
 			EndpointType: "slack",
 		})
 		assert.NoError(t, err)
@@ -110,7 +108,7 @@ func TestIntegrationEndpoints_UpdateEndpoint(t *testing.T) {
 		updatedEndpoint, err := underTest.UpdateEndpoint(endpoint.Id, endpoints.Endpoint{
 			Title:        "slackupdatedupdatedendpoint",
 			Description:  "my updated description",
-			Url:          "https://this.is.com/some/other/webhook",
+			Url:          "https://jsonplaceholder.typicode.com/todos/1",
 			EndpointType: "slack",
 		})
 		assert.NoError(t, err)

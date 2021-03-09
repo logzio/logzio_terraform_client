@@ -1,5 +1,3 @@
-// +build integration
-
 package endpoints_test
 
 import (
@@ -28,7 +26,7 @@ func createPagerDutyEndpoint() endpoints.Endpoint {
 	return endpoints.Endpoint{
 		Title:        "pagerdutyvalidEndpoint",
 		Description:  "my description",
-		EndpointType: "pager-duty",
+		EndpointType: "pagerduty",
 		ServiceKey:   "my_service_key",
 	}
 }
