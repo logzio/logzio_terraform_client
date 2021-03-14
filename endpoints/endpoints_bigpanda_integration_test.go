@@ -1,5 +1,3 @@
-// +build integration
-
 package endpoints_test
 
 import (
@@ -26,7 +24,7 @@ func createBigPandaEndpoint() endpoints.Endpoint {
 	return endpoints.Endpoint{
 		Title:        "bigpandaendpoint",
 		Description:  "description",
-		EndpointType: "big-panda",
+		EndpointType: "bigpanda",
 		ApiToken:     "api_token",
 		AppKey:       "app_key",
 	}
@@ -36,7 +34,7 @@ func updateBigPandaEndpoint() endpoints.Endpoint {
 	return endpoints.Endpoint{
 		Title:        "bigpandaupdatedendpoint",
 		Description:  "updated description",
-		EndpointType: "big-panda",
+		EndpointType: "bigpanda",
 		ApiToken:     "updated_api_token",
 		AppKey:       "updated_app_key",
 	}

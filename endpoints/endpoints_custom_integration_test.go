@@ -1,5 +1,3 @@
-// +build integration
-
 package endpoints_test
 
 import (
@@ -15,7 +13,7 @@ func TestIntegrationEndpoints_CustomCreateUpdate(t *testing.T) {
 			Title:        "testCreateCustomEndpoint",
 			Method:       "POST",
 			Description:  "my description",
-			Url:          "https://this.is.com/some/other/webhook",
+			Url:          "https://jsonplaceholder.typicode.com/todos/1",
 			EndpointType: "custom",
 			Headers:      map[string]string{"hello": "there", "header": "two"},
 			BodyTemplate: map[string]string{"hello": "there", "header": "two"},
@@ -27,7 +25,7 @@ func TestIntegrationEndpoints_CustomCreateUpdate(t *testing.T) {
 				Title:        "testCreateUpdateCustomEndpoint",
 				Method:       "POST",
 				Description:  "my description update",
-				Url:          "https://this.is.com/some/updated/webhook",
+				Url:          "https://jsonplaceholder.typicode.com/todos/1",
 				EndpointType: "custom",
 				Headers:      map[string]string{"hello": "there", "header": "two"},
 				BodyTemplate: map[string]string{"hello": "there", "header": "two"},
@@ -45,7 +43,7 @@ func TestIntegrationEndpoints_CustomCreateDuplicate(t *testing.T) {
 			Title:        "testCustomDuplicateEndpoint",
 			Method:       "POST",
 			Description:  "my description",
-			Url:          "https://this.is.com/some/other/webhook",
+			Url:          "https://jsonplaceholder.typicode.com/todos/1",
 			EndpointType: "custom",
 			Headers:      map[string]string{"hello": "there", "header": "two"},
 			BodyTemplate: map[string]string{"hello": "there", "header": "two"},
@@ -57,7 +55,7 @@ func TestIntegrationEndpoints_CustomCreateDuplicate(t *testing.T) {
 				Title:        "testCustomDuplicateEndpoint",
 				Method:       "POST",
 				Description:  "my description",
-				Url:          "https://this.is.com/some/other/webhook",
+				Url:          "https://jsonplaceholder.typicode.com/todos/1",
 				EndpointType: "custom",
 				Headers:      map[string]string{"hello": "there", "header": "two"},
 				BodyTemplate: map[string]string{"hello": "there", "header": "two"},

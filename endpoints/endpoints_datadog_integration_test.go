@@ -1,5 +1,3 @@
-// +build integration
-
 package endpoints_test
 
 import (
@@ -26,7 +24,7 @@ func createDataDogEndpoint() endpoints.Endpoint {
 	return endpoints.Endpoint{
 		Title:        "datadogendpoint",
 		Description:  "description",
-		EndpointType: "data-dog",
+		EndpointType: "datadog",
 		ApiKey:       "api_key",
 	}
 }
@@ -35,7 +33,7 @@ func updateDataDogEndpoint() endpoints.Endpoint {
 	return endpoints.Endpoint{
 		Title:        "datadogupdatedendpoint",
 		Description:  "updated description",
-		EndpointType: "data-dog",
+		EndpointType: "datadog",
 		ApiKey:       "updated_api_key",
 	}
 }
