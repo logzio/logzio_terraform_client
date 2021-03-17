@@ -29,16 +29,14 @@ type ExportResults struct {
 	Hits          []map[string]interface{} `json:"hits"`
 }
 
+type ExportPayload struct {
+	Type exportType
+}
+
 // Export allows export of the Kibana objects configuration.
 // https://docs.logz.io/api/#operation/exportSavedObjects
 func (c *KibanaObjectsClient) Export(t exportType) (*ExportResults, error) {
-	exportPayload := struct {
-		T exportType `json:"type"`
-	}{
-		t,
-	}
-
-	payload, err := json.Marshal(&exportPayload)
+	payload, err := json.Marshal(&ExportPayload{t})
 	if err != nil {
 		return nil, fmt.Errorf("could not marshal payload for Kibana export request: %w", err)
 	}
@@ -72,5 +70,5 @@ func (c *KibanaObjectsClient) Export(t exportType) (*ExportResults, error) {
 		return nil, fmt.Errorf("could not unmarshal response body into KibanaObjects: %w", err)
 	}
 
-	return results, nil
+	return &results, nil
 }

@@ -21,9 +21,7 @@ func exportMockHandler(t *testing.T) func(http.ResponseWriter, *http.Request) {
 		}
 
 		jsonBytes, _ := ioutil.ReadAll(r.Body)
-		payload := struct {
-			T string `json:"type"`
-		}{}
+		payload := kibana_objects.ExportPayload{}
 		err := json.Unmarshal(jsonBytes, &payload)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
@@ -31,16 +29,16 @@ func exportMockHandler(t *testing.T) func(http.ResponseWriter, *http.Request) {
 			return
 		}
 
-		switch payload.T {
-		case kibana_objects.ExportTypeSearch.String():
+		switch payload.Type {
+		case kibana_objects.ExportTypeSearch:
 			w.WriteHeader(http.StatusOK)
 			w.Header().Set("Content-Type", "application/json")
 			fmt.Fprint(w, fixture("export_search.json"))
-		case kibana_objects.ExportTypeDashboard.String():
+		case kibana_objects.ExportTypeDashboard:
 			w.WriteHeader(http.StatusOK)
 			w.Header().Set("Content-Type", "application/json")
 			fmt.Fprint(w, fixture("export_dashboard.json"))
-		case kibana_objects.ExportTypeVisualization.String():
+		case kibana_objects.ExportTypeVisualization:
 			w.WriteHeader(http.StatusOK)
 			w.Header().Set("Content-Type", "application/json")
 			fmt.Fprint(w, fixture("export_visualization.json"))
