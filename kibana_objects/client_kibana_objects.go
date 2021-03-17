@@ -28,7 +28,7 @@ func New(apiToken string, baseUrl string) (*KibanaObjectsClient, error) {
 		return nil, fmt.Errorf("Base URL not defined")
 	}
 
-	c := &KibanaObjectsClient{
+	client := &KibanaObjectsClient{
 		Client: client.New(apiToken, baseUrl),
 		logger: hclog.New(&hclog.LoggerOptions{
 			Level:      hclog.Debug,
@@ -36,5 +36,5 @@ func New(apiToken string, baseUrl string) (*KibanaObjectsClient, error) {
 			JSONFormat: true,
 		}),
 	}
-	return c, nil
+	return client, nil
 }
