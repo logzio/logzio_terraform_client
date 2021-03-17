@@ -58,11 +58,12 @@ func TestKibanaObjects_ExportSearch(t *testing.T) {
 
 	mux.HandleFunc("/v1/kibana/export", exportMockHandler(t))
 
-	objects, err := underTest.Export(kibana_objects.ExportTypeVisualization)
+	objects, err := underTest.Export(kibana_objects.ExportTypeSearch)
 	assert.NoError(t, err)
 	require.NotNil(t, objects)
-	assert.Equal(t, "visualization_1", objects.Hits[0]["name"])
-	assert.Equal(t, "visualization_2", objects.Hits[1]["name"])
+	assert.Equal(t, 2, len(objects.Hits))
+	assert.Equal(t, "search_1", objects.Hits[0]["name"])
+	assert.Equal(t, "search_2", objects.Hits[1]["name"])
 }
 
 func TestKibanaObjects_ExportDashboard(t *testing.T) {
