@@ -111,7 +111,7 @@ func jsonEndpointToEndpoint(jsonEndpoint map[string]interface{}) Endpoint {
 }
 
 type EndpointsClient struct {
-	*client.Client
+	 *client.Client
 }
 
 func New(apiToken, baseUrl string) (*EndpointsClient, error) {
