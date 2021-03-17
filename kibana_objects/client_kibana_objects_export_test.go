@@ -120,5 +120,5 @@ func TestKibanaObjects_BadResponse(t *testing.T) {
 	})
 
 	_, err = underTest.Export(kibana_objects.ExportTypeSearch)
-	assert.EqualError(t, err, "could not unmarshal response body into KibanaObjects: invalid character 'b' looking for beginning of value")
+	assert.Error(t, err, "error expected")
 }
