@@ -1,0 +1,11 @@
+{
+  "kibanaVersion": "4.0.0-beta3",
+  "hits": [
+    {
+      "name": "search_1"
+    },
+    { "name": "search_2"
+    }
+  ],
+  "override": true
+}

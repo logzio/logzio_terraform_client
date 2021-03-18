@@ -1,0 +1,10 @@
+{
+  "kibanaVersion": "4.0.0-beta3",
+  "hits": [
+    {
+      "name": "dashboard_1"
+    },
+    { "name": "dashboard_2"
+    }
+  ]
+}
