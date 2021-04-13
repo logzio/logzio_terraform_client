@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-const disableAlertServiceUrl = alertsServiceEndpoint + "/%d/enable"
+const disableAlertServiceUrl = alertsServiceEndpoint + "/%d/disable"
 const disableAlertServiceMethod string = http.MethodPost
 const disableAlertMethodSuccess int = http.StatusNoContent
 
