@@ -11,6 +11,7 @@ import (
 const (
 	serviceSuccess   int = http.StatusOK
 	serviceNoContest int = http.StatusNoContent // This is like StatusOK with no body in response
+	serviceCreated int = http.StatusCreated
 )
 
 func AddHttpHeaders(apiToken string, req *http.Request) {
@@ -55,4 +56,19 @@ func CreateHttpRequest(req *http.Request) (map[string]interface{}, error) {
 		}
 	}
 	return target, nil
+}
+
+func CreateHttpRequestBytesResponse(req *http.Request) ([]byte, error) {
+	httpClient := client.GetHttpClient(req)
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	jsonBytes, err := ioutil.ReadAll(resp.Body)
+	if !CheckValidStatus(resp, []int{serviceSuccess, serviceNoContest, serviceCreated}) {
+		return nil, fmt.Errorf("%d %s", resp.StatusCode, jsonBytes)
+	}
+
+	return jsonBytes, nil
 }

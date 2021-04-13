@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1234567,
+    "updatedAt": "2021-04-06T19:56:57.000Z",
+    "updatedBy": "test.user@test.co",
+    "createdAt": "2021-04-06T19:56:57.000Z",
+    "createdBy": "test.user@test.co",
+    "enabled": true,
+    "title": "test create alert1",
+    "description": "this is my description",
+    "tags": [
+      "some",
+      "words"
+    ],
+    "output": {
+      "suppressNotificationsMinutes": 5,
+      "type": "JSON"
+    },
+    "searchTimeFrameMinutes": 5,
+    "subComponents": [
+      {
+        "queryDefinition": {
+          "query": "loglevel:ERROR",
+          "aggregation": {
+            "aggregationType": "COUNT"
+          },
+          "shouldQueryOnAllAccounts": true
+        },
+        "trigger": {
+          "operator": "EQUALS",
+          "severityThresholdTiers": {
+            "HIGH": 10.0,
+            "INFO": 5.0
+          }
+        },
+        "output": {
+          "shouldUseAllFields": true
+        }
+      }
+    ],
+    "correlations": {
+      "correlationOperators": [
+        "AND"
+      ]
+    }
+  },
+  {
+    "id": 1234568,
+    "updatedAt": "2021-04-06T19:56:57.000Z",
+    "updatedBy": "test.user@test.co",
+    "createdAt": "2021-04-06T19:56:57.000Z",
+    "createdBy": "test.user@test.co",
+    "enabled": true,
+    "title": "test create alert2",
+    "description": "this is my description",
+    "tags": [
+      "some",
+      "words"
+    ],
+    "output": {
+      "suppressNotificationsMinutes": 5,
+      "type": "JSON"
+    },
+    "searchTimeFrameMinutes": 5,
+    "subComponents": [
+      {
+        "queryDefinition": {
+          "query": "loglevel:ERROR",
+          "aggregation": {
+            "aggregationType": "COUNT"
+          },
+          "shouldQueryOnAllAccounts": true
+        },
+        "trigger": {
+          "operator": "EQUALS",
+          "severityThresholdTiers": {
+            "HIGH": 10.0,
+            "INFO": 5.0
+          }
+        },
+        "output": {
+          "shouldUseAllFields": true
+        }
+      }
+    ],
+    "correlations": {
+      "correlationOperators": [
+        "AND"
+      ]
+    }
+  }
+]
