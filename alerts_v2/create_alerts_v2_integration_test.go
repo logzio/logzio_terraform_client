@@ -98,13 +98,41 @@ func TestIntegrationAlertsV2_CreateAlertInvalidValueAggregationTypeCount(t *test
 	}
 }
 
-func TestIntegrationAlertsV2_CreateAlertInvalidMail(t *testing.T) {
+func TestIntegrationAlertsV2_CreateAlertInvalidEmail(t *testing.T) {
 	underTest, err := setupAlertsV2IntegrationTest()
 
 	if assert.NoError(t, err) {
 		createAlert := getCreateAlertType()
-		createAlert.Title = "test alerts v2 invalid mail"
+		createAlert.Title = "test alerts v2 invalid email"
 		createAlert.Output.Recipients.Emails = []string{""}
+
+		alert, err := underTest.CreateAlert(createAlert)
+		assert.Error(t, err)
+		assert.Nil(t, alert)
+	}
+}
+
+func TestIntegrationAlertsV2_CreateAlertNoQueryString(t *testing.T) {
+	underTest, err := setupAlertsV2IntegrationTest()
+
+	if assert.NoError(t, err) {
+		createAlert := getCreateAlertType()
+		createAlert.Title = "test alerts v2 no query string"
+		createAlert.SubComponents[0].QueryDefinition.Query = ""
+
+		alert, err := underTest.CreateAlert(createAlert)
+		assert.Error(t, err)
+		assert.Nil(t, alert)
+	}
+}
+
+func TestIntegrationAlertsV2_CreateAlertInvalidSeverity(t *testing.T) {
+	underTest, err := setupAlertsV2IntegrationTest()
+
+	if assert.NoError(t, err) {
+		createAlert := getCreateAlertType()
+		createAlert.Title = "test alerts v2 invalid severity"
+		createAlert.SubComponents[0].Trigger.SeverityThresholdTiers = map[string]float32{"TEST": 10.0}
 
 		alert, err := underTest.CreateAlert(createAlert)
 		assert.Error(t, err)
