@@ -43,5 +43,6 @@ func (c *AlertsV2Client) DisableAlert(alert AlertType) (*AlertType, error) {
 		return nil, fmt.Errorf("API call %s failed with missing alert %d, data: %s", "DisableAlert", alert.AlertId, str)
 	}
 
+	alert.Enabled = false
 	return &alert, nil
 }
