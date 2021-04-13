@@ -7,34 +7,34 @@ import (
 	"time"
 )
 
-func TestIntegrationAlertsV2_DisableAlert(t *testing.T) {
+func TestIntegrationAlertsV2_EnableAlert(t *testing.T) {
 	underTest, err := setupAlertsV2IntegrationTest()
 
 	if assert.NoError(t, err) {
 		createAlert := getCreateAlertType()
-		createAlert.Title = "test alerts v2 disable alert"
-		createAlert.Enabled = strconv.FormatBool(true)
+		createAlert.Title = "test alerts v2 enable alert"
+		createAlert.Enabled = strconv.FormatBool(false)
 
 		alert, err := underTest.CreateAlert(createAlert)
 		if assert.NoError(t, err) && assert.NotNil(t, alert) {
 			time.Sleep(4 * time.Second)
-			disabledAlert, err := underTest.DisableAlert(*alert)
+			enabledAlert, err := underTest.EnableAlert(*alert)
 			assert.NoError(t, err)
-			assert.NotNil(t, disabledAlert)
-			assert.False(t, disabledAlert.Enabled)
+			assert.NotNil(t, enabledAlert)
+			assert.True(t, enabledAlert.Enabled)
 
-			defer underTest.DeleteAlert(disabledAlert.AlertId)
+			defer underTest.DeleteAlert(enabledAlert.AlertId)
 		}
 	}
 }
 
-func TestIntegrationAlertsV2_DisableAlertIdNotExist(t *testing.T) {
+func TestIntegrationAlertsV2_EnableAlertIdNotExist(t *testing.T) {
 	underTest, err := setupAlertsV2IntegrationTest()
 
 	if assert.NoError(t, err) {
 		alertType := getAlertType()
 
-		alert, err := underTest.DisableAlert(alertType)
+		alert, err := underTest.EnableAlert(alertType)
 		assert.Error(t, err)
 		assert.Nil(t, alert)
 	}

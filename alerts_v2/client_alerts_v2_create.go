@@ -41,6 +41,9 @@ func (c *AlertsV2Client) CreateAlert(alert CreateAlertType) (*AlertType, error) 
 
 	var retVal AlertType
 	err = json.Unmarshal(jsonResponse, &retVal)
+	if err != nil {
+		return nil, err
+	}
 
 	return &retVal, nil
 }

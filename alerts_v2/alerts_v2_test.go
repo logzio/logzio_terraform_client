@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 )
 
@@ -59,7 +60,7 @@ func getCreateAlertType() alerts_v2.CreateAlertType {
 		Output:                 alerts_v2.AlertOutput{},
 		SubComponents:          []alerts_v2.SubAlert{subComponent},
 		Correlations:           alerts_v2.SubAlertCorrelation{},
-		Enabled:                true,
+		Enabled:                strconv.FormatBool(true),
 	}
 
 	return createAlertType

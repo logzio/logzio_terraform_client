@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/logzio/logzio_terraform_client"
 	"github.com/logzio/logzio_terraform_client/client"
+	"strconv"
 )
 
 const (
@@ -48,7 +49,7 @@ type CreateAlertType struct {
 	SearchTimeFrameMinutes int `json:"searchTimeFrameMinutes,omitempty"`
 	SubComponents []SubAlert `json:"subComponents,omitempty"`
 	Correlations SubAlertCorrelation `json:"correlations,omitempty"`
-	Enabled bool `json:"enabled,omitempty"`
+	Enabled string `json:"enabled,omitempty"`
 }
 
 type AlertOutput struct {
@@ -109,7 +110,7 @@ type ColumnConfig struct {
 
 type SubAlertCorrelation struct {
 	CorrelationOperators []string `json:"correlationOperators,omitempty"`
-	Joins map[string]string `json:"joins,omitempty"`
+	Joins []map[string]string `json:"joins,omitempty"`
 }
 
 type AlertType struct {
@@ -148,6 +149,12 @@ func validateCreateAlertRequest(alert CreateAlertType) error {
 
 	if alert.SubComponents == nil || len(alert.SubComponents) == 0 {
 		return fmt.Errorf("subComponents must be not empty")
+	}
+
+	if len(alert.Enabled) > 0 {
+		if alert.Enabled != strconv.FormatBool(true) && alert.Enabled != strconv.FormatBool(false) {
+			return fmt.Errorf("enabled field must be %s or %s", strconv.FormatBool(true), strconv.FormatBool(false))
+		}
 	}
 
 	validAggregationTypes := []string{AggregationTypeSum, AggregationTypeMin, AggregationTypeMax, AggregationTypeAvg, AggregationTypeCount, AggregationTypeUniqueCount, AggregationTypeNone}
