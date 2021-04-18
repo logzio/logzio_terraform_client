@@ -35,6 +35,9 @@ const (
 
 	SortDesc string = "DESC"
 	SortAsc string = "ASC"
+
+	OutputTypeJson string = "JSON"
+	OutputTypeTable string = "TABLE"
 )
 
 type AlertsV2Client struct {
