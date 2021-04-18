@@ -38,6 +38,8 @@ const (
 
 	OutputTypeJson string = "JSON"
 	OutputTypeTable string = "TABLE"
+
+	CorrelationOperatorAnd string = "AND"
 )
 
 type AlertsV2Client struct {
