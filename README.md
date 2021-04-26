@@ -126,6 +126,8 @@ endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
 
 
 ### Changelog
+- v1.4
+    - Add alerts v2 compatibility.
 - v1.3.2
    - fix client custom endpoint headers bug
    - improve tests 
