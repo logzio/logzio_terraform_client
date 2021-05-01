@@ -88,6 +88,9 @@ func jsonEndpointToEndpoint(jsonEndpoint map[string]interface{}) Endpoint {
 		headers := strings.Split(headerString, ",")
 		for _, header := range headers {
 			kv := strings.Split(header, "=")
+			if len(kv) <= 1 {
+				continue
+			}
 			headerMap[kv[0]] = kv[1]
 		}
 		endpoint.Headers = headerMap
