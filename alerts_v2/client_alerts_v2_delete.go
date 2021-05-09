@@ -36,9 +36,5 @@ func (c *AlertsV2Client) DeleteAlert(alertId int64) error {
 		return fmt.Errorf("API call %s failed with status code %d, data: %s", "DeleteAlert", resp.StatusCode, jsonBytes)
 	}
 
-	if resp.StatusCode == 404 {
-		return fmt.Errorf("API call %s failed with missing alert %d, data: %s", "DeleteAlert", alertId, jsonBytes)
-	}
-
 	return nil
 }

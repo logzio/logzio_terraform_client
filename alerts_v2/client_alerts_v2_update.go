@@ -54,10 +54,6 @@ func (c *AlertsV2Client) UpdateAlert(alertId int64, alert CreateAlertType) (*Ale
 		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "UpdateAlert", resp.StatusCode, jsonBytes)
 	}
 
-	if resp.StatusCode == 404 {
-		return nil, fmt.Errorf("API call %s failed with missing alert %d, data: %s", "UpdateAlert", alertId, jsonBytes)
-	}
-
 	var target AlertType
 	json.Unmarshal(jsonBytes, &target)
 
