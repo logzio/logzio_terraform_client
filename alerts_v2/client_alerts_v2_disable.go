@@ -6,7 +6,6 @@ import (
 	"github.com/logzio/logzio_terraform_client/client"
 	"io/ioutil"
 	"net/http"
-	"strings"
 )
 
 const disableAlertServiceUrl = alertsServiceEndpoint + "/%d/disable"
@@ -39,7 +38,7 @@ func (c *AlertsV2Client) DisableAlert(alert AlertType) (*AlertType, error) {
 	}
 
 	str := fmt.Sprintf("%s", jsonBytes)
-	if strings.Contains(str, fmt.Sprintf("alert id %d not found", alert.AlertId)) {
+	if resp.StatusCode == 404 {
 		return nil, fmt.Errorf("API call %s failed with missing alert %d, data: %s", "DisableAlert", alert.AlertId, str)
 	}
 

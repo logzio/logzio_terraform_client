@@ -6,7 +6,6 @@ import (
 	"github.com/logzio/logzio_terraform_client/client"
 	"io/ioutil"
 	"net/http"
-	"strings"
 )
 
 const enableAlertServiceUrl = alertsServiceEndpoint + "/%d/enable"
@@ -39,7 +38,7 @@ func (c *AlertsV2Client) EnableAlert(alert AlertType) (*AlertType, error) {
 	}
 
 	str := fmt.Sprintf("%s", jsonBytes)
-	if strings.Contains(str, fmt.Sprintf("alert id %d not found", alert.AlertId)) {
+	if resp.StatusCode == 404 {
 		return nil, fmt.Errorf("API call %s failed with missing alert %d, data: %s", "EnableAlert", alert.AlertId, str)
 	}
 

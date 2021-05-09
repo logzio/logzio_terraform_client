@@ -32,9 +32,9 @@ func TestAlertsV2_DeleteMissingAlert(t *testing.T) {
 
 	mux.HandleFunc("/v2/alerts/", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodDelete, r.Method)
+		w.WriteHeader(http.StatusNotFound)
 		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprint(w, fixture("delete_alert_not_exist.txt"))
-		w.WriteHeader(http.StatusNotFound)
 	})
 
 	err = underTest.DeleteAlert(int64(1234567))

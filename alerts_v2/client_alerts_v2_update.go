@@ -8,7 +8,6 @@ import (
 	"github.com/logzio/logzio_terraform_client/client"
 	"io/ioutil"
 	"net/http"
-	"strings"
 )
 
 const updateAlertServiceUrl string = alertsServiceEndpoint + "/%d"
@@ -55,8 +54,7 @@ func (c *AlertsV2Client) UpdateAlert(alertId int64, alert CreateAlertType) (*Ale
 		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "UpdateAlert", resp.StatusCode, jsonBytes)
 	}
 
-	str := fmt.Sprintf("%s", jsonBytes)
-	if strings.Contains(str, "no alert id") {
+	if resp.StatusCode == 404 {
 		return nil, fmt.Errorf("API call %s failed with missing alert %d, data: %s", "UpdateAlert", alertId, jsonBytes)
 	}
 

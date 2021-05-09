@@ -6,7 +6,6 @@ import (
 	"github.com/logzio/logzio_terraform_client/client"
 	"io/ioutil"
 	"net/http"
-	"strings"
 )
 
 const deleteAlertServiceMethod string = http.MethodDelete
@@ -37,8 +36,7 @@ func (c *AlertsV2Client) DeleteAlert(alertId int64) error {
 		return fmt.Errorf("API call %s failed with status code %d, data: %s", "DeleteAlert", resp.StatusCode, jsonBytes)
 	}
 
-	str := fmt.Sprintf("%s", jsonBytes)
-	if strings.Contains(str, fmt.Sprintf("alert id %d not found", alertId)) {
+	if resp.StatusCode == 404 {
 		return fmt.Errorf("API call %s failed with missing alert %d, data: %s", "DeleteAlert", alertId, jsonBytes)
 	}
 
