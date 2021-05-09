@@ -9,6 +9,52 @@ To use it, you'll need to [create an API token](https://app.logz.io/#/dashboard/
 
 Note: the lastest version of the API (1.3) is not backwards compatible with previous versions, specifically the client entrypoint names have changed to prevent naming conflicts. Use `UsersClient` ([Users API](#users)) ,`SubaccountClient` ([Sub-accounts API](#sub-accounts)), `AlertsClient` ([Alerts API](#alerts)) and `EndpointsClient` ([Endpoints API](#endpoints)) rather than `Users`, `Alerts` and `Endpoints`.
 
+##### Alerts V2
+To create an alert where the type field = 'mytype' and the loglevel field = ERROR, see the logz.io docs for more info
+
+https://support.logz.io/hc/en-us/articles/209487329-How-do-I-create-an-Alert-
+
+```go
+client, _ := alerts_v2.New(apiToken, apiServerAddress)
+alertQuery := alerts_v2.AlertQuery{
+		Query:                    "loglevel:ERROR",
+		Aggregation:              alerts_v2.AggregationObj{AggregationType: alerts_v2.AggregationTypeCount},
+		ShouldQueryOnAllAccounts: true,
+	}
+
+	trigger := alerts_v2.AlertTrigger{
+		Operator:               alerts_v2.OperatorEquals,
+		SeverityThresholdTiers: map[string]float32{alerts_v2.SeverityHigh: 10, alerts_v2.SeverityInfo: 5},
+	}
+	
+	subComponent := alerts_v2.SubAlert{
+		QueryDefinition: alertQuery,
+		Trigger:         trigger,
+		Output:          alerts_v2.SubAlertOutput{},
+	}
+
+	createAlertType := alerts_v2.CreateAlertType{
+		Title:                  "test create alert",
+		Description:            "this is my description",
+		Tags:                   []string{"some", "words"},
+		Output:                 alerts_v2.AlertOutput{},
+		SubComponents:          []alerts_v2.SubAlert{subComponent},
+		Correlations:           alerts_v2.SubAlertCorrelation{},
+		Enabled:                strconv.FormatBool(true),
+	}
+
+alert := client.CreateAlert(createAlertType)
+```
+
+|function|func name|
+|---|---|
+| Create alert | `func (c *AlertsV2Client) CreateAlert(alert CreateAlertType) (*AlertType, error)` |
+| Delete alert | `func (c *AlertsV2Client) DeleteAlert(alertId int64) error` |
+| Disable alert | `func (c *AlertsV2Client) DisableAlert(alert AlertType) (*AlertType, error)` |
+| Enable alert | `func (c *AlertsV2Client) EnableAlert(alert AlertType) (*AlertType, error)` |
+| Get alert | `func (c *AlertsV2Client) GetAlert(alertId int64) (*AlertType, error)` |
+| List alerts | `func (c *AlertsV2Client) ListAlerts() ([]AlertType, error)` |
+| Update alert | `func (c *AlertsV2Client) UpdateAlert(alertId int64, alert CreateAlertType) (*AlertType, error)` |
 
 ##### Alerts
 
@@ -126,6 +172,8 @@ endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
 
 
 ### Changelog
+- v1.4
+    - Add alerts v2 compatibility.
 - v1.3.2
    - fix client custom endpoint headers bug
    - improve tests 
