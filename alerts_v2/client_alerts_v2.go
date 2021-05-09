@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/logzio/logzio_terraform_client"
 	"github.com/logzio/logzio_terraform_client/client"
+	"io/ioutil"
+	"net/http"
 	"strconv"
 )
 
@@ -196,4 +198,33 @@ func validateCreateAlertRequest(alert CreateAlertType) error {
 	}
 
 	return nil
+}
+
+// Enables/disables an alert given it's unique identifier. Returns the alert, an error otherwise
+func (c *AlertsV2Client) EnableOrDisableAlert(alert AlertType, enable bool) (*AlertType, error) {
+	var req *http.Request
+	var operationName string
+	if enable {
+		req, _ = c.buildEnableApiRequest(c.ApiToken, alert.AlertId)
+		operationName = "EnableAlert"
+	} else {
+		req, _ = c.buildDisableApiRequest(c.ApiToken, alert.AlertId)
+		operationName = "DisableAlert"
+	}
+
+	httpClient := client.GetHttpClient(req)
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	jsonBytes, _ := ioutil.ReadAll(resp.Body)
+
+	if !logzio_client.CheckValidStatus(resp, []int{disableAlertMethodSuccess, enableAlertMethodSuccess}) {
+		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", operationName, resp.StatusCode, jsonBytes)
+	}
+
+	alert.Enabled = enable
+	return &alert, nil
 }

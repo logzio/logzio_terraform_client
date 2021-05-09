@@ -3,8 +3,6 @@ package alerts_v2
 import (
 	"fmt"
 	"github.com/logzio/logzio_terraform_client"
-	"github.com/logzio/logzio_terraform_client/client"
-	"io/ioutil"
 	"net/http"
 )
 
@@ -22,21 +20,5 @@ func (c *AlertsV2Client) buildDisableApiRequest(apiToken string, alertId int64) 
 
 // Disables an alert given it's unique identifier. Returns the alert, an error otherwise
 func (c *AlertsV2Client) DisableAlert(alert AlertType) (*AlertType, error) {
-	req, _ := c.buildDisableApiRequest(c.ApiToken, alert.AlertId)
-
-	httpClient := client.GetHttpClient(req)
-	resp, err := httpClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	jsonBytes, _ := ioutil.ReadAll(resp.Body)
-
-	if !logzio_client.CheckValidStatus(resp, []int{disableAlertMethodSuccess}) {
-		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "DisableAlert", resp.StatusCode, jsonBytes)
-	}
-
-	alert.Enabled = false
-	return &alert, nil
+	return c.EnableOrDisableAlert(alert, false)
 }
