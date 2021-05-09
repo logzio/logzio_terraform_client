@@ -38,16 +38,7 @@ func CheckValidStatus(response *http.Response, status []int) bool {
 }
 
 func CreateHttpRequest(req *http.Request) (map[string]interface{}, error) {
-	httpClient := client.GetHttpClient(req)
-	resp, err := httpClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-	jsonBytes, err := ioutil.ReadAll(resp.Body)
-	if !CheckValidStatus(resp, []int{serviceSuccess, serviceNoContest}) {
-		return nil, fmt.Errorf("%d %s", resp.StatusCode, jsonBytes)
-	}
+	jsonBytes, err := CreateHttpRequestBytesResponse(req)
 	var target map[string]interface{}
 	if len(jsonBytes) > 0 {
 		err = json.Unmarshal(jsonBytes, &target)
