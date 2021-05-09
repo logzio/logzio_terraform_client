@@ -11,6 +11,7 @@ import (
 const deleteAlertServiceMethod string = http.MethodDelete
 const deleteAlertServiceUrl = alertsServiceEndpoint + "/%d"
 const deleteAlertMethodSuccess int = http.StatusOK
+const deleteAlertMethodNotFound int = http.StatusNotFound
 
 func (c *AlertsV2Client) buildDeleteApiRequest(apiToken string, alertId int64) (*http.Request, error) {
 	baseUrl := c.BaseUrl
@@ -33,6 +34,10 @@ func (c *AlertsV2Client) DeleteAlert(alertId int64) error {
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 
 	if !logzio_client.CheckValidStatus(resp, []int{deleteAlertMethodSuccess}) {
+		if resp.StatusCode == deleteAlertMethodNotFound {
+			return fmt.Errorf("API call %s failed with missing alert %d, data: %s", "DeleteAlert", alertId, jsonBytes)
+		}
+
 		return fmt.Errorf("API call %s failed with status code %d, data: %s", "DeleteAlert", resp.StatusCode, jsonBytes)
 	}
 

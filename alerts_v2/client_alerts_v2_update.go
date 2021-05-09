@@ -13,6 +13,7 @@ import (
 const updateAlertServiceUrl string = alertsServiceEndpoint + "/%d"
 const updateAlertServiceMethod string = http.MethodPut
 const updateAlertMethodSuccess int = http.StatusOK
+const updateAlertMethodNotFound int = http.StatusNotFound
 
 
 func (c *AlertsV2Client) buildUpdateApiRequest(apiToken string, alertId int64, alert CreateAlertType) (*http.Request, error) {
@@ -51,6 +52,10 @@ func (c *AlertsV2Client) UpdateAlert(alertId int64, alert CreateAlertType) (*Ale
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 
 	if !logzio_client.CheckValidStatus(resp, []int{updateAlertMethodSuccess}) {
+		if resp.StatusCode == updateAlertMethodNotFound {
+			return nil, fmt.Errorf("API call %s failed with missing alert %d, data: %s", "UpdateAlert", alertId, jsonBytes)
+		}
+
 		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "UpdateAlert", resp.StatusCode, jsonBytes)
 	}
 

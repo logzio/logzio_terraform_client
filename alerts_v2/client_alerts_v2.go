@@ -11,6 +11,7 @@ import (
 
 const (
 	alertsServiceEndpoint string = "%s/v2/alerts"
+	enableOrDisableMethodNotFound int = http.StatusNotFound
 )
 
 const (
@@ -222,6 +223,9 @@ func (c *AlertsV2Client) EnableOrDisableAlert(alert AlertType, enable bool) (*Al
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 
 	if !logzio_client.CheckValidStatus(resp, []int{disableAlertMethodSuccess, enableAlertMethodSuccess}) {
+		if resp.StatusCode == enableOrDisableMethodNotFound {
+			return nil, fmt.Errorf("API call %s failed with missing alert %d, data: %s", operationName, alert.AlertId, jsonBytes)
+		}
 		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", operationName, resp.StatusCode, jsonBytes)
 	}
 
