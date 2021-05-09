@@ -8,7 +8,6 @@ import (
 	"net/http"
 )
 
-
 const createAlertServiceUrl = alertsServiceEndpoint
 const createAlertServiceMethod string = http.MethodPost
 

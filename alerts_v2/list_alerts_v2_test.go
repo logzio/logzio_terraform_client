@@ -1,10 +1,10 @@
 package alerts_v2_test
 
 import (
-"fmt"
-"github.com/stretchr/testify/assert"
-"net/http"
-"testing"
+	"fmt"
+	"github.com/stretchr/testify/assert"
+	"net/http"
+	"testing"
 )
 
 func TestAlertsV2_ListAlerts(t *testing.T) {

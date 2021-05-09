@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/logzio/logzio_terraform_client/alerts_v2"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestAlertsV2_CreateAlert(t *testing.T) {

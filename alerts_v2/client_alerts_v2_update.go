@@ -15,7 +15,6 @@ const updateAlertServiceMethod string = http.MethodPut
 const updateAlertMethodSuccess int = http.StatusOK
 const updateAlertMethodNotFound int = http.StatusNotFound
 
-
 func (c *AlertsV2Client) buildUpdateApiRequest(apiToken string, alertId int64, alert CreateAlertType) (*http.Request, error) {
 	jsonBytes, err := json.Marshal(alert)
 	if err != nil {

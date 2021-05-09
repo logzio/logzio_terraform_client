@@ -46,7 +46,7 @@ func getCreateAlertType() alerts_v2.CreateAlertType {
 		Operator:               alerts_v2.OperatorEquals,
 		SeverityThresholdTiers: map[string]float32{alerts_v2.SeverityHigh: 10, alerts_v2.SeverityInfo: 5},
 	}
-	
+
 	subComponent := alerts_v2.SubAlert{
 		QueryDefinition: alertQuery,
 		Trigger:         trigger,
@@ -54,13 +54,13 @@ func getCreateAlertType() alerts_v2.CreateAlertType {
 	}
 
 	createAlertType := alerts_v2.CreateAlertType{
-		Title:                  "test create alert",
-		Description:            "this is my description",
-		Tags:                   []string{"some", "words"},
-		Output:                 alerts_v2.AlertOutput{},
-		SubComponents:          []alerts_v2.SubAlert{subComponent},
-		Correlations:           alerts_v2.SubAlertCorrelation{},
-		Enabled:                strconv.FormatBool(true),
+		Title:         "test create alert",
+		Description:   "this is my description",
+		Tags:          []string{"some", "words"},
+		Output:        alerts_v2.AlertOutput{},
+		SubComponents: []alerts_v2.SubAlert{subComponent},
+		Correlations:  alerts_v2.SubAlertCorrelation{},
+		Enabled:       strconv.FormatBool(true),
 	}
 
 	return createAlertType
@@ -85,14 +85,14 @@ func getAlertType() alerts_v2.AlertType {
 	}
 
 	alert := alerts_v2.AlertType{
-		AlertId: int64(1234567),
-		Title:                  "test alert",
-		Description:            "this is my description",
-		Tags:                   []string{"some", "words"},
-		Output:                 alerts_v2.AlertOutput{},
-		SubComponents:          []alerts_v2.SubAlert{subComponent},
-		Correlations:           alerts_v2.SubAlertCorrelation{},
-		Enabled:                true,
+		AlertId:       int64(1234567),
+		Title:         "test alert",
+		Description:   "this is my description",
+		Tags:          []string{"some", "words"},
+		Output:        alerts_v2.AlertOutput{},
+		SubComponents: []alerts_v2.SubAlert{subComponent},
+		Correlations:  alerts_v2.SubAlertCorrelation{},
+		Enabled:       true,
 	}
 
 	return alert
@@ -121,7 +121,7 @@ func TestNewWithEmptyApiToken(t *testing.T) {
 	}
 }
 
-func setupAlertsV2IntegrationTest() (*alerts_v2.AlertsV2Client, error){
+func setupAlertsV2IntegrationTest() (*alerts_v2.AlertsV2Client, error) {
 	apiToken, err := test_utils.GetApiToken()
 	if err != nil {
 		return nil, err

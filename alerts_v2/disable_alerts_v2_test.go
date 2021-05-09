@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestAlertsV2_DisableAlert(t *testing.T){
+func TestAlertsV2_DisableAlert(t *testing.T) {
 	underTest, err, teardown := setupAlertsTest()
 	defer teardown()
 
@@ -26,7 +26,7 @@ func TestAlertsV2_DisableAlert(t *testing.T){
 	assert.NotNil(t, alert)
 }
 
-func TestAlertsV2_DisableAlertNotExist(t *testing.T){
+func TestAlertsV2_DisableAlertNotExist(t *testing.T) {
 	underTest, err, teardown := setupAlertsTest()
 	defer teardown()
 
