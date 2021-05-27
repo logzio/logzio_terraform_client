@@ -152,7 +152,7 @@ func TestIntegrationAlertsV2_CreateAlertOutputTypeTable(t *testing.T) {
 			Sort:      "DESC",
 		}
 
-		createAlert.SubComponents[0].Output.Columns = []alerts_v2.ColumnConfig { column }
+		createAlert.SubComponents[0].Output.Columns = []alerts_v2.ColumnConfig{column}
 
 		alert, err := underTest.CreateAlert(createAlert)
 
