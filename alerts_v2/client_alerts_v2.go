@@ -168,7 +168,7 @@ func validateCreateAlertRequest(alert CreateAlertType) error {
 	validAggregationTypes := []string{AggregationTypeSum, AggregationTypeMin, AggregationTypeMax, AggregationTypeAvg, AggregationTypeCount, AggregationTypeUniqueCount, AggregationTypeNone}
 	validOperations := []string{OperatorGreaterThanOrEquals, OperatorLessThanOrEquals, OperatorGreaterThan, OperatorLessThan, OperatorNotEquals, OperatorEquals}
 	validSeverities := []string{SeverityInfo, SeverityLow, SeverityMedium, SeverityHigh, SeveritySevere}
-	validSorts := []string{SortDesc, SortDesc}
+	validSorts := []string{SortDesc, SortAsc}
 
 	for _, subComponent := range alert.SubComponents {
 		if len(subComponent.QueryDefinition.Query) == 0 {
@@ -191,7 +191,7 @@ func validateCreateAlertRequest(alert CreateAlertType) error {
 
 		if subComponent.Output.Columns != nil && len(subComponent.Output.Columns) > 0 {
 			for _, column := range subComponent.Output.Columns {
-				if logzio_client.Contains(validSorts, column.Sort) {
+				if !logzio_client.Contains(validSorts, column.Sort) {
 					return fmt.Errorf("sort must be one of %s", validSorts)
 				}
 			}

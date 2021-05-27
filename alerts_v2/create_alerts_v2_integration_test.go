@@ -139,3 +139,49 @@ func TestIntegrationAlertsV2_CreateAlertInvalidSeverity(t *testing.T) {
 		assert.Nil(t, alert)
 	}
 }
+
+func TestIntegrationAlertsV2_CreateAlertOutputTypeTableSortDesc(t *testing.T) {
+	underTest, err := setupAlertsV2IntegrationTest()
+	if assert.NoError(t, err) {
+		createAlert := getCreateAlertType()
+		createAlert.Title = "test alerts v2 table"
+		createAlert.Output.Type = "TABLE"
+		column := alerts_v2.ColumnConfig{
+			FieldName: "some_field",
+			Regex:     "[\\d]",
+			Sort:      "DESC",
+		}
+
+		createAlert.SubComponents[0].Output.Columns = []alerts_v2.ColumnConfig{column}
+
+		alert, err := underTest.CreateAlert(createAlert)
+
+		if assert.NoError(t, err) && assert.NotNil(t, alert) {
+			time.Sleep(4 * time.Second)
+			defer underTest.DeleteAlert(alert.AlertId)
+		}
+	}
+}
+
+func TestIntegrationAlertsV2_CreateAlertOutputTypeTableSortAsc(t *testing.T) {
+	underTest, err := setupAlertsV2IntegrationTest()
+	if assert.NoError(t, err) {
+		createAlert := getCreateAlertType()
+		createAlert.Title = "test alerts v2 table"
+		createAlert.Output.Type = "TABLE"
+		column := alerts_v2.ColumnConfig{
+			FieldName: "some_field",
+			Regex:     "[\\d]",
+			Sort:      "ASC",
+		}
+
+		createAlert.SubComponents[0].Output.Columns = []alerts_v2.ColumnConfig{column}
+
+		alert, err := underTest.CreateAlert(createAlert)
+
+		if assert.NoError(t, err) && assert.NotNil(t, alert) {
+			time.Sleep(4 * time.Second)
+			defer underTest.DeleteAlert(alert.AlertId)
+		}
+	}
+}

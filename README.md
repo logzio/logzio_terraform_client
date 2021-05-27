@@ -172,6 +172,8 @@ endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
 
 
 ### Changelog
+- v1.5.1
+    - Fix alerts_v2 sort bug.
 - v1.5
     - Add alerts v2 compatibility.
 - v1.3.2
