@@ -4,6 +4,7 @@ import (
 	"github.com/logzio/logzio_terraform_client/endpoints"
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"time"
 )
 
 func TestIntegrationEndpoints_CustomCreateUpdate(t *testing.T) {
@@ -63,5 +64,57 @@ func TestIntegrationEndpoints_CustomCreateDuplicate(t *testing.T) {
 			assert.Nil(t, duplicate)
 			assert.Error(t, err)
 		}
+	}
+}
+
+func TestIntegrationEndpoints_CustomCreateNoHeader(t *testing.T) {
+	underTest, err := setupEndpointsIntegrationTest()
+	if assert.NoError(t, err) {
+		endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
+			Title:        "testCreateCustomEndpointNoHeaders",
+			Method:       "POST",
+			Description:  "my description",
+			Url:          "https://jsonplaceholder.typicode.com/todos/1",
+			EndpointType: "custom",
+			BodyTemplate: map[string]string{"hello": "there", "header": "two"},
+		})
+
+		if endpoint != nil {
+			defer underTest.DeleteEndpoint(endpoint.Id)
+		}
+
+		assert.NotNil(t, endpoint)
+		assert.NoError(t, err)
+		assert.NotEmpty(t, endpoint.Id)
+	}
+}
+
+func TestIntegrationEndpoints_CustomGetNoHeaders(t *testing.T) {
+	underTest, err := setupEndpointsIntegrationTest()
+	if assert.NoError(t, err) {
+		endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
+			Title:        "testCreateCustomEndpointNoHeaders",
+			Method:       "POST",
+			Description:  "my description",
+			Url:          "https://jsonplaceholder.typicode.com/todos/1",
+			EndpointType: "custom",
+			BodyTemplate: map[string]string{"hello": "there", "header": "two"},
+		})
+
+		if endpoint != nil {
+			defer underTest.DeleteEndpoint(endpoint.Id)
+		}
+
+		assert.NotNil(t, endpoint)
+		assert.NoError(t, err)
+		assert.NotEmpty(t, endpoint.Id)
+
+		time.Sleep(4 * time.Second)
+
+		getEndpoint, err := underTest.GetEndpoint(endpoint.Id)
+
+		assert.NotNil(t, endpoint)
+		assert.NoError(t, err)
+		assert.Equal(t, endpoint.Id, getEndpoint.Id)
 	}
 }
