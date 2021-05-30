@@ -173,7 +173,8 @@ endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
 
 ### Changelog
 - v1.5.2
-    - Fix custom endpoint-empty headers bug.
+    - Fix `custom endpoint` -empty headers bug.
+    - Allow empty array for sharing accounts in `sub account`.
 - v1.5.1
     - Fix alerts_v2 sort bug.
 - v1.5
