@@ -21,6 +21,10 @@ func (c *SubAccountClient) updateValidateRequest(id int64) (error, bool) {
 }
 
 func (c *SubAccountClient) updateApiRequest(apiToken string, id int64, subAccount SubAccount) (*http.Request, error) {
+	if subAccount.SharingObjectAccounts == nil {
+		subAccount.SharingObjectAccounts = make([]interface{}, 0)
+	}
+
 	var (
 		updateUser = map[string]interface{}{
 			//"email":                  subAccount.Email,
