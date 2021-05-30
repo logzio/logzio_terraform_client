@@ -33,12 +33,17 @@ func setupSubAccountsTest() (*sub_accounts.SubAccountClient, error, func()) {
 	}
 }
 
-func setupSubAccountsIntegrationTest() (*sub_accounts.SubAccountClient, error) {
+func setupSubAccountsIntegrationTest() (*sub_accounts.SubAccountClient, string, error) {
 	apiToken, err := test_utils.GetApiToken()
 	if err != nil {
-		return nil, err
+		return nil, "", err
+	}
+
+	email, err := test_utils.GetLogzioEmail()
+	if err != nil {
+		return nil, "", err
 	}
 
 	underTest, err := sub_accounts.New(apiToken, test_utils.GetLogzIoBaseUrl())
-	return underTest, err
+	return underTest, email, err
 }
