@@ -10,6 +10,7 @@ const ENV_LOGZIO_BASE_URL = "LOGZIO_BASE_URL"
 const ENV_LOGZIO_API_TOKEN string = "LOGZIO_API_TOKEN"
 const ENV_LOGZIO_ACCOUNT_ID string = "LOGZIO_ACCOUNT_ID"
 const LOGZIO_BASE_URL string = "https://api.logz.io"
+const ENV_LOGZIO_EMAIL string = "LOGZIO_EMAIL"
 
 func GetApiToken() (string, error) {
 	api_token := os.Getenv(ENV_LOGZIO_API_TOKEN)
@@ -33,4 +34,12 @@ func GetLogzIoBaseUrl() string {
 		return os.Getenv(ENV_LOGZIO_BASE_URL)
 	}
 	return LOGZIO_BASE_URL
+}
+
+func GetLogzioEmail() (string, error) {
+	email := os.Getenv(ENV_LOGZIO_EMAIL)
+	if len(email) > 0 {
+		return email, nil
+	}
+	return "", fmt.Errorf("%s env var not specified", ENV_LOGZIO_EMAIL)
 }

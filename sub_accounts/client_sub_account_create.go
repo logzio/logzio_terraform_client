@@ -15,6 +15,10 @@ const (
 )
 
 func (c *SubAccountClient) createApiRequest(apiToken string, s SubAccountCreate) (*http.Request, error) {
+	if s.SharingObjectAccounts == nil {
+		s.SharingObjectAccounts = make([]int32, 0)
+	}
+
 	var (
 		createSubAccount = map[string]interface{}{
 			"email":                  s.Email,
