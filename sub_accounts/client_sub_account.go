@@ -39,6 +39,7 @@ type SubAccount struct {
 	SharingObjectAccounts []interface{}
 	DocSizeSetting        bool
 	UtilizationSettings   map[string]interface{}
+	Token                 string
 }
 
 type SubAccountRelation struct {
@@ -135,6 +136,12 @@ func jsonToSubAccount(json map[string]interface{}) SubAccount {
 			}
 		}
 	}
+
+	// Token should be in json object only when this function is called by a Create request
+	if _, ok := json[fldAccountToken]; ok {
+		subAccount.Token = json[fldAccountToken].(string)
+	}
+
 	return subAccount
 }
 

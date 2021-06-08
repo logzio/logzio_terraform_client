@@ -172,6 +172,8 @@ endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
 
 
 ### Changelog
+- v1.5.3
+    - Fix for `sub account`: return token on Create. 
 - v1.5.2
     - Fix `custom endpoint` -empty headers bug.
     - Allow empty array for sharing accounts in `sub account`.
