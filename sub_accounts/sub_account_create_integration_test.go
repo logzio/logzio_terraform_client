@@ -25,9 +25,11 @@ func TestIntegrationSubAccount_CreateSubAccount(t *testing.T) {
 
 		subAccount, err := underTest.CreateSubAccount(createSubAccount)
 
-		if assert.NoError(t, err) && assert.NotNil(t, subAccount) && assert.NotEmpty(t, subAccount.Token) {
+		if assert.NoError(t, err) && assert.NotNil(t, subAccount) {
 			time.Sleep(4 * time.Second)
 			defer underTest.DeleteSubAccount(subAccount.Id)
+			assert.NotEmpty(t, subAccount.Token)
+			assert.NotEmpty(t, subAccount.AccountId)
 		}
 	}
 }
@@ -52,9 +54,11 @@ func TestIntegrationSubAccount_CreateSubAccountWithSharingAccount(t *testing.T) 
 
 		subAccount, err := underTest.CreateSubAccount(createSubAccount)
 
-		if assert.NoError(t, err) && assert.NotNil(t, subAccount) && assert.NotEmpty(t, subAccount.Token) {
+		if assert.NoError(t, err) && assert.NotNil(t, subAccount) {
 			time.Sleep(4 * time.Second)
 			defer underTest.DeleteSubAccount(subAccount.Id)
+			assert.NotEmpty(t, subAccount.Token)
+			assert.NotEmpty(t, subAccount.AccountId)
 		}
 	}
 }

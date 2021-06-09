@@ -69,7 +69,7 @@ func (c *SubAccountClient) CreateSubAccount(subAccount SubAccountCreate) (*SubAc
 		RetentionDays:         subAccount.RetentionDays,
 		SharingObjectAccounts: sharingAccounts,
 		Token:                 target[fldAccountToken].(string),
-		AccountId: target[fldAccountId].(int64),
+		AccountId: int64(target["accountId"].(float64)),
 	}
 	return &createdSubAccount, nil
 }
