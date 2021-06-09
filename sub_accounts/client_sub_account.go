@@ -40,7 +40,7 @@ type SubAccount struct {
 	DocSizeSetting        bool
 	UtilizationSettings   map[string]interface{}
 	Token                 string
-	AccountId int64
+	AccountId             int64
 }
 
 type SubAccountRelation struct {
