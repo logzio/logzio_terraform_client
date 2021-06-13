@@ -11,7 +11,7 @@ import (
 func TestIntegrationSubAccount_CreateSubAccount(t *testing.T) {
 	underTest, email, err := setupSubAccountsIntegrationTest()
 
-	if assert.NoError(t, err){
+	if assert.NoError(t, err) {
 		createSubAccount := sub_accounts.SubAccountCreate{
 			Email:                 email,
 			AccountName:           "test_create",
@@ -28,6 +28,8 @@ func TestIntegrationSubAccount_CreateSubAccount(t *testing.T) {
 		if assert.NoError(t, err) && assert.NotNil(t, subAccount) {
 			time.Sleep(4 * time.Second)
 			defer underTest.DeleteSubAccount(subAccount.Id)
+			assert.NotEmpty(t, subAccount.Token)
+			assert.NotEmpty(t, subAccount.AccountId)
 		}
 	}
 }
@@ -35,7 +37,7 @@ func TestIntegrationSubAccount_CreateSubAccount(t *testing.T) {
 func TestIntegrationSubAccount_CreateSubAccountWithSharingAccount(t *testing.T) {
 	underTest, email, err := setupSubAccountsIntegrationTest()
 
-	if assert.NoError(t, err){
+	if assert.NoError(t, err) {
 		accountId, err := test_utils.GetAccountId()
 		assert.NoError(t, err)
 
@@ -55,6 +57,8 @@ func TestIntegrationSubAccount_CreateSubAccountWithSharingAccount(t *testing.T) 
 		if assert.NoError(t, err) && assert.NotNil(t, subAccount) {
 			time.Sleep(4 * time.Second)
 			defer underTest.DeleteSubAccount(subAccount.Id)
+			assert.NotEmpty(t, subAccount.Token)
+			assert.NotEmpty(t, subAccount.AccountId)
 		}
 	}
 }
@@ -62,15 +66,15 @@ func TestIntegrationSubAccount_CreateSubAccountWithSharingAccount(t *testing.T) 
 func TestIntegrationSubAccount_CreateSubAccountInvalidMail(t *testing.T) {
 	underTest, _, err := setupSubAccountsIntegrationTest()
 
-	if assert.NoError(t, err){
+	if assert.NoError(t, err) {
 		createSubAccount := sub_accounts.SubAccountCreate{
-			Email:                 "invalid@mail.com",
-			AccountName:           "test_create",
-			MaxDailyGB:            1,
-			RetentionDays:         1,
-			Searchable:            false,
-			Accessible:            true,
-			DocSizeSetting:        false,
+			Email:          "invalid@mail.com",
+			AccountName:    "test_create",
+			MaxDailyGB:     1,
+			RetentionDays:  1,
+			Searchable:     false,
+			Accessible:     true,
+			DocSizeSetting: false,
 		}
 
 		subAccount, err := underTest.CreateSubAccount(createSubAccount)
