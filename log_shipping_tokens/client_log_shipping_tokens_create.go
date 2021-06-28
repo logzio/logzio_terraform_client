@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-const createLogShippingTokenServiceUrl = logShippingTokensServiceEndpoint
+const createLogShippingTokenServiceUrl = LogShippingTokensServiceEndpoint
 const createLogShippingTokenServiceMethod string = http.MethodPost
 
 type FieldError struct {

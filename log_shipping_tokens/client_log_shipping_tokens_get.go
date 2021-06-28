@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-const getLogShippingTokenServiceUrl = logShippingTokensServiceEndpoint + "/%d"
+const getLogShippingTokenServiceUrl = LogShippingTokensServiceEndpoint + "/%d"
 const getLogShippingTokenServiceMethod string = http.MethodGet
 const getLogShippingTokenMethodSuccess int = http.StatusOK
 const getLogShippingTokenMethodNotFound int = http.StatusNotFound

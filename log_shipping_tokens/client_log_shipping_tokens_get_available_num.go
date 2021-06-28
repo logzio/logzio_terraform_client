@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-const getAvailableLogShippingTokensNumberServiceUrl = logShippingTokensServiceEndpoint + "/limits"
+const getAvailableLogShippingTokensNumberServiceUrl = LogShippingTokensServiceEndpoint + "/limits"
 const getAvailableLogShippingTokensNumberServiceMethod string = http.MethodGet
 const getAvailableLogShippingTokensNumberMethodSuccess int = http.StatusOK
 

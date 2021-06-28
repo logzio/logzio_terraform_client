@@ -10,7 +10,7 @@ import (
 	"net/http"
 )
 
-const retrieveLogShippingTokenServiceUrl = logShippingTokensServiceEndpoint + "/search"
+const retrieveLogShippingTokenServiceUrl = LogShippingTokensServiceEndpoint + "/search"
 const retrieveLogShippingTokenServiceMethod string = http.MethodPost
 const retrieveLogShippingTokenMethodSuccess int = http.StatusOK
 

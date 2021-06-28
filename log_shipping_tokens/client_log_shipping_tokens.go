@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	logShippingTokensServiceEndpoint         string = "%s/v1/log-shipping/tokens"
+	LogShippingTokensServiceEndpoint string = "%s/v1/log-shipping/tokens"
 )
 
 const (
@@ -28,7 +28,6 @@ type LogShippingTokensClient struct {
 
 type CreateLogShippingToken struct {
 	Name string `json:"name"`
-	Enabled string `json:"enabled"`
 }
 
 type LogShippingToken struct {
@@ -90,14 +89,6 @@ func New(apiToken, baseUrl string) (*LogShippingTokensClient, error) {
 func validateCreateLogShippingTokenRequest(token CreateLogShippingToken) error {
 	if len(token.Name) == 0 {
 		return fmt.Errorf("name must be set")
-	}
-
-	if len(token.Enabled) == 0 {
-		return fmt.Errorf("enabled must be set")
-	}
-
-	if token.Enabled != strconv.FormatBool(true) && token.Enabled != strconv.FormatBool(false) {
-		return fmt.Errorf("enabled must be %s or %s", strconv.FormatBool(true), strconv.FormatBool(false))
 	}
 
 	return nil

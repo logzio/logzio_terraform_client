@@ -32,30 +32,6 @@ func TestIntegrationLogShippingTokens_CreateTokenInvalidName(t *testing.T) {
 	}
 }
 
-func TestIntegrationLogShippingTokens_CreateTokenInvalidEnabled(t *testing.T) {
-	underTest, err := setupLogShippingTokensIntegrationTest()
-	if assert.NoError(t, err) {
-		createToken := getCreateLogShippingToken()
-		createToken.Enabled = ""
-		token, err := underTest.CreateLogShippingToken(createToken)
-
-		assert.Error(t, err)
-		assert.Nil(t, token)
-	}
-}
-
-func TestIntegrationLogShippingTokens_CreateTokenInvalidEnabled2(t *testing.T) {
-	underTest, err := setupLogShippingTokensIntegrationTest()
-	if assert.NoError(t, err) {
-		createToken := getCreateLogShippingToken()
-		createToken.Enabled = "invalid_value"
-		token, err := underTest.CreateLogShippingToken(createToken)
-
-		assert.Error(t, err)
-		assert.Nil(t, token)
-	}
-}
-
 func TestIntegrationLogShippingTokens_CreateTokenAlreadyExist(t *testing.T) {
 	underTest, err := setupLogShippingTokensIntegrationTest()
 	if assert.NoError(t, err) {
