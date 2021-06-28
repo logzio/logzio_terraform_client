@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/logzio/logzio_terraform_client"
 	"github.com/logzio/logzio_terraform_client/client"
+	"strconv"
 )
 
 const (
@@ -27,16 +28,16 @@ type LogShippingTokensClient struct {
 
 type CreateLogShippingToken struct {
 	Name string `json:"name"`
-	Enabled bool `json:"enabled"`
+	Enabled string `json:"enabled"`
 }
 
 type LogShippingToken struct {
 	Name string `json:"name"`
 	Id int32 `json:"id"`
 	Token string `json:"token"`
-	UpdatedAt string `json:"updatedAt"`
+	UpdatedAt float64 `json:"updatedAt"`
 	UpdatedBy string `json:"updatedBy"`
-	CreatedAt string `json:"createdAt"`
+	CreatedAt float64 `json:"createdAt"`
 	CreatedBy string `json:"createdBy"`
 	Enabled bool `json:"enabled"`
 }
@@ -53,12 +54,12 @@ type RetrieveLogShippingTokensRequest struct {
 }
 
 type ShippingTokensFilterRequest struct {
-	Enabled bool `json:"enabled"`
+	Enabled string `json:"enabled"`
 }
 
 type ShippingTokensSortRequest struct {
 	Field string `json:"field"`
-	Descending bool `json:"descending"`
+	Descending string `json:"descending"`
 }
 
 type ShippingTokensPaginationRequest struct {
@@ -91,16 +92,32 @@ func validateCreateLogShippingTokenRequest(token CreateLogShippingToken) error {
 		return fmt.Errorf("name must be set")
 	}
 
+	if len(token.Enabled) == 0 {
+		return fmt.Errorf("enabled must be set")
+	}
+
+	if token.Enabled != strconv.FormatBool(true) && token.Enabled != strconv.FormatBool(false) {
+		return fmt.Errorf("enabled must be %s or %s", strconv.FormatBool(true), strconv.FormatBool(false))
+	}
+
 	return nil
 }
 
 func validateRetrieveLogShippingTokensRequest(retrieveRequest RetrieveLogShippingTokensRequest) error {
+	if retrieveRequest.Filter.Enabled != strconv.FormatBool(true) && retrieveRequest.Filter.Enabled != strconv.FormatBool(false) {
+		return fmt.Errorf("filter.enabled must be %s or %s", strconv.FormatBool(true), strconv.FormatBool(false))
+	}
+
 	validSortFieldValues :=  []string{retrieveSortFieldCreatedAtValue, retrieveSortFieldNameValue}
 
 	if len(retrieveRequest.Sort) > 0 {
 		for _, sort := range retrieveRequest.Sort {
 			if !logzio_client.Contains(validSortFieldValues, sort.Field) {
 				return fmt.Errorf("sort's Field must be one of %s", validSortFieldValues)
+			}
+
+			if sort.Descending != strconv.FormatBool(true) && sort.Descending != strconv.FormatBool(false) {
+				return fmt.Errorf("sort.descending must be %s or %s", strconv.FormatBool(true), strconv.FormatBool(false))
 			}
 		}
 	}

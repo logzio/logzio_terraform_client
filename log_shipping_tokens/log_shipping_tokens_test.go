@@ -3,6 +3,7 @@ package log_shipping_tokens_test
 import (
 	"github.com/logzio/logzio_terraform_client/log_shipping_tokens"
 	"github.com/logzio/logzio_terraform_client/test_utils"
+	"strconv"
 )
 
 func setupLogShippingTokensIntegrationTest() (*log_shipping_tokens.LogShippingTokensClient, error) {
@@ -17,6 +18,6 @@ func setupLogShippingTokensIntegrationTest() (*log_shipping_tokens.LogShippingTo
 func getCreateLogShippingToken() log_shipping_tokens.CreateLogShippingToken {
 	return log_shipping_tokens.CreateLogShippingToken{
 		Name:    "client_integration_test",
-		Enabled: false,
+		Enabled: strconv.FormatBool(true),
 	}
 }
