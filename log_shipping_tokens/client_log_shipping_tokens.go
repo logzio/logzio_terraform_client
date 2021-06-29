@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	LogShippingTokensServiceEndpoint string = "%s/v1/log-shipping/tokens"
+	logShippingTokensServiceEndpoint string = "%s/v1/log-shipping/tokens"
 )
 
 const (

@@ -9,7 +9,7 @@ import (
 )
 
 const deleteLogShippingTokenServiceMethod string = http.MethodDelete
-const deleteLogShippingTokenServiceUrl = LogShippingTokensServiceEndpoint + "/%d"
+const deleteLogShippingTokenServiceUrl = logShippingTokensServiceEndpoint + "/%d"
 const deleteLogShippingTokenMethodSuccess int = http.StatusOK
 const deleteLogShippingTokenMethodNotFound int = http.StatusNotFound
 
