@@ -58,7 +58,6 @@ func (c *LogShippingTokensClient) UpdateLogShippingToken(tokenId int32, token Up
 		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", operationUpdateLogShippingToken, resp.StatusCode, jsonBytes)
 	}
 
-
 	var target LogShippingToken
 	err = json.Unmarshal(jsonBytes, &target)
 	if err != nil {

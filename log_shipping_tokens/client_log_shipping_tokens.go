@@ -12,14 +12,14 @@ const (
 )
 
 const (
-	operationGetLogShippingToken = "GetLogShippingToken"
-	operationUpdateLogShippingToken = "UpdateLogShippingToken"
-	operationDeleteLogShippingToken = "DeleteLogShippingToken"
+	operationGetLogShippingToken        = "GetLogShippingToken"
+	operationUpdateLogShippingToken     = "UpdateLogShippingToken"
+	operationDeleteLogShippingToken     = "DeleteLogShippingToken"
 	operationGetLogShippingTokensLimits = "GetNumberOfAvailableTokens"
-	operationRetrieveLogShippingTokens = "RetrieveLogShippingTokens"
+	operationRetrieveLogShippingTokens  = "RetrieveLogShippingTokens"
 
 	retrieveSortFieldCreatedAtValue = "createdAt"
-	retrieveSortFieldNameValue = "name"
+	retrieveSortFieldNameValue      = "name"
 )
 
 type LogShippingTokensClient struct {
@@ -31,24 +31,24 @@ type CreateLogShippingToken struct {
 }
 
 type LogShippingToken struct {
-	Name string `json:"name"`
-	Id int32 `json:"id"`
-	Token string `json:"token"`
+	Name      string  `json:"name"`
+	Id        int32   `json:"id"`
+	Token     string  `json:"token"`
 	UpdatedAt float64 `json:"updatedAt"`
-	UpdatedBy string `json:"updatedBy"`
+	UpdatedBy string  `json:"updatedBy"`
 	CreatedAt float64 `json:"createdAt"`
-	CreatedBy string `json:"createdBy"`
-	Enabled bool `json:"enabled"`
+	CreatedBy string  `json:"createdBy"`
+	Enabled   bool    `json:"enabled"`
 }
 
 type LogShippingTokensLimits struct {
-	MaxAllowedTokens int32 `json:"maxAllowedTokens"` // The number of log shipping tokens this account can have.
+	MaxAllowedTokens   int32 `json:"maxAllowedTokens"`   // The number of log shipping tokens this account can have.
 	NumOfEnabledTokens int32 `json:"numOfEnabledTokens"` // The number of log shipping tokens currently enabled for this account.
 }
 
 type RetrieveLogShippingTokensRequest struct {
-	Filter ShippingTokensFilterRequest `json:"filter"`
-	Sort []ShippingTokensSortRequest `json:"sort"`
+	Filter     ShippingTokensFilterRequest     `json:"filter"`
+	Sort       []ShippingTokensSortRequest     `json:"sort"`
 	Pagination ShippingTokensPaginationRequest `json:"pagination,omitempty"`
 }
 
@@ -57,23 +57,23 @@ type ShippingTokensFilterRequest struct {
 }
 
 type ShippingTokensSortRequest struct {
-	Field string `json:"field"`
+	Field      string `json:"field"`
 	Descending string `json:"descending"`
 }
 
 type ShippingTokensPaginationRequest struct {
 	PageNumber int32 `json:"pageNumber,omitempty"`
-	PageSize int32 `json:"pageSize,omitempty"`
+	PageSize   int32 `json:"pageSize,omitempty"`
 }
 
 type RetrieveLogShippingTokensResponse struct {
-	Total int32 `json:"total"`
-	Results []LogShippingToken `json:"results"`
+	Total      int32                           `json:"total"`
+	Results    []LogShippingToken              `json:"results"`
 	Pagination ShippingTokensPaginationRequest `json:"pagination"`
 }
 
 type UpdateLogShippingToken struct {
-	Name string `json:"name"`
+	Name    string `json:"name"`
 	Enabled string `json:"enabled"`
 }
 
@@ -120,7 +120,7 @@ func validateRetrieveLogShippingTokensRequest(retrieveRequest RetrieveLogShippin
 		return fmt.Errorf("filter.enabled must be %s or %s", strconv.FormatBool(true), strconv.FormatBool(false))
 	}
 
-	validSortFieldValues :=  []string{retrieveSortFieldCreatedAtValue, retrieveSortFieldNameValue}
+	validSortFieldValues := []string{retrieveSortFieldCreatedAtValue, retrieveSortFieldNameValue}
 
 	if len(retrieveRequest.Sort) > 0 {
 		for _, sort := range retrieveRequest.Sort {

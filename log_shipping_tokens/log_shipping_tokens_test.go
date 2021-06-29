@@ -25,7 +25,7 @@ func setupLogShippingTokensIntegrationTest() (*log_shipping_tokens.LogShippingTo
 
 func getCreateLogShippingToken() log_shipping_tokens.CreateLogShippingToken {
 	return log_shipping_tokens.CreateLogShippingToken{
-		Name:    "client_integration_test",
+		Name: "client_integration_test",
 	}
 }
 
@@ -56,8 +56,8 @@ func getCreateRetrieveTokensRequest() log_shipping_tokens.RetrieveLogShippingTok
 	}
 
 	return log_shipping_tokens.RetrieveLogShippingTokensRequest{
-		Filter:     log_shipping_tokens.ShippingTokensFilterRequest{Enabled: strconv.FormatBool(true)},
-		Sort:       []log_shipping_tokens.ShippingTokensSortRequest{sort},
+		Filter: log_shipping_tokens.ShippingTokensFilterRequest{Enabled: strconv.FormatBool(true)},
+		Sort:   []log_shipping_tokens.ShippingTokensSortRequest{sort},
 		Pagination: log_shipping_tokens.ShippingTokensPaginationRequest{
 			PageNumber: 1,
 			PageSize:   25,
