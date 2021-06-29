@@ -20,9 +20,9 @@ func TestLogShippingTokens_CreateLogShippingToken(t *testing.T) {
 			jsonBytes, _ := ioutil.ReadAll(r.Body)
 			var target log_shipping_tokens.CreateLogShippingToken
 			err = json.Unmarshal(jsonBytes, &target)
+			assert.NoError(t, err)
 			assert.NotNil(t, target)
 			assert.NotEmpty(t, target.Name)
-
 			w.Header().Set("Content-Type", "application/json")
 			fmt.Fprint(w, fixture("create_log_shipping_token.json"))
 			w.WriteHeader(http.StatusOK)

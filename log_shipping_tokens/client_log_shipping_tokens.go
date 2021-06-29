@@ -18,8 +18,8 @@ const (
 	operationGetLogShippingTokensLimits = "GetNumberOfAvailableTokens"
 	operationRetrieveLogShippingTokens = "RetrieveLogShippingTokens"
 
-	retrieveSortFieldCreatedAtValue = "CREATED_AT"
-	retrieveSortFieldNameValue = "NAME"
+	retrieveSortFieldCreatedAtValue = "createdAt"
+	retrieveSortFieldNameValue = "name"
 )
 
 type LogShippingTokensClient struct {

@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 )
 
 var (
@@ -46,4 +47,20 @@ func fixture(path string) string {
 		panic(err)
 	}
 	return string(b)
+}
+
+func getCreateRetrieveTokensRequest() log_shipping_tokens.RetrieveLogShippingTokensRequest {
+	sort := log_shipping_tokens.ShippingTokensSortRequest{
+		Field:      "createdAt",
+		Descending: strconv.FormatBool(true),
+	}
+
+	return log_shipping_tokens.RetrieveLogShippingTokensRequest{
+		Filter:     log_shipping_tokens.ShippingTokensFilterRequest{Enabled: strconv.FormatBool(true)},
+		Sort:       []log_shipping_tokens.ShippingTokensSortRequest{sort},
+		Pagination: log_shipping_tokens.ShippingTokensPaginationRequest{
+			PageNumber: 1,
+			PageSize:   25,
+		},
+	}
 }
