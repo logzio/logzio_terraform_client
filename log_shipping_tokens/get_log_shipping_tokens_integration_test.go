@@ -18,6 +18,7 @@ func TestIntegrationLogShippingTokens_GetToken(t *testing.T) {
 			tokenFromGet, err := underTest.GetLogShippingToken(token.Id)
 			assert.NoError(t, err)
 			assert.NotNil(t, tokenFromGet)
+			assert.Equal(t, token.Id, tokenFromGet.Id)
 		}
 	}
 }
