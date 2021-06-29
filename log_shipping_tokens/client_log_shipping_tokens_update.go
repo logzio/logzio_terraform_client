@@ -15,7 +15,7 @@ const updateLogShippingTokenServiceMethod string = http.MethodPut
 const updateLogShippingTokenMethodSuccess int = http.StatusOK
 const updateLogShippingTokenMethodNotFound int = http.StatusNotFound
 
-func (c *LogShippingTokensClient) buildUpdateApiRequest(apiToken string, tokenId int32, token CreateLogShippingToken) (*http.Request, error) {
+func (c *LogShippingTokensClient) buildUpdateApiRequest(apiToken string, tokenId int32, token UpdateLogShippingToken) (*http.Request, error) {
 	jsonBytes, err := json.Marshal(token)
 	if err != nil {
 		return nil, err
@@ -30,8 +30,8 @@ func (c *LogShippingTokensClient) buildUpdateApiRequest(apiToken string, tokenId
 
 // Updates an existing log shipping token, based on the supplied token identifier, using the parameters of the specified token
 // Returns the updated token if successful, an error otherwise
-func (c *LogShippingTokensClient) UpdateLogShippingToken(tokenId int32, token CreateLogShippingToken) (*LogShippingToken, error) {
-	err := validateCreateLogShippingTokenRequest(token)
+func (c *LogShippingTokensClient) UpdateLogShippingToken(tokenId int32, token UpdateLogShippingToken) (*LogShippingToken, error) {
+	err := validateUpdateLogShippingTokenRequest(token)
 	if err != nil {
 		return nil, err
 	}

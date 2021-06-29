@@ -64,3 +64,10 @@ func getCreateRetrieveTokensRequest() log_shipping_tokens.RetrieveLogShippingTok
 		},
 	}
 }
+
+func getUpdateLogShippingToken() log_shipping_tokens.UpdateLogShippingToken {
+	return log_shipping_tokens.UpdateLogShippingToken{
+		Name:    "after_update",
+		Enabled: strconv.FormatBool(true),
+	}
+}

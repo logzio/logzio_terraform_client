@@ -72,6 +72,11 @@ type RetrieveLogShippingTokensResponse struct {
 	Pagination ShippingTokensPaginationRequest `json:"pagination"`
 }
 
+type UpdateLogShippingToken struct {
+	Name string `json:"name"`
+	Enabled string `json:"enabled"`
+}
+
 func New(apiToken, baseUrl string) (*LogShippingTokensClient, error) {
 	if len(apiToken) == 0 {
 		return nil, fmt.Errorf("API token not defined")
@@ -89,6 +94,22 @@ func New(apiToken, baseUrl string) (*LogShippingTokensClient, error) {
 func validateCreateLogShippingTokenRequest(token CreateLogShippingToken) error {
 	if len(token.Name) == 0 {
 		return fmt.Errorf("name must be set")
+	}
+
+	return nil
+}
+
+func validateUpdateLogShippingTokenRequest(token UpdateLogShippingToken) error {
+	if len(token.Name) == 0 {
+		return fmt.Errorf("name must be set")
+	}
+
+	if len(token.Enabled) == 0 {
+		return fmt.Errorf("enabled must be set")
+	}
+
+	if token.Enabled != strconv.FormatBool(true) && token.Enabled != strconv.FormatBool(false) {
+		return fmt.Errorf("enabled must be %s or %s", strconv.FormatBool(true), strconv.FormatBool(false))
 	}
 
 	return nil
