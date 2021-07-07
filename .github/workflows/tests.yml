@@ -6,6 +6,7 @@ env:
   LOGZIO_API_TOKEN: ${{ secrets.LOGZIO_API_TOKEN }}
   LOGZIO_EMAIL: ${{ secrets.LOGZIO_EMAIL }}
   LOGZIO_ACCOUNT_ID: ${{ secrets.LOGZIO_ACCOUNT_ID }}
+  GO111MODULE: "on"
 
 jobs:
   test:
