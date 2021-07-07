@@ -195,7 +195,7 @@ token, err := client.CreateLogShippingToken(log_shipping_tokens.CreateLogShippin
 
 ### Changelog
 - v1.6.0
-    - Add log shipping tokens API compatibility.
+    - Add [log shipping tokens API](https://docs.logz.io/api/#tag/Manage-log-shipping-tokens) compatibility.
 - v1.5.3
     - Fix for `sub account`: return token & account id on Create. 
 - v1.5.2
