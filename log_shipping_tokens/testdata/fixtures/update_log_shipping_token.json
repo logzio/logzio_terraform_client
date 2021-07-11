@@ -1,0 +1,10 @@
+{
+  "name": "after_update",
+  "id": 123456,
+  "token": "some_token",
+  "updatedAt": 1624981530.000000000,
+  "updatedBy": "test.user@test.co",
+  "createdAt": 1624887273.000000000,
+  "createdBy": "test.user@test.co",
+  "enabled": true
+}

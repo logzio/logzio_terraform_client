@@ -1,0 +1,19 @@
+{
+  "total": 1,
+  "results": [
+    {
+      "name": "default",
+      "id": 123456,
+      "token": "some_token",
+      "updatedAt": 1619118474.000000000,
+      "updatedBy": "test.user@test.co",
+      "createdAt": 1619118474.000000000,
+      "createdBy": "test.user@test.co",
+      "enabled": true
+    }
+  ],
+  "pagination": {
+    "pageNumber": 1,
+    "pageSize": 25
+  }
+}
