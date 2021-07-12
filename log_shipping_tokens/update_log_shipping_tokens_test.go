@@ -54,7 +54,7 @@ func TestLogShippingTokens_UpdateLogShippingTokenIdNotFound(t *testing.T) {
 			assert.NotNil(t, target)
 			assert.NotEmpty(t, target.Enabled)
 			w.Header().Set("Content-Type", "application/json")
-			fmt.Fprint(w, fixture("update_log_shipping_token_failed.json"))
+			fmt.Fprint(w, fixture("update_log_shipping_token_failed.txt"))
 			w.WriteHeader(http.StatusNotFound)
 		})
 	}
