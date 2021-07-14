@@ -34,7 +34,7 @@ func (c *DropFiltersClient) DeleteDropFilter(dropFilterId string) error {
 
 	if !logzio_client.CheckValidStatus(resp, []int{deleteDropFilterMethodSuccess}) {
 		if resp.StatusCode == deleteDropFilterMethodNotFound {
-			return fmt.Errorf("API call %s failed with missing drop filter %d, data: %s", "DeleteDropFilter", dropFilterId, jsonBytes)
+			return fmt.Errorf("API call %s failed with missing drop filter %s, data: %s", "DeleteDropFilter", dropFilterId, jsonBytes)
 		}
 
 		return fmt.Errorf("API call %s failed with status code %d, data: %s", "DeleteDropFilter", resp.StatusCode, jsonBytes)

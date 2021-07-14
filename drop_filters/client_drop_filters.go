@@ -86,7 +86,7 @@ func (c *DropFiltersClient) ActivateOrDeactivateDropFilter(dropFilter DropFilter
 
 	if !logzio_client.CheckValidStatus(resp, []int{activateDropFilterMethodSuccess, deactivateDropFilterMethodSuccess}) {
 		if resp.StatusCode == activateDropFilterMethodNotFound || resp.StatusCode == deactivateDropFilterMethodNotFound {
-			return nil, fmt.Errorf("API call %s failed with missing drop filter %d, data: %s", operationName, dropFilter.Id, jsonBytes)
+			return nil, fmt.Errorf("API call %s failed with missing drop filter %s, data: %s", operationName, dropFilter.Id, jsonBytes)
 		}
 
 		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", operationName, resp.StatusCode, jsonBytes)
