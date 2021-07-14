@@ -1,6 +1,7 @@
 package drop_filters
 
 import (
+	"encoding/json"
 	"fmt"
 	logzio_client "github.com/logzio/logzio_terraform_client"
 	"github.com/logzio/logzio_terraform_client/client"
@@ -64,7 +65,7 @@ func validateCreateDropFilterRequest(filter CreateDropFilter) error {
 }
 
 // Activates/deactivates a drop filter given it's unique identifier. Returns the drop filter, an error otherwise
-func (c *DropFiltersClient) ActivateOrDeactivateDropFilter(dropFilterId string, active bool) error {
+func (c *DropFiltersClient) ActivateOrDeactivateDropFilter(dropFilterId string, active bool) (*DropFilter, error) {
 	var req *http.Request
 	var operationName string
 	if active {
@@ -78,19 +79,25 @@ func (c *DropFiltersClient) ActivateOrDeactivateDropFilter(dropFilterId string, 
 	httpClient := client.GetHttpClient(req)
 	resp, err := httpClient.Do(req)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer resp.Body.Close()
 
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
+	var dropFilter DropFilter
+	err = json.Unmarshal(jsonBytes, &dropFilter)
+	if err != nil {
+		return nil, err
+	}
+
 
 	if !logzio_client.CheckValidStatus(resp, []int{activateDropFilterMethodSuccess, deactivateDropFilterMethodSuccess}) {
 		if resp.StatusCode == activateDropFilterMethodNotFound || resp.StatusCode == deactivateDropFilterMethodNotFound {
-			return fmt.Errorf("API call %s failed with missing drop filter %s, data: %s", operationName, dropFilterId, jsonBytes)
+			return nil, fmt.Errorf("API call %s failed with missing drop filter %s, data: %s", operationName, dropFilterId, jsonBytes)
 		}
 
-		return fmt.Errorf("API call %s failed with status code %d, data: %s", operationName, resp.StatusCode, jsonBytes)
+		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", operationName, resp.StatusCode, jsonBytes)
 	}
 
-	return nil
+	return &dropFilter, nil
 }

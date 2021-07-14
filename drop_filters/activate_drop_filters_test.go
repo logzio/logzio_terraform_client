@@ -19,8 +19,11 @@ func TestDropFilters_ActivateDropFilter(t *testing.T) {
 		})
 
 		id := "some-drop-filter-id"
-		err = underTest.ActivateOrDeactivateDropFilter(id, true)
+		dropFilter, err := underTest.ActivateOrDeactivateDropFilter(id, true)
 		assert.NoError(t, err)
+		assert.NotNil(t, dropFilter)
+		assert.Equal(t, id, dropFilter.Id)
+		assert.True(t, dropFilter.Active)
 	}
 }
 
@@ -36,8 +39,9 @@ func TestDropFilters_ActivateDropFilterAPIFailed(t *testing.T) {
 		})
 
 		id := "some-drop-filter-id"
-		err = underTest.ActivateOrDeactivateDropFilter(id, true)
+		dropFilter, err := underTest.ActivateOrDeactivateDropFilter(id, true)
 		assert.Error(t, err)
+		assert.Nil(t, dropFilter)
 	}
 }
 
@@ -53,7 +57,8 @@ func TestDropFilters_ActivateDropFilterNotFound(t *testing.T) {
 		})
 
 		id := "some-drop-filter-id-not-exist"
-		err = underTest.ActivateOrDeactivateDropFilter(id, true)
+		dropFilter, err := underTest.ActivateOrDeactivateDropFilter(id, true)
 		assert.Error(t, err)
+		assert.Nil(t, dropFilter)
 	}
 }

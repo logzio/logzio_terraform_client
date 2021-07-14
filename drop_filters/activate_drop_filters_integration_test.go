@@ -16,11 +16,13 @@ func TestIntegrationDropFilters_ActivateDropFilter(t *testing.T) {
 		if assert.NoError(t, err) && assert.NotNil(t, dropFilter) {
 			time.Sleep(2 * time.Second)
 			defer underTest.DeleteDropFilter(dropFilter.Id)
-			err = underTest.ActivateOrDeactivateDropFilter(dropFilter.Id, false)
+			_, err = underTest.ActivateOrDeactivateDropFilter(dropFilter.Id, false)
 			if assert.NoError(t, err) {
 				time.Sleep(2 * time.Second)
-				err = underTest.ActivateOrDeactivateDropFilter(dropFilter.Id, true)
+				activated, err := underTest.ActivateOrDeactivateDropFilter(dropFilter.Id, true)
 				assert.NoError(t, err)
+				assert.NotNil(t, activated)
+				assert.True(t, activated.Active)
 			}
 		}
 	}
@@ -31,8 +33,9 @@ func TestIntegrationDropFilters_ActivateDropFilterNotFound(t *testing.T) {
 
 	if assert.NoError(t, err) {
 		id := "some-invalid-id"
-		err = underTest.ActivateOrDeactivateDropFilter(id, true)
+		dropFilter, err := underTest.ActivateOrDeactivateDropFilter(id, true)
 		assert.Error(t, err)
+		assert.Nil(t, dropFilter)
 	}
 }
 
@@ -40,7 +43,8 @@ func TestIntegrationDropFilters_ActivateDropFilterNoId(t *testing.T) {
 	underTest, err := setupDropFiltersIntegrationTest()
 
 	if assert.NoError(t, err) {
-		err = underTest.ActivateOrDeactivateDropFilter("", true)
+		dropFilter, err := underTest.ActivateOrDeactivateDropFilter("", true)
 		assert.Error(t, err)
+		assert.Nil(t, dropFilter)
 	}
 }
