@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestDropFilters_ActivateDropFilter(t *testing.T) {
+func TestDropFilters_DeactivateDropFilter(t *testing.T) {
 	underTest, err, teardown := setupDropFiltersTest()
 	defer teardown()
 
@@ -15,19 +15,18 @@ func TestDropFilters_ActivateDropFilter(t *testing.T) {
 		mux.HandleFunc("/v1/drop-filters/", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPost, r.Method)
 			w.Header().Set("Content-Type", "application/json")
-			fmt.Fprint(w, fixture("activate_drop_filter.json"))
+			fmt.Fprint(w, fixture("deactivate_drop_filter.json"))
 		})
 
 		id := "some-drop-filter-id"
-		dropFilter, err := underTest.ActivateDropFilter(id)
+		dropFilter, err := underTest.DeactivateDropFilter(id)
 		assert.NoError(t, err)
 		assert.NotNil(t, dropFilter)
-		assert.Equal(t, id, dropFilter.Id)
-		assert.True(t, dropFilter.Active)
+		assert.False(t, dropFilter.Active)
 	}
 }
 
-func TestDropFilters_ActivateDropFilterAPIFailed(t *testing.T) {
+func TestDropFilters_DeactivateDropFilterAPIFailed(t *testing.T) {
 	underTest, err, teardown := setupDropFiltersTest()
 	defer teardown()
 
@@ -35,17 +34,17 @@ func TestDropFilters_ActivateDropFilterAPIFailed(t *testing.T) {
 		mux.HandleFunc("/v1/drop-filters/", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPost, r.Method)
 			w.WriteHeader(http.StatusInternalServerError)
-			fmt.Fprint(w, fixture("activate_drop_filter_failed.txt"))
+			fmt.Fprint(w, fixture("deactivate_drop_filter_failed.txt"))
 		})
 
 		id := "some-drop-filter-id"
-		dropFilter, err := underTest.ActivateDropFilter(id)
+		dropFilter, err := underTest.DeactivateDropFilter(id)
 		assert.Error(t, err)
 		assert.Nil(t, dropFilter)
 	}
 }
 
-func TestDropFilters_ActivateDropFilterNotFound(t *testing.T) {
+func TestDropFilters_DeactivateDropFilterNotFound(t *testing.T) {
 	underTest, err, teardown := setupDropFiltersTest()
 	defer teardown()
 
@@ -53,11 +52,11 @@ func TestDropFilters_ActivateDropFilterNotFound(t *testing.T) {
 		mux.HandleFunc("/v1/drop-filters/", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPost, r.Method)
 			w.WriteHeader(http.StatusNotFound)
-			fmt.Fprint(w, fixture("activate_drop_filter_not_found.txt"))
+			fmt.Fprint(w, fixture("deactivate_drop_filter_not_found.txt"))
 		})
 
 		id := "some-drop-filter-id-not-exist"
-		dropFilter, err := underTest.ActivateDropFilter(id)
+		dropFilter, err := underTest.DeactivateDropFilter(id)
 		assert.Error(t, err)
 		assert.Nil(t, dropFilter)
 	}

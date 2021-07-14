@@ -6,7 +6,8 @@ import (
 	"time"
 )
 
-func TestIntegrationDropFilters_ActivateDropFilter(t *testing.T) {
+
+func TestIntegrationDropFilters_DeactivateDropFilter(t *testing.T) {
 	underTest, err := setupDropFiltersIntegrationTest()
 
 	if assert.NoError(t, err) {
@@ -16,34 +17,31 @@ func TestIntegrationDropFilters_ActivateDropFilter(t *testing.T) {
 		if assert.NoError(t, err) && assert.NotNil(t, dropFilter) {
 			time.Sleep(2 * time.Second)
 			defer underTest.DeleteDropFilter(dropFilter.Id)
-			_, err = underTest.ActivateOrDeactivateDropFilter(dropFilter.Id, false)
-			if assert.NoError(t, err) {
-				time.Sleep(2 * time.Second)
-				activated, err := underTest.ActivateDropFilter(dropFilter.Id)
-				assert.NoError(t, err)
-				assert.NotNil(t, activated)
-				assert.True(t, activated.Active)
-			}
+			deactivated, err := underTest.DeactivateDropFilter(dropFilter.Id)
+			assert.NoError(t, err)
+			assert.NotNil(t, deactivated)
+			assert.False(t, deactivated.Active)
+
 		}
 	}
 }
 
-func TestIntegrationDropFilters_ActivateDropFilterNotFound(t *testing.T) {
+func TestIntegrationDropFilters_DeactivateDropFilterNotFound(t *testing.T) {
 	underTest, err := setupDropFiltersIntegrationTest()
 
 	if assert.NoError(t, err) {
 		id := "some-invalid-id"
-		dropFilter, err := underTest.ActivateDropFilter(id)
+		dropFilter, err := underTest.DeactivateDropFilter(id)
 		assert.Error(t, err)
 		assert.Nil(t, dropFilter)
 	}
 }
 
-func TestIntegrationDropFilters_ActivateDropFilterNoId(t *testing.T) {
+func TestIntegrationDropFilters_DeactivateDropFilterNoId(t *testing.T) {
 	underTest, err := setupDropFiltersIntegrationTest()
 
 	if assert.NoError(t, err) {
-		dropFilter, err := underTest.ActivateDropFilter("")
+		dropFilter, err := underTest.DeactivateDropFilter("")
 		assert.Error(t, err)
 		assert.Nil(t, dropFilter)
 	}
