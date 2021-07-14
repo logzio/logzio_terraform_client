@@ -11,6 +11,7 @@ import (
 const deleteDropFilterServiceUrl string = dropFiltersServiceEndpoint + "/%s"
 const deleteDropFilterServiceMethod string = http.MethodDelete
 const deleteDropFilterMethodSuccess int = http.StatusOK
+const deleteDropFilterMethodNotFound int = http.StatusNotFound
 
 func (c *DropFiltersClient) buildDeleteApiRequest(apiToken string, dropFilterId string) (*http.Request, error) {
 	baseUrl := c.BaseUrl
@@ -21,7 +22,7 @@ func (c *DropFiltersClient) buildDeleteApiRequest(apiToken string, dropFilterId 
 }
 
 // Delete a drop filter, specified by it's unique id, returns an error if a problem is encountered
-func (c *DropFiltersClient) DeleteAlert(dropFilterId string) error {
+func (c *DropFiltersClient) DeleteDropFilter(dropFilterId string) error {
 	req, _ := c.buildDeleteApiRequest(c.ApiToken, dropFilterId)
 	httpClient := client.GetHttpClient(req)
 	resp, err := httpClient.Do(req)
@@ -31,4 +32,13 @@ func (c *DropFiltersClient) DeleteAlert(dropFilterId string) error {
 
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 
+	if !logzio_client.CheckValidStatus(resp, []int{deleteDropFilterMethodSuccess}) {
+		if resp.StatusCode == deleteDropFilterMethodNotFound {
+			return fmt.Errorf("API call %s failed with missing drop filter %d, data: %s", "DeleteDropFilter", dropFilterId, jsonBytes)
+		}
+
+		return fmt.Errorf("API call %s failed with status code %d, data: %s", "DeleteDropFilter", resp.StatusCode, jsonBytes)
+	}
+
+	return nil
 }
