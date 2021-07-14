@@ -20,6 +20,6 @@ func (c *DropFiltersClient) buildDeactivateApiRequest(apiToken string, dropFilte
 }
 
 // Deactivates drop filter by Id
-func (c *DropFiltersClient) deactivateDropFilter(dropFilter DropFilter) (*DropFilter, error) {
-	return c.ActivateOrDeactivateDropFilter(dropFilter, false)
+func (c *DropFiltersClient) deactivateDropFilter(dropFilterId string) error {
+	return c.ActivateOrDeactivateDropFilter(dropFilterId, false)
 }
