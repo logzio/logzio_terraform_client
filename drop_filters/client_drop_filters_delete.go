@@ -15,7 +15,7 @@ const deleteDropFilterMethodNotFound int = http.StatusNotFound
 
 func (c *DropFiltersClient) buildDeleteApiRequest(apiToken string, dropFilterId string) (*http.Request, error) {
 	baseUrl := c.BaseUrl
-	req, err := http.NewRequest(deleteDropFilterServiceMethod, fmt.Sprintf(deleteDropFilterServiceUrl, baseUrl,dropFilterId), nil)
+	req, err := http.NewRequest(deleteDropFilterServiceMethod, fmt.Sprintf(deleteDropFilterServiceUrl, baseUrl, dropFilterId), nil)
 	logzio_client.AddHttpHeaders(apiToken, req)
 
 	return req, err

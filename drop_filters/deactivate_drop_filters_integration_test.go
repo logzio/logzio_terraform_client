@@ -6,7 +6,6 @@ import (
 	"time"
 )
 
-
 func TestIntegrationDropFilters_DeactivateDropFilter(t *testing.T) {
 	underTest, err := setupDropFiltersIntegrationTest()
 

@@ -19,7 +19,7 @@ func (c *DropFiltersClient) buildActivateApiRequest(apiToken string, dropFilterI
 	return req, err
 }
 
-// Activates drop filter by Id
+// Activates drop filter by Id, returns the activated drop filter or error if occurred
 func (c *DropFiltersClient) ActivateDropFilter(dropFilterID string) (*DropFilter, error) {
 	return c.ActivateOrDeactivateDropFilter(dropFilterID, true)
 }
