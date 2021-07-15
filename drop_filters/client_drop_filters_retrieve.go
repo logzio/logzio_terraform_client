@@ -23,7 +23,7 @@ func (c *DropFiltersClient) buildRetrieveApiRequest(apiToken string) (*http.Requ
 
 // Returns all the drop filters in an array associated with the account identified by the supplied API token, returns an error if
 // any problem occurs during the API call
-func (c *DropFiltersClient) retrieveDropFilters() ([]DropFilter, error) {
+func (c *DropFiltersClient) RetrieveDropFilters() ([]DropFilter, error) {
 	req, _ := c.buildRetrieveApiRequest(c.ApiToken)
 
 	httpClient := client.GetHttpClient(req)
