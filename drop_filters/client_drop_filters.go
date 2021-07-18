@@ -26,10 +26,10 @@ type FieldConditionObject struct {
 }
 
 type DropFilter struct {
-	Id             string
-	Active         bool
-	LogType        string
-	FieldCondition []FieldConditionObject
+	Id             string                 `json:"id"`
+	Active         bool                   `json:"active"`
+	LogType        string                 `json:"logType"`
+	FieldCondition []FieldConditionObject `json:"fieldConditions"`
 }
 
 func New(apiToken, baseUrl string) (*DropFiltersClient, error) {
