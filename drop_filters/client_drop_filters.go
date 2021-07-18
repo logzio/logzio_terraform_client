@@ -16,7 +16,7 @@ type DropFiltersClient struct {
 }
 
 type CreateDropFilter struct {
-	LogType         string                 `json:"LogType,omitempty"`
+	LogType         string                 `json:"logType,omitempty"`
 	FieldConditions []FieldConditionObject `json:"fieldConditions"`
 }
 
