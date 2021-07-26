@@ -1,7 +1,6 @@
 package sub_accounts_test
 
 import (
-	"github.com/logzio/logzio_terraform_client/sub_accounts"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
@@ -9,27 +8,16 @@ import (
 
 func TestIntegrationSubAccount_DeleteSubAccount(t *testing.T) {
 	underTest, email, err := setupSubAccountsIntegrationTest()
-
-	if assert.NoError(t, err){
-		createSubAccount := sub_accounts.SubAccountCreate{
-			Email:                 email,
-			AccountName:           "test_delete",
-			MaxDailyGB:            1,
-			RetentionDays:         1,
-			Searchable:            false,
-			Accessible:            true,
-			DocSizeSetting:        false,
-			SharingObjectAccounts: []int32{},
-		}
-
+	if assert.NoError(t, err) {
+		createSubAccount := getCreatrOrUpdateSubAccount(email)
+		createSubAccount.AccountName = createSubAccount.AccountName + "_delete"
 		subAccount, err := underTest.CreateSubAccount(createSubAccount)
 		if assert.NoError(t, err) && assert.NotNil(t, subAccount) {
-			time.Sleep(4 * time.Second)
+			time.Sleep(2 * time.Second)
 			defer func() {
-				err = underTest.DeleteSubAccount(subAccount.Id)
+				err = underTest.DeleteSubAccount(int64(subAccount.AccountId))
 				assert.NoError(t, err)
 			}()
-
 		}
 	}
 }

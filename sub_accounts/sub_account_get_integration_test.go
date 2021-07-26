@@ -1,7 +1,6 @@
 package sub_accounts_test
 
 import (
-	"github.com/logzio/logzio_terraform_client/sub_accounts"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
@@ -11,27 +10,18 @@ func TestIntegrationSubAccount_GetSubAccount(t *testing.T) {
 	underTest, email, err := setupSubAccountsIntegrationTest()
 
 	if assert.NoError(t, err) {
-		createSubAccount := sub_accounts.SubAccountCreate{
-			Email:                 email,
-			AccountName:           "test_get",
-			MaxDailyGB:            1,
-			RetentionDays:         1,
-			Searchable:            false,
-			Accessible:            true,
-			DocSizeSetting:        false,
-			SharingObjectAccounts: []int32{},
-		}
+		createSubAccount := getCreatrOrUpdateSubAccount(email)
+		createSubAccount.AccountName = createSubAccount.AccountName + "_get"
 
 		subAccount, err := underTest.CreateSubAccount(createSubAccount)
 		if assert.NoError(t, err) && assert.NotNil(t, subAccount) {
-			defer underTest.DeleteSubAccount(subAccount.Id)
+			defer underTest.DeleteSubAccount(int64(subAccount.AccountId))
 			time.Sleep(4 * time.Second)
-			getSubAccount, err := underTest.GetSubAccount(subAccount.Id)
-
+			getSubAccount, err := underTest.GetSubAccount(int64(subAccount.AccountId))
 			assert.NoError(t, err)
 			assert.NotNil(t, getSubAccount)
-			assert.Equal(t, subAccount.Id, getSubAccount.Id)
-			assert.Equal(t, subAccount.AccountName, getSubAccount.AccountName)
+			assert.Equal(t, subAccount.AccountId, getSubAccount.AccountId)
+			assert.Equal(t, createSubAccount.AccountName, getSubAccount.AccountName)
 		}
 	}
 }

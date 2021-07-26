@@ -1,45 +1,32 @@
 {
   "subAccountRelation": {
-    "ownerAccountId": 88765,
+    "ownerAccountId": 1234555,
     "subAccountId": 1234567,
     "searchable": true,
     "accessible": false,
-    "createdDate": 1584532201,
-    "lastUpdatedDate": 1584532202,
-    "lastUpdaterUserId": 33342,
+    "createdDate": 1626964508000,
+    "lastUpdatedDate": 1626964508000,
+    "lastUpdaterUserId": 32123,
     "type": "SUB_ACCOUNT"
   },
   "account": {
-    "accountId": 12345,
+    "accountId": 1234567,
     "accountName": "testAccount",
-    "accountToken": "testToken",
     "active": true,
     "esIndexPrefix": "testIndex",
-    "maxDailyGB": 12,
-    "retentionDays": 123
+    "maxDailyGB": 5.0,
+    "reservedDailyGB": null,
+    "isFlexible": false,
+    "retentionDays": 5,
+    "accountToken": "testToken"
   },
-  "sharingObjectsAccounts": [
-    {
-      "accountId": 12345,
-      "accountName": "testAccount",
-      "accountToken": "testToken",
-      "active": true,
-      "esIndexPrefix": "testIndex",
-      "maxDailyGB": 12,
-      "retentionDays": 123
-    }
-  ],
+  "sharingObjectsAccounts": [],
   "utilizationSettings": {
     "frequencyMinutes": 5,
     "utilizationEnabled": true
   },
   "dailyUsagesList": {
-    "usage": [
-      {
-        "date": 0,
-        "bytes": 0
-      }
-    ]
+    "usage": []
   },
   "docSizeSetting": true
 }

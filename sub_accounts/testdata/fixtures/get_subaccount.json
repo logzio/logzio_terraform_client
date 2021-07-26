@@ -1,19 +1,15 @@
 {
   "accountId": 1234567,
-  "email": "them@mycompany.com",
-  "accountName": "404 errors",
-  "accountToken": "f483abe93b",
-  "maxDailyGB": 100,
+  "email": null,
+  "accountName": "testAccount",
+  "maxDailyGB": 1.0,
+  "reservedDailyGB": null,
+  "isFlexible": false,
   "retentionDays": 5,
   "searchable": true,
   "accessible": false,
   "docSizeSetting": true,
-  "sharingObjectsAccounts": [
-    {
-      "accountId": 88888,
-      "accountName": "dev group 8"
-    }
-  ],
+  "sharingObjectsAccounts": [],
   "utilizationSettings": {
     "frequencyMinutes": 5,
     "utilizationEnabled": true
