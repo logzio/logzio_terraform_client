@@ -1,0 +1,7 @@
+{
+  "id": 1234567,
+  "title": "New Microsoft Teams endpoint",
+  "description": "Sends notifications to logzio-alerts channel",
+  "url": "https://jsonplaceholder.typicode.com/todos/1",
+  "endpointType": "Microsoft Teams"
+}

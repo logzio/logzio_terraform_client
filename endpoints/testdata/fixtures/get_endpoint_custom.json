@@ -1,0 +1,16 @@
+{
+  "endpointType": "Custom",
+  "id": 1234567,
+  "title": "New custom endpoint",
+  "description": "Sends notifications to my custom endpoint",
+  "url": "https://jsonplaceholder.typicode.com/todos/1",
+  "method": "POST",
+  "headers": "authKey=6e30-60a9-3591",
+  "bodyTemplate": {
+    "subject": "Alert from Logz.io",
+    "message": {
+      "severity": "LOW",
+      "body": "Check Logz.io for log activity"
+    }
+  }
+}

@@ -14,6 +14,11 @@ var (
 	server *httptest.Server
 )
 
+const (
+	testsUrl = "https://jsonplaceholder.typicode.com/todos/1"
+	testsUrlUpdate = "https://jsonplaceholder.typicode.com/todos/2"
+)
+
 func fixture(path string) string {
 	b, err := ioutil.ReadFile("testdata/fixtures/" + path)
 	if err != nil {
@@ -63,5 +68,12 @@ func TestNewWithEmptyApiToken(t *testing.T) {
 	if err.Error() != "API token not defined" {
 		t.Fatalf("The expected error message to be '%s' but was '%s'",
 			"API token not defined", err.Error())
+	}
+}
+
+func GetCreateOrUpdateEndpoint() endpoints.CreateOrUpdateEndpoint {
+	return endpoints.CreateOrUpdateEndpoint{
+		Title:         "tf_test",
+		Description:   "this is a description",
 	}
 }

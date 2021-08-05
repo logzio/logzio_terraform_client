@@ -1,0 +1,9 @@
+{
+  "endpointType": "VictorOps",
+  "id": 1234567,
+  "title": "VictorOps endpoint",
+  "description": "Sends notifications to VictorOps",
+  "routingKey": "someRoutingKey",
+  "messageType": "someMessageType",
+  "serviceApiKey": "someServiceApiKey"
+}

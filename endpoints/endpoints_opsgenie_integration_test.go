@@ -8,12 +8,12 @@ import (
 	"time"
 )
 
-func TestIntegrationEndpoints_CreateEndpointDataDog(t *testing.T) {
+func TestIntegrationEndpoints_CreateEndpointOpsGenie(t *testing.T) {
 	underTest, err := setupEndpointsIntegrationTest()
 	if assert.NoError(t, err) {
 		createEndpoint := GetCreateOrUpdateEndpoint()
-		createEndpoint.Title = createEndpoint.Title + "_create_datadog"
-		createEndpoint.Type = endpoints.EndpointTypeDataDog
+		createEndpoint.Title = createEndpoint.Title + "_create_opsgenie"
+		createEndpoint.Type = endpoints.EndpointTypeOpsGenie
 		createEndpoint.ApiKey = "someApiKey"
 		endpoint, err := underTest.CreateEndpoint(createEndpoint)
 		if assert.NoError(t, err) && assert.NotNil(t, endpoint) {
@@ -23,24 +23,24 @@ func TestIntegrationEndpoints_CreateEndpointDataDog(t *testing.T) {
 	}
 }
 
-func TestIntegrationEndpoints_CreateEndpointDataDogNoApiKey(t *testing.T) {
+func TestIntegrationEndpoints_CreateEndpointOpsGenieEmptyApiKey(t *testing.T) {
 	underTest, err := setupEndpointsIntegrationTest()
 	if assert.NoError(t, err) {
 		createEndpoint := GetCreateOrUpdateEndpoint()
-		createEndpoint.Title = createEndpoint.Title + "_create_datadog"
-		createEndpoint.Type = endpoints.EndpointTypeDataDog
+		createEndpoint.Title = createEndpoint.Title + "_create_opsgenie_empty_api_key"
+		createEndpoint.Type = endpoints.EndpointTypeOpsGenie
 		endpoint, err := underTest.CreateEndpoint(createEndpoint)
 		assert.Error(t, err)
 		assert.Nil(t, endpoint)
 	}
 }
 
-func TestIntegrationEndpoints_CreateEndpointDataDogDuplicationError(t *testing.T) {
+func TestIntegrationEndpoints_CreateEndpointOpsGenieDuplicationError(t *testing.T) {
 	underTest, err := setupEndpointsIntegrationTest()
 	if assert.NoError(t, err) {
 		createEndpoint := GetCreateOrUpdateEndpoint()
-		createEndpoint.Title = createEndpoint.Title + "_create_datadog_dup"
-		createEndpoint.Type = endpoints.EndpointTypeDataDog
+		createEndpoint.Title = createEndpoint.Title + "_create_opsgenie_dup"
+		createEndpoint.Type = endpoints.EndpointTypeOpsGenie
 		createEndpoint.ApiKey = "someApiKey"
 		endpoint, err := underTest.CreateEndpoint(createEndpoint)
 		if assert.NoError(t, err) && assert.NotNil(t, endpoint) {
@@ -53,31 +53,31 @@ func TestIntegrationEndpoints_CreateEndpointDataDogDuplicationError(t *testing.T
 	}
 }
 
-func TestIntegrationEndpoints_CreateEndpointDataDogNoTitle(t *testing.T) {
+func TestIntegrationEndpoints_CreateEndpointOpsGenieNoTitle(t *testing.T) {
 	underTest, err := setupEndpointsIntegrationTest()
 	if assert.NoError(t, err) {
 		createEndpoint := GetCreateOrUpdateEndpoint()
-		createEndpoint.Type = endpoints.EndpointTypeDataDog
+		createEndpoint.Title = ""
+		createEndpoint.Type = endpoints.EndpointTypeOpsGenie
 		createEndpoint.ApiKey = "someApiKey"
 		endpoint, err := underTest.CreateEndpoint(createEndpoint)
-		if assert.NoError(t, err) && assert.NotNil(t, endpoint) {
-			defer underTest.DeleteEndpoint(int64(endpoint.Id))
-		}
+		assert.Error(t, err)
+		assert.Nil(t, endpoint)
 	}
 }
 
-func TestIntegrationEndpoints_UpdateEndpointDataDog(t *testing.T) {
+func TestIntegrationEndpoints_UpdateEndpointOpsGenie(t *testing.T) {
 	underTest, err := setupEndpointsIntegrationTest()
 	if assert.NoError(t, err) {
 		createEndpoint := GetCreateOrUpdateEndpoint()
-		createEndpoint.Title = createEndpoint.Title + "_create_datadog_to_update"
-		createEndpoint.Type = endpoints.EndpointTypeDataDog
+		createEndpoint.Title = createEndpoint.Title + "_create_opsgenie_to_update"
+		createEndpoint.Type = endpoints.EndpointTypeOpsGenie
 		createEndpoint.ApiKey = "someApiKey"
 		endpoint, err := underTest.CreateEndpoint(createEndpoint)
 		if assert.NoError(t, err) && assert.NotNil(t, endpoint) {
 			defer underTest.DeleteEndpoint(int64(endpoint.Id))
 			time.Sleep(time.Second * 1)
-			createEndpoint.Title = "updated_datadog"
+			createEndpoint.Title = "updated_opsgenie"
 			createEndpoint.Description = "This is an UPDATED description"
 			createEndpoint.ApiKey = "updatedApiKey"
 			updated, err := underTest.UpdateEndpoint(int64(endpoint.Id), createEndpoint)
@@ -88,12 +88,12 @@ func TestIntegrationEndpoints_UpdateEndpointDataDog(t *testing.T) {
 	}
 }
 
-func TestIntegrationEndpoints_GetEndpointDataDog(t *testing.T) {
+func TestIntegrationEndpoints_GetEndpointOpsGenie(t *testing.T) {
 	underTest, err := setupEndpointsIntegrationTest()
 	if assert.NoError(t, err) {
 		createEndpoint := GetCreateOrUpdateEndpoint()
-		createEndpoint.Title = createEndpoint.Title + "_get_datadog"
-		createEndpoint.Type = endpoints.EndpointTypeDataDog
+		createEndpoint.Title = createEndpoint.Title + "_get_opsgenie"
+		createEndpoint.Type = endpoints.EndpointTypeOpsGenie
 		createEndpoint.ApiKey = "someApiKey"
 		endpoint, err := underTest.CreateEndpoint(createEndpoint)
 		if assert.NoError(t, err) && assert.NotNil(t, endpoint) {

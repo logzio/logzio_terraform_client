@@ -1,0 +1,7 @@
+{
+  "endpointType": "PagerDuty",
+  "id": 1234567,
+  "title": "PagerDuty endpoint",
+  "description": "Sends notifications to PagerDuty",
+  "serviceKey": "someServiceKey"
+}

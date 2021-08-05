@@ -1,0 +1,7 @@
+{
+  "endpointType": "Opsgenie",
+  "id": 1234567,
+  "title": "OpsGenie endpoint",
+  "description": "Sends notifications to OpsGenie",
+  "apiKey": "someApiKey"
+}

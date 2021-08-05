@@ -3,124 +3,109 @@ package endpoints_test
 import (
 	"github.com/logzio/logzio_terraform_client/endpoints"
 	"github.com/stretchr/testify/assert"
+	"strings"
 	"testing"
+	"time"
 )
 
-func TestIntegrationEndpoints_CreateDeleteGetValidEndpoint(t *testing.T) {
-	var endpoint *endpoints.Endpoint
-	var err error
-
+func TestIntegrationEndpoints_CreateEndpointSlack(t *testing.T) {
 	underTest, err := setupEndpointsIntegrationTest()
-
 	if assert.NoError(t, err) {
-		endpoint, err = underTest.CreateEndpoint(endpoints.Endpoint{
-			Title:        "slackcreatedeletevalidendpoint",
-			Description:  "my description",
-			Url:          "https://jsonplaceholder.typicode.com/todos/1",
-			EndpointType: "slack",
-		})
-		assert.Nil(t, err)
-
-		err = underTest.DeleteEndpoint(endpoint.Id)
-		assert.NoError(t, err)
-
-		_, err = underTest.GetEndpoint(endpoint.Id)
-		assert.Error(t, err)
+		createEndpoint := GetCreateOrUpdateEndpoint()
+		createEndpoint.Title = createEndpoint.Title + "_create_slack"
+		createEndpoint.Type = endpoints.EndpointTypeSlack
+		createEndpoint.Url = testsUrl
+		endpoint, err := underTest.CreateEndpoint(createEndpoint)
+		if assert.NoError(t, err) && assert.NotNil(t, endpoint) {
+			defer underTest.DeleteEndpoint(int64(endpoint.Id))
+			time.Sleep(time.Second * 1)
+		}
 	}
 }
 
-// Tests create of an already existing endpoint (same titles)
-func TestIntegrationEndpoints_CreateDuplicateEndpoint(t *testing.T) {
-	var endpoint *endpoints.Endpoint
-	var err error
-
+func TestIntegrationEndpoints_CreateEndpointSlackNoUrl(t *testing.T) {
 	underTest, err := setupEndpointsIntegrationTest()
-
 	if assert.NoError(t, err) {
-		endpoint, err = underTest.CreateEndpoint(endpoints.Endpoint{
-			Title:        "slackcreateduplicateendpoint",
-			Description:  "my description",
-			Url:          "https://jsonplaceholder.typicode.com/todos/1",
-			EndpointType: "slack",
-		})
-		if assert.NoError(t, err) {
-			duplicate, err := underTest.CreateEndpoint(endpoints.Endpoint{
-				Title:        "slackcreateduplicateendpoint",
-				Description:  "my description",
-				Url:          "https://jsonplaceholder.typicode.com/todos/1",
-				EndpointType: "slack",
-			})
+		createEndpoint := GetCreateOrUpdateEndpoint()
+		createEndpoint.Title = createEndpoint.Title + "_create_slack"
+		createEndpoint.Type = endpoints.EndpointTypeSlack
+		endpoint, err := underTest.CreateEndpoint(createEndpoint)
+		assert.Error(t, err)
+		assert.Nil(t, endpoint)
+	}
+}
+
+func TestIntegrationEndpoints_CreateEndpointSlackDuplicationError(t *testing.T) {
+	underTest, err := setupEndpointsIntegrationTest()
+	if assert.NoError(t, err) {
+		createEndpoint := GetCreateOrUpdateEndpoint()
+		createEndpoint.Title = createEndpoint.Title + "_create_slack_dup"
+		createEndpoint.Type = endpoints.EndpointTypeSlack
+		createEndpoint.Url = testsUrl
+		endpoint, err := underTest.CreateEndpoint(createEndpoint)
+		if assert.NoError(t, err) && assert.NotNil(t, endpoint) {
+			defer underTest.DeleteEndpoint(int64(endpoint.Id))
+			time.Sleep(time.Second * 1)
+			duplicate, err := underTest.CreateEndpoint(createEndpoint)
 			assert.Error(t, err)
 			assert.Nil(t, duplicate)
 		}
-		err = underTest.DeleteEndpoint(endpoint.Id)
-		assert.NoError(t, err)
 	}
 }
 
-func TestIntegrationEndpoints_ListEndpoints(t *testing.T) {
+func TestIntegrationEndpoints_CreateEndpointSlackNoTitle(t *testing.T) {
 	underTest, err := setupEndpointsIntegrationTest()
 	if assert.NoError(t, err) {
-		endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
-			Title:        "slacklistendpoints",
-			Description:  "my description",
-			Url:          "https://jsonplaceholder.typicode.com/todos/1",
-			EndpointType: "slack",
-		})
-		list, err := underTest.ListEndpoints()
-		assert.NoError(t, err)
-		assert.True(t, len(list) > 0)
-		err = underTest.DeleteEndpoint(endpoint.Id)
-		assert.NoError(t, err)
-	}
-}
-
-func TestIntegrationEndpoints_CreateInvalidEndpoint(t *testing.T) {
-	underTest, err := setupEndpointsIntegrationTest()
-	if assert.NoError(t, err) {
-		endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
-			Title:        "slackinvalidEndpoint",
-			Description:  "my description",
-			Url:          "https://someUrl",
-			EndpointType: "slack",
-		})
-		assert.Nil(t, endpoint)
+		createEndpoint := GetCreateOrUpdateEndpoint()
+		createEndpoint.Title = ""
+		createEndpoint.Type = endpoints.EndpointTypeSlack
+		createEndpoint.Url = testsUrl
+		endpoint, err := underTest.CreateEndpoint(createEndpoint)
 		assert.Error(t, err)
+		assert.Nil(t, endpoint)
 	}
 }
 
-func TestIntegrationEndpoints_UpdateEndpoint(t *testing.T) {
-	var endpoint *endpoints.Endpoint
-	var err error
-
+func TestIntegrationEndpoints_UpdateEndpointSlack(t *testing.T) {
 	underTest, err := setupEndpointsIntegrationTest()
+	if assert.NoError(t, err) {
+		createEndpoint := GetCreateOrUpdateEndpoint()
+		createEndpoint.Title = createEndpoint.Title + "_create_slack_to_update"
+		createEndpoint.Type = endpoints.EndpointTypeSlack
+		createEndpoint.Url = testsUrl
+		endpoint, err := underTest.CreateEndpoint(createEndpoint)
+		if assert.NoError(t, err) && assert.NotNil(t, endpoint) {
+			defer underTest.DeleteEndpoint(int64(endpoint.Id))
+			time.Sleep(time.Second * 1)
+			createEndpoint.Title = "updated_slack"
+			createEndpoint.Description = "This is an UPDATED description"
+			createEndpoint.Url = testsUrlUpdate
+			updated, err := underTest.UpdateEndpoint(int64(endpoint.Id), createEndpoint)
+			assert.NoError(t, err)
+			assert.NotNil(t, updated)
+			assert.Equal(t, endpoint.Id, updated.Id)
+		}
+	}
+}
 
-	if assert.NoError(t, err) && assert.NotNil(t, underTest) {
-		endpoint, err = underTest.CreateEndpoint(endpoints.Endpoint{
-			Title:        "slackupdatedendpoint",
-			Description:  "my description",
-			Url:          "https://jsonplaceholder.typicode.com/todos/1",
-			EndpointType: "slack",
-		})
-		assert.NoError(t, err)
-		assert.NotNil(t, endpoint)
-
-		updatedEndpoint, err := underTest.UpdateEndpoint(endpoint.Id, endpoints.Endpoint{
-			Title:        "slackupdatedupdatedendpoint",
-			Description:  "my updated description",
-			Url:          "https://jsonplaceholder.typicode.com/todos/1",
-			EndpointType: "slack",
-		})
-		assert.NoError(t, err)
-		assert.NotNil(t, updatedEndpoint)
-
-		readEndpoint, err := underTest.GetEndpoint(updatedEndpoint.Id)
-		assert.NoError(t, err)
-		assert.NotNil(t, readEndpoint)
-
-		assert.Equal(t, "slackupdatedupdatedendpoint", readEndpoint.Title)
-
-		err = underTest.DeleteEndpoint(endpoint.Id)
-		assert.NoError(t, err)
+func TestIntegrationEndpoints_GetEndpointSlack(t *testing.T) {
+	underTest, err := setupEndpointsIntegrationTest()
+	if assert.NoError(t, err) {
+		createEndpoint := GetCreateOrUpdateEndpoint()
+		createEndpoint.Title = createEndpoint.Title + "_get_slack"
+		createEndpoint.Type = endpoints.EndpointTypeSlack
+		createEndpoint.Url = testsUrl
+		endpoint, err := underTest.CreateEndpoint(createEndpoint)
+		if assert.NoError(t, err) && assert.NotNil(t, endpoint) {
+			defer underTest.DeleteEndpoint(int64(endpoint.Id))
+			time.Sleep(time.Second * 1)
+			endpointFromGet, err := underTest.GetEndpoint(int64(endpoint.Id))
+			assert.NoError(t, err)
+			assert.NotNil(t, endpointFromGet)
+			assert.Equal(t, endpoint.Id, endpointFromGet.Id)
+			assert.Equal(t, createEndpoint.Type, strings.ToLower(endpointFromGet.Type))
+			assert.Equal(t, createEndpoint.Title, endpointFromGet.Title)
+			assert.Equal(t, createEndpoint.Url, endpointFromGet.Url)
+		}
 	}
 }

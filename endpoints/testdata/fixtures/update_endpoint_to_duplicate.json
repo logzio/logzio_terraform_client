@@ -1,8 +1,0 @@
-{
-  "errorCode": "endpoints/DUPLICATE_NAME",
-  "message": "Endpoint name 'my endpoint' already exists",
-  "requestId": "7cb814b5-e5bf-4c85-a385-d45d234168d3",
-  "parameters": {
-    "name": "my endpoint"
-  }
-}
