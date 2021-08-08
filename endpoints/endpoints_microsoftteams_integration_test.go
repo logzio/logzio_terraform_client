@@ -103,7 +103,6 @@ func TestIntegrationEndpoints_GetEndpointMicrosoftTeams(t *testing.T) {
 			assert.NoError(t, err)
 			assert.NotNil(t, endpointFromGet)
 			assert.Equal(t, endpoint.Id, endpointFromGet.Id)
-			// TODO: change the following line if the type will be camelcase
 			assert.Equal(t, "microsoft teams", strings.ToLower(endpointFromGet.Type))
 			assert.Equal(t, createEndpoint.Title, endpointFromGet.Title)
 			assert.Equal(t, createEndpoint.Url, endpointFromGet.Url)

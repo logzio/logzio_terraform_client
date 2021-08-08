@@ -15,7 +15,7 @@ var (
 )
 
 const (
-	testsUrl = "https://jsonplaceholder.typicode.com/todos/1"
+	testsUrl       = "https://jsonplaceholder.typicode.com/todos/1"
 	testsUrlUpdate = "https://jsonplaceholder.typicode.com/todos/2"
 )
 
@@ -73,7 +73,7 @@ func TestNewWithEmptyApiToken(t *testing.T) {
 
 func GetCreateOrUpdateEndpoint() endpoints.CreateOrUpdateEndpoint {
 	return endpoints.CreateOrUpdateEndpoint{
-		Title:         "tf_test",
-		Description:   "this is a description",
+		Title:       "tf_test",
+		Description: "this is a description",
 	}
 }

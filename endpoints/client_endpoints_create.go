@@ -42,7 +42,7 @@ func (c *EndpointsClient) CreateEndpoint(endpoint CreateOrUpdateEndpoint) (*Crea
 
 func (c *EndpointsClient) buildCreateApiRequest(apiToken string, jsonBytes []byte, endpointType string) (*http.Request, error) {
 	baseUrl := c.BaseUrl
-	req, err := http.NewRequest(createEndpointServiceMethod,fmt.Sprintf(createEndpointServiceUrl, baseUrl, c.getURLByType(endpointType)), bytes.NewBuffer(jsonBytes))
+	req, err := http.NewRequest(createEndpointServiceMethod, fmt.Sprintf(createEndpointServiceUrl, baseUrl, c.getURLByType(endpointType)), bytes.NewBuffer(jsonBytes))
 	logzio_client.AddHttpHeaders(apiToken, req)
 
 	return req, err

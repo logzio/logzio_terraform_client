@@ -60,7 +60,7 @@ func validateCreateOrUpdateEndpointRequestCustom(endpoint CreateOrUpdateEndpoint
 		return fmt.Errorf("method must be set for type %s", EndpointTypeCustom)
 	}
 
-	validMethods := []string{ http.MethodPost, http.MethodPut, http.MethodGet }
+	validMethods := []string{http.MethodPost, http.MethodPut, http.MethodGet}
 	if !logzio_client.Contains(validMethods, endpoint.Method) {
 		return fmt.Errorf("method should be one of %s", validMethods)
 	}
@@ -142,7 +142,7 @@ func validateCreateOrUpdateEndpointRequestMicrosoftTeams(endpoint CreateOrUpdate
 }
 
 func isValidEndpoint(endpointType string) bool {
-	validEndpoints := []string { EndpointTypeSlack, EndpointTypeCustom, EndpointTypePagerDuty, EndpointTypeBigPanda,
+	validEndpoints := []string{EndpointTypeSlack, EndpointTypeCustom, EndpointTypePagerDuty, EndpointTypeBigPanda,
 		EndpointTypeDataDog, EndpointTypeVictorOps, EndpointTypeOpsGenie, EndpointTypeServiceNow, EndpointTypeMicrosoftTeams}
 	for _, endpoint := range validEndpoints {
 		if endpoint == endpointType {

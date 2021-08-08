@@ -10,10 +10,10 @@ import (
 )
 
 const (
-	getEndpointsServiceUrl string = endpointServiceEndpoint + "/%d"
-	getEndpointsServiceMethod string = http.MethodGet
-	getEndpointsMethodSuccess int = http.StatusOK
-	getEndpointsMethodNotFound int = http.StatusNotFound
+	getEndpointsServiceUrl     string = endpointServiceEndpoint + "/%d"
+	getEndpointsServiceMethod  string = http.MethodGet
+	getEndpointsMethodSuccess  int    = http.StatusOK
+	getEndpointsMethodNotFound int    = http.StatusNotFound
 )
 
 // Returns an endpoint given it's unique identifier, an error otherwise

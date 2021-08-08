@@ -104,7 +104,6 @@ func TestEndpoints_GetEndpointMicrosoftTeams(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, endpoint)
 	assert.Equal(t, endpointId, int64(endpoint.Id))
-	// TODO: change if the type will be in camel case
 	assert.Equal(t, "microsoft teams", strings.ToLower(endpoint.Type))
 	assert.Equal(t, "New Microsoft Teams endpoint", endpoint.Title)
 	assert.Equal(t, "Sends notifications to logzio-alerts channel", endpoint.Description)

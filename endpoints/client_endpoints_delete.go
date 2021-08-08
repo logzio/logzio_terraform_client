@@ -9,11 +9,11 @@ import (
 )
 
 const (
-	deleteEndpointServiceUrl    string = endpointServiceEndpoint + "/%d"
-	deleteEndpointServiceMethod string = http.MethodDelete
-	deleteEndpointMethodSuccess int    = http.StatusOK
-	deleteEndpointMethodSuccessNoContent int = http.StatusNoContent
-	deleteEndpointMethodNotFound int = http.StatusNotFound
+	deleteEndpointServiceUrl             string = endpointServiceEndpoint + "/%d"
+	deleteEndpointServiceMethod          string = http.MethodDelete
+	deleteEndpointMethodSuccess          int    = http.StatusOK
+	deleteEndpointMethodSuccessNoContent int    = http.StatusNoContent
+	deleteEndpointMethodNotFound         int    = http.StatusNotFound
 )
 
 // Delete an endpoint, specified by it's unique id, returns an error if a problem is encountered
