@@ -50,7 +50,6 @@ type SubAccount struct {
 	AccountId              int32                      `json:"accountId"`
 	Email                  string                     `json:"email"`
 	AccountName            string                     `json:"accountName"`
-	AccountToken           string                     `json:"accountToken"`
 	Flexible               bool                       `json:"isFlexible"`
 	ReservedDailyGB        float32                    `json:"reservedDailyGB"`
 	MaxDailyGB             float32                    `json:"maxDailyGB"`

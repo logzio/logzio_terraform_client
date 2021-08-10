@@ -38,7 +38,7 @@ type CreateOrUpdateEndpoint struct {
 	AppKey        string      `json:"appKey,omitempty"`        // bigPanda
 	ApiKey        string      `json:"apiKey,omitempty"`        // dataDog, opsGenie
 	RoutingKey    string      `json:"routingKey,omitempty"`    // victorOps
-	MessageType   string      `json:"messageType,omitempty"`   //victorOps
+	MessageType   string      `json:"messageType,omitempty"`   // victorOps
 	ServiceApiKey string      `json:"serviceApiKey,omitempty"` // victorOps
 	Username      string      `json:"username,omitempty"`      // serviceNow
 	Password      string      `json:"password,omitempty"`      // serviceNow
