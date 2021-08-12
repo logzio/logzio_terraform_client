@@ -225,7 +225,7 @@ dropFilter, err := client.CreateDropFilter(drop_filters.CreateDropFilter{
 
 
 ### Changelog
-- v1.8
+- v1.8.0
     - `sub_accounts`:
         - Add `flexible` & `reservedDailyGB`.
         - **Breaking changes:** refactor resource.
