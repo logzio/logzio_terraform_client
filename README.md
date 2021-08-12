@@ -229,7 +229,9 @@ dropFilter, err := client.CreateDropFilter(drop_filters.CreateDropFilter{
     - `sub_accounts`:
         - Add `flexible` & `reservedDailyGB`.
         - **Breaking changes:** refactor resource.
-    - `endpoints`: **Breaking changes:** refactor resource.
+    - `endpoints`:
+        - **Breaking changes:** refactor resource.
+        - Add new endpoint types (OpsGenie, ServiceNow, Microsoft Teams).
 - v1.7.0
     - Add [drop filters API](https://docs.logz.io/api/#tag/Drop-filters).
 - v1.6.0
