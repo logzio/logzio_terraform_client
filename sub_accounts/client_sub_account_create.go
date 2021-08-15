@@ -95,6 +95,9 @@ func validateCreateSubAccount(createSubAccount CreateOrUpdateSubAccount) error {
 func (c *SubAccountClient) buildCreateApiRequest(apiToken string, jsonBytes []byte) (*http.Request, error) {
 	baseUrl := c.BaseUrl
 	req, err := http.NewRequest(createSubAccountServiceMethod, fmt.Sprintf(createSubAccountServiceUrl, baseUrl), bytes.NewBuffer(jsonBytes))
+	if err != nil {
+		return nil, err
+	}
 	logzio_client.AddHttpHeaders(apiToken, req)
 
 	return req, err

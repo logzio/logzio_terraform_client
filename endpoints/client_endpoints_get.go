@@ -18,7 +18,10 @@ const (
 
 // Returns an endpoint given it's unique identifier, an error otherwise
 func (c *EndpointsClient) GetEndpoint(endpointId int64) (*Endpoint, error) {
-	req, _ := c.buildGetApiRequest(c.ApiToken, endpointId)
+	req, err := c.buildGetApiRequest(c.ApiToken, endpointId)
+	if err != nil {
+		return nil, err
+	}
 	httpClient := client.GetHttpClient(req)
 	resp, err := httpClient.Do(req)
 	if err != nil {
@@ -48,6 +51,9 @@ func (c *EndpointsClient) GetEndpoint(endpointId int64) (*Endpoint, error) {
 func (c *EndpointsClient) buildGetApiRequest(apiToken string, endpointId int64) (*http.Request, error) {
 	baseUrl := c.BaseUrl
 	req, err := http.NewRequest(getEndpointsServiceMethod, fmt.Sprintf(getEndpointsServiceUrl, baseUrl, endpointId), nil)
+	if err != nil {
+		return nil, err
+	}
 	logzio_client.AddHttpHeaders(apiToken, req)
 
 	return req, err

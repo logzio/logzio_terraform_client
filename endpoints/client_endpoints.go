@@ -3,6 +3,7 @@ package endpoints
 import (
 	"fmt"
 	"github.com/logzio/logzio_terraform_client/client"
+	"strings"
 )
 
 const (
@@ -87,7 +88,7 @@ func New(apiToken, baseUrl string) (*EndpointsClient, error) {
 }
 
 func (c *EndpointsClient) getURLByType(t string) string {
-	switch t {
+	switch strings.ToLower(t) {
 	case EndpointTypeSlack:
 		return "slack"
 	case EndpointTypeCustom:

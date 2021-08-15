@@ -4,6 +4,7 @@ import (
 	"fmt"
 	logzio_client "github.com/logzio/logzio_terraform_client"
 	"net/http"
+	"strings"
 )
 
 func validateCreateOrUpdateEndpointRequest(endpoint CreateOrUpdateEndpoint) error {
@@ -15,11 +16,11 @@ func validateCreateOrUpdateEndpointRequest(endpoint CreateOrUpdateEndpoint) erro
 		return fmt.Errorf("type must be set")
 	}
 
-	if !isValidEndpoint(endpoint.Type) {
+	if !isValidEndpoint(strings.ToLower(endpoint.Type)) {
 		return fmt.Errorf("unsupported endpoint type %s", endpoint.Type)
 	}
 
-	switch endpoint.Type {
+	switch strings.ToLower(endpoint.Type) {
 	case EndpointTypeSlack:
 		return validateCreateOrUpdateEndpointRequestSlack(endpoint)
 	case EndpointTypeCustom:

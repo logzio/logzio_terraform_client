@@ -18,7 +18,10 @@ const (
 // Returns all the detailed sub accounts in an array associated with the account identified by the supplied API token, returns an error if
 // any problem occurs during the API call
 func (c *SubAccountClient) ListDetailedSubAccounts() ([]DetailedSubAccount, error) {
-	req, _ := c.buildListDetailedApiRequest(c.ApiToken)
+	req, err := c.buildListDetailedApiRequest(c.ApiToken)
+	if err != nil {
+		return nil, err
+	}
 	httpClient := client.GetHttpClient(req)
 	resp, err := httpClient.Do(req)
 	if err != nil {
@@ -44,6 +47,9 @@ func (c *SubAccountClient) ListDetailedSubAccounts() ([]DetailedSubAccount, erro
 func (c *SubAccountClient) buildListDetailedApiRequest(apiToken string) (*http.Request, error) {
 	baseUrl := c.BaseUrl
 	req, err := http.NewRequest(listDetailedSubAccountsServiceMethod, fmt.Sprintf(listDetailedSubAccountsServiceUrl, baseUrl), nil)
+	if err != nil {
+		return nil, err
+	}
 	logzio_client.AddHttpHeaders(apiToken, req)
 
 	return req, err

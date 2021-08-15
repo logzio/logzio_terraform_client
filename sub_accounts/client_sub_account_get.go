@@ -18,7 +18,10 @@ const (
 
 // Returns a sub account given it's unique identifier, an error otherwise
 func (c *SubAccountClient) GetSubAccount(subAccountId int64) (*SubAccount, error) {
-	req, _ := c.buildGetApiRequest(c.ApiToken, subAccountId)
+	req, err := c.buildGetApiRequest(c.ApiToken, subAccountId)
+	if err != nil {
+		return nil, err
+	}
 	httpClient := client.GetHttpClient(req)
 	resp, err := httpClient.Do(req)
 	if err != nil {
@@ -48,6 +51,9 @@ func (c *SubAccountClient) GetSubAccount(subAccountId int64) (*SubAccount, error
 func (c *SubAccountClient) buildGetApiRequest(apiToken string, subAccountId int64) (*http.Request, error) {
 	baseUrl := c.BaseUrl
 	req, err := http.NewRequest(getSubAccountServiceMethod, fmt.Sprintf(getSubAccountServiceUrl, baseUrl, subAccountId), nil)
+	if err != nil {
+		return nil, err
+	}
 	logzio_client.AddHttpHeaders(apiToken, req)
 
 	return req, err

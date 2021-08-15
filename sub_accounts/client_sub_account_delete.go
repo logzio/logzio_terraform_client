@@ -17,7 +17,10 @@ const (
 
 // Deletes sub account specified by it's unique id, returns an error if a problem is encountered
 func (c *SubAccountClient) DeleteSubAccount(subAccountId int64) error {
-	req, _ := c.buildDeleteApiRequest(c.ApiToken, subAccountId)
+	req, err := c.buildDeleteApiRequest(c.ApiToken, subAccountId)
+	if err != nil {
+		return err
+	}
 	httpClient := client.GetHttpClient(req)
 	resp, err := httpClient.Do(req)
 	if err != nil {
@@ -40,6 +43,9 @@ func (c *SubAccountClient) DeleteSubAccount(subAccountId int64) error {
 func (c *SubAccountClient) buildDeleteApiRequest(apiToken string, subAccountId int64) (*http.Request, error) {
 	baseUrl := c.BaseUrl
 	req, err := http.NewRequest(deleteSubAccountServiceMethod, fmt.Sprintf(deleteSubAccountServiceUrl, baseUrl, subAccountId), nil)
+	if err != nil {
+		return nil, err
+	}
 	logzio_client.AddHttpHeaders(apiToken, req)
 
 	return req, err

@@ -75,6 +75,9 @@ func (c *SubAccountClient) buildUpdateApiRequest(apiToken string, subAccountId i
 
 	baseUrl := c.BaseUrl
 	req, err := http.NewRequest(updateSubAccountServiceMethod, fmt.Sprintf(updateSubAccountServiceUrl, baseUrl, subAccountId), bytes.NewBuffer(jsonBytes))
+	if err != nil {
+		return nil, err
+	}
 	logzio_client.AddHttpHeaders(apiToken, req)
 
 	return req, err

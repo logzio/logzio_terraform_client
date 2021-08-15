@@ -17,7 +17,10 @@ const (
 )
 
 func (c *SubAccountClient) GetDetailedSubAccount(subAccountId int64) (*DetailedSubAccount, error) {
-	req, _ := c.buildGetDetailedApiRequest(c.ApiToken, subAccountId)
+	req, err := c.buildGetDetailedApiRequest(c.ApiToken, subAccountId)
+	if err != nil {
+		return nil, err
+	}
 	httpClient := client.GetHttpClient(req)
 	resp, err := httpClient.Do(req)
 	if err != nil {
@@ -46,6 +49,9 @@ func (c *SubAccountClient) GetDetailedSubAccount(subAccountId int64) (*DetailedS
 func (c *SubAccountClient) buildGetDetailedApiRequest(apiToken string, subAccountId int64) (*http.Request, error) {
 	baseUrl := c.BaseUrl
 	req, err := http.NewRequest(getDetailedSubAccountServiceMethod, fmt.Sprintf(getDetailedSubAccountServiceUrl, baseUrl, subAccountId), nil)
+	if err != nil {
+		return nil, err
+	}
 	logzio_client.AddHttpHeaders(apiToken, req)
 
 	return req, err
