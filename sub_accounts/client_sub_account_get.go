@@ -3,76 +3,58 @@ package sub_accounts
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/logzio/logzio_terraform_client"
+	logzio_client "github.com/logzio/logzio_terraform_client"
 	"github.com/logzio/logzio_terraform_client/client"
 	"io/ioutil"
 	"net/http"
 )
 
 const (
-	getServiceUrl     string = subAccountServiceEndpoint + "/%d"
-	getServiceMethod  string = http.MethodGet
-	getServiceSuccess int    = http.StatusOK
+	getSubAccountServiceUrl      string = subAccountServiceEndpoint + "/%d"
+	getSubAccountServiceMethod   string = http.MethodGet
+	getSubAccountServiceSuccess  int    = http.StatusOK
+	getSubAccountServiceNotFound int    = http.StatusNotFound
 )
 
-func (c *SubAccountClient) getValidateRequest(id int64) (error, bool) {
-	return nil, true
-}
-
-func (c *SubAccountClient) getApiRequest(apiToken string, id int64) (*http.Request, error) {
-
-	url := fmt.Sprintf(getServiceUrl, c.BaseUrl, id)
-	req, err := http.NewRequest(getServiceMethod, url, nil)
-	logzio_client.AddHttpHeaders(apiToken, req)
-	return req, err
-}
-
-func (c *SubAccountClient) getHttpRequest(req *http.Request) (map[string]interface{}, error) {
+// Returns a sub account given it's unique identifier, an error otherwise
+func (c *SubAccountClient) GetSubAccount(subAccountId int64) (*SubAccount, error) {
+	req, err := c.buildGetApiRequest(c.ApiToken, subAccountId)
+	if err != nil {
+		return nil, err
+	}
 	httpClient := client.GetHttpClient(req)
 	resp, err := httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	jsonBytes, err := ioutil.ReadAll(resp.Body)
-	if !logzio_client.CheckValidStatus(resp, []int{getServiceSuccess}) {
-		return nil, fmt.Errorf("%d %s", resp.StatusCode, jsonBytes)
-	}
-	var target map[string]interface{}
-	err = json.Unmarshal(jsonBytes, &target)
-	if err != nil {
-		return nil, err
-	}
-	return target, nil
-}
 
-func (c *SubAccountClient) getCheckResponse(response map[string]interface{}) error {
-	return nil
-}
+	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 
-func (c *SubAccountClient) GetSubAccount(id int64) (*SubAccount, error) {
-	if err, ok := c.getValidateRequest(id); !ok {
-		return nil, err
+	if !logzio_client.CheckValidStatus(resp, []int{getSubAccountServiceSuccess}) {
+		if resp.StatusCode == getSubAccountServiceNotFound {
+			return nil, fmt.Errorf("API call %s failed with missing sub account %d, data: %s", operationGetSubAccount, subAccountId, jsonBytes)
+		}
+
+		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", operationGetSubAccount, resp.StatusCode, jsonBytes)
 	}
-	req, _ := c.getApiRequest(c.ApiToken, id)
 
-	target, err := c.getHttpRequest(req)
+	var subAccount SubAccount
+	err = json.Unmarshal(jsonBytes, &subAccount)
 	if err != nil {
 		return nil, err
 	}
 
-	err = c.getCheckResponse(target)
-	if err != nil {
-		return nil, err
-	}
-
-	pretty, err := json.MarshalIndent(target, "", "	")
-	if err != nil {
-		c.logger.Error("Error parsing subaccount: ", err)
-	} else {
-		c.logger.Trace("subaccount:", string(pretty))
-	}
-
-	subAccount := jsonToSubAccount(target)
 	return &subAccount, nil
+}
+
+func (c *SubAccountClient) buildGetApiRequest(apiToken string, subAccountId int64) (*http.Request, error) {
+	baseUrl := c.BaseUrl
+	req, err := http.NewRequest(getSubAccountServiceMethod, fmt.Sprintf(getSubAccountServiceUrl, baseUrl, subAccountId), nil)
+	if err != nil {
+		return nil, err
+	}
+	logzio_client.AddHttpHeaders(apiToken, req)
+
+	return req, err
 }

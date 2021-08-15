@@ -3,136 +3,181 @@ package endpoints_test
 import (
 	"github.com/logzio/logzio_terraform_client/endpoints"
 	"github.com/stretchr/testify/assert"
+	"net/http"
+	"strings"
 	"testing"
 	"time"
 )
 
-func TestIntegrationEndpoints_CustomCreateUpdate(t *testing.T) {
+func TestIntegrationEndpoints_CreateEndpointCustom(t *testing.T) {
 	underTest, err := setupEndpointsIntegrationTest()
 	if assert.NoError(t, err) {
-		endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
-			Title:        "testCreateCustomEndpoint",
-			Method:       "POST",
-			Description:  "my description",
-			Url:          "https://jsonplaceholder.typicode.com/todos/1",
-			EndpointType: "custom",
-			Headers:      map[string]string{"hello": "there", "header": "two"},
-			BodyTemplate: map[string]string{"hello": "there", "header": "two"},
-		})
+		createEndpoint := GetCreateOrUpdateEndpoint()
+		createEndpoint.Title = createEndpoint.Title + "_create_custom"
+		createEndpoint.Type = endpoints.EndpointTypeCustom
+		createEndpoint.Url = testsUrl
+		createEndpoint.Method = http.MethodPost
+		createEndpoint.Headers = "hello=there,header=two"
+		createEndpoint.BodyTemplate = map[string]string{"hello": "there", "header": "two"}
+		endpoint, err := underTest.CreateEndpoint(createEndpoint)
 		if assert.NoError(t, err) && assert.NotNil(t, endpoint) {
-			defer underTest.DeleteEndpoint(endpoint.Id)
-
-			endpoint, err = underTest.UpdateEndpoint(endpoint.Id, endpoints.Endpoint{
-				Title:        "testCreateUpdateCustomEndpoint",
-				Method:       "POST",
-				Description:  "my description update",
-				Url:          "https://jsonplaceholder.typicode.com/todos/1",
-				EndpointType: "custom",
-				Headers:      map[string]string{"hello": "there", "header": "two"},
-				BodyTemplate: map[string]string{"hello": "there", "header": "two"},
-			})
-			assert.NotNil(t, endpoint)
-			assert.NoError(t, err)
+			time.Sleep(time.Second * 1)
+			defer underTest.DeleteEndpoint(int64(endpoint.Id))
 		}
 	}
 }
 
-func TestIntegrationEndpoints_CustomCreateDuplicate(t *testing.T) {
+func TestIntegrationEndpoints_CreateEndpointCustomEmptyHeaders(t *testing.T) {
 	underTest, err := setupEndpointsIntegrationTest()
 	if assert.NoError(t, err) {
-		endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
-			Title:        "testCustomDuplicateEndpoint",
-			Method:       "POST",
-			Description:  "my description",
-			Url:          "https://jsonplaceholder.typicode.com/todos/1",
-			EndpointType: "custom",
-			Headers:      map[string]string{"hello": "there", "header": "two"},
-			BodyTemplate: map[string]string{"hello": "there", "header": "two"},
-		})
+		createEndpoint := GetCreateOrUpdateEndpoint()
+		createEndpoint.Title = createEndpoint.Title + "_create_custom_empty_headers"
+		createEndpoint.Type = endpoints.EndpointTypeCustom
+		createEndpoint.Url = testsUrl
+		createEndpoint.Method = http.MethodPost
+		createEndpoint.Headers = ""
+		createEndpoint.BodyTemplate = map[string]string{"hello": "there", "header": "two"}
+		endpoint, err := underTest.CreateEndpoint(createEndpoint)
 		if assert.NoError(t, err) && assert.NotNil(t, endpoint) {
-			defer underTest.DeleteEndpoint(endpoint.Id)
+			defer underTest.DeleteEndpoint(int64(endpoint.Id))
+		}
+	}
+}
 
-			duplicate, err := underTest.CreateEndpoint(endpoints.Endpoint{
-				Title:        "testCustomDuplicateEndpoint",
-				Method:       "POST",
-				Description:  "my description",
-				Url:          "https://jsonplaceholder.typicode.com/todos/1",
-				EndpointType: "custom",
-				Headers:      map[string]string{"hello": "there", "header": "two"},
-				BodyTemplate: map[string]string{"hello": "there", "header": "two"},
-			})
-			assert.Nil(t, duplicate)
+func TestIntegrationEndpoints_CreateEndpointCustomEmptyBodyTemplate(t *testing.T) {
+	underTest, err := setupEndpointsIntegrationTest()
+	if assert.NoError(t, err) {
+		createEndpoint := GetCreateOrUpdateEndpoint()
+		createEndpoint.Title = createEndpoint.Title + "_create_custom_empty_body_template"
+		createEndpoint.Type = endpoints.EndpointTypeCustom
+		createEndpoint.Url = testsUrl
+		createEndpoint.Method = http.MethodPost
+		createEndpoint.Headers = "hello=there,header=two"
+		createEndpoint.BodyTemplate = nil
+		endpoint, err := underTest.CreateEndpoint(createEndpoint)
+		if assert.NoError(t, err) && assert.NotNil(t, endpoint) {
+			defer underTest.DeleteEndpoint(int64(endpoint.Id))
+		}
+	}
+}
+
+func TestIntegrationEndpoints_CreateEndpointCustomNoUrl(t *testing.T) {
+	underTest, err := setupEndpointsIntegrationTest()
+	if assert.NoError(t, err) {
+		createEndpoint := GetCreateOrUpdateEndpoint()
+		createEndpoint.Title = createEndpoint.Title + "_create_custom_no_url"
+		createEndpoint.Type = endpoints.EndpointTypeCustom
+		createEndpoint.Method = http.MethodPost
+		createEndpoint.Headers = "hello=there,header=two"
+		createEndpoint.BodyTemplate = map[string]string{"hello": "there", "header": "two"}
+		endpoint, err := underTest.CreateEndpoint(createEndpoint)
+		assert.Error(t, err)
+		assert.Nil(t, endpoint)
+	}
+}
+
+func TestIntegrationEndpoints_CreateEndpointCustomNoMethod(t *testing.T) {
+	underTest, err := setupEndpointsIntegrationTest()
+	if assert.NoError(t, err) {
+		createEndpoint := GetCreateOrUpdateEndpoint()
+		createEndpoint.Title = createEndpoint.Title + "_create_custom_no_method"
+		createEndpoint.Type = endpoints.EndpointTypeCustom
+		createEndpoint.Url = testsUrl
+		createEndpoint.Headers = "hello=there,header=two"
+		createEndpoint.BodyTemplate = map[string]string{"hello": "there", "header": "two"}
+		endpoint, err := underTest.CreateEndpoint(createEndpoint)
+		assert.Error(t, err)
+		assert.Nil(t, endpoint)
+	}
+}
+
+func TestIntegrationEndpoints_CreateEndpointCustomDuplicationError(t *testing.T) {
+	underTest, err := setupEndpointsIntegrationTest()
+	if assert.NoError(t, err) {
+		createEndpoint := GetCreateOrUpdateEndpoint()
+		createEndpoint.Title = createEndpoint.Title + "_create_custom_dup"
+		createEndpoint.Type = endpoints.EndpointTypeCustom
+		createEndpoint.Url = testsUrl
+		createEndpoint.Method = http.MethodPost
+		createEndpoint.Headers = "hello=there,header=two"
+		createEndpoint.BodyTemplate = map[string]string{"hello": "there", "header": "two"}
+		endpoint, err := underTest.CreateEndpoint(createEndpoint)
+		if assert.NoError(t, err) && assert.NotNil(t, endpoint) {
+			defer underTest.DeleteEndpoint(int64(endpoint.Id))
+			time.Sleep(time.Second * 1)
+			duplicated, err := underTest.CreateEndpoint(createEndpoint)
 			assert.Error(t, err)
+			assert.Nil(t, duplicated)
 		}
 	}
 }
 
-func TestIntegrationEndpoints_CustomCreateNoHeader(t *testing.T) {
+func TestIntegrationEndpoints_CreateEndpointNoTitle(t *testing.T) {
 	underTest, err := setupEndpointsIntegrationTest()
 	if assert.NoError(t, err) {
-		endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
-			Title:        "testCreateCustomEndpointNoHeaders",
-			Method:       "POST",
-			Description:  "my description",
-			Url:          "https://jsonplaceholder.typicode.com/todos/1",
-			EndpointType: "custom",
-			BodyTemplate: map[string]string{"hello": "there", "header": "two"},
-		})
-
-		if assert.NotNil(t, endpoint) && assert.NoError(t, err) {
-			assert.NotEmpty(t, endpoint.Id)
-			defer underTest.DeleteEndpoint(endpoint.Id)
-		}
+		createEndpoint := GetCreateOrUpdateEndpoint()
+		createEndpoint.Title = ""
+		createEndpoint.Type = endpoints.EndpointTypeCustom
+		createEndpoint.Url = testsUrl
+		createEndpoint.Method = http.MethodPost
+		createEndpoint.Headers = "hello=there,header=two"
+		createEndpoint.BodyTemplate = map[string]string{"hello": "there", "header": "two"}
+		endpoint, err := underTest.CreateEndpoint(createEndpoint)
+		assert.Error(t, err)
+		assert.Nil(t, endpoint)
 	}
 }
 
-func TestIntegrationEndpoints_CustomGetNoHeaders(t *testing.T) {
+func TestIntegrationEndpoints_UpdateEndpointCustom(t *testing.T) {
 	underTest, err := setupEndpointsIntegrationTest()
 	if assert.NoError(t, err) {
-		endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
-			Title:        "testCreateCustomEndpointNoHeaders",
-			Method:       "POST",
-			Description:  "my description",
-			Url:          "https://jsonplaceholder.typicode.com/todos/1",
-			EndpointType: "custom",
-			BodyTemplate: map[string]string{"hello": "there", "header": "two"},
-		})
-
-		if assert.NotNil(t, endpoint) && assert.NoError(t, err) {
-			defer underTest.DeleteEndpoint(endpoint.Id)
-			assert.NotEmpty(t, endpoint.Id)
-			time.Sleep(4 * time.Second)
-			getEndpoint, err := underTest.GetEndpoint(endpoint.Id)
-			assert.NotNil(t, endpoint)
+		createEndpoint := GetCreateOrUpdateEndpoint()
+		createEndpoint.Title = createEndpoint.Title + "_create_custom_to_update"
+		createEndpoint.Type = endpoints.EndpointTypeCustom
+		createEndpoint.Url = testsUrl
+		createEndpoint.Method = http.MethodPost
+		createEndpoint.Headers = "hello=there,header=two"
+		createEndpoint.BodyTemplate = map[string]string{"hello": "there", "header": "two"}
+		endpoint, err := underTest.CreateEndpoint(createEndpoint)
+		if assert.NoError(t, err) && assert.NotNil(t, endpoint) {
+			defer underTest.DeleteEndpoint(int64(endpoint.Id))
+			time.Sleep(time.Second * 1)
+			createEndpoint.Title = "updated_custom"
+			createEndpoint.Description = "This is an UPDATED description"
+			createEndpoint.Method = http.MethodPut
+			createEndpoint.Url = testsUrlUpdate
+			updated, err := underTest.UpdateEndpoint(int64(endpoint.Id), createEndpoint)
 			assert.NoError(t, err)
-			assert.Equal(t, endpoint.Id, getEndpoint.Id)
+			assert.NotNil(t, updated)
+			assert.Equal(t, endpoint.Id, updated.Id)
 		}
 	}
 }
 
-func TestIntegrationEndpoints_CustomCreateInvalidMethod(t *testing.T) {
+func TestIntegrationEndpoints_GetEndpointCustom(t *testing.T) {
 	underTest, err := setupEndpointsIntegrationTest()
 	if assert.NoError(t, err) {
-		endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
-			Title:        "testCreateCustomEndpoint",
-			Method:       "INVALID",
-			Description:  "my description",
-			Url:          "https://jsonplaceholder.typicode.com/todos/1",
-			EndpointType: "custom",
-			Headers:      map[string]string{"hello": "there", "header": "two"},
-			BodyTemplate: map[string]string{"hello": "there", "header": "two"},
-		})
-
-		assert.Error(t, err)
-		assert.Nil(t, endpoint)
-	}
-}
-
-func TestIntegrationEndpoints_CustomGetNotExists(t *testing.T) {
-	underTest, err := setupEndpointsIntegrationTest()
-	if assert.NoError(t, err) {
-		endpoint, err := underTest.GetEndpoint(int64(1234567))
-		assert.Error(t, err)
-		assert.Nil(t, endpoint)
+		createEndpoint := GetCreateOrUpdateEndpoint()
+		createEndpoint.Title = createEndpoint.Title + "_get_custom"
+		createEndpoint.Type = endpoints.EndpointTypeCustom
+		createEndpoint.Url = testsUrl
+		createEndpoint.Method = http.MethodPost
+		createEndpoint.Headers = "hello=there,header=two"
+		createEndpoint.BodyTemplate = map[string]string{"hello": "there", "header": "two"}
+		endpoint, err := underTest.CreateEndpoint(createEndpoint)
+		if assert.NoError(t, err) && assert.NotNil(t, endpoint) {
+			time.Sleep(time.Second * 1)
+			defer underTest.DeleteEndpoint(int64(endpoint.Id))
+			endpointFromGet, err := underTest.GetEndpoint(int64(endpoint.Id))
+			assert.NoError(t, err)
+			assert.NotNil(t, endpointFromGet)
+			assert.Equal(t, endpoint.Id, endpointFromGet.Id)
+			assert.Equal(t, createEndpoint.Title, endpointFromGet.Title)
+			assert.Equal(t, strings.ToLower(createEndpoint.Type), strings.ToLower(endpointFromGet.Type))
+			assert.Equal(t, createEndpoint.Url, endpointFromGet.Url)
+			assert.Equal(t, createEndpoint.Method, endpointFromGet.Method)
+			assert.Equal(t, createEndpoint.Headers, endpointFromGet.Headers)
+			assert.NotEmpty(t, endpointFromGet.BodyTemplate)
+		}
 	}
 }

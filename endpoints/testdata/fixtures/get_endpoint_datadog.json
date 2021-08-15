@@ -1,0 +1,7 @@
+{
+  "endpointType": "Datadog",
+  "id": 1234567,
+  "title": "Datadog endpoint",
+  "description": "Sends notifications to Datadog",
+  "apiKey": "someApiKey"
+}

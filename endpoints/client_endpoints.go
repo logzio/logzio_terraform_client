@@ -1,117 +1,73 @@
 package endpoints
 
 import (
-	"errors"
 	"fmt"
-	"net/http"
-	"strings"
-
-	"github.com/logzio/logzio_terraform_client"
 	"github.com/logzio/logzio_terraform_client/client"
+	"strings"
 )
 
 const (
 	endpointServiceEndpoint = "%s/v1/endpoints"
+	deleteEndpointMethod    = "DeleteEndpoint"
+	getEndpointMethod       = "GetEndpoint"
+	listEndpointMethod      = "ListEndpoint"
+	updateEndpointMethod    = "UpdateEndpoint"
 )
 
+// supported endpoint types
 const (
-	fldEndpointId            string = "id"
-	fldEndpointType          string = "endpointType"
-	fldEndpointTitle         string = "title"
-	fldEndpointDescription   string = "description"
-	fldEndpointUrl           string = "url"
-	fldEndpointMethod        string = "method"
-	fldEndpointHeaders       string = "headers"
-	fldEndpointBodyTemplate  string = "bodyTemplate"
-	fldEndpointServiceKey    string = "serviceKey"
-	fldEndpointApiToken      string = "apiToken"
-	fldEndpointAppKey        string = "appKey"
-	fldEndpointApiKey        string = "apiKey"
-	fldEndpointRoutingKey    string = "routingKey"
-	fldEndpointMessageType   string = "messageType"
-	fldEndpointServiceApiKey string = "serviceApiKey"
+	EndpointTypeSlack          string = "slack"
+	EndpointTypeCustom         string = "custom"
+	EndpointTypePagerDuty      string = "pagerduty"
+	EndpointTypeBigPanda       string = "bigpanda"
+	EndpointTypeDataDog        string = "datadog"
+	EndpointTypeVictorOps      string = "victorops"
+	EndpointTypeOpsGenie       string = "opsgenie"
+	EndpointTypeServiceNow     string = "servicenow"
+	EndpointTypeMicrosoftTeams string = "microsoftteams"
 )
 
-const (
-	EndpointTypeSlack     endpointType = "slack"
-	EndpointTypeCustom    endpointType = "custom"
-	EndpointTypePagerDuty endpointType = "pagerduty"
-	EndpointTypeBigPanda  endpointType = "bigpanda"
-	EndpointTypeDataDog   endpointType = "datadog"
-	EndpointTypeVictorOps endpointType = "victorops"
-)
-
-type (
-	endpointType string
-)
-
-type Endpoint struct {
-	Id            int64             // all
-	EndpointType  endpointType      // all
-	Title         string            // all
-	Description   string            // all
-	Url           string            // custom & slack
-	Method        string            // custom
-	Headers       map[string]string // custom
-	BodyTemplate  interface{}       // custom
-	Message       string            // n.b. this is a hack to determine if there was an error (despite a 200 being returned)
-	ServiceKey    string            // pager-duty
-	ApiToken      string            // big-panda
-	AppKey        string            // big-panda
-	ApiKey        string            // data-dog
-	RoutingKey    string            // victorops
-	MessageType   string            // victorops
-	ServiceApiKey string            // victorops
+type CreateOrUpdateEndpoint struct {
+	Title         string      `json:"title"`                   // all
+	Description   string      `json:"description"`             // all
+	Url           string      `json:"url,omitempty"`           // slack, custom, serviceNow, microsoftTeams
+	Method        string      `json:"method,omitempty'"`       // custom
+	Headers       string      `json:"headers,omitempty"`       // custom
+	BodyTemplate  interface{} `json:"bodyTemplate,omitempty"`  // custom
+	ServiceKey    string      `json:"serviceKey,omitempty"`    // pagerDuty
+	ApiToken      string      `json:"apiToken,omitempty"`      // bigPanda
+	AppKey        string      `json:"appKey,omitempty"`        // bigPanda
+	ApiKey        string      `json:"apiKey,omitempty"`        // dataDog, opsGenie
+	RoutingKey    string      `json:"routingKey,omitempty"`    // victorOps
+	MessageType   string      `json:"messageType,omitempty"`   // victorOps
+	ServiceApiKey string      `json:"serviceApiKey,omitempty"` // victorOps
+	Username      string      `json:"username,omitempty"`      // serviceNow
+	Password      string      `json:"password,omitempty"`      // serviceNow
+	Type          string      `json:"-"`                       // only for identification of the endpoint
 }
 
-func jsonEndpointToEndpoint(jsonEndpoint map[string]interface{}) Endpoint {
-	t := strings.ToLower(jsonEndpoint[fldEndpointType].(string))
+type CreateOrUpdateEndpointResponse struct {
+	Id int32 `json:"id"`
+}
 
-	endpoint := Endpoint{
-		Id:           int64(jsonEndpoint[fldEndpointId].(float64)),
-		EndpointType: endpointType(t),
-		Title:        jsonEndpoint[fldEndpointTitle].(string),
-	}
-
-	if jsonEndpoint[fldEndpointDescription] != nil {
-		endpoint.Description = jsonEndpoint[fldEndpointDescription].(string)
-	}
-
-	switch endpoint.EndpointType {
-	case EndpointTypeSlack:
-		endpoint.Url = jsonEndpoint[fldEndpointUrl].(string)
-	case EndpointTypeCustom:
-		endpoint.Url = jsonEndpoint[fldEndpointUrl].(string)
-		endpoint.BodyTemplate = jsonEndpoint[fldEndpointBodyTemplate]
-		if jsonEndpoint[fldEndpointHeaders] != nil {
-			headerMap := make(map[string]string)
-			headerString := jsonEndpoint[fldEndpointHeaders].(string)
-			headers := strings.Split(headerString, ",")
-			for _, header := range headers {
-				kv := strings.Split(header, "=")
-				headerMap[kv[0]] = kv[1]
-			}
-
-			endpoint.Headers = headerMap
-		}
-
-		endpoint.Method = jsonEndpoint[fldEndpointMethod].(string)
-	case EndpointTypePagerDuty:
-		endpoint.ServiceKey = jsonEndpoint[fldEndpointServiceKey].(string)
-	case EndpointTypeBigPanda:
-		endpoint.ApiToken = jsonEndpoint[fldEndpointApiToken].(string)
-		endpoint.AppKey = jsonEndpoint[fldEndpointAppKey].(string)
-	case EndpointTypeDataDog:
-		endpoint.ApiKey = jsonEndpoint[fldEndpointApiKey].(string)
-	case EndpointTypeVictorOps:
-		endpoint.RoutingKey = jsonEndpoint[fldEndpointRoutingKey].(string)
-		endpoint.MessageType = jsonEndpoint[fldEndpointMessageType].(string)
-		endpoint.ServiceApiKey = jsonEndpoint[fldEndpointServiceApiKey].(string)
-	default:
-		panic(fmt.Sprintf("unsupported endpoint type %s", endpoint.EndpointType))
-	}
-
-	return endpoint
+type Endpoint struct {
+	Type          string      `json:"endpointType"`
+	Id            int32       `json:"id"`
+	Title         string      `json:"title"`
+	Description   string      `json:"description"`
+	Url           string      `json:"url,omitempty"`           // slack, custom, serviceNow, microsoftTeams
+	Method        string      `json:"method,omitempty'"`       // custom
+	Headers       string      `json:"headers,omitempty"`       // custom
+	BodyTemplate  interface{} `json:"bodyTemplate,omitempty"`  // custom
+	ServiceKey    string      `json:"serviceKey,omitempty"`    // pagerDuty
+	ApiToken      string      `json:"apiToken,omitempty"`      // bigPanda
+	AppKey        string      `json:"appKey,omitempty"`        // bigPanda
+	ApiKey        string      `json:"apiKey,omitempty"`        // dataDog, opsGenie
+	RoutingKey    string      `json:"routingKey,omitempty"`    // victorOps
+	MessageType   string      `json:"messageType,omitempty"`   //victorOps
+	ServiceApiKey string      `json:"serviceApiKey,omitempty"` // victorOps
+	Username      string      `json:"username,omitempty"`      // serviceNow
+	Password      string      `json:"password,omitempty"`      // serviceNow
 }
 
 type EndpointsClient struct {
@@ -131,30 +87,8 @@ func New(apiToken, baseUrl string) (*EndpointsClient, error) {
 	return c, nil
 }
 
-type endpointValidator = func(e Endpoint) bool
-type endpointBuilder = func(a string, t endpointType, e Endpoint) (*http.Request, error)
-type endpointChecker = func(data map[string]interface{}) error
-
-func (c *EndpointsClient) makeEndpointRequest(endpoint interface{}, validator endpointValidator, builder endpointBuilder, checker endpointChecker) (map[string]interface{}, error, bool) {
-	e := endpoint.(Endpoint)
-	if !validator(e) {
-		return nil, errors.New("the passed in endpoint is not valid"), false
-	}
-	req, _ := builder(c.ApiToken, e.EndpointType, e)
-	jsonResponse, err := logzio_client.CreateHttpRequest(req)
-	if err != nil {
-		return nil, err, false
-	}
-
-	err = checker(jsonResponse)
-	if err != nil {
-		return nil, err, false
-	}
-	return jsonResponse, err, true
-}
-
-func (c *EndpointsClient) getURLByType(t endpointType) string {
-	switch t {
+func (c *EndpointsClient) getURLByType(t string) string {
+	switch strings.ToLower(t) {
 	case EndpointTypeSlack:
 		return "slack"
 	case EndpointTypeCustom:
@@ -167,6 +101,12 @@ func (c *EndpointsClient) getURLByType(t endpointType) string {
 		return "data-dog"
 	case EndpointTypeVictorOps:
 		return "victorops"
+	case EndpointTypeOpsGenie:
+		return "ops-genie"
+	case EndpointTypeServiceNow:
+		return "service-now"
+	case EndpointTypeMicrosoftTeams:
+		return "microsoft-teams"
 	default:
 		panic(fmt.Sprintf("unsupported endpoint type %s", t))
 	}

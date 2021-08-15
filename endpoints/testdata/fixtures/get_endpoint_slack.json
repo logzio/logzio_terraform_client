@@ -1,0 +1,7 @@
+{
+  "endpointType": "Slack",
+  "id": 1234567,
+  "title": "New Slack endpoint",
+  "description": "Sends notifications to logzio-alerts channel",
+  "url": "https://jsonplaceholder.typicode.com/todos/1"
+}

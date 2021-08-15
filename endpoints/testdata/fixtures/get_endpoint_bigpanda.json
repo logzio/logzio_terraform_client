@@ -1,0 +1,8 @@
+{
+  "endpointType": "BigPanda",
+  "id": 1234567,
+  "title": "BigPanda endpoint",
+  "description": "Sends notifications to BigPanda",
+  "apiToken": "someApiToken",
+  "appKey": "someAppKey"
+}

@@ -125,27 +125,27 @@ user := client.User{
 To create a new sub-account, on a main account.
 ```go
 client, _ := sub_accounts.New(apiToken, apiServerAddress)
-subaccount := sub_accounts.SubAccountCreate{
-    Email:                 "test.user@email.com",
-    AccountName:           "my account name",
-    MaxDailyGB:            6.5,
-    RetentionDays:         4,
-    Searchable:            true,
-    Accessible:            false,
-    SharingObjectAccounts: []int32{accountId1, accountId2}, //Id's of the accounts who will be able to access this account
-    DocSizeSetting:        true,
-}
+subaccount := sub_accounts.CreateOrUpdateSubAccount{
+                Email:                  "some@email.test",
+                AccountName:            "tf_client_test",
+                MaxDailyGB:             1,
+                RetentionDays:          1,
+                Searchable:             strconv.FormatBool(false),
+                Accessible:             strconv.FormatBool(true),
+                SharingObjectsAccounts: []int32{},
+                DocSizeSetting:         strconv.FormatBool(false),
+            }
 ```
 
 |function|func name|
 |---|---|
-|create sub-account|`func (c *SubAccountClient) CreateSubAccount(subAccount SubAccountCreate) (*SubAccount, error) `|
-|update sub-account|`func (c *SubAccountClient) UpdateSubAccount(id int64, subAccount SubAccount) error`|
-|delete sub-account|`func (c *SubAccountClient) DeleteSubAccount(id int64) error`|
-|get sub-account|`func (c *SubAccountClient) GetSubAccount(id int64) (*SubAccount, error)`|
-|get detailed sub-account|`func (c *SubAccountClient) GetDetailedSubAccount(id int64) (*SubAccountDetailed, error)`|
+|create sub-account|`func (c *SubAccountClient) CreateSubAccount(createSubAccount CreateOrUpdateSubAccount) (*SubAccountCreateResponse, error)`|
+|update sub-account|`func (c *SubAccountClient) UpdateSubAccount(subAccountId int64, updateSubAccount CreateOrUpdateSubAccount) error`|
+|delete sub-account|`func (c *SubAccountClient) DeleteSubAccount(subAccountId int64) error`|
+|get sub-account|`func (c *SubAccountClient) GetSubAccount(subAccountId int64) (*SubAccount, error)`|
+|get detailed sub-account|`func (c *SubAccountClient) GetDetailedSubAccount(subAccountId int64) (*DetailedSubAccount, error)`|
 |list sub-accounts|`func (c *SubAccountClient) ListSubAccounts() ([]SubAccount, error)`|
-|list detailed sub-accounts|`func (c *SubAccountClient) DetailedSubAccounts() ([]SubAccountDetailed, error) `|
+|list detailed sub-accounts|`func (c *SubAccountClient) ListDetailedSubAccounts() ([]DetailedSubAccount, error)`|
 
 ##### Endpoints
 
@@ -154,13 +154,21 @@ For more info, see: https://docs.logz.io/api/#tag/Manage-notification-endpoints 
 
 ```go
 client, _ := endpoints.New(apiToken, apiServerAddress)
-endpoint, err := underTest.CreateEndpoint(endpoints.Endpoint{
-			Title:        "some_endpoint",
-			Description:  "my description",
-			Url:          "https://this.is.com/some/webhook",
-			EndpointType: endpoints.EndpointTypeSlack,
-		})
+endpoint, err := client.CreateEndpoint(endpoints.CreateOrUpdateEndpoint{
+                Title:         "New endpoint",
+                Description:   "this is a description",
+                Type:          "slack",
+                Url:           "https://jsonplaceholder.typicode.com/todos/1",
+            })
 ```
+
+|function|func name|
+|---|---|
+|create endpoint| `func (c *EndpointsClient) CreateEndpoint(endpoint CreateOrUpdateEndpoint) (*CreateOrUpdateEndpointResponse, error)` |
+|delete endpoint| `func (c *EndpointsClient) DeleteEndpoint(endpointId int64) error` |
+|get endpoint| `func (c *EndpointsClient) GetEndpoint(endpointId int64) (*Endpoint, error)` |
+|list endpoints| `func (c *EndpointsClient) ListEndpoints() ([]Endpoint, error)` |
+|update endpoint| `func (c *EndpointsClient) UpdateEndpoint(id int64, endpoint CreateOrUpdateEndpoint) (*CreateOrUpdateEndpointResponse, error)` |
 
 ##### Log Shipping Tokens
 
@@ -217,6 +225,13 @@ dropFilter, err := client.CreateDropFilter(drop_filters.CreateDropFilter{
 
 
 ### Changelog
+- v1.8.0
+    - `sub_accounts`:
+        - Add `flexible` & `reservedDailyGB`.
+        - **Breaking changes:** refactor resource.
+    - `endpoints`:
+        - **Breaking changes:** refactor resource.
+        - Add new endpoint types (OpsGenie, ServiceNow, Microsoft Teams).
 - v1.7.0
     - Add [drop filters API](https://docs.logz.io/api/#tag/Drop-filters).
 - v1.6.0

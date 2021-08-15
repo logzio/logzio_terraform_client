@@ -9,7 +9,8 @@ func TestIntegrationSubAccount_ListSubAccounts(t *testing.T) {
 	underTest, _, err := setupSubAccountsIntegrationTest()
 
 	if assert.NoError(t, err) {
-		_, err = underTest.ListSubAccounts()
+		subAccounts, err := underTest.ListSubAccounts()
 		assert.NoError(t, err)
+		assert.NotNil(t, subAccounts)
 	}
 }

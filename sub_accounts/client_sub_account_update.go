@@ -4,79 +4,81 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/logzio/logzio_terraform_client"
+	logzio_client "github.com/logzio/logzio_terraform_client"
 	"github.com/logzio/logzio_terraform_client/client"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 )
 
 const (
-	updateServiceUrl     string = subAccountServiceEndpoint + "/%d"
-	updateServiceMethod  string = http.MethodPut
-	updateServiceSuccess int    = http.StatusNoContent
+	updateSubAccountServiceUrl      string = subAccountServiceEndpoint + "/%d"
+	updateSubAccountServiceMethod   string = http.MethodPut
+	updateSubAccountServiceSuccess  int    = http.StatusNoContent
+	updateSubAccountServiceNotFound int    = http.StatusNotFound
 )
 
-func (c *SubAccountClient) updateValidateRequest(id int64) (error, bool) {
-	return nil, true
-}
-
-func (c *SubAccountClient) updateApiRequest(apiToken string, id int64, subAccount SubAccount) (*http.Request, error) {
-	if subAccount.SharingObjectAccounts == nil {
-		subAccount.SharingObjectAccounts = make([]interface{}, 0)
-	}
-
-	var (
-		updateUser = map[string]interface{}{
-			//"email":                  subAccount.Email,
-			"accountName":            subAccount.AccountName,
-			"maxDailyGB":             subAccount.MaxDailyGB,
-			"retentionDays":          subAccount.RetentionDays,
-			"searchable":             subAccount.Searchable,
-			"accessible":             subAccount.Accessible,
-			"sharingObjectsAccounts": subAccount.SharingObjectAccounts,
-			"docSizeSetting":         subAccount.DocSizeSetting,
-			"utilizationSettings":    subAccount.UtilizationSettings,
-		}
-	)
-
-	jsonBytes, err := json.Marshal(updateUser)
+func (c *SubAccountClient) UpdateSubAccount(subAccountId int64, updateSubAccount CreateOrUpdateSubAccount) error {
+	err := validateUpdateSubAccount(updateSubAccount)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	url := fmt.Sprintf(updateServiceUrl, c.BaseUrl, id)
-	req, err := http.NewRequest(updateServiceMethod, url, bytes.NewBuffer(jsonBytes))
-	logzio_client.AddHttpHeaders(apiToken, req)
-	return req, err
-}
-
-func (c *SubAccountClient) updateHttpRequest(req *http.Request) error {
+	req, err := c.buildUpdateApiRequest(c.ApiToken, subAccountId, updateSubAccount)
+	if err != nil {
+		return err
+	}
 	httpClient := client.GetHttpClient(req)
 	resp, err := httpClient.Do(req)
 	if err != nil {
 		return err
 	}
 	defer resp.Body.Close()
-	if !logzio_client.CheckValidStatus(resp, []int{updateServiceSuccess}) {
-		jsonBytes, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			return err
+
+	jsonBytes, _ := ioutil.ReadAll(resp.Body)
+
+	if !logzio_client.CheckValidStatus(resp, []int{updateSubAccountServiceSuccess}) {
+		if resp.StatusCode == updateSubAccountServiceNotFound {
+			return fmt.Errorf("API call %s failed with missing sub account %d, data: %s", operationUpdateSubAccount, subAccountId, jsonBytes)
 		}
-		return fmt.Errorf("%d %s", resp.StatusCode, jsonBytes)
+
+		return fmt.Errorf("API call %s failed with status code %d, data: %s", operationUpdateSubAccount, resp.StatusCode, jsonBytes)
 	}
+
 	return nil
 }
 
-func (c *SubAccountClient) UpdateSubAccount(id int64, subAccount SubAccount) error {
-	if err, ok := c.getValidateRequest(id); !ok {
-		return err
+func validateUpdateSubAccount(updateSubAccount CreateOrUpdateSubAccount) error {
+	if len(updateSubAccount.AccountName) == 0 {
+		return fmt.Errorf("account name must be set")
 	}
-	req, _ := c.updateApiRequest(c.ApiToken, id, subAccount)
 
-	err := c.updateHttpRequest(req)
-	if err != nil {
-		return err
+	if len(updateSubAccount.Flexible) > 0 {
+		_, err := strconv.ParseBool(updateSubAccount.Flexible)
+		if err != nil {
+			return fmt.Errorf("flexible field is not set to boolean value")
+		}
+	} else {
+		if updateSubAccount.ReservedDailyGB != 0 {
+			return fmt.Errorf("when isFlexible=false reservedDailyGB should be 0, empty, or emitted")
+		}
 	}
 
 	return nil
+}
+
+func (c *SubAccountClient) buildUpdateApiRequest(apiToken string, subAccountId int64, updateSubAccount CreateOrUpdateSubAccount) (*http.Request, error) {
+	jsonBytes, err := json.Marshal(updateSubAccount)
+	if err != nil {
+		return nil, err
+	}
+
+	baseUrl := c.BaseUrl
+	req, err := http.NewRequest(updateSubAccountServiceMethod, fmt.Sprintf(updateSubAccountServiceUrl, baseUrl, subAccountId), bytes.NewBuffer(jsonBytes))
+	if err != nil {
+		return nil, err
+	}
+	logzio_client.AddHttpHeaders(apiToken, req)
+
+	return req, err
 }

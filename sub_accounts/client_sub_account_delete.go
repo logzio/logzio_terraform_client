@@ -2,57 +2,51 @@ package sub_accounts
 
 import (
 	"fmt"
-	"github.com/logzio/logzio_terraform_client"
+	logzio_client "github.com/logzio/logzio_terraform_client"
 	"github.com/logzio/logzio_terraform_client/client"
 	"io/ioutil"
 	"net/http"
 )
 
 const (
-	deleteServiceUrl     string = subAccountServiceEndpoint + "/%d"
-	deleteServiceMethod  string = http.MethodDelete
-	deleteServiceSuccess int    = http.StatusNoContent
+	deleteSubAccountServiceUrl     string = subAccountServiceEndpoint + "/%d"
+	deleteSubAccountServiceMethod  string = http.MethodDelete
+	deleteSubAccountServiceSuccess int    = http.StatusNoContent
+	deleteSubAccountMethodNotFound int    = http.StatusNotFound
 )
 
-func (c *SubAccountClient) deleteValidateRequest(id int64) (error, bool) {
-	return nil, true
-}
-
-func (c *SubAccountClient) deleteApiRequest(apiToken string, id int64) (*http.Request, error) {
-	url := fmt.Sprintf(deleteServiceUrl, c.BaseUrl, id)
-	req, err := http.NewRequest(deleteServiceMethod, url, nil)
-	logzio_client.AddHttpHeaders(apiToken, req)
-
-	return req, err
-}
-
-func (c *SubAccountClient) deleteHttpRequest(req *http.Request) error {
+// Deletes sub account specified by it's unique id, returns an error if a problem is encountered
+func (c *SubAccountClient) DeleteSubAccount(subAccountId int64) error {
+	req, err := c.buildDeleteApiRequest(c.ApiToken, subAccountId)
+	if err != nil {
+		return err
+	}
 	httpClient := client.GetHttpClient(req)
 	resp, err := httpClient.Do(req)
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
-	if !logzio_client.CheckValidStatus(resp, []int{deleteServiceSuccess}) {
-		jsonBytes, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			return err
+
+	jsonBytes, _ := ioutil.ReadAll(resp.Body)
+
+	if !logzio_client.CheckValidStatus(resp, []int{deleteSubAccountServiceSuccess}) {
+		if resp.StatusCode == deleteSubAccountMethodNotFound {
+			return fmt.Errorf("API call %s failed with missing sub account %d, data: %s", operationDeleteSubAccount, subAccountId, jsonBytes)
 		}
-		return fmt.Errorf("%d %s", resp.StatusCode, jsonBytes)
+
+		return fmt.Errorf("API call %s failed with status code %d, data: %s", operationDeleteSubAccount, resp.StatusCode, jsonBytes)
 	}
+
 	return nil
 }
 
-func (c *SubAccountClient) DeleteSubAccount(id int64) error {
-	if err, ok := c.deleteValidateRequest(id); !ok {
-		return err
-	}
-	req, _ := c.deleteApiRequest(c.ApiToken, id)
-
-	err := c.deleteHttpRequest(req)
+func (c *SubAccountClient) buildDeleteApiRequest(apiToken string, subAccountId int64) (*http.Request, error) {
+	baseUrl := c.BaseUrl
+	req, err := http.NewRequest(deleteSubAccountServiceMethod, fmt.Sprintf(deleteSubAccountServiceUrl, baseUrl, subAccountId), nil)
 	if err != nil {
-		return err
+		return nil, err
 	}
+	logzio_client.AddHttpHeaders(apiToken, req)
 
-	return nil
+	return req, err
 }

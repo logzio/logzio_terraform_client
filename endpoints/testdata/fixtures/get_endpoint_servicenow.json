@@ -1,0 +1,9 @@
+{
+  "endpointType": "ServiceNow",
+  "id": 1234567,
+  "title": "New ServiceNow endpoint",
+  "description": "Sends notifications to logzio-alerts channel",
+  "username": "User",
+  "password": "Password",
+  "url": "https://jsonplaceholder.typicode.com/todos/1"
+}

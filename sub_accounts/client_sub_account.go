@@ -1,95 +1,115 @@
 package sub_accounts
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/hashicorp/go-hclog"
 	"github.com/logzio/logzio_terraform_client/client"
 )
 
 const (
-	subAccountServiceEndpoint = "%s/v1/account-management/time-based-accounts"
-	loggerName                = "logzio-client"
+	subAccountServiceEndpoint               = "%s/v1/account-management/time-based-accounts"
+	loggerName                              = "logzio-client"
+	operationGetSubAccount           string = "GetSubAccount"
+	operationDeleteSubAccount        string = "DeleteSubAccount"
+	operationGetDetailedSubAccount   string = "GetDetailedSubAccount"
+	operationListSubAccounts         string = "ListSubAccounts"
+	operationListDetailedSubAccounts string = "ListDetailedSubAccounts"
+	operationUpdateSubAccount        string = "UpdateSubAccount"
 )
-
-const (
-	fldAccountId             string = "accountId"   //required
-	fldEmail                 string = "email"       //required
-	fldAccountName           string = "accountName" //required
-	fldMaxDailyGB            string = "maxDailyGB"
-	fldRetentionDays         string = "retentionDays" //required
-	fldAccessible            string = "accessible"
-	fldSearchable            string = "searchable"
-	fldSharingAccountObjects string = "sharingObjectsAccounts" //required
-	fldDocSizeSetting        string = "docSizeSetting"
-	fldUtilizationSettings   string = "utilizationSettings"
-	fldFrequencyMinutes      string = "frequencyMinutes"
-	fldUtilizationEnabled    string = "utilizationEnabled"
-	fldAccountToken          string = "accountToken"
-	fldDailyUsagesList       string = "dailyUsagesList"
-)
-
-type SubAccount struct {
-	Id                    int64
-	AccountName           string
-	MaxDailyGB            float32
-	RetentionDays         int32
-	Searchable            bool
-	Accessible            bool
-	SharingObjectAccounts []interface{}
-	DocSizeSetting        bool
-	UtilizationSettings   map[string]interface{}
-	Token                 string
-	AccountId             int64
-}
-
-type SubAccountRelation struct {
-	OwnerAccountId    int64  `json:"ownerAccountId"`
-	SubAccountId      int64  `json:"subAccountId"`
-	Searchable        bool   `json:"searchable"`
-	Accessible        bool   `json:"accessible"`
-	CreatedDate       int64  `json:"createdDate"`
-	LastUpdatedDate   int64  `json:"lastUpdatedDate"`
-	LastUpdaterUserId int64  `json:"lastUpdaterUserId"`
-	Type              string `json:"type"`
-}
-
-type Account struct {
-	AccountId     int64  `json:"accountId"`
-	AccountToken  string `json:"accountToken"`
-	AccountName   string `json:"accountName"`
-	Active        bool   `json:"active"`
-	EsIndexPrefix string `json:"esIndexPrefix"`
-	MaxDailyGB    int64  `json:"maxDailyGB"`
-	RetentionDays int64  `json:"retentionDays"`
-}
-
-type SubAccountDetailed struct {
-	SubAccountRelation    SubAccountRelation     `json:"subAccountRelation"`
-	Account               Account                `json:"account"`
-	SharingObjectAccounts []interface{}          `json:"sharingObjectsAccounts"`
-	UtilizationSettings   map[string]interface{} `json:"utilizationSettings"`
-	DailyUsagesList       map[string]interface{} `json:"dailyUsagesList"`
-	DocSizeSetting        bool                   `json:"docSizeSetting"`
-}
-
-type SubAccountCreate struct {
-	Email                 string
-	AccountName           string
-	MaxDailyGB            float32
-	RetentionDays         int32
-	Searchable            bool
-	Accessible            bool
-	SharingObjectAccounts []int32
-	DocSizeSetting        bool
-	UtilizationSettings   map[string]interface{}
-	AccountToken          string
-	DailyUsagesList       interface{}
-}
 
 type SubAccountClient struct {
 	*client.Client
 	logger hclog.Logger
+}
+
+type CreateOrUpdateSubAccount struct {
+	Email                  string                                   `json:"email,omitempty"`
+	AccountName            string                                   `json:"accountName"`
+	Flexible               string                                   `json:"isFlexible,omitempty"` // boolean
+	ReservedDailyGB        float32                                  `json:"reservedDailyGB,omitempty"`
+	MaxDailyGB             float32                                  `json:"maxDailyGB"`
+	RetentionDays          int32                                    `json:"retentionDays"`
+	Searchable             string                                   `json:"searchable,omitempty"` // boolean
+	Accessible             string                                   `json:"accessible,omitempty"` // boolean
+	SharingObjectsAccounts []int32                                  `json:"sharingObjectsAccounts"`
+	DocSizeSetting         string                                   `json:"docSizeSetting"` // boolean
+	UtilizationSettings    AccountUtilizationSettingsCreateOrUpdate `json:"utilizationSettings"`
+}
+
+type AccountUtilizationSettingsCreateOrUpdate struct {
+	FrequencyMinutes   int32  `json:"frequencyMinutes"`
+	UtilizationEnabled string `json:"utilizationEnabled"` // boolean
+}
+
+type AccountUtilizationSettings struct {
+	FrequencyMinutes   int32 `json:"frequencyMinutes"`
+	UtilizationEnabled bool  `json:"utilizationEnabled"`
+}
+
+type SubAccount struct {
+	AccountId              int32                      `json:"accountId"`
+	Email                  string                     `json:"email"`
+	AccountName            string                     `json:"accountName"`
+	Flexible               bool                       `json:"isFlexible"`
+	ReservedDailyGB        float32                    `json:"reservedDailyGB"`
+	MaxDailyGB             float32                    `json:"maxDailyGB"`
+	RetentionDays          int32                      `json:"retentionDays"`
+	Searchable             bool                       `json:"searchable"`
+	Accessible             bool                       `json:"accessible"`
+	DocSizeSetting         bool                       `json:"docSizeSetting"`
+	SharingObjectsAccounts []SharingAccount           `json:"sharingObjectsAccounts"`
+	UtilizationSettings    AccountUtilizationSettings `json:"utilizationSettings"`
+}
+
+type SharingAccount struct {
+	AccountId   int32  `json:"accountId"`
+	AccountName string `json:"accountName"`
+}
+
+type DetailedSubAccount struct {
+	SubAccountRelation     SubAccountRelationObject   `json:"subAccountRelation"`
+	Account                AccountView                `json:"account"`
+	SharingObjectsAccounts []AccountView              `json:"sharingObjectsAccounts"`
+	UtilizationSettings    AccountUtilizationSettings `json:"utilizationSettings"`
+	DailyUsagesList        DailyUsagesListObject      `json:"dailyUsagesList"`
+	DocSizeSetting         bool                       `json:"docSizeSetting"`
+}
+
+type SubAccountRelationObject struct {
+	OwnerAccountId    int32  `json:"ownerAccountId"`
+	SubAccountId      int32  `json:"subAccountId"`
+	Searchable        bool   `json:"searchable"`
+	Accessible        bool   `json:"accessible"`
+	CreatedDate       int64  `json:"createdDate"`
+	LastUpdatedDate   int64  `json:"lastUpdatedDate"`
+	LastUpdaterUserId int32  `json:"lastUpdaterUserId"`
+	Type              string `json:"type"`
+}
+
+type AccountView struct {
+	AccountId       int32   `json:"accountId"`
+	AccountName     string  `json:"accountName"`
+	AccountToken    string  `json:"accountToken"`
+	Active          bool    `json:"active"`
+	EsIndexPrefix   string  `json:"esIndexPrefix"`
+	Flexible        bool    `json:"isFlexible"`
+	ReservedDailyGB float32 `json:"reservedDailyGB"`
+	MaxDailyGB      float32 `json:"maxDailyGB"`
+	RetentionDays   int32   `json:"retentionDays"`
+}
+
+type DailyUsagesListObject struct {
+	Usage []LHDailyCount `json:"usage"`
+}
+
+type LHDailyCount struct {
+	Date  int64 `json:"date"`
+	Bytes int64 `json:"bytes"`
+}
+
+type SubAccountCreateResponse struct {
+	AccountId    int32  `json:"accountId"`
+	AccountToken string `json:"accountToken"`
 }
 
 // Creates a new entry point into the sub-account functions, accepts the user's logz.io API token and account Id
@@ -110,55 +130,4 @@ func New(apiToken string, baseUrl string) (*SubAccountClient, error) {
 		}),
 	}
 	return c, nil
-}
-
-func jsonToSubAccount(json map[string]interface{}) SubAccount {
-	var maxDailyGB float32 = 0
-	if json[fldMaxDailyGB] != nil {
-		maxDailyGB = float32(json[fldMaxDailyGB].(float64))
-	}
-	subAccount := SubAccount{
-		Id:                    int64(json[fldAccountId].(float64)),
-		AccountName:           json[fldAccountName].(string),
-		MaxDailyGB:            maxDailyGB,
-		RetentionDays:         int32(json[fldRetentionDays].(float64)),
-		Searchable:            json[fldSearchable].(bool),
-		Accessible:            json[fldAccessible].(bool),
-		DocSizeSetting:        json[fldDocSizeSetting].(bool),
-		SharingObjectAccounts: json[fldSharingAccountObjects].([]interface{}),
-		UtilizationSettings:   json[fldUtilizationSettings].(map[string]interface{}),
-	}
-
-	if json[fldUtilizationSettings] != nil {
-		subAccount.UtilizationSettings = json[fldUtilizationSettings].(map[string]interface{})
-		for key, value := range subAccount.UtilizationSettings {
-			if value == nil {
-				delete(subAccount.UtilizationSettings, key)
-			}
-		}
-	}
-
-	// Token & account id should be in json object only when called by a Create request
-	if _, ok := json[fldAccountToken]; ok {
-		subAccount.Token = json[fldAccountToken].(string)
-	}
-
-	if _, ok := json[fldAccountId]; ok {
-		subAccount.AccountId = int64(json[fldAccountId].(float64))
-	}
-
-	return subAccount
-}
-
-func jsonToDetailedSubAccount(jsonMap map[string]interface{}) (*SubAccountDetailed, error) {
-	jsonBytes, err := json.Marshal(jsonMap)
-	if err != nil {
-		return nil, err
-	}
-
-	var subAccount SubAccountDetailed
-	if err := json.Unmarshal(jsonBytes, &subAccount); err != nil {
-		return nil, err
-	}
-	return &subAccount, nil
 }

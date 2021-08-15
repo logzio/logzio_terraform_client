@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 )
 
 var (
@@ -46,4 +47,17 @@ func setupSubAccountsIntegrationTest() (*sub_accounts.SubAccountClient, string, 
 
 	underTest, err := sub_accounts.New(apiToken, test_utils.GetLogzIoBaseUrl())
 	return underTest, email, err
+}
+
+func getCreatrOrUpdateSubAccount(email string) sub_accounts.CreateOrUpdateSubAccount {
+	return sub_accounts.CreateOrUpdateSubAccount{
+		Email:                  email,
+		AccountName:            "tf_client_test",
+		MaxDailyGB:             1,
+		RetentionDays:          1,
+		Searchable:             strconv.FormatBool(false),
+		Accessible:             strconv.FormatBool(true),
+		SharingObjectsAccounts: []int32{},
+		DocSizeSetting:         strconv.FormatBool(false),
+	}
 }

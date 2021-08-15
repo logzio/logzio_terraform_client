@@ -1,7 +1,7 @@
 [
   {
     "endpointType": "Custom",
-    "id": 7996,
+    "id": 1234567,
     "title": "my endpoint",
     "description": "my description",
     "url": "https://this.is.com/some/webhook",
@@ -14,7 +14,7 @@
   },
   {
     "endpointType": "Slack",
-    "id": 7997,
+    "id": 1234568,
     "title": "my slack endpoint",
     "description": "my description",
     "url": "https://this.is.com/some/webhook"

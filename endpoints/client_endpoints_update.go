@@ -4,102 +4,70 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	logzio_client "github.com/logzio/logzio_terraform_client"
+	"github.com/logzio/logzio_terraform_client/client"
+	"io/ioutil"
 	"net/http"
-	"strings"
-
-	"github.com/logzio/logzio_terraform_client"
 )
 
 const (
-	updateEndpointServiceUrl    string = endpointServiceEndpoint + "/%s/%d"
-	updateEndpointServiceMethod string = http.MethodPut
-	updateEndpointMethodSuccess int    = http.StatusOK
+	updateEndpointServiceUrl     string = endpointServiceEndpoint + "/%s/%d"
+	updateEndpointServiceMethod  string = http.MethodPut
+	updateEndpointMethodSuccess  int    = http.StatusOK
+	updateEndpointMethodNotFound int    = http.StatusNotFound
 )
 
-const (
-	errorUpdateEndpointApiCallFailed = "API call UpdateEndpoint failed with status code:%d, data:%s"
-	errorUpdateEndpointDoesntExist   = "API call UpdateEndpoint failed as endpoint with id:%d doesn't exist, data:%s"
-)
-
-func (c *EndpointsClient) buildUpdateEndpointApiRequest(apiToken string, endpointType endpointType, endpoint Endpoint) (*http.Request, error) {
-	jsonObject, err := buildUpdateEndpointRequest(endpoint)
+// Updates an existing endpoint, based on the supplied identifier, using the parameters of the specified endpoint
+// Returns the updated endpoint id if successful, an error otherwise
+func (c *EndpointsClient) UpdateEndpoint(id int64, endpoint CreateOrUpdateEndpoint) (*CreateOrUpdateEndpointResponse, error) {
+	err := validateCreateOrUpdateEndpointRequest(endpoint)
 	if err != nil {
 		return nil, err
 	}
 
-	jsonBytes, err := json.Marshal(jsonObject)
+	req, err := c.buildUpdateEndpointApiRequest(c.ApiToken, endpoint, id)
+	if err != nil {
+		return nil, err
+	}
+
+	httpClient := client.GetHttpClient(req)
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	jsonBytes, _ := ioutil.ReadAll(resp.Body)
+
+	if !logzio_client.CheckValidStatus(resp, []int{updateEndpointMethodSuccess}) {
+		if resp.StatusCode == updateEndpointMethodNotFound {
+			return nil, fmt.Errorf("API call %s failed with missing endpoint %d, data: %s", updateEndpointMethod, id, jsonBytes)
+		}
+
+		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", updateEndpointMethod, resp.StatusCode, jsonBytes)
+	}
+
+	var target CreateOrUpdateEndpointResponse
+	err = json.Unmarshal(jsonBytes, &target)
+	if err != nil {
+		return nil, err
+	}
+
+	return &target, nil
+}
+
+func (c *EndpointsClient) buildUpdateEndpointApiRequest(apiToken string, endpoint CreateOrUpdateEndpoint, endpointId int64) (*http.Request, error) {
+	jsonBytes, err := json.Marshal(endpoint)
 	if err != nil {
 		return nil, err
 	}
 
 	baseUrl := c.BaseUrl
-	id := endpoint.Id
-	req, err := http.NewRequest(updateEndpointServiceMethod, fmt.Sprintf(updateEndpointServiceUrl, baseUrl, strings.ToLower(c.getURLByType(endpointType)), id), bytes.NewBuffer(jsonBytes))
+	req, err := http.NewRequest(updateEndpointServiceMethod, fmt.Sprintf(updateEndpointServiceUrl, baseUrl, c.getURLByType(endpoint.Type), endpointId), bytes.NewBuffer(jsonBytes))
+	if err != nil {
+		return nil, err
+	}
 	logzio_client.AddHttpHeaders(apiToken, req)
 
 	return req, err
-}
-
-func buildUpdateEndpointRequest(endpoint Endpoint) (map[string]interface{}, error) {
-	var updateEndpoint = map[string]interface{}{}
-
-	updateEndpoint[fldEndpointTitle] = endpoint.Title
-	updateEndpoint[fldEndpointDescription] = endpoint.Description
-
-	switch endpoint.EndpointType {
-	case EndpointTypeSlack:
-		updateEndpoint[fldEndpointUrl] = endpoint.Url
-	case EndpointTypeCustom:
-		updateEndpoint[fldEndpointUrl] = endpoint.Url
-		updateEndpoint[fldEndpointMethod] = endpoint.Method
-		headers := endpoint.Headers
-		headerStrings := []string{}
-		for k, v := range headers {
-			headerStrings = append(headerStrings, fmt.Sprintf("%s=%s", k, v))
-		}
-		headerString := strings.Trim(strings.Join(strings.Fields(fmt.Sprint(headerStrings)), ","), "[]")
-		updateEndpoint[fldEndpointHeaders] = headerString
-		updateEndpoint[fldEndpointBodyTemplate] = endpoint.BodyTemplate
-	case EndpointTypePagerDuty:
-		updateEndpoint[fldEndpointServiceKey] = endpoint.ServiceKey
-	case EndpointTypeBigPanda:
-		updateEndpoint[fldEndpointApiToken] = endpoint.ApiToken
-		updateEndpoint[fldEndpointAppKey] = endpoint.AppKey
-	case EndpointTypeDataDog:
-		updateEndpoint[fldEndpointApiKey] = endpoint.ApiKey
-	case EndpointTypeVictorOps:
-		updateEndpoint[fldEndpointRoutingKey] = endpoint.RoutingKey
-		updateEndpoint[fldEndpointMessageType] = endpoint.MessageType
-		updateEndpoint[fldEndpointServiceApiKey] = endpoint.ServiceApiKey
-	default:
-		return nil, fmt.Errorf("don't recognise endpoint type %s", endpoint.EndpointType)
-	}
-
-	return updateEndpoint, nil
-}
-
-// Updates an existing endpoint, returns the updated endpoint if successful, an error otherwise
-func (c *EndpointsClient) UpdateEndpoint(id int64, endpoint Endpoint) (*Endpoint, error) {
-
-	endpoint.Id = id
-	if target, err, ok := c.makeEndpointRequest(endpoint, ValidateEndpointRequest, c.buildUpdateEndpointApiRequest, func(data map[string]interface{}) error {
-		if strings.Contains(fmt.Sprintf("%s", data), "Insufficient privileges") {
-			return fmt.Errorf("API call %s failed for endpoint %d, data: %s", "UpdateEndpoint", id, data)
-		}
-		if strings.Contains(fmt.Sprintf("%s", data), "errorCode") {
-			return fmt.Errorf("API call %s failed for endpoint %d, data: %s", "UpdateEndpoint", id, data)
-		}
-
-		return nil
-	}); ok {
-		endpointBytes, _ := json.Marshal(target)
-		var endpoint Endpoint
-		err = json.Unmarshal(endpointBytes, &endpoint)
-		if err != nil {
-			return nil, err
-		}
-		return &endpoint, nil
-	} else {
-		return nil, err
-	}
 }
