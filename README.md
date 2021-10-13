@@ -225,6 +225,9 @@ dropFilter, err := client.CreateDropFilter(drop_filters.CreateDropFilter{
 
 
 ### Changelog
+
+- v1.9.0
+    - Add [Archive logs API](https://docs.logz.io/api/#tag/Archive-logs).
 - v1.8.0
     - `sub_accounts`:
         - Add `flexible` & `reservedDailyGB`.
@@ -234,6 +237,9 @@ dropFilter, err := client.CreateDropFilter(drop_filters.CreateDropFilter{
         - Add new endpoint types (OpsGenie, ServiceNow, Microsoft Teams).
 - v1.7.0
     - Add [drop filters API](https://docs.logz.io/api/#tag/Drop-filters).
+
+<details>
+  <summary markdown="span">Exapnd to check old versions </summary>
 - v1.6.0
     - Add [log shipping tokens API](https://docs.logz.io/api/#tag/Manage-log-shipping-tokens) compatibility.
 - v1.5.3
@@ -254,4 +260,4 @@ dropFilter, err := client.CreateDropFilter(drop_filters.CreateDropFilter{
 - v1.2
     - Add subaccount support
 
-
+</details>
