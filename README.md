@@ -235,11 +235,10 @@ dropFilter, err := client.CreateDropFilter(drop_filters.CreateDropFilter{
     - `endpoints`:
         - **Breaking changes:** refactor resource.
         - Add new endpoint types (OpsGenie, ServiceNow, Microsoft Teams).
-- v1.7.0
-    - Add [drop filters API](https://docs.logz.io/api/#tag/Drop-filters).
-
 <details>
   <summary markdown="span">Exapnd to check old versions </summary>
+- v1.7.0
+    - Add [drop filters API](https://docs.logz.io/api/#tag/Drop-filters).
 - v1.6.0
     - Add [log shipping tokens API](https://docs.logz.io/api/#tag/Manage-log-shipping-tokens) compatibility.
 - v1.5.3
