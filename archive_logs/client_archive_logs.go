@@ -8,17 +8,17 @@ import (
 const archiveLogsServiceEndpoint string = "%s/v2/archive/settings"
 
 const (
-	StorageTypeS3 = "S3"
-	StorageTypeBlob = "BLOB"
-	CredentialsTypeIam = "IAM"
+	StorageTypeS3       = "S3"
+	StorageTypeBlob     = "BLOB"
+	CredentialsTypeIam  = "IAM"
 	CredentialsTypeKeys = "KEYS"
 
 	setupArchiveApi         = "SetupArchiveLogs"
 	retrieveArchiveSettings = "RetrieveArchiveSettings"
-	updateArchiveSettings = "UpdateArchiveSettings"
-	deleteArchiveSettings = "DeleteArchiveSettings"
-	testArchiveSettings = "TestArchiveSettings"
-	listArchivesSettings = "ListArchiveSettings"
+	updateArchiveSettings   = "UpdateArchiveSettings"
+	deleteArchiveSettings   = "DeleteArchiveSettings"
+	testArchiveSettings     = "TestArchiveSettings"
+	listArchivesSettings    = "ListArchiveSettings"
 )
 
 type ArchiveLogsClient struct {
@@ -35,10 +35,10 @@ type CreateOrUpdateArchiving struct {
 
 // S3StorageSettings - use when StorageType is S3
 type S3StorageSettings struct {
-	CredentialsType string `json:"credentialsType,omitempty"` // required
-	Path string `json:"path,omitempty"` // required
+	CredentialsType     string                     `json:"credentialsType,omitempty"`     // required
+	Path                string                     `json:"path,omitempty"`                // required
 	S3SecretCredentials *S3SecretCredentialsObject `json:"s3SecretCredentials,omitempty"` // Set as pointer so that on marshalling will omit empty
-	S3IamCredentials *S3IamCredentials `json:"s3IamCredentials,omitempty"` // Set as pointer so that on marshalling will omit empty
+	S3IamCredentials    *S3IamCredentials          `json:"s3IamCredentials,omitempty"`    // Set as pointer so that on marshalling will omit empty
 }
 
 // S3SecretCredentialsObject - use when CredentialsType is KEYS
@@ -49,31 +49,31 @@ type S3SecretCredentialsObject struct {
 
 // S3IamCredentials - use when CredentialsType is IAM
 type S3IamCredentials struct {
-	Arn string `json:"arn,omitempty"` // required
+	Arn        string `json:"arn,omitempty"`        // required
 	ExternalId string `json:"externalId,omitempty"` // only in response
 }
 
 // BlobSettings - use when StorageType is BLOB
 type BlobSettings struct {
-	TenantId string `json:"tenantId,omitempty"` // required
-	ClientId string `json:"clientId,omitempty"` // required
-	ClientSecret string `json:"clientSecret,omitempty"` // required
-	AccountName string `json:"accountName,omitempty"` // required
+	TenantId      string `json:"tenantId,omitempty"`      // required
+	ClientId      string `json:"clientId,omitempty"`      // required
+	ClientSecret  string `json:"clientSecret,omitempty"`  // required
+	AccountName   string `json:"accountName,omitempty"`   // required
 	ContainerName string `json:"containerName,omitempty"` // required
-	Path string `json:"path,omitempty"`
+	Path          string `json:"path,omitempty"`
 }
 
 type ArchiveLogs struct {
-	Id int32 `json:"id"`
+	Id       int32           `json:"id"`
 	Settings StorageSettings `json:"settings"`
 }
 
 type StorageSettings struct {
-	StorageType string `json:"storageType"` // required
-	Enabled    bool `json:"enabled"`
-	Compressed bool `json:"compressed"`
-	AmazonS3StorageSettings S3StorageSettings `json:"amazonS3StorageSettings"`
-	AzureBlobStorageSettings BlobSettings `json:"azureBlobStorageSettings"`
+	StorageType              string            `json:"storageType"` // required
+	Enabled                  bool              `json:"enabled"`
+	Compressed               bool              `json:"compressed"`
+	AmazonS3StorageSettings  S3StorageSettings `json:"amazonS3StorageSettings"`
+	AzureBlobStorageSettings BlobSettings      `json:"azureBlobStorageSettings"`
 }
 
 // New Creates a new entry point into the archive logs functions, accepts the user's logz.io API token and base url
@@ -91,7 +91,6 @@ func New(apiToken string, baseUrl string) (*ArchiveLogsClient, error) {
 	return c, nil
 }
 
-
 func validateCreateOrUpdateArchiveRequest(createOrUpdateArchive CreateOrUpdateArchiving) error {
 	switch createOrUpdateArchive.StorageType {
 	case StorageTypeS3:
@@ -99,7 +98,7 @@ func validateCreateOrUpdateArchiveRequest(createOrUpdateArchive CreateOrUpdateAr
 	case StorageTypeBlob:
 		return validateBlobSettings(createOrUpdateArchive.AzureBlobStorageSettings)
 	default:
-		return fmt.Errorf("storage type must be one of %s", []string { StorageTypeS3, StorageTypeBlob })
+		return fmt.Errorf("storage type must be one of %s", []string{StorageTypeS3, StorageTypeBlob})
 	}
 }
 
@@ -121,7 +120,7 @@ func validateS3Settings(s3Settings *S3StorageSettings) error {
 			return fmt.Errorf("secret key must be set for credentials type %s", CredentialsTypeKeys)
 		}
 	default:
-		return fmt.Errorf("credentials type must be one of %s", []string { CredentialsTypeIam, CredentialsTypeKeys })
+		return fmt.Errorf("credentials type must be one of %s", []string{CredentialsTypeIam, CredentialsTypeKeys})
 	}
 
 	return nil

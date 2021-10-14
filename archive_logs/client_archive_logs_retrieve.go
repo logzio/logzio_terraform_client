@@ -11,13 +11,11 @@ import (
 )
 
 const (
-	 retrieveArchiveLogsServiceUrl = archiveLogsServiceEndpoint + "/%d"
-	 retrieveArchiveLogsServiceMethod string = http.MethodGet
-	 retrieveArchiveLogsMethodSuccess int = http.StatusOK
-	 retrieveArchiveLogsMethodNotFound int = http.StatusNotFound
+	retrieveArchiveLogsServiceUrl            = archiveLogsServiceEndpoint + "/%d"
+	retrieveArchiveLogsServiceMethod  string = http.MethodGet
+	retrieveArchiveLogsMethodSuccess  int    = http.StatusOK
+	retrieveArchiveLogsMethodNotFound int    = http.StatusNotFound
 )
-
-
 
 // RetrieveArchiveLogsSetting gets an archive id and returns its settings or an error
 func (c *ArchiveLogsClient) RetrieveArchiveLogsSetting(archiveId int32) (*ArchiveLogs, error) {

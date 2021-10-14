@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	setupArchiveLogsServiceUrl = archiveLogsServiceEndpoint
+	setupArchiveLogsServiceUrl           = archiveLogsServiceEndpoint
 	setupArchiveLogsServiceMethod string = http.MethodPost
 )
 
@@ -44,7 +44,6 @@ func (c *ArchiveLogsClient) SetupArchive(createArchive CreateOrUpdateArchiving) 
 
 	return &retVal, nil
 }
-
 
 func (c *ArchiveLogsClient) buildSetupApiRequest(apiToken string, jsonBytes []byte) (*http.Request, error) {
 	baseUrl := c.BaseUrl

@@ -9,11 +9,11 @@ import (
 )
 
 const (
-	deleteArchiveLogsServiceUrl     = archiveLogsServiceEndpoint + "/%d"
-	deleteArchiveLogsServiceMethod  = http.MethodDelete
+	deleteArchiveLogsServiceUrl            = archiveLogsServiceEndpoint + "/%d"
+	deleteArchiveLogsServiceMethod         = http.MethodDelete
 	deleteArchiveLogsServiceSuccessCreated = http.StatusCreated
-	deleteArchiveLogsServiceSuccess = http.StatusOK
-	deleteArchiveLogsMethodNotFound = http.StatusNotFound
+	deleteArchiveLogsServiceSuccess        = http.StatusOK
+	deleteArchiveLogsMethodNotFound        = http.StatusNotFound
 )
 
 func (c *ArchiveLogsClient) DeleteArchiveLogs(archiveId int32) error {

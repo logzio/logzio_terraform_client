@@ -11,11 +11,11 @@ import (
 )
 
 const (
-	updateArchiveLogsServiceUrl      = archiveLogsServiceEndpoint + "/%d"
-	updateArchiveLogsServiceMethod   = http.MethodPut
-	updateArchiveLogsServiceSuccess = http.StatusOK
-	updateArchiveLogsServiceSuccessCreated  = http.StatusCreated
-	updateArchiveLogsServiceNotFound = http.StatusNotFound
+	updateArchiveLogsServiceUrl            = archiveLogsServiceEndpoint + "/%d"
+	updateArchiveLogsServiceMethod         = http.MethodPut
+	updateArchiveLogsServiceSuccess        = http.StatusOK
+	updateArchiveLogsServiceSuccessCreated = http.StatusCreated
+	updateArchiveLogsServiceNotFound       = http.StatusNotFound
 )
 
 // UpdateArchiveLogs updates an existing logs archive
@@ -69,4 +69,3 @@ func (c *ArchiveLogsClient) buildUpdateApiRequest(apiToken string, subAccountId 
 
 	return req, err
 }
-
