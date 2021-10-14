@@ -11,8 +11,6 @@ import (
 const (
 	setupArchiveLogsServiceUrl = archiveLogsServiceEndpoint
 	setupArchiveLogsServiceMethod string = http.MethodPost
-	setupArchiveLogsMethodSuccess = http.StatusOK
-	setupArchiveLogsMethodNoContent = http.StatusNoContent
 )
 
 // SetupArchive receives archive settings, and sends it as api request to logz.io
