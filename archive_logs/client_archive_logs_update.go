@@ -19,13 +19,13 @@ const (
 )
 
 // UpdateArchiveLogs updates an existing logs archive
-func (c *ArchiveLogsClient) UpdateArchiveLogs(archiveId int32, updateSubAccount CreateOrUpdateArchiving) (*ArchiveLogs, error) {
-	err := validateCreateOrUpdateArchiveRequest(updateSubAccount)
+func (c *ArchiveLogsClient) UpdateArchiveLogs(archiveId int32, updateArchive CreateOrUpdateArchiving) (*ArchiveLogs, error) {
+	err := validateCreateOrUpdateArchiveRequest(updateArchive)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := c.buildUpdateApiRequest(c.ApiToken, archiveId, updateSubAccount)
+	req, err := c.buildUpdateApiRequest(c.ApiToken, archiveId, updateArchive)
 	if err != nil {
 		return nil, err
 	}
@@ -54,14 +54,14 @@ func (c *ArchiveLogsClient) UpdateArchiveLogs(archiveId int32, updateSubAccount 
 	return &retVal, nil
 }
 
-func (c *ArchiveLogsClient) buildUpdateApiRequest(apiToken string, subAccountId int32, updateSubAccount CreateOrUpdateArchiving) (*http.Request, error) {
-	jsonBytes, err := json.Marshal(updateSubAccount)
+func (c *ArchiveLogsClient) buildUpdateApiRequest(apiToken string, archiveId int32, updateArchive CreateOrUpdateArchiving) (*http.Request, error) {
+	jsonBytes, err := json.Marshal(updateArchive)
 	if err != nil {
 		return nil, err
 	}
 
 	baseUrl := c.BaseUrl
-	req, err := http.NewRequest(updateArchiveLogsServiceMethod, fmt.Sprintf(updateArchiveLogsServiceUrl, baseUrl, subAccountId), bytes.NewBuffer(jsonBytes))
+	req, err := http.NewRequest(updateArchiveLogsServiceMethod, fmt.Sprintf(updateArchiveLogsServiceUrl, baseUrl, archiveId), bytes.NewBuffer(jsonBytes))
 	if err != nil {
 		return nil, err
 	}
