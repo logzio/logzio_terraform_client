@@ -6,7 +6,6 @@ import (
 	logzio_client "github.com/logzio/logzio_terraform_client"
 	"github.com/logzio/logzio_terraform_client/client"
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
@@ -31,7 +30,6 @@ func (c *ArchiveLogsClient) RetrieveArchiveLogsSetting(archiveId int32) (*Archiv
 	defer resp.Body.Close()
 
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
-	log.Printf(string(jsonBytes))
 	if !logzio_client.CheckValidStatus(resp, []int{retrieveArchiveLogsMethodSuccess}) {
 		if resp.StatusCode == retrieveArchiveLogsMethodNotFound {
 			return nil, fmt.Errorf("API call %s failed with missing archive %d, data: %s", retrieveArchiveSettings, archiveId, jsonBytes)
