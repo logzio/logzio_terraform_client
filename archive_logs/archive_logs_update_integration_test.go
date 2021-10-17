@@ -2,6 +2,7 @@ package archive_logs_test
 
 import (
 	"github.com/logzio/logzio_terraform_client/archive_logs"
+	"github.com/logzio/logzio_terraform_client/test_utils"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
@@ -11,13 +12,13 @@ func TestIntegrationArchiveLogs_UpdateArchiveLogsS3KeysToIam(t *testing.T) {
 	underTest, err := setupArchiveLogsIntegrationTest()
 
 	if assert.NoError(t, err) {
-		createArchive, err := getCreateOrUpdateArchiveLogs(archive_logs.StorageTypeS3)
+		createArchive, err := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeS3)
 		if assert.NoError(t, err) {
 			archive, err := underTest.SetupArchive(createArchive)
 			if assert.NoError(t, err) && assert.NotNil(t, archive) {
 				defer underTest.DeleteArchiveLogs(archive.Id)
 				time.Sleep(2 * time.Second)
-				createArchive.AmazonS3StorageSettings.S3IamCredentials, err = getS3IamCredentials()
+				createArchive.AmazonS3StorageSettings.S3IamCredentials, err = test_utils.GetS3IamCredentials()
 				if assert.NoError(t, err) {
 					createArchive.AmazonS3StorageSettings.S3SecretCredentials = nil
 					createArchive.AmazonS3StorageSettings.CredentialsType = archive_logs.CredentialsTypeIam
@@ -36,13 +37,13 @@ func TestIntegrationArchiveLogs_UpdateArchiveLogsS3toBlob(t *testing.T) {
 	underTest, err := setupArchiveLogsIntegrationTest()
 
 	if assert.NoError(t, err) {
-		createArchive, err := getCreateOrUpdateArchiveLogs(archive_logs.StorageTypeS3)
+		createArchive, err := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeS3)
 		if assert.NoError(t, err) {
 			archive, err := underTest.SetupArchive(createArchive)
 			if assert.NoError(t, err) && assert.NotNil(t, archive) {
 				defer underTest.DeleteArchiveLogs(archive.Id)
 				time.Sleep(2 * time.Second)
-				createArchive, err = getCreateOrUpdateArchiveLogs(archive_logs.StorageTypeBlob)
+				createArchive, err = test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeBlob)
 				if assert.NoError(t, err) {
 					updated, err := underTest.UpdateArchiveLogs(archive.Id, createArchive)
 					assert.NoError(t, err)
@@ -59,7 +60,7 @@ func TestIntegrationArchiveLogs_UpdateArchiveLogsDisable(t *testing.T) {
 	underTest, err := setupArchiveLogsIntegrationTest()
 
 	if assert.NoError(t, err) {
-		createArchive, err := getCreateOrUpdateArchiveLogs(archive_logs.StorageTypeBlob)
+		createArchive, err := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeBlob)
 		if assert.NoError(t, err) {
 			archive, err := underTest.SetupArchive(createArchive)
 			if assert.NoError(t, err) && assert.NotNil(t, archive) {
@@ -82,7 +83,7 @@ func TestIntegrationArchiveLogs_UpdateArchiveLogsIdNotFound(t *testing.T) {
 	underTest, err := setupArchiveLogsIntegrationTest()
 
 	if assert.NoError(t, err) {
-		createArchive, err := getCreateOrUpdateArchiveLogs(archive_logs.StorageTypeBlob)
+		createArchive, err := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeBlob)
 		if assert.NoError(t, err) {
 			updated, err := underTest.UpdateArchiveLogs(int32(0000), createArchive)
 			assert.Error(t, err)

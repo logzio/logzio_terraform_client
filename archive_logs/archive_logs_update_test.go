@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/logzio/logzio_terraform_client/archive_logs"
+	"github.com/logzio/logzio_terraform_client/test_utils"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
@@ -29,7 +30,7 @@ func TestArchiveLogs_UpdateArchiveS3(t *testing.T) {
 			fmt.Fprint(w, fixture("update_archive_s3.json"))
 		})
 
-		createArchive, err := getCreateOrUpdateArchiveLogs(archive_logs.StorageTypeS3)
+		createArchive, err := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeS3)
 		if assert.NoError(t, err) {
 			archive, err := underTest.UpdateArchiveLogs(id, createArchive)
 			assert.NoError(t, err)
@@ -66,7 +67,7 @@ func TestArchiveLogs_UpdateArchiveBlob(t *testing.T) {
 			fmt.Fprint(w, fixture("update_archive_blob.json"))
 		})
 
-		createArchive, err := getCreateOrUpdateArchiveLogs(archive_logs.StorageTypeBlob)
+		createArchive, err := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeBlob)
 		if assert.NoError(t, err) {
 			createArchive.AzureBlobStorageSettings.TenantId = "another-tenant-id"
 			createArchive.AzureBlobStorageSettings.ClientId = "another-client-id"
@@ -108,7 +109,7 @@ func TestArchiveLogs_UpdateArchiveIdNotFound(t *testing.T) {
 			fmt.Fprint(w, fixture("update_archive_id_not_found.txt"))
 		})
 
-		createArchive, err := getCreateOrUpdateArchiveLogs(archive_logs.StorageTypeBlob)
+		createArchive, err := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeBlob)
 		if assert.NoError(t, err) {
 			archive, err := underTest.UpdateArchiveLogs(id, createArchive)
 			assert.Error(t, err)
@@ -128,7 +129,7 @@ func TestArchiveLogs_UpdateArchiveApiFail(t *testing.T) {
 	})
 
 	if assert.NoError(t, err) {
-		createArchive, err := getCreateOrUpdateArchiveLogs(archive_logs.StorageTypeS3)
+		createArchive, err := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeS3)
 		if assert.NoError(t, err) {
 			archive, err := underTest.UpdateArchiveLogs(int32(1234), createArchive)
 			assert.Error(t, err)

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/logzio/logzio_terraform_client/archive_logs"
+	"github.com/logzio/logzio_terraform_client/test_utils"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
@@ -29,7 +30,7 @@ func TestArchiveLogs_SetupArchiveS3Keys(t *testing.T) {
 			fmt.Fprint(w, fixture("setup_archive_s3_keys.json"))
 		})
 
-		createArchive, err := getCreateOrUpdateArchiveLogs(archive_logs.StorageTypeS3)
+		createArchive, err := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeS3)
 		createArchive.AmazonS3StorageSettings.Path = "some-path"
 		createArchive.AmazonS3StorageSettings.S3SecretCredentials.AccessKey = "some-access-key"
 		createArchive.AmazonS3StorageSettings.S3SecretCredentials.SecretKey = "some-secret-key"
@@ -70,10 +71,10 @@ func TestArchiveLogs_SetupArchiveS3Iam(t *testing.T) {
 			fmt.Fprint(w, fixture("setup_archive_s3_iam.json"))
 		})
 
-		createArchive, err := getCreateOrUpdateArchiveLogs(archive_logs.StorageTypeS3)
+		createArchive, err := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeS3)
 		createArchive.AmazonS3StorageSettings.S3SecretCredentials = nil
 		createArchive.AmazonS3StorageSettings.CredentialsType = archive_logs.CredentialsTypeIam
-		iamCredentials, err := getS3IamCredentials()
+		iamCredentials, err := test_utils.GetS3IamCredentials()
 		if assert.NoError(t, err) {
 			createArchive.AmazonS3StorageSettings.S3IamCredentials = iamCredentials
 			createArchive.AmazonS3StorageSettings.S3IamCredentials.Arn = "some-arn"
@@ -115,7 +116,7 @@ func TestArchiveLogs_SetupArchiveBlob(t *testing.T) {
 			fmt.Fprint(w, fixture("setup_archive_blob.json"))
 		})
 
-		createArchive, err := getCreateOrUpdateArchiveLogs(archive_logs.StorageTypeBlob)
+		createArchive, err := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeBlob)
 		if assert.NoError(t, err) {
 			createArchive.AzureBlobStorageSettings.TenantId = "some-tenant-id"
 			createArchive.AzureBlobStorageSettings.ClientId = "some-client-id"
@@ -143,7 +144,7 @@ func TestArchiveLogs_SetupArchiveInvalidStorageType(t *testing.T) {
 	underTest, err, teardown := setupArchiveLogsTest()
 	defer teardown()
 
-	createArchive, err := getCreateOrUpdateArchiveLogs(archive_logs.StorageTypeS3)
+	createArchive, err := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeS3)
 	if assert.NoError(t, err) {
 		createArchive.StorageType = "invalid storage type"
 		archive, err := underTest.SetupArchive(createArchive)
@@ -157,7 +158,7 @@ func TestArchiveLogs_SetupArchiveS3InvalidCredentialsType(t *testing.T) {
 	defer teardown()
 
 	if assert.NoError(t, err) {
-		createArchive, err := getCreateOrUpdateArchiveLogs(archive_logs.StorageTypeS3)
+		createArchive, err := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeS3)
 		if assert.NoError(t, err) {
 			createArchive.AmazonS3StorageSettings.CredentialsType = "invalid credentials type"
 			archive, err := underTest.SetupArchive(createArchive)
@@ -178,7 +179,7 @@ func TestArchiveLogs_SetupArchiveApiFail(t *testing.T) {
 	})
 
 	if assert.NoError(t, err) {
-		createArchive, err := getCreateOrUpdateArchiveLogs(archive_logs.StorageTypeS3)
+		createArchive, err := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeS3)
 		if assert.NoError(t, err) {
 			archive, err := underTest.SetupArchive(createArchive)
 			assert.Error(t, err)
