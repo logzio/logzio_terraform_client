@@ -9,6 +9,15 @@ jobs:
       LOGZIO_API_TOKEN: ${{ secrets.LOGZIO_API_TOKEN }}
       LOGZIO_EMAIL: ${{ secrets.LOGZIO_EMAIL }}
       LOGZIO_ACCOUNT_ID: ${{ secrets.LOGZIO_ACCOUNT_ID }}
+      S3_PATH: ${{ secrets.S3_PATH }}
+      AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+      AWS_ARN: ${{ secrets.AWS_ARN }}
+      AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+      AZURE_ACCOUNT_NAME: ${{ secrets.AZURE_ACCOUNT_NAME }}
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      AZURE_CONTAINER_NAME: ${{ secrets.AZURE_CONTAINER_NAME }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       GO111MODULE: on
     name: Test
     runs-on: ubuntu-18.04
