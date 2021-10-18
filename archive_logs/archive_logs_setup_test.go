@@ -16,7 +16,7 @@ func TestArchiveLogs_SetupArchiveS3Keys(t *testing.T) {
 	defer teardown()
 
 	if assert.NoError(t, err) {
-		mux.HandleFunc("/v2/archive/settings", func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc(archiveApiBasePath, func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPost, r.Method)
 			jsonBytes, _ := ioutil.ReadAll(r.Body)
 			var target archive_logs.CreateOrUpdateArchiving

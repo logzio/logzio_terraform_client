@@ -14,7 +14,7 @@ func TestArchiveLogs_DeleteArchive(t *testing.T) {
 
 	id := int32(1234)
 
-	mux.HandleFunc("/v2/archive/settings/", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc(archiveApiBasePath+"/", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodDelete, r.Method)
 		assert.Contains(t, r.URL.String(), strconv.FormatInt(int64(id), 10))
 		w.WriteHeader(http.StatusCreated)

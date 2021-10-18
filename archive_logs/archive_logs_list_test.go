@@ -11,7 +11,7 @@ func TestArchiveLogs_ListArchives(t *testing.T) {
 	underTest, err, teardown := setupArchiveLogsTest()
 	defer teardown()
 
-	mux.HandleFunc("/v2/archive/settings", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc(archiveApiBasePath, func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodGet, r.Method)
 		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprint(w, fixture("list_archives.json"))

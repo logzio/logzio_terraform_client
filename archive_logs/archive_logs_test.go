@@ -13,6 +13,8 @@ var (
 	server *httptest.Server
 )
 
+const archiveApiBasePath = "/v2/archive/settings"
+
 func setupArchiveLogsTest() (*archive_logs.ArchiveLogsClient, error, func()) {
 	mux = http.NewServeMux()
 	server = httptest.NewServer(mux)
