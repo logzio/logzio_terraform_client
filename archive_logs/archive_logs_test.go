@@ -15,16 +15,16 @@ var (
 
 const archiveApiBasePath = "/v2/archive/settings"
 
-func setupArchiveLogsTest() (*archive_logs.ArchiveLogsClient, error, func()) {
+func setupArchiveLogsTest() (*archive_logs.ArchiveLogsClient, func(), error) {
 	mux = http.NewServeMux()
 	server = httptest.NewServer(mux)
 
 	apiToken := "SOME_API_TOKEN"
 	underTest, _ := archive_logs.New(apiToken, server.URL)
 
-	return underTest, nil, func() {
+	return underTest, func() {
 		server.Close()
-	}
+	}, nil
 }
 
 func fixture(path string) string {

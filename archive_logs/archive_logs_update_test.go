@@ -13,7 +13,7 @@ import (
 )
 
 func TestArchiveLogs_UpdateArchiveS3(t *testing.T) {
-	underTest, err, teardown := setupArchiveLogsTest()
+	underTest, teardown, err := setupArchiveLogsTest()
 	defer teardown()
 	id := int32(1234)
 
@@ -50,12 +50,12 @@ func TestArchiveLogs_UpdateArchiveS3(t *testing.T) {
 }
 
 func TestArchiveLogs_UpdateArchiveBlob(t *testing.T) {
-	underTest, err, teardown := setupArchiveLogsTest()
+	underTest, teardown, err := setupArchiveLogsTest()
 	defer teardown()
 	id := int32(1234)
 
 	if assert.NoError(t, err) {
-		mux.HandleFunc("/v2/archive/settings/", func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc(archiveApiBasePath+"/", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPut, r.Method)
 			jsonBytes, _ := ioutil.ReadAll(r.Body)
 			var target archive_logs.CreateOrUpdateArchiving
@@ -92,12 +92,12 @@ func TestArchiveLogs_UpdateArchiveBlob(t *testing.T) {
 }
 
 func TestArchiveLogs_UpdateArchiveIdNotFound(t *testing.T) {
-	underTest, err, teardown := setupArchiveLogsTest()
+	underTest, teardown, err := setupArchiveLogsTest()
 	defer teardown()
 	id := int32(1234)
 
 	if assert.NoError(t, err) {
-		mux.HandleFunc("/v2/archive/settings/", func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc(archiveApiBasePath+"/", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPut, r.Method)
 			jsonBytes, _ := ioutil.ReadAll(r.Body)
 			var target archive_logs.CreateOrUpdateArchiving
@@ -119,10 +119,10 @@ func TestArchiveLogs_UpdateArchiveIdNotFound(t *testing.T) {
 }
 
 func TestArchiveLogs_UpdateArchiveApiFail(t *testing.T) {
-	underTest, err, teardown := setupArchiveLogsTest()
+	underTest, teardown, err := setupArchiveLogsTest()
 	defer teardown()
 
-	mux.HandleFunc("/v2/archive/settings/", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc(archiveApiBasePath+"/", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodPut, r.Method)
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprint(w, fixture("archive_api_fail.txt"))

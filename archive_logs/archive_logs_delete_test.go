@@ -8,7 +8,7 @@ import (
 )
 
 func TestArchiveLogs_DeleteArchive(t *testing.T) {
-	underTest, err, teardown := setupArchiveLogsTest()
+	underTest, teardown, err := setupArchiveLogsTest()
 	assert.NoError(t, err)
 	defer teardown()
 
@@ -25,13 +25,13 @@ func TestArchiveLogs_DeleteArchive(t *testing.T) {
 }
 
 func TestArchiveLogs_DeleteArchiveIdNotFound(t *testing.T) {
-	underTest, err, teardown := setupArchiveLogsTest()
+	underTest, teardown, err := setupArchiveLogsTest()
 	assert.NoError(t, err)
 	defer teardown()
 
 	id := int32(1234)
 
-	mux.HandleFunc("/v2/archive/settings/", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc(archiveApiBasePath+"/", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodDelete, r.Method)
 		w.WriteHeader(http.StatusNotFound)
 	})
@@ -41,13 +41,13 @@ func TestArchiveLogs_DeleteArchiveIdNotFound(t *testing.T) {
 }
 
 func TestArchiveLogs_DeleteArchiveApiFail(t *testing.T) {
-	underTest, err, teardown := setupArchiveLogsTest()
+	underTest, teardown, err := setupArchiveLogsTest()
 	assert.NoError(t, err)
 	defer teardown()
 
 	id := int32(1234)
 
-	mux.HandleFunc("/v2/archive/settings/", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc(archiveApiBasePath+"/", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodDelete, r.Method)
 		w.WriteHeader(http.StatusInternalServerError)
 	})

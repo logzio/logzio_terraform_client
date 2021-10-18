@@ -8,7 +8,7 @@ import (
 )
 
 func TestArchiveLogs_ListArchives(t *testing.T) {
-	underTest, err, teardown := setupArchiveLogsTest()
+	underTest, teardown, err := setupArchiveLogsTest()
 	defer teardown()
 
 	mux.HandleFunc(archiveApiBasePath, func(w http.ResponseWriter, r *http.Request) {
@@ -24,10 +24,10 @@ func TestArchiveLogs_ListArchives(t *testing.T) {
 }
 
 func TestArchiveLogs_ListArchivesApiFail(t *testing.T) {
-	underTest, err, teardown := setupArchiveLogsTest()
+	underTest, teardown, err := setupArchiveLogsTest()
 	defer teardown()
 
-	mux.HandleFunc("/v2/archive/settings", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc(archiveApiBasePath, func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodGet, r.Method)
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprint(w, fixture("archive_api_fail.txt"))

@@ -12,7 +12,7 @@ import (
 )
 
 func TestArchiveLogs_SetupArchiveS3Keys(t *testing.T) {
-	underTest, err, teardown := setupArchiveLogsTest()
+	underTest, teardown, err := setupArchiveLogsTest()
 	defer teardown()
 
 	if assert.NoError(t, err) {
@@ -53,11 +53,11 @@ func TestArchiveLogs_SetupArchiveS3Keys(t *testing.T) {
 }
 
 func TestArchiveLogs_SetupArchiveS3Iam(t *testing.T) {
-	underTest, err, teardown := setupArchiveLogsTest()
+	underTest, teardown, err := setupArchiveLogsTest()
 	defer teardown()
 
 	if assert.NoError(t, err) {
-		mux.HandleFunc("/v2/archive/settings", func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc(archiveApiBasePath, func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPost, r.Method)
 			jsonBytes, _ := ioutil.ReadAll(r.Body)
 			var target archive_logs.CreateOrUpdateArchiving
@@ -99,11 +99,11 @@ func TestArchiveLogs_SetupArchiveS3Iam(t *testing.T) {
 }
 
 func TestArchiveLogs_SetupArchiveBlob(t *testing.T) {
-	underTest, err, teardown := setupArchiveLogsTest()
+	underTest, teardown, err := setupArchiveLogsTest()
 	defer teardown()
 
 	if assert.NoError(t, err) {
-		mux.HandleFunc("/v2/archive/settings", func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc(archiveApiBasePath, func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPost, r.Method)
 			jsonBytes, _ := ioutil.ReadAll(r.Body)
 			var target archive_logs.CreateOrUpdateArchiving
@@ -141,7 +141,7 @@ func TestArchiveLogs_SetupArchiveBlob(t *testing.T) {
 }
 
 func TestArchiveLogs_SetupArchiveInvalidStorageType(t *testing.T) {
-	underTest, err, teardown := setupArchiveLogsTest()
+	underTest, teardown, err := setupArchiveLogsTest()
 	defer teardown()
 
 	createArchive, err := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeS3)
@@ -154,7 +154,7 @@ func TestArchiveLogs_SetupArchiveInvalidStorageType(t *testing.T) {
 }
 
 func TestArchiveLogs_SetupArchiveS3InvalidCredentialsType(t *testing.T) {
-	underTest, err, teardown := setupArchiveLogsTest()
+	underTest, teardown, err := setupArchiveLogsTest()
 	defer teardown()
 
 	if assert.NoError(t, err) {
@@ -169,10 +169,10 @@ func TestArchiveLogs_SetupArchiveS3InvalidCredentialsType(t *testing.T) {
 }
 
 func TestArchiveLogs_SetupArchiveApiFail(t *testing.T) {
-	underTest, err, teardown := setupArchiveLogsTest()
+	underTest, teardown, err := setupArchiveLogsTest()
 	defer teardown()
 
-	mux.HandleFunc("/v2/archive/settings", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc(archiveApiBasePath, func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodPost, r.Method)
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprint(w, fixture("archive_api_fail.txt"))
