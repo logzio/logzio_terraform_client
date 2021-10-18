@@ -1,4 +1,4 @@
-##### Restore logs
+# Restore logs
 
 Compatible with Logz.io's [restore logs API](https://docs.logz.io/api/#tag/Restore-logs).
 
