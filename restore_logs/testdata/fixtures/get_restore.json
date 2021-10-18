@@ -1,0 +1,13 @@
+{
+  "id": 1234,
+  "accountId": 1234567,
+  "accountName": "test_account",
+  "restoredVolumeGb": 2.0,
+  "status": "ACTIVE",
+  "startTime": 1634437185.000000000,
+  "endTime": 1634444385.000000000,
+  "createdAt": 1634479972.000000000,
+  "startedAt": 1634479976.000000000,
+  "finishedAt": 1634480039.000000000,
+  "expiresAt": 1634912039.000000000
+}
