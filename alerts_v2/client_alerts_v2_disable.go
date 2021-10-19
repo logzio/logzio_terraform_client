@@ -7,10 +7,10 @@ import (
 )
 
 const (
-	disableAlertServiceUrl = alertsServiceEndpoint + "/%d/disable"
-	disableAlertServiceMethod  string = http.MethodPost
-	disableAlertServiceSuccess int    = http.StatusNoContent
-	disableAlertServiceStatusNotFound = http.StatusNotFound
+	disableAlertServiceUrl                   = alertsServiceEndpoint + "/%d/disable"
+	disableAlertServiceMethod         string = http.MethodPost
+	disableAlertServiceSuccess        int    = http.StatusNoContent
+	disableAlertServiceStatusNotFound        = http.StatusNotFound
 )
 
 // DisableAlert disables an alert given its unique identifier. Returns the alert, an error otherwise

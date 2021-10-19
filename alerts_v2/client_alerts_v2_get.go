@@ -8,10 +8,10 @@ import (
 )
 
 const (
-	getAlertServiceUrl = alertsServiceEndpoint + "/%d"
-	getAlertServiceMethod string = http.MethodGet
-	getAlertMethodSuccess int = http.StatusOK
-	getAlertMethodNotFound int = http.StatusNotFound
+	getAlertServiceUrl            = alertsServiceEndpoint + "/%d"
+	getAlertServiceMethod  string = http.MethodGet
+	getAlertMethodSuccess  int    = http.StatusOK
+	getAlertMethodNotFound int    = http.StatusNotFound
 )
 
 // GetAlert returns an alert given itss unique identifier, an error otherwise

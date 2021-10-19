@@ -7,9 +7,9 @@ import (
 )
 
 const (
-	deleteAlertServiceMethod = http.MethodDelete
-	deleteAlertServiceUrl = alertsServiceEndpoint + "/%d"
-	deleteAlertMethodSuccess int = http.StatusOK
+	deleteAlertServiceMethod      = http.MethodDelete
+	deleteAlertServiceUrl         = alertsServiceEndpoint + "/%d"
+	deleteAlertMethodSuccess  int = http.StatusOK
 	deleteAlertMethodNotFound int = http.StatusNotFound
 )
 

@@ -8,11 +8,11 @@ import (
 )
 
 const (
-	createAlertServiceUrl = alertsServiceEndpoint
-	createAlertServiceMethod = http.MethodPost
-	createAlertServiceSuccess = http.StatusOK
-	createAlertServiceCreated = http.StatusCreated
-	createAlertServiceNoContent = http.StatusNoContent
+	createAlertServiceUrl            = alertsServiceEndpoint
+	createAlertServiceMethod         = http.MethodPost
+	createAlertServiceSuccess        = http.StatusOK
+	createAlertServiceCreated        = http.StatusCreated
+	createAlertServiceNoContent      = http.StatusNoContent
 	createAlertServiceStatusNotFound = http.StatusNotFound
 )
 

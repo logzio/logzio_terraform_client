@@ -7,10 +7,10 @@ import (
 )
 
 const (
-	enableAlertServiceUrl = alertsServiceEndpoint + "/%d/enable"
-	enableAlertServiceMethod string = http.MethodPost
-	enableAlertMethodSuccess int = http.StatusNoContent
-	enableAlertMethodNotFound int = http.StatusNotFound
+	enableAlertServiceUrl            = alertsServiceEndpoint + "/%d/enable"
+	enableAlertServiceMethod  string = http.MethodPost
+	enableAlertMethodSuccess  int    = http.StatusNoContent
+	enableAlertMethodNotFound int    = http.StatusNotFound
 )
 
 // EnableAlert enables an alert given its unique identifier. Returns the alert, an error otherwise

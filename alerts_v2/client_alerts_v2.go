@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	alertsServiceEndpoint         string = "%s/v2/alerts"
+	alertsServiceEndpoint string = "%s/v2/alerts"
 )
 
 const (
@@ -41,11 +41,11 @@ const (
 
 	CorrelationOperatorAnd string = "AND"
 
-	createAlertOperation = "CreateAlertV2"
-	deleteAlertOperation = "DeleteAlertV2"
+	createAlertOperation  = "CreateAlertV2"
+	deleteAlertOperation  = "DeleteAlertV2"
 	disableAlertOperation = "DisableAlertV2"
-	enableAlertOperation = "EnableAlertV2"
-	getAlertOperation = "GetAlertV2"
+	enableAlertOperation  = "EnableAlertV2"
+	getAlertOperation     = "GetAlertV2"
 )
 
 type AlertsV2Client struct {
