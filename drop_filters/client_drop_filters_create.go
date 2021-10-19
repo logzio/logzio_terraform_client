@@ -37,15 +37,6 @@ func (c *DropFiltersClient) CreateDropFilter(createDropFilter CreateDropFilter) 
 		return nil, err
 	}
 
-	//req, err := c.buildCreateApiRequest(c.ApiToken, dropFilterJson)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//
-	//jsonResponse, err := logzio_client.CreateHttpRequestBytesResponse(req)
-	//if err != nil {
-	//	return nil, err
-	//}
 	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
 		ApiToken:     c.ApiToken,
 		HttpMethod:   createDropFilterServiceMethod,
@@ -70,11 +61,3 @@ func (c *DropFiltersClient) CreateDropFilter(createDropFilter CreateDropFilter) 
 	return &retVal, nil
 
 }
-
-//func (c *DropFiltersClient) buildCreateApiRequest(apiToken string, jsonBytes []byte) (*http.Request, error) {
-//	baseUrl := c.BaseUrl
-//	req, err := http.NewRequest(createDropFilterServiceMethod, fmt.Sprintf(createDropFilterServiceUrl, baseUrl), bytes.NewBuffer(jsonBytes))
-//	logzio_client.AddHttpHeaders(apiToken, req)
-//
-//	return req, err
-//}
