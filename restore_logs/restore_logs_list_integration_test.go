@@ -9,8 +9,8 @@ func TestIntegrationRestoreLogs_ListRestoreOperations(t *testing.T) {
 	underTest, _, err := setupRestoreLogsIntegrationTest(withoutArchive)
 
 	if assert.NoError(t, err) {
-		archives, err := underTest.ListRestoreOperations()
+		restores, err := underTest.ListRestoreOperations()
 		assert.NoError(t, err)
-		assert.NotNil(t, archives)
+		assert.NotNil(t, restores)
 	}
 }

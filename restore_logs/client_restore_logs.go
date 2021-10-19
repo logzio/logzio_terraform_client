@@ -16,9 +16,10 @@ const (
 	RestoreStatusDeleted       = "DELETED"
 	RestoreStatusExpired       = "EXPIRED"
 
-	listRestoreOperations  = "ListRestoreOperations"
-	getRestoreOperation    = "GetRestoreOperation"
-	deleteRestoreOperation = "DeleteRestoreOperation"
+	listRestoreOperations    = "ListRestoreOperations"
+	getRestoreOperation      = "GetRestoreOperation"
+	deleteRestoreOperation   = "DeleteRestoreOperation"
+	initiateRestoreOperation = "InitiateRestoreOperation"
 )
 
 type RestoreClient struct {

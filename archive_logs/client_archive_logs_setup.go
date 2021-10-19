@@ -1,7 +1,6 @@
 package archive_logs
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	logzio_client "github.com/logzio/logzio_terraform_client"
@@ -11,6 +10,8 @@ import (
 const (
 	setupArchiveLogsServiceUrl           = archiveLogsServiceEndpoint
 	setupArchiveLogsServiceMethod string = http.MethodPost
+	setupArchiveLogsStatusSuccess int    = http.StatusOK
+	setupArchiveLogsStatusCreated int    = http.StatusCreated
 )
 
 // SetupArchive receives archive settings, and sends it as api request to logz.io
@@ -26,32 +27,26 @@ func (c *ArchiveLogsClient) SetupArchive(createArchive CreateOrUpdateArchiving) 
 		return nil, err
 	}
 
-	req, err := c.buildSetupApiRequest(c.ApiToken, archiveLogsJson)
-	if err != nil {
-		return nil, err
-	}
+	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
+		ApiToken:     c.ApiToken,
+		HttpMethod:   setupArchiveLogsServiceMethod,
+		Url:          fmt.Sprintf(setupArchiveLogsServiceUrl, c.BaseUrl),
+		Body:         archiveLogsJson,
+		SuccessCodes: []int{setupArchiveLogsStatusSuccess, setupArchiveLogsStatusCreated},
+		NotFoundCode: http.StatusNotFound,
+		ResourceId:   nil,
+		ApiAction:    setupArchiveApi,
+	})
 
-	jsonResponse, err := logzio_client.CreateHttpRequestBytesResponse(req)
 	if err != nil {
 		return nil, err
 	}
 
 	var retVal ArchiveLogs
-	err = json.Unmarshal(jsonResponse, &retVal)
+	err = json.Unmarshal(res, &retVal)
 	if err != nil {
 		return nil, err
 	}
 
 	return &retVal, nil
-}
-
-func (c *ArchiveLogsClient) buildSetupApiRequest(apiToken string, jsonBytes []byte) (*http.Request, error) {
-	baseUrl := c.BaseUrl
-	req, err := http.NewRequest(setupArchiveLogsServiceMethod, fmt.Sprintf(setupArchiveLogsServiceUrl, baseUrl), bytes.NewBuffer(jsonBytes))
-	if err != nil {
-		return nil, err
-	}
-
-	logzio_client.AddHttpHeaders(apiToken, req)
-	return req, err
 }

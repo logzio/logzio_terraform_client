@@ -1,12 +1,9 @@
 package archive_logs
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	logzio_client "github.com/logzio/logzio_terraform_client"
-	"github.com/logzio/logzio_terraform_client/client"
-	"io/ioutil"
 	"net/http"
 )
 
@@ -25,47 +22,31 @@ func (c *ArchiveLogsClient) UpdateArchiveLogs(archiveId int32, updateArchive Cre
 		return nil, err
 	}
 
-	req, err := c.buildUpdateApiRequest(c.ApiToken, archiveId, updateArchive)
+	updateArchiveBodyJson, err := json.Marshal(updateArchive)
 	if err != nil {
 		return nil, err
 	}
-	httpClient := client.GetHttpClient(req)
-	resp, err := httpClient.Do(req)
+
+	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
+		ApiToken:     c.ApiToken,
+		HttpMethod:   updateArchiveLogsServiceMethod,
+		Url:          fmt.Sprintf(updateArchiveLogsServiceUrl, c.BaseUrl, archiveId),
+		Body:         updateArchiveBodyJson,
+		SuccessCodes: []int{updateArchiveLogsServiceSuccess, updateArchiveLogsServiceSuccessCreated},
+		NotFoundCode: updateArchiveLogsServiceNotFound,
+		ResourceId:   archiveId,
+		ApiAction:    updateArchiveSettings,
+	})
+
 	if err != nil {
 		return nil, err
-	}
-	defer resp.Body.Close()
-
-	jsonBytes, _ := ioutil.ReadAll(resp.Body)
-	if !logzio_client.CheckValidStatus(resp, []int{updateArchiveLogsServiceSuccess, updateArchiveLogsServiceSuccessCreated}) {
-		if resp.StatusCode == updateArchiveLogsServiceNotFound {
-			return nil, fmt.Errorf("API call %s failed with missing archive %d, data: %s", updateArchiveSettings, archiveId, jsonBytes)
-		}
-
-		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", updateArchiveSettings, resp.StatusCode, jsonBytes)
 	}
 
 	var retVal ArchiveLogs
-	err = json.Unmarshal(jsonBytes, &retVal)
+	err = json.Unmarshal(res, &retVal)
 	if err != nil {
 		return nil, err
 	}
 
 	return &retVal, nil
-}
-
-func (c *ArchiveLogsClient) buildUpdateApiRequest(apiToken string, archiveId int32, updateArchive CreateOrUpdateArchiving) (*http.Request, error) {
-	jsonBytes, err := json.Marshal(updateArchive)
-	if err != nil {
-		return nil, err
-	}
-
-	baseUrl := c.BaseUrl
-	req, err := http.NewRequest(updateArchiveLogsServiceMethod, fmt.Sprintf(updateArchiveLogsServiceUrl, baseUrl, archiveId), bytes.NewBuffer(jsonBytes))
-	if err != nil {
-		return nil, err
-	}
-	logzio_client.AddHttpHeaders(apiToken, req)
-
-	return req, err
 }

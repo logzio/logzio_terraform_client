@@ -1,7 +1,6 @@
 package restore_logs
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	logzio_client "github.com/logzio/logzio_terraform_client"
@@ -9,8 +8,9 @@ import (
 )
 
 const (
-	initiateRestoreLogsServiceUrl           = restoreLogsServiceEndpoint
-	initiateRestoreLogsServiceMethod string = http.MethodPost
+	initiateRestoreLogsServiceUrl            = restoreLogsServiceEndpoint
+	initiateRestoreLogsServiceMethod  string = http.MethodPost
+	initiateRestoreLogsServiceSuccess        = http.StatusOK
 )
 
 // InitiateRestoreOperation initiates a new operation to restore data from a specific time frame
@@ -24,19 +24,33 @@ func (c *RestoreClient) InitiateRestoreOperation(initiateRestore InitiateRestore
 	if err != nil {
 		return nil, err
 	}
+	//
+	//req, err := c.buildInitiateApiRequest(c.ApiToken, initiateRestoreJson)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//
+	//jsonResponse, err := logzio_client.CreateHttpRequestBytesResponse(req)
+	//if err != nil {
+	//	return nil, err
+	//}
+	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
+		ApiToken:     c.ApiToken,
+		HttpMethod:   initiateRestoreLogsServiceMethod,
+		Url:          fmt.Sprintf(initiateRestoreLogsServiceUrl, c.BaseUrl),
+		Body:         initiateRestoreJson,
+		SuccessCodes: []int{initiateRestoreLogsServiceSuccess},
+		NotFoundCode: http.StatusNotFound,
+		ResourceId:   nil,
+		ApiAction:    initiateRestoreOperation,
+	})
 
-	req, err := c.buildInitiateApiRequest(c.ApiToken, initiateRestoreJson)
-	if err != nil {
-		return nil, err
-	}
-
-	jsonResponse, err := logzio_client.CreateHttpRequestBytesResponse(req)
 	if err != nil {
 		return nil, err
 	}
 
 	var retVal RestoreOperation
-	err = json.Unmarshal(jsonResponse, &retVal)
+	err = json.Unmarshal(res, &retVal)
 	if err != nil {
 		return nil, err
 	}
@@ -60,13 +74,13 @@ func validateInitiateRestoreOperation(initiateRestore InitiateRestore) error {
 	return nil
 }
 
-func (c *RestoreClient) buildInitiateApiRequest(apiToken string, jsonBytes []byte) (*http.Request, error) {
-	baseUrl := c.BaseUrl
-	req, err := http.NewRequest(initiateRestoreLogsServiceMethod, fmt.Sprintf(initiateRestoreLogsServiceUrl, baseUrl), bytes.NewBuffer(jsonBytes))
-	if err != nil {
-		return nil, err
-	}
-
-	logzio_client.AddHttpHeaders(apiToken, req)
-	return req, err
-}
+//func (c *RestoreClient) buildInitiateApiRequest(apiToken string, jsonBytes []byte) (*http.Request, error) {
+//	baseUrl := c.BaseUrl
+//	req, err := http.NewRequest(initiateRestoreLogsServiceMethod, fmt.Sprintf(initiateRestoreLogsServiceUrl, baseUrl), bytes.NewBuffer(jsonBytes))
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	logzio_client.AddHttpHeaders(apiToken, req)
+//	return req, err
+//}
