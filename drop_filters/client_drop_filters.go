@@ -1,15 +1,18 @@
 package drop_filters
 
 import (
-	"encoding/json"
 	"fmt"
-	logzio_client "github.com/logzio/logzio_terraform_client"
 	"github.com/logzio/logzio_terraform_client/client"
-	"io/ioutil"
-	"net/http"
 )
 
-const dropFiltersServiceEndpoint string = "%s/v1/drop-filters"
+const (
+	dropFiltersServiceEndpoint    string = "%s/v1/drop-filters"
+	createDropFilterOperation            = "CreateDropFilter"
+	activateDropFilterOperation          = "ActivateDropFilter"
+	deactivateDropFilterOperation        = "DeactivateDropFilter"
+	deleteDropFilterOperation            = "DeleteDropFilter"
+	retrieveDropFiltersOperation         = "RetrieveDropFilters"
+)
 
 type DropFiltersClient struct {
 	*client.Client
@@ -62,41 +65,4 @@ func validateCreateDropFilterRequest(filter CreateDropFilter) error {
 	}
 
 	return nil
-}
-
-// Activates/deactivates a drop filter given it's unique identifier. Returns the drop filter, an error otherwise
-func (c *DropFiltersClient) ActivateOrDeactivateDropFilter(dropFilterId string, active bool) (*DropFilter, error) {
-	var req *http.Request
-	var operationName string
-	if active {
-		req, _ = c.buildActivateApiRequest(c.ApiToken, dropFilterId)
-		operationName = "ActivateDropFilter"
-	} else {
-		req, _ = c.buildDeactivateApiRequest(c.ApiToken, dropFilterId)
-		operationName = "DeactivateDropFilter"
-	}
-
-	httpClient := client.GetHttpClient(req)
-	resp, err := httpClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	jsonBytes, _ := ioutil.ReadAll(resp.Body)
-	var dropFilter DropFilter
-	err = json.Unmarshal(jsonBytes, &dropFilter)
-	if err != nil {
-		return nil, err
-	}
-
-	if !logzio_client.CheckValidStatus(resp, []int{activateDropFilterMethodSuccess, deactivateDropFilterMethodSuccess}) {
-		if resp.StatusCode == activateDropFilterMethodNotFound || resp.StatusCode == deactivateDropFilterMethodNotFound {
-			return nil, fmt.Errorf("API call %s failed with missing drop filter %s, data: %s", operationName, dropFilterId, jsonBytes)
-		}
-
-		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", operationName, resp.StatusCode, jsonBytes)
-	}
-
-	return &dropFilter, nil
 }

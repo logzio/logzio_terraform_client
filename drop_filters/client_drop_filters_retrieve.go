@@ -4,43 +4,36 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/logzio/logzio_terraform_client"
-	"github.com/logzio/logzio_terraform_client/client"
-	"io/ioutil"
 	"net/http"
 )
 
-const retrieveDropFilterServiceUrl string = dropFiltersServiceEndpoint + "/search"
-const retrieveDropFilterServiceMethod string = http.MethodPost
-const retrieveDropFilterMethodSuccess int = http.StatusOK
+const (
+	retrieveDropFilterServiceUrl     = dropFiltersServiceEndpoint + "/search"
+	retrieveDropFilterServiceMethod  = http.MethodPost
+	retrieveDropFilterMethodSuccess  = http.StatusOK
+	retrieveDropFilterStatusNotFound = http.StatusNotFound
+)
 
-func (c *DropFiltersClient) buildRetrieveApiRequest(apiToken string) (*http.Request, error) {
-	baseUrl := c.BaseUrl
-	req, err := http.NewRequest(retrieveDropFilterServiceMethod, fmt.Sprintf(retrieveDropFilterServiceUrl, baseUrl), nil)
-	logzio_client.AddHttpHeaders(apiToken, req)
-
-	return req, err
-}
-
-// Returns all the drop filters in an array associated with the account identified by the supplied API token, returns an error if
+// RetrieveDropFilters returns all the drop filters in an array associated with the account identified by the supplied API token, returns an error if
 // any problem occurs during the API call
 func (c *DropFiltersClient) RetrieveDropFilters() ([]DropFilter, error) {
-	req, _ := c.buildRetrieveApiRequest(c.ApiToken)
+	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
+		ApiToken:     c.ApiToken,
+		HttpMethod:   retrieveDropFilterServiceMethod,
+		Url:          fmt.Sprintf(retrieveDropFilterServiceUrl, c.BaseUrl),
+		Body:         nil,
+		SuccessCodes: []int{retrieveDropFilterMethodSuccess},
+		NotFoundCode: retrieveDropFilterStatusNotFound,
+		ResourceId:   nil,
+		ApiAction:    retrieveDropFiltersOperation,
+	})
 
-	httpClient := client.GetHttpClient(req)
-	resp, err := httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
-
-	jsonBytes, _ := ioutil.ReadAll(resp.Body)
-
-	if !logzio_client.CheckValidStatus(resp, []int{retrieveDropFilterMethodSuccess}) {
-		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "RetrieveDropFilters", resp.StatusCode, jsonBytes)
-	}
 
 	var dropFilters []DropFilter
-	err = json.Unmarshal(jsonBytes, &dropFilters)
+	err = json.Unmarshal(res, &dropFilters)
 
 	if err != nil {
 		return nil, err
