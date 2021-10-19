@@ -4,14 +4,11 @@ import (
 	"fmt"
 	"github.com/logzio/logzio_terraform_client"
 	"github.com/logzio/logzio_terraform_client/client"
-	"io/ioutil"
-	"net/http"
 	"strconv"
 )
 
 const (
 	alertsServiceEndpoint         string = "%s/v2/alerts"
-	enableOrDisableMethodNotFound int    = http.StatusNotFound
 )
 
 const (
@@ -43,6 +40,12 @@ const (
 	OutputTypeTable string = "TABLE"
 
 	CorrelationOperatorAnd string = "AND"
+
+	createAlertOperation = "CreateAlertV2"
+	deleteAlertOperation = "DeleteAlertV2"
+	disableAlertOperation = "DisableAlertV2"
+	enableAlertOperation = "EnableAlertV2"
+	getAlertOperation = "GetAlertV2"
 )
 
 type AlertsV2Client struct {
@@ -199,36 +202,4 @@ func validateCreateAlertRequest(alert CreateAlertType) error {
 	}
 
 	return nil
-}
-
-// Enables/disables an alert given it's unique identifier. Returns the alert, an error otherwise
-func (c *AlertsV2Client) EnableOrDisableAlert(alert AlertType, enable bool) (*AlertType, error) {
-	var req *http.Request
-	var operationName string
-	if enable {
-		req, _ = c.buildEnableApiRequest(c.ApiToken, alert.AlertId)
-		operationName = "EnableAlert"
-	} else {
-		req, _ = c.buildDisableApiRequest(c.ApiToken, alert.AlertId)
-		operationName = "DisableAlert"
-	}
-
-	httpClient := client.GetHttpClient(req)
-	resp, err := httpClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	jsonBytes, _ := ioutil.ReadAll(resp.Body)
-
-	if !logzio_client.CheckValidStatus(resp, []int{disableAlertMethodSuccess, enableAlertMethodSuccess}) {
-		if resp.StatusCode == enableOrDisableMethodNotFound {
-			return nil, fmt.Errorf("API call %s failed with missing alert %d, data: %s", operationName, alert.AlertId, jsonBytes)
-		}
-		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", operationName, resp.StatusCode, jsonBytes)
-	}
-
-	alert.Enabled = enable
-	return &alert, nil
 }

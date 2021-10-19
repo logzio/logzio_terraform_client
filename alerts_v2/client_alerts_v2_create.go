@@ -1,15 +1,20 @@
 package alerts_v2
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/logzio/logzio_terraform_client"
 	"net/http"
 )
 
-const createAlertServiceUrl = alertsServiceEndpoint
-const createAlertServiceMethod string = http.MethodPost
+const (
+	createAlertServiceUrl = alertsServiceEndpoint
+	createAlertServiceMethod = http.MethodPost
+	createAlertServiceSuccess = http.StatusOK
+	createAlertServiceCreated = http.StatusCreated
+	createAlertServiceNoContent = http.StatusNoContent
+	createAlertServiceStatusNotFound = http.StatusNotFound
+)
 
 type FieldError struct {
 	Field   string
@@ -20,37 +25,38 @@ func (e FieldError) Error() string {
 	return fmt.Sprintf("%v: %v", e.Field, e.Message)
 }
 
-// Create an alert, return the created alert if successful, an error otherwise
+// CreateAlert creates an alert, returns the created alert if successful, an error otherwise
 func (c *AlertsV2Client) CreateAlert(alert CreateAlertType) (*AlertType, error) {
 	err := validateCreateAlertRequest(alert)
 	if err != nil {
 		return nil, err
 	}
 
-	createAlert, err := json.Marshal(alert)
+	createAlertJson, err := json.Marshal(alert)
 	if err != nil {
 		return nil, err
 	}
 
-	req, _ := c.buildCreateApiRequest(c.ApiToken, createAlert)
-	jsonResponse, err := logzio_client.CreateHttpRequestBytesResponse(req)
+	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
+		ApiToken:     c.ApiToken,
+		HttpMethod:   createAlertServiceMethod,
+		Url:          fmt.Sprintf(createAlertServiceUrl, c.BaseUrl),
+		Body:         createAlertJson,
+		SuccessCodes: []int{createAlertServiceSuccess, createAlertServiceCreated, createAlertServiceNoContent},
+		NotFoundCode: createAlertServiceStatusNotFound,
+		ResourceId:   nil,
+		ApiAction:    createAlertOperation,
+	})
+
 	if err != nil {
 		return nil, err
 	}
 
 	var retVal AlertType
-	err = json.Unmarshal(jsonResponse, &retVal)
+	err = json.Unmarshal(res, &retVal)
 	if err != nil {
 		return nil, err
 	}
 
 	return &retVal, nil
-}
-
-func (c *AlertsV2Client) buildCreateApiRequest(apiToken string, jsonBytes []byte) (*http.Request, error) {
-	baseUrl := c.BaseUrl
-	req, err := http.NewRequest(createAlertServiceMethod, fmt.Sprintf(createAlertServiceUrl, baseUrl), bytes.NewBuffer(jsonBytes))
-	logzio_client.AddHttpHeaders(apiToken, req)
-
-	return req, err
 }

@@ -4,47 +4,35 @@ import (
 	"encoding/json"
 	"fmt"
 	logzio_client "github.com/logzio/logzio_terraform_client"
-	"github.com/logzio/logzio_terraform_client/client"
-	"io/ioutil"
 	"net/http"
 )
 
-const getAlertServiceUrl = alertsServiceEndpoint + "/%d"
-const getAlertServiceMethod string = http.MethodGet
-const getAlertMethodSuccess int = http.StatusOK
-const getAlertMethodNotFound int = http.StatusNotFound
+const (
+	getAlertServiceUrl = alertsServiceEndpoint + "/%d"
+	getAlertServiceMethod string = http.MethodGet
+	getAlertMethodSuccess int = http.StatusOK
+	getAlertMethodNotFound int = http.StatusNotFound
+)
 
-func (c *AlertsV2Client) buildGetApiRequest(apiToken string, alertId int64) (*http.Request, error) {
-	baseUrl := c.BaseUrl
-	req, err := http.NewRequest(getAlertServiceMethod, fmt.Sprintf(getAlertServiceUrl, baseUrl, alertId), nil)
-	logzio_client.AddHttpHeaders(apiToken, req)
-
-	return req, err
-}
-
-// Returns an alert given it's unique identifier, an error otherwise
+// GetAlert returns an alert given itss unique identifier, an error otherwise
 func (c *AlertsV2Client) GetAlert(alertId int64) (*AlertType, error) {
-	req, _ := c.buildGetApiRequest(c.ApiToken, alertId)
+	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
+		ApiToken:     c.ApiToken,
+		HttpMethod:   getAlertServiceMethod,
+		Url:          fmt.Sprintf(getAlertServiceUrl, c.BaseUrl, alertId),
+		Body:         nil,
+		SuccessCodes: []int{getAlertMethodSuccess},
+		NotFoundCode: getAlertMethodNotFound,
+		ResourceId:   alertId,
+		ApiAction:    getAlertOperation,
+	})
 
-	httpClient := client.GetHttpClient(req)
-	resp, err := httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
-
-	jsonBytes, _ := ioutil.ReadAll(resp.Body)
-
-	if !logzio_client.CheckValidStatus(resp, []int{getAlertMethodSuccess}) {
-		if resp.StatusCode == getAlertMethodNotFound {
-			return nil, fmt.Errorf("API call %s failed with missing alert %d, data: %s", "GetAlert", alertId, jsonBytes)
-		}
-
-		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", "GetAlert", resp.StatusCode, jsonBytes)
-	}
 
 	var alert AlertType
-	err = json.Unmarshal(jsonBytes, &alert)
+	err = json.Unmarshal(res, &alert)
 	if err != nil {
 		return nil, err
 	}
