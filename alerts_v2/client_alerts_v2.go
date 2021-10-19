@@ -46,6 +46,8 @@ const (
 	disableAlertOperation = "DisableAlertV2"
 	enableAlertOperation  = "EnableAlertV2"
 	getAlertOperation     = "GetAlertV2"
+	listAlertOperation    = "ListAlertsV2"
+	updateAlertOperation  = "UpdateAlertV2"
 )
 
 type AlertsV2Client struct {
