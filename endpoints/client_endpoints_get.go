@@ -4,57 +4,38 @@ import (
 	"encoding/json"
 	"fmt"
 	logzio_client "github.com/logzio/logzio_terraform_client"
-	"github.com/logzio/logzio_terraform_client/client"
-	"io/ioutil"
 	"net/http"
 )
 
 const (
-	getEndpointsServiceUrl     string = endpointServiceEndpoint + "/%d"
-	getEndpointsServiceMethod  string = http.MethodGet
-	getEndpointsMethodSuccess  int    = http.StatusOK
-	getEndpointsMethodNotFound int    = http.StatusNotFound
+	getEndpointsServiceUrl     = endpointServiceEndpoint + "/%d"
+	getEndpointsServiceMethod  = http.MethodGet
+	getEndpointsMethodSuccess  = http.StatusOK
+	getEndpointsMethodNotFound = http.StatusNotFound
 )
 
-// Returns an endpoint given it's unique identifier, an error otherwise
+// GetEndpoint returns an endpoint given its unique identifier, an error otherwise
 func (c *EndpointsClient) GetEndpoint(endpointId int64) (*Endpoint, error) {
-	req, err := c.buildGetApiRequest(c.ApiToken, endpointId)
-	if err != nil {
-		return nil, err
-	}
-	httpClient := client.GetHttpClient(req)
-	resp, err := httpClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
+	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
+		ApiToken:     c.ApiToken,
+		HttpMethod:   getEndpointsServiceMethod,
+		Url:          fmt.Sprintf(getEndpointsServiceUrl, c.BaseUrl, endpointId),
+		Body:         nil,
+		SuccessCodes: []int{getEndpointsMethodSuccess},
+		NotFoundCode: getEndpointsMethodNotFound,
+		ResourceId:   endpointId,
+		ApiAction:    getEndpointMethod,
+	})
 
-	jsonBytes, _ := ioutil.ReadAll(resp.Body)
-
-	if !logzio_client.CheckValidStatus(resp, []int{getEndpointsMethodSuccess}) {
-		if resp.StatusCode == getEndpointsMethodNotFound {
-			return nil, fmt.Errorf("API call %s failed with missing endpoint %d, data: %s", getEndpointMethod, endpointId, jsonBytes)
-		}
-
-		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", getEndpointMethod, resp.StatusCode, jsonBytes)
-	}
-
-	var token Endpoint
-	err = json.Unmarshal(jsonBytes, &token)
 	if err != nil {
 		return nil, err
 	}
 
-	return &token, nil
-}
-
-func (c *EndpointsClient) buildGetApiRequest(apiToken string, endpointId int64) (*http.Request, error) {
-	baseUrl := c.BaseUrl
-	req, err := http.NewRequest(getEndpointsServiceMethod, fmt.Sprintf(getEndpointsServiceUrl, baseUrl, endpointId), nil)
+	var endpoint Endpoint
+	err = json.Unmarshal(res, &endpoint)
 	if err != nil {
 		return nil, err
 	}
-	logzio_client.AddHttpHeaders(apiToken, req)
 
-	return req, err
+	return &endpoint, nil
 }

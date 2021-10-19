@@ -12,6 +12,7 @@ const (
 	getEndpointMethod       = "GetEndpoint"
 	listEndpointMethod      = "ListEndpoint"
 	updateEndpointMethod    = "UpdateEndpoint"
+	createEndpointMethod    = "CreateEndpoint"
 )
 
 // supported endpoint types
