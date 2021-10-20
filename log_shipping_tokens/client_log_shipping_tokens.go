@@ -9,14 +9,13 @@ import (
 
 const (
 	logShippingTokensServiceEndpoint string = "%s/v1/log-shipping/tokens"
-)
 
-const (
 	operationGetLogShippingToken        = "GetLogShippingToken"
 	operationUpdateLogShippingToken     = "UpdateLogShippingToken"
 	operationDeleteLogShippingToken     = "DeleteLogShippingToken"
 	operationGetLogShippingTokensLimits = "GetNumberOfAvailableTokens"
 	operationRetrieveLogShippingTokens  = "RetrieveLogShippingTokens"
+	operationCreateLogShippingToken     = "CreateLogShippingToken"
 
 	retrieveSortFieldCreatedAtValue = "createdAt"
 	retrieveSortFieldNameValue      = "name"
