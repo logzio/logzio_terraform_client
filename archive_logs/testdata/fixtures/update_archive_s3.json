@@ -1,0 +1,18 @@
+{
+  "id": 1234,
+  "settings": {
+    "storageType": "S3",
+    "enabled": true,
+    "compressed": true,
+    "amazonS3StorageSettings": {
+      "credentialsType": "KEYS",
+      "path": "another-path",
+      "s3SecretCredentials": {
+        "accessKey": "another-access-key",
+        "secretKey": "another-secret-key"
+      },
+      "s3IamCredentials": null
+    },
+    "azureBlobStorageSettings": null
+  }
+}

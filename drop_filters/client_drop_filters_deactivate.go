@@ -1,6 +1,7 @@
 package drop_filters
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/logzio/logzio_terraform_client"
 	"net/http"
@@ -11,15 +12,28 @@ const deactivateDropFilterServiceMethod string = http.MethodPost
 const deactivateDropFilterMethodSuccess int = http.StatusOK
 const deactivateDropFilterMethodNotFound int = http.StatusNotFound
 
-func (c *DropFiltersClient) buildDeactivateApiRequest(apiToken string, dropFilterId string) (*http.Request, error) {
-	baseUrl := c.BaseUrl
-	req, err := http.NewRequest(deactivateDropFilterServiceMethod, fmt.Sprintf(deactivateDropFilterServiceUrl, baseUrl, dropFilterId), nil)
-	logzio_client.AddHttpHeaders(apiToken, req)
-
-	return req, err
-}
-
-// Deactivates drop filter by Id, returns the deactivated drop filter or error if occurred
+// DeactivateDropFilter deactivates drop filter by id, returns the deactivated drop filter or error if occurred
 func (c *DropFiltersClient) DeactivateDropFilter(dropFilterId string) (*DropFilter, error) {
-	return c.ActivateOrDeactivateDropFilter(dropFilterId, false)
+	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
+		ApiToken:     c.ApiToken,
+		HttpMethod:   deactivateDropFilterServiceMethod,
+		Url:          fmt.Sprintf(deactivateDropFilterServiceUrl, c.BaseUrl, dropFilterId),
+		Body:         nil,
+		SuccessCodes: []int{deactivateDropFilterMethodSuccess},
+		NotFoundCode: deactivateDropFilterMethodNotFound,
+		ResourceId:   dropFilterId,
+		ApiAction:    deactivateDropFilterOperation,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	var dropFilter DropFilter
+	err = json.Unmarshal(res, &dropFilter)
+	if err != nil {
+		return nil, err
+	}
+
+	return &dropFilter, nil
 }

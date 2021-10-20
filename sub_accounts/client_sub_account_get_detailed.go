@@ -4,55 +4,38 @@ import (
 	"encoding/json"
 	"fmt"
 	logzio_client "github.com/logzio/logzio_terraform_client"
-	"github.com/logzio/logzio_terraform_client/client"
-	"io/ioutil"
 	"net/http"
 )
 
 const (
-	getDetailedSubAccountServiceUrl      string = subAccountServiceEndpoint + "/detailed/%d"
-	getDetailedSubAccountServiceMethod   string = http.MethodGet
-	getDetailedSubAccountServiceSuccess  int    = http.StatusOK
-	getDetailedSubAccountServiceNotFound int    = http.StatusNotFound
+	getDetailedSubAccountServiceUrl      = subAccountServiceEndpoint + "/detailed/%d"
+	getDetailedSubAccountServiceMethod   = http.MethodGet
+	getDetailedSubAccountServiceSuccess  = http.StatusOK
+	getDetailedSubAccountServiceNotFound = http.StatusNotFound
 )
 
+// GetDetailedSubAccount returns a detailed sub-account given its unique identifier, an error otherwise
 func (c *SubAccountClient) GetDetailedSubAccount(subAccountId int64) (*DetailedSubAccount, error) {
-	req, err := c.buildGetDetailedApiRequest(c.ApiToken, subAccountId)
+	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
+		ApiToken:     c.ApiToken,
+		HttpMethod:   getDetailedSubAccountServiceMethod,
+		Url:          fmt.Sprintf(getDetailedSubAccountServiceUrl, c.BaseUrl, subAccountId),
+		Body:         nil,
+		SuccessCodes: []int{getDetailedSubAccountServiceSuccess},
+		NotFoundCode: getDetailedSubAccountServiceNotFound,
+		ResourceId:   subAccountId,
+		ApiAction:    operationGetDetailedSubAccount,
+	})
+
 	if err != nil {
 		return nil, err
-	}
-	httpClient := client.GetHttpClient(req)
-	resp, err := httpClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	jsonBytes, _ := ioutil.ReadAll(resp.Body)
-	if !logzio_client.CheckValidStatus(resp, []int{getDetailedSubAccountServiceSuccess}) {
-		if resp.StatusCode == getDetailedSubAccountServiceNotFound {
-			return nil, fmt.Errorf("API call %s failed with missing sub account %d, data: %s", operationGetDetailedSubAccount, subAccountId, jsonBytes)
-		}
-
-		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", operationGetDetailedSubAccount, resp.StatusCode, jsonBytes)
 	}
 
 	var subAccount DetailedSubAccount
-	err = json.Unmarshal(jsonBytes, &subAccount)
+	err = json.Unmarshal(res, &subAccount)
 	if err != nil {
 		return nil, err
 	}
 
 	return &subAccount, nil
-}
-
-func (c *SubAccountClient) buildGetDetailedApiRequest(apiToken string, subAccountId int64) (*http.Request, error) {
-	baseUrl := c.BaseUrl
-	req, err := http.NewRequest(getDetailedSubAccountServiceMethod, fmt.Sprintf(getDetailedSubAccountServiceUrl, baseUrl, subAccountId), nil)
-	if err != nil {
-		return nil, err
-	}
-	logzio_client.AddHttpHeaders(apiToken, req)
-
-	return req, err
 }

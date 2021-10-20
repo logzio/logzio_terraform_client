@@ -16,7 +16,7 @@ func TestIntegrationDropFilters_ActivateDropFilter(t *testing.T) {
 		if assert.NoError(t, err) && assert.NotNil(t, dropFilter) {
 			time.Sleep(2 * time.Second)
 			defer underTest.DeleteDropFilter(dropFilter.Id)
-			_, err = underTest.ActivateOrDeactivateDropFilter(dropFilter.Id, false)
+			_, err = underTest.ActivateDropFilter(dropFilter.Id)
 			if assert.NoError(t, err) {
 				time.Sleep(2 * time.Second)
 				activated, err := underTest.ActivateDropFilter(dropFilter.Id)

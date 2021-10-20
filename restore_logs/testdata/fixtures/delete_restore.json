@@ -1,0 +1,13 @@
+{
+  "id": 1234,
+  "accountId": null,
+  "accountName": "test_account",
+  "restoredVolumeGb": null,
+  "status": "ABORTED",
+  "startTime": 1634540173.000000000,
+  "endTime": 1634543773.000000000,
+  "createdAt": 1634543773.000000000,
+  "startedAt": null,
+  "finishedAt": null,
+  "expiresAt": null
+}

@@ -5,215 +5,15 @@ Client library for Logz.io API, see below for supported endpoints.
 The primary purpose of this library is to act as the API interface for the logz.io Terraform provider.
 To use it, you'll need to [create an API token](https://app.logz.io/#/dashboard/settings/api-tokens) and provide it to the client library along with your logz.io regional [API server address](https://docs.logz.io/user-guide/accounts/account-region.html#regions-and-urls).
 
-##### Usage
-
-Note: the lastest version of the API (1.3) is not backwards compatible with previous versions, specifically the client entrypoint names have changed to prevent naming conflicts. Use `UsersClient` ([Users API](#users)) ,`SubaccountClient` ([Sub-accounts API](#sub-accounts)), `AlertsClient` ([Alerts API](#alerts)) and `EndpointsClient` ([Endpoints API](#endpoints)) rather than `Users`, `Alerts` and `Endpoints`.
-
-##### Alerts V2
-To create an alert where the type field = 'mytype' and the loglevel field = ERROR, see the logz.io docs for more info
-
-https://support.logz.io/hc/en-us/articles/209487329-How-do-I-create-an-Alert-
-
-```go
-client, _ := alerts_v2.New(apiToken, apiServerAddress)
-alertQuery := alerts_v2.AlertQuery{
-		Query:                    "loglevel:ERROR",
-		Aggregation:              alerts_v2.AggregationObj{AggregationType: alerts_v2.AggregationTypeCount},
-		ShouldQueryOnAllAccounts: true,
-	}
-
-	trigger := alerts_v2.AlertTrigger{
-		Operator:               alerts_v2.OperatorEquals,
-		SeverityThresholdTiers: map[string]float32{alerts_v2.SeverityHigh: 10, alerts_v2.SeverityInfo: 5},
-	}
-	
-	subComponent := alerts_v2.SubAlert{
-		QueryDefinition: alertQuery,
-		Trigger:         trigger,
-		Output:          alerts_v2.SubAlertOutput{},
-	}
-
-	createAlertType := alerts_v2.CreateAlertType{
-		Title:                  "test create alert",
-		Description:            "this is my description",
-		Tags:                   []string{"some", "words"},
-		Output:                 alerts_v2.AlertOutput{},
-		SubComponents:          []alerts_v2.SubAlert{subComponent},
-		Correlations:           alerts_v2.SubAlertCorrelation{},
-		Enabled:                strconv.FormatBool(true),
-	}
-
-alert := client.CreateAlert(createAlertType)
-```
-
-|function|func name|
-|---|---|
-| Create alert | `func (c *AlertsV2Client) CreateAlert(alert CreateAlertType) (*AlertType, error)` |
-| Delete alert | `func (c *AlertsV2Client) DeleteAlert(alertId int64) error` |
-| Disable alert | `func (c *AlertsV2Client) DisableAlert(alert AlertType) (*AlertType, error)` |
-| Enable alert | `func (c *AlertsV2Client) EnableAlert(alert AlertType) (*AlertType, error)` |
-| Get alert | `func (c *AlertsV2Client) GetAlert(alertId int64) (*AlertType, error)` |
-| List alerts | `func (c *AlertsV2Client) ListAlerts() ([]AlertType, error)` |
-| Update alert | `func (c *AlertsV2Client) UpdateAlert(alertId int64, alert CreateAlertType) (*AlertType, error)` |
-
-##### Alerts
-
-To create an alert where the type field = 'mytype' and the loglevel field = ERROR, see the logz.io docs for more info
-
-https://support.logz.io/hc/en-us/articles/209487329-How-do-I-create-an-Alert-
-
-```go
-client, _ := alerts.New(apiToken, apiServerAddress)
-alert := client.CreateAlert(alerts.CreateAlertType{
-    Title:       "this is my alert",
-    Description: "this is my description",
-    QueryString: "loglevel:ERROR",
-    Filter:      "{\"bool\":{\"must\":[{\"match\":{\"type\":\"mytype\"}}],\"must_not\":[]}}",
-    Operation:   alerts.OperatorGreaterThan,
-    SeverityThresholdTiers: []alerts.SeverityThresholdType{
-        alerts.SeverityThresholdType{
-            alerts.SeverityHigh,
-            10,
-        },
-    },
-    SearchTimeFrameMinutes:       0,
-    NotificationEmails:           []interface{}{},
-    IsEnabled:                    true,
-    SuppressNotificationsMinutes: 0,
-    ValueAggregationType:         alerts.AggregationTypeCount,
-    ValueAggregationField:        nil,
-    GroupByAggregationFields:     []interface{}{"my_field"},
-    AlertNotificationEndpoints:   []interface{}{},
-})
-```
-
-|function|func name|
-|---|---|
-|create alert|`func (c *AlertsClient) CreateAlert(alert CreateAlertType) (*AlertType, error)`|
-|update alert|`func (c *AlertsClient) UpdateAlert(alertId int64, alert CreateAlertType) (*AlertType, error)`
-|delete alert|`func (c *AlertsClient) DeleteAlert(alertId int64) error`|
-|get alert (by id)|`func (c *AlertsClient) GetAlert(alertId int64) (*AlertType, error)`|
-|list alerts|`func (c *AlertsClient) ListAlerts() ([]AlertType, error)`|
-
-
-##### Users
-
-To create a new user, on a specific account or sub-account. you'll need [your account Id](https://docs.logz.io/user-guide/accounts/finding-your-account-id.html).
-
-```go
-client, _ := users.New(apiToken, apiServerAddress)
-user := client.User{
-    Username:  "createa@test.user",
-    Fullname:  "my username",
-    AccountId: 123456,
-    Roles:     []int32{users.UserTypeUser},
-}
-```
-
-|function|func name|
-|---|---|
-|create user|`func (c *UsersClient) CreateUser(user User) (*User, error)`|
-|update user|`func (c *UsersClient) UpdateUser(user User) (*User, error)`|
-|delete user|`func (c *UsersClient) DeleteUser(id int32) error`|
-|get user|`func (c *UsersClient) GetUser(id int32) (*User, error)`|
-|list users|`func (c *UsersClient) ListUsers() ([]User, error)`|
-|suspend user|`func (c *UsersClient) SuspendUser(userId int32) (bool, error)`|
-|unsuspend user|`func (c *UsersClient) UnSuspendUser(userId int32) (bool, error)`|
-
-##### Sub-accounts
-
-To create a new sub-account, on a main account.
-```go
-client, _ := sub_accounts.New(apiToken, apiServerAddress)
-subaccount := sub_accounts.CreateOrUpdateSubAccount{
-                Email:                  "some@email.test",
-                AccountName:            "tf_client_test",
-                MaxDailyGB:             1,
-                RetentionDays:          1,
-                Searchable:             strconv.FormatBool(false),
-                Accessible:             strconv.FormatBool(true),
-                SharingObjectsAccounts: []int32{},
-                DocSizeSetting:         strconv.FormatBool(false),
-            }
-```
-
-|function|func name|
-|---|---|
-|create sub-account|`func (c *SubAccountClient) CreateSubAccount(createSubAccount CreateOrUpdateSubAccount) (*SubAccountCreateResponse, error)`|
-|update sub-account|`func (c *SubAccountClient) UpdateSubAccount(subAccountId int64, updateSubAccount CreateOrUpdateSubAccount) error`|
-|delete sub-account|`func (c *SubAccountClient) DeleteSubAccount(subAccountId int64) error`|
-|get sub-account|`func (c *SubAccountClient) GetSubAccount(subAccountId int64) (*SubAccount, error)`|
-|get detailed sub-account|`func (c *SubAccountClient) GetDetailedSubAccount(subAccountId int64) (*DetailedSubAccount, error)`|
-|list sub-accounts|`func (c *SubAccountClient) ListSubAccounts() ([]SubAccount, error)`|
-|list detailed sub-accounts|`func (c *SubAccountClient) ListDetailedSubAccounts() ([]DetailedSubAccount, error)`|
-
-##### Endpoints
-
-For each type of endpoint there is a different structure, below you can find an example for creating a Slack endpoint.
-For more info, see: https://docs.logz.io/api/#tag/Manage-notification-endpoints or check our endpoints tests for more examples.
-
-```go
-client, _ := endpoints.New(apiToken, apiServerAddress)
-endpoint, err := client.CreateEndpoint(endpoints.CreateOrUpdateEndpoint{
-                Title:         "New endpoint",
-                Description:   "this is a description",
-                Type:          "slack",
-                Url:           "https://jsonplaceholder.typicode.com/todos/1",
-            })
-```
-
-|function|func name|
-|---|---|
-|create endpoint| `func (c *EndpointsClient) CreateEndpoint(endpoint CreateOrUpdateEndpoint) (*CreateOrUpdateEndpointResponse, error)` |
-|delete endpoint| `func (c *EndpointsClient) DeleteEndpoint(endpointId int64) error` |
-|get endpoint| `func (c *EndpointsClient) GetEndpoint(endpointId int64) (*Endpoint, error)` |
-|list endpoints| `func (c *EndpointsClient) ListEndpoints() ([]Endpoint, error)` |
-|update endpoint| `func (c *EndpointsClient) UpdateEndpoint(id int64, endpoint CreateOrUpdateEndpoint) (*CreateOrUpdateEndpointResponse, error)` |
-
-##### Log Shipping Tokens
-
-Compatible with Logz.io's [Manage Log Shipping Tokens API](https://docs.logz.io/api/#tag/Manage-log-shipping-tokens).
-To create a new log shipping token:
-
-```go
-client, _ := log_shipping_tokens.New(apiToken, apiServerAddress)
-token, err := client.CreateLogShippingToken(log_shipping_tokens.CreateLogShippingToken{
-                Name: "client_integration_test",
-            })
-```
-
-|function|func name|
-|---|---|
-|create log shipping token| `func (c *LogShippingTokensClient) CreateLogShippingToken(token CreateLogShippingToken) (*LogShippingToken, error)` |
-|delete log shipping token| `func (c *LogShippingTokensClient) DeleteLogShippingToken(tokenId int32) error` |
-|get log shipping token| `func (c *LogShippingTokensClient) GetLogShippingToken(tokenId int32) (*LogShippingToken, error)` |
-|get available number of tokens| `func (c *LogShippingTokensClient) GetLogShippingLimitsToken() (*LogShippingTokensLimits, error)` |
-|retrieve tokens| `func (c *LogShippingTokensClient) RetrieveLogShippingTokens(retrieveRequest RetrieveLogShippingTokensRequest) (*RetrieveLogShippingTokensResponse, error)` |
-|update log shipping token| `func (c *LogShippingTokensClient) UpdateLogShippingToken(tokenId int32, token UpdateLogShippingToken) (*LogShippingToken, error)` |
-
-##### Drop Filters
-Compatible with Logz.io's [drop filters API](https://docs.logz.io/api/#tag/Drop-filters).
-Drop filters provide a solution for filtering out logs before they are indexed in your account to help lower costs and reduce account volume.
-To create a new drop filter:
-
-```go
-client, _ := drop_filters.New(apiToken, apiServerAddress)
-dropFilter, err := client.CreateDropFilter(drop_filters.CreateDropFilter{
-                    LogType: "some_type",
-                    FieldConditions: []drop_filters.FieldConditionObject{{
-                        FieldName: "some_field_name",
-                        Value:     "some_value",
-                    }},
-                })
-```
-
-|function|func name|
-|---|---|
-|activate drop filter| `func (c *DropFiltersClient) ActivateDropFilter(dropFilterID string) (*DropFilter, error)` |
-|create drop filter| `func (c *DropFiltersClient) CreateDropFilter(createDropFilter CreateDropFilter) (*DropFilter, error)` |
-|deactivate drop filter| `func (c *DropFiltersClient) DeactivateDropFilter(dropFilterId string) (*DropFilter, error)` |
-|delete drop filter| `func (c *DropFiltersClient) DeleteDropFilter(dropFilterId string) error` |
-|retrieve drop filters| `func (c *DropFiltersClient) RetrieveDropFilters() ([]DropFilter, error)` |
+The library currently supports the following API endpoints:
+* [Alerts V2](https://github.com/logzio/logzio_terraform_client/tree/master/alerts_v2).
+* [Users](https://github.com/logzio/logzio_terraform_client/tree/master/users).
+* [Sub-accounts](https://github.com/logzio/logzio_terraform_client/tree/master/sub_accounts).
+* [Endpoints](https://github.com/logzio/logzio_terraform_client/tree/master/endpoints).
+* [Log shipping tokens](https://github.com/logzio/logzio_terraform_client/tree/master/log_shipping_tokens).
+* [Drop filters](https://github.com/logzio/logzio_terraform_client/tree/master/drop_filters).
+* [Archive logs](https://github.com/logzio/logzio_terraform_client/tree/master/archive_logs).
+* [Restore logs](https://github.com/logzio/logzio_terraform_client/tree/master/restore_logs).
 
 #### Contributing
 
@@ -223,8 +23,11 @@ dropFilter, err := client.CreateDropFilter(drop_filters.CreateDropFilter{
 ##### Run tests
 `go test -v -race ./...`
 
-
 ### Changelog
+
+- v1.9.0
+    - Add [Archive logs API](https://docs.logz.io/api/#tag/Archive-logs).
+    - Add [Restore logs API](https://docs.logz.io/api/#tag/Restore-logs).
 - v1.8.0
     - `sub_accounts`:
         - Add `flexible` & `reservedDailyGB`.
@@ -232,6 +35,8 @@ dropFilter, err := client.CreateDropFilter(drop_filters.CreateDropFilter{
     - `endpoints`:
         - **Breaking changes:** refactor resource.
         - Add new endpoint types (OpsGenie, ServiceNow, Microsoft Teams).
+<details>
+  <summary markdown="span">Exapnd to check old versions </summary>
 - v1.7.0
     - Add [drop filters API](https://docs.logz.io/api/#tag/Drop-filters).
 - v1.6.0
@@ -254,4 +59,4 @@ dropFilter, err := client.CreateDropFilter(drop_filters.CreateDropFilter{
 - v1.2
     - Add subaccount support
 
-
+</details>

@@ -1,0 +1,13 @@
+{
+  "id": 1234,
+  "accountId": null,
+  "accountName": "test_account",
+  "restoredVolumeGb": null,
+  "status": "IN_PROGRESS",
+  "startTime": 1634437185.000000000,
+  "endTime": 1634444385.000000000,
+  "createdAt": 1634455226.000000000,
+  "startedAt": null,
+  "finishedAt": null,
+  "expiresAt": null
+}

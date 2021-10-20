@@ -1,7 +1,6 @@
 package endpoints
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	logzio_client "github.com/logzio/logzio_terraform_client"
@@ -9,47 +8,46 @@ import (
 )
 
 const (
-	createEndpointServiceUrl    string = endpointServiceEndpoint + "/%s"
-	createEndpointServiceMethod string = http.MethodPost
+	createEndpointServiceUrl      = endpointServiceEndpoint + "/%s"
+	createEndpointServiceMethod   = http.MethodPost
+	createEndpointMethodSuccess   = http.StatusOK
+	createEndpointMethodNoContent = http.StatusNoContent
+	createEndpointMethodCreated   = http.StatusCreated
+	createEndpointStatusNotFound  = http.StatusNotFound
 )
 
-// Create a notification endpoint, return the created endpoint's id if successful, an error otherwise
+// CreateEndpoint creates a notification endpoint, return the created endpoint's id if successful, an error otherwise
 func (c *EndpointsClient) CreateEndpoint(endpoint CreateOrUpdateEndpoint) (*CreateOrUpdateEndpointResponse, error) {
 	err := validateCreateOrUpdateEndpointRequest(endpoint)
 	if err != nil {
 		return nil, err
 	}
 
-	createEndpoint, err := json.Marshal(endpoint)
+	createEndpointJson, err := json.Marshal(endpoint)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := c.buildCreateApiRequest(c.ApiToken, createEndpoint, endpoint.Type)
-	if err != nil {
-		return nil, err
-	}
-	jsonResponse, err := logzio_client.CreateHttpRequestBytesResponse(req)
+	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
+		ApiToken:     c.ApiToken,
+		HttpMethod:   createEndpointServiceMethod,
+		Url:          fmt.Sprintf(createEndpointServiceUrl, c.BaseUrl, c.getURLByType(endpoint.Type)),
+		Body:         createEndpointJson,
+		SuccessCodes: []int{createEndpointMethodSuccess, createEndpointMethodNoContent, createEndpointMethodCreated},
+		NotFoundCode: createEndpointStatusNotFound,
+		ResourceId:   nil,
+		ApiAction:    createEndpointMethod,
+	})
+
 	if err != nil {
 		return nil, err
 	}
 
 	var retVal CreateOrUpdateEndpointResponse
-	err = json.Unmarshal(jsonResponse, &retVal)
+	err = json.Unmarshal(res, &retVal)
 	if err != nil {
 		return nil, err
 	}
 
 	return &retVal, nil
-}
-
-func (c *EndpointsClient) buildCreateApiRequest(apiToken string, jsonBytes []byte, endpointType string) (*http.Request, error) {
-	baseUrl := c.BaseUrl
-	req, err := http.NewRequest(createEndpointServiceMethod, fmt.Sprintf(createEndpointServiceUrl, baseUrl, c.getURLByType(endpointType)), bytes.NewBuffer(jsonBytes))
-	if err != nil {
-		return nil, err
-	}
-	logzio_client.AddHttpHeaders(apiToken, req)
-
-	return req, err
 }

@@ -6,19 +6,30 @@ import (
 	"net/http"
 )
 
-const enableAlertServiceUrl = alertsServiceEndpoint + "/%d/enable"
-const enableAlertServiceMethod string = http.MethodPost
-const enableAlertMethodSuccess int = http.StatusNoContent
+const (
+	enableAlertServiceUrl            = alertsServiceEndpoint + "/%d/enable"
+	enableAlertServiceMethod  string = http.MethodPost
+	enableAlertMethodSuccess  int    = http.StatusNoContent
+	enableAlertMethodNotFound int    = http.StatusNotFound
+)
 
-func (c *AlertsV2Client) buildEnableApiRequest(apiToken string, alertId int64) (*http.Request, error) {
-	baseUrl := c.BaseUrl
-	req, err := http.NewRequest(enableAlertServiceMethod, fmt.Sprintf(enableAlertServiceUrl, baseUrl, alertId), nil)
-	logzio_client.AddHttpHeaders(apiToken, req)
-
-	return req, err
-}
-
-// Enables an alert given it's unique identifier. Returns the alert, an error otherwise
+// EnableAlert enables an alert given its unique identifier. Returns the alert, an error otherwise
 func (c *AlertsV2Client) EnableAlert(alert AlertType) (*AlertType, error) {
-	return c.EnableOrDisableAlert(alert, true)
+	_, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
+		ApiToken:     c.ApiToken,
+		HttpMethod:   enableAlertServiceMethod,
+		Url:          fmt.Sprintf(enableAlertServiceUrl, c.BaseUrl, alert.AlertId),
+		Body:         nil,
+		SuccessCodes: []int{enableAlertMethodSuccess},
+		NotFoundCode: enableAlertMethodNotFound,
+		ResourceId:   alert.AlertId,
+		ApiAction:    enableAlertOperation,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	alert.Enabled = true
+	return &alert, nil
 }

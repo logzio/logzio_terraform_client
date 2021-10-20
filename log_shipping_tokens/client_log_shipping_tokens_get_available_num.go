@@ -4,43 +4,37 @@ import (
 	"encoding/json"
 	"fmt"
 	logzio_client "github.com/logzio/logzio_terraform_client"
-	"github.com/logzio/logzio_terraform_client/client"
-	"io/ioutil"
 	"net/http"
 )
 
-const getAvailableLogShippingTokensNumberServiceUrl = logShippingTokensServiceEndpoint + "/limits"
-const getAvailableLogShippingTokensNumberServiceMethod string = http.MethodGet
-const getAvailableLogShippingTokensNumberMethodSuccess int = http.StatusOK
+const (
+	getAvailableLogShippingTokensNumberServiceUrl     = logShippingTokensServiceEndpoint + "/limits"
+	getAvailableLogShippingTokensNumberServiceMethod  = http.MethodGet
+	getAvailableLogShippingTokensNumberMethodSuccess  = http.StatusOK
+	getAvailableLogShippingTokensNumberStatusNotFound = http.StatusNotFound
+)
 
-func (c *LogShippingTokensClient) buildGetAvailableNumberApiRequest(apiToken string) (*http.Request, error) {
-	baseUrl := c.BaseUrl
-	req, err := http.NewRequest(getAvailableLogShippingTokensNumberServiceMethod, fmt.Sprintf(getAvailableLogShippingTokensNumberServiceUrl, baseUrl), nil)
-	logzio_client.AddHttpHeaders(apiToken, req)
-
-	return req, err
-}
-
-// Returns the number of log shipping tokens currently in use and the number of available tokens that can be enabled,
+// GetLogShippingLimitsToken returns the number of log shipping tokens currently in use and the number of available tokens that can be enabled,
 // error otherwise.
 // Disabled tokens don't count against the token limit.
 func (c *LogShippingTokensClient) GetLogShippingLimitsToken() (*LogShippingTokensLimits, error) {
-	req, _ := c.buildGetAvailableNumberApiRequest(c.ApiToken)
-	httpClient := client.GetHttpClient(req)
-	resp, err := httpClient.Do(req)
+	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
+		ApiToken:     c.ApiToken,
+		HttpMethod:   getAvailableLogShippingTokensNumberServiceMethod,
+		Url:          fmt.Sprintf(getAvailableLogShippingTokensNumberServiceUrl, c.BaseUrl),
+		Body:         nil,
+		SuccessCodes: []int{getAvailableLogShippingTokensNumberMethodSuccess},
+		NotFoundCode: getAvailableLogShippingTokensNumberStatusNotFound,
+		ResourceId:   nil,
+		ApiAction:    operationGetLogShippingTokensLimits,
+	})
+
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
-
-	jsonBytes, _ := ioutil.ReadAll(resp.Body)
-
-	if !logzio_client.CheckValidStatus(resp, []int{getAvailableLogShippingTokensNumberMethodSuccess}) {
-		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s", operationGetLogShippingTokensLimits, resp.StatusCode, jsonBytes)
-	}
 
 	var limits LogShippingTokensLimits
-	err = json.Unmarshal(jsonBytes, &limits)
+	err = json.Unmarshal(res, &limits)
 	if err != nil {
 		return nil, err
 	}

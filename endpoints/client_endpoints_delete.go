@@ -3,50 +3,29 @@ package endpoints
 import (
 	"fmt"
 	logzio_client "github.com/logzio/logzio_terraform_client"
-	"github.com/logzio/logzio_terraform_client/client"
-	"io/ioutil"
 	"net/http"
 )
 
 const (
-	deleteEndpointServiceUrl             string = endpointServiceEndpoint + "/%d"
-	deleteEndpointServiceMethod          string = http.MethodDelete
-	deleteEndpointMethodSuccess          int    = http.StatusOK
-	deleteEndpointMethodSuccessNoContent int    = http.StatusNoContent
-	deleteEndpointMethodNotFound         int    = http.StatusNotFound
+	deleteEndpointServiceUrl             = endpointServiceEndpoint + "/%d"
+	deleteEndpointServiceMethod          = http.MethodDelete
+	deleteEndpointMethodSuccess          = http.StatusOK
+	deleteEndpointMethodSuccessNoContent = http.StatusNoContent
+	deleteEndpointMethodNotFound         = http.StatusNotFound
 )
 
-// Delete an endpoint, specified by it's unique id, returns an error if a problem is encountered
+// DeleteEndpoint deletes an endpoint, specified by its unique id, returns an error if a problem is encountered
 func (c *EndpointsClient) DeleteEndpoint(endpointId int64) error {
-	req, err := c.buildDeleteApiRequest(c.ApiToken, endpointId)
-	if err != nil {
-		return err
-	}
-	httpClient := client.GetHttpClient(req)
-	resp, err := httpClient.Do(req)
-	if err != nil {
-		return err
-	}
+	_, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
+		ApiToken:     c.ApiToken,
+		HttpMethod:   deleteEndpointServiceMethod,
+		Url:          fmt.Sprintf(deleteEndpointServiceUrl, c.BaseUrl, endpointId),
+		Body:         nil,
+		SuccessCodes: []int{deleteEndpointMethodSuccess, deleteEndpointMethodSuccessNoContent},
+		NotFoundCode: deleteEndpointMethodNotFound,
+		ResourceId:   endpointId,
+		ApiAction:    deleteEndpointMethod,
+	})
 
-	jsonBytes, _ := ioutil.ReadAll(resp.Body)
-	if !logzio_client.CheckValidStatus(resp, []int{deleteEndpointMethodSuccess, deleteEndpointMethodSuccessNoContent}) {
-		if resp.StatusCode == deleteEndpointMethodNotFound {
-			return fmt.Errorf("API call %s failed with missing endpoint %d, data: %s", deleteEndpointMethod, endpointId, jsonBytes)
-		}
-
-		return fmt.Errorf("API call %s failed with status code %d, data: %s", deleteEndpointMethod, resp.StatusCode, jsonBytes)
-	}
-
-	return nil
-}
-
-func (c *EndpointsClient) buildDeleteApiRequest(apiToken string, endpointId int64) (*http.Request, error) {
-	baseUrl := c.BaseUrl
-	req, err := http.NewRequest(deleteEndpointServiceMethod, fmt.Sprintf(deleteEndpointServiceUrl, baseUrl, endpointId), nil)
-	if err != nil {
-		return nil, err
-	}
-	logzio_client.AddHttpHeaders(apiToken, req)
-
-	return req, err
+	return err
 }
