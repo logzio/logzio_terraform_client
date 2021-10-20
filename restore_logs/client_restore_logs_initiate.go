@@ -24,16 +24,7 @@ func (c *RestoreClient) InitiateRestoreOperation(initiateRestore InitiateRestore
 	if err != nil {
 		return nil, err
 	}
-	//
-	//req, err := c.buildInitiateApiRequest(c.ApiToken, initiateRestoreJson)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//
-	//jsonResponse, err := logzio_client.CreateHttpRequestBytesResponse(req)
-	//if err != nil {
-	//	return nil, err
-	//}
+
 	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
 		ApiToken:     c.ApiToken,
 		HttpMethod:   initiateRestoreLogsServiceMethod,
@@ -73,14 +64,3 @@ func validateInitiateRestoreOperation(initiateRestore InitiateRestore) error {
 
 	return nil
 }
-
-//func (c *RestoreClient) buildInitiateApiRequest(apiToken string, jsonBytes []byte) (*http.Request, error) {
-//	baseUrl := c.BaseUrl
-//	req, err := http.NewRequest(initiateRestoreLogsServiceMethod, fmt.Sprintf(initiateRestoreLogsServiceUrl, baseUrl), bytes.NewBuffer(jsonBytes))
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	logzio_client.AddHttpHeaders(apiToken, req)
-//	return req, err
-//}
