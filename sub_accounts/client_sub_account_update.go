@@ -1,21 +1,18 @@
 package sub_accounts
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	logzio_client "github.com/logzio/logzio_terraform_client"
-	"github.com/logzio/logzio_terraform_client/client"
-	"io/ioutil"
 	"net/http"
 	"strconv"
 )
 
 const (
-	updateSubAccountServiceUrl      string = subAccountServiceEndpoint + "/%d"
-	updateSubAccountServiceMethod   string = http.MethodPut
-	updateSubAccountServiceSuccess  int    = http.StatusNoContent
-	updateSubAccountServiceNotFound int    = http.StatusNotFound
+	updateSubAccountServiceUrl      = subAccountServiceEndpoint + "/%d"
+	updateSubAccountServiceMethod   = http.MethodPut
+	updateSubAccountServiceSuccess  = http.StatusNoContent
+	updateSubAccountServiceNotFound = http.StatusNotFound
 )
 
 func (c *SubAccountClient) UpdateSubAccount(subAccountId int64, updateSubAccount CreateOrUpdateSubAccount) error {
@@ -24,28 +21,23 @@ func (c *SubAccountClient) UpdateSubAccount(subAccountId int64, updateSubAccount
 		return err
 	}
 
-	req, err := c.buildUpdateApiRequest(c.ApiToken, subAccountId, updateSubAccount)
+	updateSubAccountJson, err := json.Marshal(updateSubAccount)
 	if err != nil {
 		return err
 	}
-	httpClient := client.GetHttpClient(req)
-	resp, err := httpClient.Do(req)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
 
-	jsonBytes, _ := ioutil.ReadAll(resp.Body)
+	_, err = logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
+		ApiToken:     c.ApiToken,
+		HttpMethod:   updateSubAccountServiceMethod,
+		Url:          fmt.Sprintf(updateSubAccountServiceUrl, c.BaseUrl, subAccountId),
+		Body:         updateSubAccountJson,
+		SuccessCodes: []int{updateSubAccountServiceSuccess},
+		NotFoundCode: updateSubAccountServiceNotFound,
+		ResourceId:   subAccountId,
+		ApiAction:    operationUpdateSubAccount,
+	})
 
-	if !logzio_client.CheckValidStatus(resp, []int{updateSubAccountServiceSuccess}) {
-		if resp.StatusCode == updateSubAccountServiceNotFound {
-			return fmt.Errorf("API call %s failed with missing sub account %d, data: %s", operationUpdateSubAccount, subAccountId, jsonBytes)
-		}
-
-		return fmt.Errorf("API call %s failed with status code %d, data: %s", operationUpdateSubAccount, resp.StatusCode, jsonBytes)
-	}
-
-	return nil
+	return err
 }
 
 func validateUpdateSubAccount(updateSubAccount CreateOrUpdateSubAccount) error {
@@ -65,20 +57,4 @@ func validateUpdateSubAccount(updateSubAccount CreateOrUpdateSubAccount) error {
 	}
 
 	return nil
-}
-
-func (c *SubAccountClient) buildUpdateApiRequest(apiToken string, subAccountId int64, updateSubAccount CreateOrUpdateSubAccount) (*http.Request, error) {
-	jsonBytes, err := json.Marshal(updateSubAccount)
-	if err != nil {
-		return nil, err
-	}
-
-	baseUrl := c.BaseUrl
-	req, err := http.NewRequest(updateSubAccountServiceMethod, fmt.Sprintf(updateSubAccountServiceUrl, baseUrl, subAccountId), bytes.NewBuffer(jsonBytes))
-	if err != nil {
-		return nil, err
-	}
-	logzio_client.AddHttpHeaders(apiToken, req)
-
-	return req, err
 }

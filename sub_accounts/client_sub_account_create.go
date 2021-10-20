@@ -1,7 +1,6 @@
 package sub_accounts
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	logzio_client "github.com/logzio/logzio_terraform_client"
@@ -10,9 +9,10 @@ import (
 )
 
 const (
-	createSubAccountServiceUrl    string = subAccountServiceEndpoint
-	createSubAccountServiceMethod string = http.MethodPost
-	serviceSuccess                int    = http.StatusOK
+	createSubAccountServiceUrl     = subAccountServiceEndpoint
+	createSubAccountServiceMethod  = http.MethodPost
+	createSubAccountMethodSuccess  = http.StatusOK
+	createSubAccountStatusNotFound = http.StatusNotFound
 )
 
 type FieldError struct {
@@ -24,7 +24,7 @@ func (e FieldError) Error() string {
 	return fmt.Sprintf("%v: %v", e.Field, e.Message)
 }
 
-// Create a sub account, return account's id & token if successful, an error otherwise
+// CreateSubAccount creates sub account, return account's id & token if successful, an error otherwise
 func (c *SubAccountClient) CreateSubAccount(createSubAccount CreateOrUpdateSubAccount) (*SubAccountCreateResponse, error) {
 	err := validateCreateSubAccount(createSubAccount)
 	if err != nil {
@@ -36,18 +36,23 @@ func (c *SubAccountClient) CreateSubAccount(createSubAccount CreateOrUpdateSubAc
 		return nil, err
 	}
 
-	req, err := c.buildCreateApiRequest(c.ApiToken, SubAccountJson)
-	if err != nil {
-		return nil, err
-	}
+	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
+		ApiToken:     c.ApiToken,
+		HttpMethod:   createSubAccountServiceMethod,
+		Url:          fmt.Sprintf(createSubAccountServiceUrl, c.BaseUrl),
+		Body:         SubAccountJson,
+		SuccessCodes: []int{createSubAccountMethodSuccess},
+		NotFoundCode: createSubAccountStatusNotFound,
+		ResourceId:   nil,
+		ApiAction:    operationCreateSubAccount,
+	})
 
-	jsonResponse, err := logzio_client.CreateHttpRequestBytesResponse(req)
 	if err != nil {
 		return nil, err
 	}
 
 	var reVal SubAccountCreateResponse
-	err = json.Unmarshal(jsonResponse, &reVal)
+	err = json.Unmarshal(res, &reVal)
 	if err != nil {
 		return nil, err
 	}
@@ -90,15 +95,4 @@ func validateCreateSubAccount(createSubAccount CreateOrUpdateSubAccount) error {
 		}
 	}
 	return nil
-}
-
-func (c *SubAccountClient) buildCreateApiRequest(apiToken string, jsonBytes []byte) (*http.Request, error) {
-	baseUrl := c.BaseUrl
-	req, err := http.NewRequest(createSubAccountServiceMethod, fmt.Sprintf(createSubAccountServiceUrl, baseUrl), bytes.NewBuffer(jsonBytes))
-	if err != nil {
-		return nil, err
-	}
-	logzio_client.AddHttpHeaders(apiToken, req)
-
-	return req, err
 }

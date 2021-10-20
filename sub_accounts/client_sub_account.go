@@ -7,14 +7,15 @@ import (
 )
 
 const (
-	subAccountServiceEndpoint               = "%s/v1/account-management/time-based-accounts"
-	loggerName                              = "logzio-client"
-	operationGetSubAccount           string = "GetSubAccount"
-	operationDeleteSubAccount        string = "DeleteSubAccount"
-	operationGetDetailedSubAccount   string = "GetDetailedSubAccount"
-	operationListSubAccounts         string = "ListSubAccounts"
-	operationListDetailedSubAccounts string = "ListDetailedSubAccounts"
-	operationUpdateSubAccount        string = "UpdateSubAccount"
+	subAccountServiceEndpoint        = "%s/v1/account-management/time-based-accounts"
+	loggerName                       = "logzio-client"
+	operationGetSubAccount           = "GetSubAccount"
+	operationDeleteSubAccount        = "DeleteSubAccount"
+	operationGetDetailedSubAccount   = "GetDetailedSubAccount"
+	operationListSubAccounts         = "ListSubAccounts"
+	operationListDetailedSubAccounts = "ListDetailedSubAccounts"
+	operationUpdateSubAccount        = "UpdateSubAccount"
+	operationCreateSubAccount        = "CreateSubAccount"
 )
 
 type SubAccountClient struct {
