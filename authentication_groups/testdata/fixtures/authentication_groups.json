@@ -9,6 +9,6 @@
   },
   {
     "group": "test_group_regular",
-    "userRole": "USER_ROLE_READONLY"
+    "userRole": "USER_ROLE_REGULAR"
   }
 ]
