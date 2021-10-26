@@ -9,22 +9,21 @@ const (
 	authGroupsServiceEndpoint = "%s/v1/authentication/groups"
 
 	authGroupsPostOperation = "PostOperation"
-	authGroupsGetOperation = "GetOperation"
+	authGroupsGetOperation  = "GetOperation"
+
+	AuthGroupsUserRoleReadonly = "USER_ROLE_READONLY"
+	AuthGroupsUserRoleRegular  = "USER_ROLE_REGULAR"
+	AuthGroupsUserRoleAdmin    = "USER_ROLE_ACCOUNT_ADMIN"
 )
 
 type AuthenticationGroupsClient struct {
 	*client.Client
 }
 
-type AuthenticationGroups struct {
-	Groups []AuthenticationGroupsObject
-}
-
-type AuthenticationGroupsObject struct {
-	Group string `json:"group"`
+type AuthenticationGroup struct {
+	Group    string `json:"group"`
 	UserRole string `json:"userRole"`
 }
-
 
 // New Creates a new entry point into the authentication groups functions, accepts the user's logz.io API token and base url
 func New(apiToken string, baseUrl string) (*AuthenticationGroupsClient, error) {

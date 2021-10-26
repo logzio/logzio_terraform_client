@@ -1,0 +1,14 @@
+[
+  {
+    "group": "test_group_admin",
+    "userRole": "USER_ROLE_ACCOUNT_ADMIN"
+  },
+  {
+    "group": "test_group_readonly",
+    "userRole": "USER_ROLE_READONLY"
+  },
+  {
+    "group": "test_group_regular",
+    "userRole": "USER_ROLE_READONLY"
+  }
+]

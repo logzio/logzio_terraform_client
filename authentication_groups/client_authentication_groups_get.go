@@ -15,7 +15,7 @@ const (
 )
 
 // GetAuthenticationGroups returns all authentication groups, or error if occurred
-func (c *AuthenticationGroupsClient) GetAuthenticationGroups() (*AuthenticationGroups, error) {
+func (c *AuthenticationGroupsClient) GetAuthenticationGroups() ([]AuthenticationGroup, error) {
 	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
 		ApiToken:     c.ApiToken,
 		HttpMethod:   authGroupsGetServiceMethod,
@@ -31,11 +31,11 @@ func (c *AuthenticationGroupsClient) GetAuthenticationGroups() (*AuthenticationG
 		return nil, err
 	}
 
-	var archive AuthenticationGroups
-	err = json.Unmarshal(res, &archive)
+	var retVal []AuthenticationGroup
+	err = json.Unmarshal(res, &retVal)
 	if err != nil {
 		return nil, err
 	}
 
-	return &archive, nil
+	return retVal, nil
 }

@@ -44,3 +44,24 @@ func fixture(path string) string {
 	}
 	return string(b)
 }
+
+func getCreateGroups() []authentication_groups.AuthenticationGroup {
+	return []authentication_groups.AuthenticationGroup{
+		{
+			Group:    "test_group_admin",
+			UserRole: authentication_groups.AuthGroupsUserRoleAdmin,
+		},
+		{
+			Group:    "test_group_readonly",
+			UserRole: authentication_groups.AuthGroupsUserRoleReadonly,
+		},
+		{
+			Group:    "test_group_regular",
+			UserRole: authentication_groups.AuthGroupsUserRoleRegular,
+		},
+	}
+}
+
+func getEmptyGroup() []authentication_groups.AuthenticationGroup {
+	return []authentication_groups.AuthenticationGroup{}
+}
