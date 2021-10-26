@@ -14,6 +14,7 @@ The library currently supports the following API endpoints:
 * [Drop filters](https://github.com/logzio/logzio_terraform_client/tree/master/drop_filters).
 * [Archive logs](https://github.com/logzio/logzio_terraform_client/tree/master/archive_logs).
 * [Restore logs](https://github.com/logzio/logzio_terraform_client/tree/master/restore_logs).
+* [Authentication groups](https://docs.logz.io/api/#tag/Authentication-groups).
 
 #### Contributing
 
@@ -25,9 +26,13 @@ The library currently supports the following API endpoints:
 
 ### Changelog
 
+- v1.10.0
+    - Add [Authentication groups API](https://docs.logz.io/api/#tag/Authentication-groups).
 - v1.9.0
     - Add [Archive logs API](https://docs.logz.io/api/#tag/Archive-logs).
     - Add [Restore logs API](https://docs.logz.io/api/#tag/Restore-logs).
+<details>
+  <summary markdown="span">Exapnd to check old versions </summary>
 - v1.8.0
     - `sub_accounts`:
         - Add `flexible` & `reservedDailyGB`.
@@ -35,8 +40,6 @@ The library currently supports the following API endpoints:
     - `endpoints`:
         - **Breaking changes:** refactor resource.
         - Add new endpoint types (OpsGenie, ServiceNow, Microsoft Teams).
-<details>
-  <summary markdown="span">Exapnd to check old versions </summary>
 - v1.7.0
     - Add [drop filters API](https://docs.logz.io/api/#tag/Drop-filters).
 - v1.6.0
