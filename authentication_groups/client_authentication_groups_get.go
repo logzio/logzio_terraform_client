@@ -25,6 +25,7 @@ func (c *AuthenticationGroupsClient) GetAuthenticationGroups() ([]Authentication
 		NotFoundCode: authGroupsGetMethodNotFound,
 		ResourceId:   nil,
 		ApiAction:    authGroupsGetOperation,
+		ResourceName: authGroupResourceName,
 	})
 
 	if err != nil {

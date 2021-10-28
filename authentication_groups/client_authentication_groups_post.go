@@ -35,6 +35,7 @@ func (c *AuthenticationGroupsClient) PostAuthenticationGroups(groups []Authentic
 		NotFoundCode: authGroupsPostStatusNotFound,
 		ResourceId:   nil,
 		ApiAction:    authGroupsPostOperation,
+		ResourceName: authGroupResourceName,
 	})
 
 	if err != nil {

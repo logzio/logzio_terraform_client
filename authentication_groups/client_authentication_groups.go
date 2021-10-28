@@ -14,6 +14,8 @@ const (
 	AuthGroupsUserRoleReadonly = "USER_ROLE_READONLY"
 	AuthGroupsUserRoleRegular  = "USER_ROLE_REGULAR"
 	AuthGroupsUserRoleAdmin    = "USER_ROLE_ACCOUNT_ADMIN"
+
+	authGroupResourceName = "authentication groups"
 )
 
 type AuthenticationGroupsClient struct {
