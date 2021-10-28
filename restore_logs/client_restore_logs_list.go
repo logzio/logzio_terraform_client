@@ -25,6 +25,7 @@ func (c *RestoreClient) ListRestoreOperations() ([]RestoreOperation, error) {
 		NotFoundCode: http.StatusNotFound,
 		ResourceId:   nil,
 		ApiAction:    listRestoreOperations,
+		ResourceName: restoreResourceName,
 	})
 
 	if err != nil {

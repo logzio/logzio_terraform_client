@@ -26,6 +26,7 @@ func (c *DropFiltersClient) RetrieveDropFilters() ([]DropFilter, error) {
 		NotFoundCode: retrieveDropFilterStatusNotFound,
 		ResourceId:   nil,
 		ApiAction:    retrieveDropFiltersOperation,
+		ResourceName: dropFilterResourceName,
 	})
 
 	if err != nil {

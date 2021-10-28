@@ -25,6 +25,7 @@ func (c *EndpointsClient) DeleteEndpoint(endpointId int64) error {
 		NotFoundCode: deleteEndpointMethodNotFound,
 		ResourceId:   endpointId,
 		ApiAction:    deleteEndpointMethod,
+		ResourceName: endpointResourceName,
 	})
 
 	return err

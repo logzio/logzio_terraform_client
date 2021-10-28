@@ -36,6 +36,7 @@ func (c *EndpointsClient) UpdateEndpoint(id int64, endpoint CreateOrUpdateEndpoi
 		NotFoundCode: updateEndpointMethodNotFound,
 		ResourceId:   id,
 		ApiAction:    updateEndpointMethod,
+		ResourceName: endpointResourceName,
 	})
 
 	if err != nil {

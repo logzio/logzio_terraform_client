@@ -24,10 +24,13 @@ The library currently supports the following API endpoints:
 `go test -v -race ./...`
 
 ### Changelog
-
+- v1.9.1
+    - Bug fix - adjust "not found" message to all resources.
 - v1.9.0
     - Add [Archive logs API](https://docs.logz.io/api/#tag/Archive-logs).
     - Add [Restore logs API](https://docs.logz.io/api/#tag/Restore-logs).
+<details>
+  <summary markdown="span">Exapnd to check old versions </summary>
 - v1.8.0
     - `sub_accounts`:
         - Add `flexible` & `reservedDailyGB`.
@@ -35,8 +38,6 @@ The library currently supports the following API endpoints:
     - `endpoints`:
         - **Breaking changes:** refactor resource.
         - Add new endpoint types (OpsGenie, ServiceNow, Microsoft Teams).
-<details>
-  <summary markdown="span">Exapnd to check old versions </summary>
 - v1.7.0
     - Add [drop filters API](https://docs.logz.io/api/#tag/Drop-filters).
 - v1.6.0

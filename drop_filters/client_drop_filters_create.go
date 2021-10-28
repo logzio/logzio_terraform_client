@@ -46,6 +46,7 @@ func (c *DropFiltersClient) CreateDropFilter(createDropFilter CreateDropFilter) 
 		NotFoundCode: createDropFilterStatusNotFound,
 		ResourceId:   nil,
 		ApiAction:    createDropFilterOperation,
+		ResourceName: dropFilterResourceName,
 	})
 
 	if err != nil {

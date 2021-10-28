@@ -19,6 +19,8 @@ const (
 
 	retrieveSortFieldCreatedAtValue = "createdAt"
 	retrieveSortFieldNameValue      = "name"
+
+	logShippingTokenResourceName = "log shipping token"
 )
 
 type LogShippingTokensClient struct {

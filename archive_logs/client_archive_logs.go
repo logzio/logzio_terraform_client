@@ -19,6 +19,8 @@ const (
 	deleteArchiveSettings   = "DeleteArchiveSettings"
 	testArchiveSettings     = "TestArchiveSettings"
 	listArchivesSettings    = "ListArchiveSettings"
+
+	archiveResourceName = "archive"
 )
 
 type ArchiveLogsClient struct {

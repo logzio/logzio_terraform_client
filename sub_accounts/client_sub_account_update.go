@@ -35,6 +35,7 @@ func (c *SubAccountClient) UpdateSubAccount(subAccountId int64, updateSubAccount
 		NotFoundCode: updateSubAccountServiceNotFound,
 		ResourceId:   subAccountId,
 		ApiAction:    operationUpdateSubAccount,
+		ResourceName: subAccountResourceName,
 	})
 
 	return err

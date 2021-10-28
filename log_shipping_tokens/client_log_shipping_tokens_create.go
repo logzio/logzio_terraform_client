@@ -46,6 +46,7 @@ func (c *LogShippingTokensClient) CreateLogShippingToken(token CreateLogShipping
 		NotFoundCode: createLogShippingTokenStatusNotFound,
 		ResourceId:   nil,
 		ApiAction:    operationCreateLogShippingToken,
+		ResourceName: logShippingTokenResourceName,
 	})
 
 	if err != nil {

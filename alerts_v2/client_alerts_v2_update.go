@@ -36,6 +36,7 @@ func (c *AlertsV2Client) UpdateAlert(alertId int64, alert CreateAlertType) (*Ale
 		NotFoundCode: updateAlertMethodNotFound,
 		ResourceId:   alert,
 		ApiAction:    updateAlertOperation,
+		ResourceName: alertResourceName,
 	})
 
 	if err != nil {

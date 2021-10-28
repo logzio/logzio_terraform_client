@@ -12,6 +12,8 @@ const (
 	deactivateDropFilterOperation        = "DeactivateDropFilter"
 	deleteDropFilterOperation            = "DeleteDropFilter"
 	retrieveDropFiltersOperation         = "RetrieveDropFilters"
+
+	dropFilterResourceName = "drop filter"
 )
 
 type DropFiltersClient struct {

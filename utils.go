@@ -24,6 +24,7 @@ type LogzioApiCallDetails struct {
 	NotFoundCode int
 	ResourceId   interface{}
 	ApiAction    string
+	ResourceName string
 }
 
 func AddHttpHeaders(apiToken string, req *http.Request) {
@@ -97,8 +98,8 @@ func CallLogzioApi(logzioCall LogzioApiCallDetails) ([]byte, error) {
 	jsonBytes, _ := ioutil.ReadAll(resp.Body)
 	if !CheckValidStatus(resp, logzioCall.SuccessCodes) {
 		if resp.StatusCode == logzioCall.NotFoundCode {
-			return nil, fmt.Errorf("API call %s failed with missing archive %d, data: %s",
-				logzioCall.ApiAction, logzioCall.ResourceId, jsonBytes)
+			return nil, fmt.Errorf("API call %s failed with missing %s %d, data: %s",
+				logzioCall.ApiAction, logzioCall.ResourceName, logzioCall.ResourceId, jsonBytes)
 		}
 
 		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s",

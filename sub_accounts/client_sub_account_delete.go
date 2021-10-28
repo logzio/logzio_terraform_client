@@ -24,6 +24,7 @@ func (c *SubAccountClient) DeleteSubAccount(subAccountId int64) error {
 		NotFoundCode: deleteSubAccountMethodNotFound,
 		ResourceId:   subAccountId,
 		ApiAction:    operationDeleteSubAccount,
+		ResourceName: subAccountResourceName,
 	})
 
 	return err

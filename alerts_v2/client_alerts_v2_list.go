@@ -25,6 +25,7 @@ func (c *AlertsV2Client) ListAlerts() ([]AlertType, error) {
 		NotFoundCode: http.StatusNotFound,
 		ResourceId:   nil,
 		ApiAction:    listAlertOperation,
+		ResourceName: alertResourceName,
 	})
 
 	if err != nil {
