@@ -27,6 +27,7 @@ func (c *LogShippingTokensClient) GetLogShippingLimitsToken() (*LogShippingToken
 		NotFoundCode: getAvailableLogShippingTokensNumberStatusNotFound,
 		ResourceId:   nil,
 		ApiAction:    operationGetLogShippingTokensLimits,
+		ResourceName: logShippingTokenResourceName,
 	})
 
 	if err != nil {

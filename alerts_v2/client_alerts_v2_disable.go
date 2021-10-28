@@ -24,6 +24,7 @@ func (c *AlertsV2Client) DisableAlert(alert AlertType) (*AlertType, error) {
 		NotFoundCode: disableAlertServiceStatusNotFound,
 		ResourceId:   alert.AlertId,
 		ApiAction:    disableAlertOperation,
+		ResourceName: alertResourceName,
 	})
 
 	if err != nil {

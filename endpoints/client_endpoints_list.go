@@ -26,6 +26,7 @@ func (c *EndpointsClient) ListEndpoints() ([]Endpoint, error) {
 		NotFoundCode: listEndpointsStatusNotFound,
 		ResourceId:   nil,
 		ApiAction:    listEndpointMethod,
+		ResourceName: endpointResourceName,
 	})
 
 	if err != nil {

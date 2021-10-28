@@ -23,6 +23,7 @@ func (c *DropFiltersClient) DeactivateDropFilter(dropFilterId string) (*DropFilt
 		NotFoundCode: deactivateDropFilterMethodNotFound,
 		ResourceId:   dropFilterId,
 		ApiAction:    deactivateDropFilterOperation,
+		ResourceName: dropFilterResourceName,
 	})
 
 	if err != nil {

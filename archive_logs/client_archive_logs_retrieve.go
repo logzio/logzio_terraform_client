@@ -25,6 +25,7 @@ func (c *ArchiveLogsClient) RetrieveArchiveLogsSetting(archiveId int32) (*Archiv
 		NotFoundCode: retrieveArchiveLogsMethodNotFound,
 		ResourceId:   archiveId,
 		ApiAction:    retrieveArchiveSettings,
+		ResourceName: archiveResourceName,
 	})
 
 	if err != nil {

@@ -35,6 +35,7 @@ func (c *LogShippingTokensClient) RetrieveLogShippingTokens(retrieveRequest Retr
 		NotFoundCode: retrieveLogShippingTokenStatusNotFound,
 		ResourceId:   nil,
 		ApiAction:    operationRetrieveLogShippingTokens,
+		ResourceName: logShippingTokenResourceName,
 	})
 
 	if err != nil {

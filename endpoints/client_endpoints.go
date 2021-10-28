@@ -13,6 +13,8 @@ const (
 	listEndpointMethod      = "ListEndpoint"
 	updateEndpointMethod    = "UpdateEndpoint"
 	createEndpointMethod    = "CreateEndpoint"
+
+	endpointResourceName = "endpoint"
 )
 
 // supported endpoint types

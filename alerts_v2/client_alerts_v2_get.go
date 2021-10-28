@@ -25,6 +25,7 @@ func (c *AlertsV2Client) GetAlert(alertId int64) (*AlertType, error) {
 		NotFoundCode: getAlertMethodNotFound,
 		ResourceId:   alertId,
 		ApiAction:    getAlertOperation,
+		ResourceName: alertResourceName,
 	})
 
 	if err != nil {
