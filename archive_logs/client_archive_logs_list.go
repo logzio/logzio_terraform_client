@@ -25,6 +25,7 @@ func (c *ArchiveLogsClient) ListArchiveLog() ([]ArchiveLogs, error) {
 		NotFoundCode: http.StatusNotFound,
 		ResourceId:   nil,
 		ApiAction:    listArchivesSettings,
+		ResourceName: archiveResourceName,
 	})
 
 	if err != nil {

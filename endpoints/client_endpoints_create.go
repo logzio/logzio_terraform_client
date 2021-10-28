@@ -37,6 +37,7 @@ func (c *EndpointsClient) CreateEndpoint(endpoint CreateOrUpdateEndpoint) (*Crea
 		NotFoundCode: createEndpointStatusNotFound,
 		ResourceId:   nil,
 		ApiAction:    createEndpointMethod,
+		ResourceName: endpointResourceName,
 	})
 
 	if err != nil {

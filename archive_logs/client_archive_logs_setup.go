@@ -36,6 +36,7 @@ func (c *ArchiveLogsClient) SetupArchive(createArchive CreateOrUpdateArchiving) 
 		NotFoundCode: http.StatusNotFound,
 		ResourceId:   nil,
 		ApiAction:    setupArchiveApi,
+		ResourceName: archiveResourceName,
 	})
 
 	if err != nil {

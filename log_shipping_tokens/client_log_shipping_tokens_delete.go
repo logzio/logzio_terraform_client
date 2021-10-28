@@ -24,6 +24,7 @@ func (c *LogShippingTokensClient) DeleteLogShippingToken(tokenId int32) error {
 		NotFoundCode: deleteLogShippingTokenMethodNotFound,
 		ResourceId:   tokenId,
 		ApiAction:    operationDeleteLogShippingToken,
+		ResourceName: logShippingTokenResourceName,
 	})
 
 	return err

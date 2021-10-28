@@ -24,6 +24,7 @@ func (c *DropFiltersClient) DeleteDropFilter(dropFilterId string) error {
 		NotFoundCode: deleteDropFilterMethodNotFound,
 		ResourceId:   dropFilterId,
 		ApiAction:    deleteDropFilterOperation,
+		ResourceName: dropFilterResourceName,
 	})
 
 	return err

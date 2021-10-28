@@ -34,6 +34,7 @@ func (c *RestoreClient) InitiateRestoreOperation(initiateRestore InitiateRestore
 		NotFoundCode: http.StatusNotFound,
 		ResourceId:   nil,
 		ApiAction:    initiateRestoreOperation,
+		ResourceName: restoreResourceName,
 	})
 
 	if err != nil {

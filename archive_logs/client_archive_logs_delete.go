@@ -24,6 +24,7 @@ func (c *ArchiveLogsClient) DeleteArchiveLogs(archiveId int32) error {
 		NotFoundCode: deleteArchiveLogsStatusNotFound,
 		ResourceId:   archiveId,
 		ApiAction:    deleteArchiveSettings,
+		ResourceName: archiveResourceName,
 	})
 
 	return err

@@ -46,6 +46,7 @@ func (c *AlertsV2Client) CreateAlert(alert CreateAlertType) (*AlertType, error) 
 		NotFoundCode: createAlertServiceStatusNotFound,
 		ResourceId:   nil,
 		ApiAction:    createAlertOperation,
+		ResourceName: alertResourceName,
 	})
 
 	if err != nil {

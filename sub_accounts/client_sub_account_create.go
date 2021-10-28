@@ -45,6 +45,7 @@ func (c *SubAccountClient) CreateSubAccount(createSubAccount CreateOrUpdateSubAc
 		NotFoundCode: createSubAccountStatusNotFound,
 		ResourceId:   nil,
 		ApiAction:    operationCreateSubAccount,
+		ResourceName: subAccountResourceName,
 	})
 
 	if err != nil {

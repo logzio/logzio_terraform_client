@@ -48,6 +48,8 @@ const (
 	getAlertOperation     = "GetAlertV2"
 	listAlertOperation    = "ListAlertsV2"
 	updateAlertOperation  = "UpdateAlertV2"
+
+	alertResourceName = "alert"
 )
 
 type AlertsV2Client struct {

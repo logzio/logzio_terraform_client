@@ -25,6 +25,7 @@ func (c *SubAccountClient) GetDetailedSubAccount(subAccountId int64) (*DetailedS
 		NotFoundCode: getDetailedSubAccountServiceNotFound,
 		ResourceId:   subAccountId,
 		ApiAction:    operationGetDetailedSubAccount,
+		ResourceName: subAccountResourceName,
 	})
 
 	if err != nil {

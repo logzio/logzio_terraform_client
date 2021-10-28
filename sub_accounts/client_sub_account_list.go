@@ -26,6 +26,7 @@ func (c *SubAccountClient) ListSubAccounts() ([]SubAccount, error) {
 		NotFoundCode: listSubAccountStatusNotFound,
 		ResourceId:   nil,
 		ApiAction:    operationListSubAccounts,
+		ResourceName: subAccountResourceName,
 	})
 
 	if err != nil {

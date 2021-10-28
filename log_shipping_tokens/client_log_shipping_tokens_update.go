@@ -36,6 +36,7 @@ func (c *LogShippingTokensClient) UpdateLogShippingToken(tokenId int32, token Up
 		NotFoundCode: updateLogShippingTokenMethodNotFound,
 		ResourceId:   tokenId,
 		ApiAction:    operationUpdateLogShippingToken,
+		ResourceName: logShippingTokenResourceName,
 	})
 
 	if err != nil {

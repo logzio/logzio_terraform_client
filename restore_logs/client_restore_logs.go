@@ -20,6 +20,8 @@ const (
 	getRestoreOperation      = "GetRestoreOperation"
 	deleteRestoreOperation   = "DeleteRestoreOperation"
 	initiateRestoreOperation = "InitiateRestoreOperation"
+
+	restoreResourceName = "restore"
 )
 
 type RestoreClient struct {

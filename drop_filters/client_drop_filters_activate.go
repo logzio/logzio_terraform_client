@@ -23,6 +23,7 @@ func (c *DropFiltersClient) ActivateDropFilter(dropFilterId string) (*DropFilter
 		NotFoundCode: activateDropFilterMethodNotFound,
 		ResourceId:   dropFilterId,
 		ApiAction:    activateDropFilterOperation,
+		ResourceName: dropFilterResourceName,
 	})
 
 	if err != nil {

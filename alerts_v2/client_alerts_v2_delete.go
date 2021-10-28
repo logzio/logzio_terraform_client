@@ -24,6 +24,7 @@ func (c *AlertsV2Client) DeleteAlert(alertId int64) error {
 		NotFoundCode: deleteAlertMethodNotFound,
 		ResourceId:   alertId,
 		ApiAction:    deleteAlertOperation,
+		ResourceName: alertResourceName,
 	})
 
 	return err

@@ -36,6 +36,7 @@ func (c *ArchiveLogsClient) UpdateArchiveLogs(archiveId int32, updateArchive Cre
 		NotFoundCode: updateArchiveLogsServiceNotFound,
 		ResourceId:   archiveId,
 		ApiAction:    updateArchiveSettings,
+		ResourceName: archiveResourceName,
 	})
 
 	if err != nil {

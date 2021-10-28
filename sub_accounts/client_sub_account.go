@@ -16,6 +16,8 @@ const (
 	operationListDetailedSubAccounts = "ListDetailedSubAccounts"
 	operationUpdateSubAccount        = "UpdateSubAccount"
 	operationCreateSubAccount        = "CreateSubAccount"
+
+	subAccountResourceName = "sub account"
 )
 
 type SubAccountClient struct {

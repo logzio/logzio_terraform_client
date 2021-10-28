@@ -25,6 +25,7 @@ func (c *RestoreClient) GetRestoreOperation(restoreId int32) (*RestoreOperation,
 		NotFoundCode: getRestoreLogsLogsMethodNotFound,
 		ResourceId:   restoreId,
 		ApiAction:    getRestoreOperation,
+		ResourceName: restoreResourceName,
 	})
 
 	if err != nil {
