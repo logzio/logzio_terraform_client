@@ -54,6 +54,7 @@ func TestRestoreLogs_GetRestoreOperationIdNotFound(t *testing.T) {
 	restore, err := underTest.GetRestoreOperation(restoreId)
 	assert.Error(t, err)
 	assert.Nil(t, restore)
+	assert.Contains(t, err.Error(), "failed with missing restore")
 }
 
 func TestRestoreLogs_GetRestoreOperationApiFail(t *testing.T) {

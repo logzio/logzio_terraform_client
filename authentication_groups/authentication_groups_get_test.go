@@ -37,3 +37,18 @@ func TestAuthenticationGroups_GetApiFail(t *testing.T) {
 	assert.Error(t, err)
 	assert.Nil(t, groups)
 }
+
+func TestAuthenticationGroups_GetNotFound(t *testing.T) {
+	underTest, teardown, err := setupAuthenticationGroupsTest()
+	defer teardown()
+
+	mux.HandleFunc(authGroupsApiBasePath, func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodGet, r.Method)
+		w.WriteHeader(http.StatusNotFound)
+	})
+
+	groups, err := underTest.GetAuthenticationGroups()
+	assert.Error(t, err)
+	assert.Nil(t, groups)
+	assert.Contains(t, err.Error(), "failed with missing authentication groups")
+}

@@ -43,6 +43,7 @@ func TestRestoreLogs_DeleteRestoreOperationIdNotFound(t *testing.T) {
 	deleted, err := underTest.DeleteRestoreOperation(id)
 	assert.Error(t, err)
 	assert.Nil(t, deleted)
+	assert.Contains(t, err.Error(), "failed with missing restore")
 }
 
 func TestRestoreLogs_DeleteRestoreOperationApiFail(t *testing.T) {

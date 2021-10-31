@@ -24,4 +24,5 @@ func TestEndpoints_GetEndpointNotExist(t *testing.T) {
 	endpoint, err := underTest.GetEndpoint(endpointId)
 	assert.Error(t, err)
 	assert.Nil(t, endpoint)
+	assert.Contains(t, err.Error(), "failed with missing endpoint")
 }

@@ -40,6 +40,7 @@ func TestEndpoints_DeleteEndpointIdNotFound(t *testing.T) {
 
 		err = underTest.DeleteEndpoint(id)
 		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "failed with missing endpoint")
 	}
 }
 

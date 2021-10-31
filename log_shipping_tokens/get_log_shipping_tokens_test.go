@@ -49,4 +49,5 @@ func TestLogShippingTokens_GetLogShippingTokenNotExist(t *testing.T) {
 	token, err := underTest.GetLogShippingToken(int32(tokenId))
 	assert.Error(t, err)
 	assert.Nil(t, token)
+	assert.Contains(t, err.Error(), "failed with missing log shipping token")
 }

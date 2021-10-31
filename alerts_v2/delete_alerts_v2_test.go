@@ -39,4 +39,5 @@ func TestAlertsV2_DeleteMissingAlert(t *testing.T) {
 
 	err = underTest.DeleteAlert(int64(1234567))
 	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "failed with missing alert")
 }
