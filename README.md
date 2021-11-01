@@ -27,6 +27,8 @@ The library currently supports the following API endpoints:
 ### Changelog
 - v1.10.0
     - Add [Authentication groups API](https://docs.logz.io/api/#tag/Authentication-groups).
+    - Add tests to retrieve archive.
+    - Improve tests.
 - v1.9.1
     - Bug fix - adjust "not found" message to all resources.
 <details>
