@@ -61,4 +61,5 @@ func TestAlerts_UpdateAlert_NotExist(t *testing.T) {
 
 	assert.Error(t, err)
 	assert.Nil(t, updatedAlert)
+	assert.Contains(t, err.Error(), "failed with missing alert")
 }

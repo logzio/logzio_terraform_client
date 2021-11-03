@@ -57,4 +57,5 @@ func TestSubAccount_GetValidSubAccountNotFound(t *testing.T) {
 	subAccount, err := underTest.GetSubAccount(subAccountId)
 	assert.Error(t, err)
 	assert.Nil(t, subAccount)
+	assert.Contains(t, err.Error(), "failed with missing sub account")
 }

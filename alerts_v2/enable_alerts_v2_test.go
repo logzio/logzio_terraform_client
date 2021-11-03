@@ -41,4 +41,5 @@ func TestAlertsV2_EnableAlertNotExist(t *testing.T) {
 
 	assert.Error(t, err)
 	assert.Nil(t, alert)
+	assert.Contains(t, err.Error(), "failed with missing alert")
 }

@@ -60,5 +60,6 @@ func TestDropFilters_ActivateDropFilterNotFound(t *testing.T) {
 		dropFilter, err := underTest.ActivateDropFilter(id)
 		assert.Error(t, err)
 		assert.Nil(t, dropFilter)
+		assert.Contains(t, err.Error(), "failed with missing drop filter")
 	}
 }

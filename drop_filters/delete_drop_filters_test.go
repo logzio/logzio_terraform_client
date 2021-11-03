@@ -55,5 +55,6 @@ func TestDropFilters_DeleteDropFilterNotFound(t *testing.T) {
 		id := "some-drop-filter-id-not-exist"
 		err = underTest.DeleteDropFilter(id)
 		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "failed with missing drop filter")
 	}
 }

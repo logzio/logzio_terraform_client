@@ -38,12 +38,12 @@ func TestLogShippingTokens_DeleteLogShippingTokenMissingToken(t *testing.T) {
 		mux.HandleFunc("/v1/log-shipping/tokens/", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodDelete, r.Method)
 			assert.Contains(t, r.URL.String(), strconv.FormatInt(tokenId, 10))
-			w.Header().Set("Content-Type", "application/json")
-			fmt.Fprint(w, fixture("delete_log_shipping_token_not_exist.txt"))
 			w.WriteHeader(http.StatusNotFound)
+			fmt.Fprint(w, fixture("delete_log_shipping_token_not_exist.txt"))
 		})
 	}
 
 	err = underTest.DeleteLogShippingToken(int32(tokenId))
-	assert.NoError(t, err)
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "failed with missing log shipping token")
 }

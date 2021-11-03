@@ -114,6 +114,7 @@ func TestArchiveLogs_UpdateArchiveIdNotFound(t *testing.T) {
 			archive, err := underTest.UpdateArchiveLogs(id, createArchive)
 			assert.Error(t, err)
 			assert.Nil(t, archive)
+			assert.Contains(t, err.Error(), "failed with missing archive")
 		}
 	}
 }

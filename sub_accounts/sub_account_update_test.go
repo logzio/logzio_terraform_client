@@ -56,4 +56,5 @@ func TestSubAccount_UpdateSubAccountIdNotFound(t *testing.T) {
 	updateSubAccount := getCreatrOrUpdateSubAccount("test@user.test")
 	err = underTest.UpdateSubAccount(subAccountId, updateSubAccount)
 	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "failed with missing sub account")
 }

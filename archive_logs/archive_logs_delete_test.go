@@ -38,6 +38,7 @@ func TestArchiveLogs_DeleteArchiveIdNotFound(t *testing.T) {
 
 	err = underTest.DeleteArchiveLogs(id)
 	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "failed with missing archive")
 }
 
 func TestArchiveLogs_DeleteArchiveApiFail(t *testing.T) {

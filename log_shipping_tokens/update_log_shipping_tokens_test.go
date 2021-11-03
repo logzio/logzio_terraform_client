@@ -53,9 +53,8 @@ func TestLogShippingTokens_UpdateLogShippingTokenIdNotFound(t *testing.T) {
 			assert.NoError(t, err)
 			assert.NotNil(t, target)
 			assert.NotEmpty(t, target.Enabled)
-			w.Header().Set("Content-Type", "application/json")
-			fmt.Fprint(w, fixture("update_log_shipping_token_failed.txt"))
 			w.WriteHeader(http.StatusNotFound)
+			fmt.Fprint(w, fixture("update_log_shipping_token_failed.txt"))
 		})
 	}
 
@@ -63,6 +62,7 @@ func TestLogShippingTokens_UpdateLogShippingTokenIdNotFound(t *testing.T) {
 	updatedToken, err := underTest.UpdateLogShippingToken(int32(123), updateRequest)
 	assert.Error(t, err)
 	assert.Nil(t, updatedToken)
+	assert.Contains(t, err.Error(), "failed with missing log shipping token")
 }
 
 func TestLogShippingTokens_UpdateLogShippingTokenNoName(t *testing.T) {

@@ -28,6 +28,10 @@ func (c *RestoreClient) DeleteRestoreOperation(restoreId int32) (*RestoreOperati
 		ResourceName: restoreResourceName,
 	})
 
+	if err != nil {
+		return nil, err
+	}
+
 	var restoreOperation RestoreOperation
 	err = json.Unmarshal(res, &restoreOperation)
 	if err != nil {

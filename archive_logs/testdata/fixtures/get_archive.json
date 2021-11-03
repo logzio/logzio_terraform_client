@@ -1,0 +1,17 @@
+{
+  "id": 1234,
+  "settings": {
+    "storageType": "BLOB",
+    "enabled": true,
+    "compressed": true,
+    "amazonS3StorageSettings": null,
+    "azureBlobStorageSettings": {
+      "tenantId": "some-tenant-id",
+      "clientId": "some-client-id",
+      "clientSecret": "some-client-secret",
+      "accountName": "some-account-name",
+      "containerName": "some-container-name",
+      "path": null
+    }
+  }
+}

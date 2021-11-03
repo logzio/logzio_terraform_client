@@ -41,4 +41,5 @@ func TestSubAccount_DeleteValidSubAccountNotFound(t *testing.T) {
 
 	err = underTest.DeleteSubAccount(subAccountId)
 	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "failed with missing sub account")
 }
