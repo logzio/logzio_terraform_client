@@ -105,4 +105,3 @@ func getBlobStorageSettings() (*archive_logs.BlobSettings, error) {
 
 	return &storageSettings, nil
 }
-

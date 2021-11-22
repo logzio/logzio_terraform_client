@@ -34,7 +34,7 @@ func (c *AlertsV2Client) UpdateAlert(alertId int64, alert CreateAlertType) (*Ale
 		Body:         updateAlertJson,
 		SuccessCodes: []int{updateAlertMethodSuccess},
 		NotFoundCode: updateAlertMethodNotFound,
-		ResourceId:   alert,
+		ResourceId:   alertId,
 		ApiAction:    updateAlertOperation,
 		ResourceName: alertResourceName,
 	})
