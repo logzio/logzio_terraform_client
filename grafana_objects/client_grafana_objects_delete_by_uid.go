@@ -13,7 +13,7 @@ import (
 type DeleteResults struct {
 	Title   string `json:"title"`
 	Message string `json:"message"`
-	Id      int    `json:"message"`
+	Id      int    `json:"id"`
 }
 
 // Delete allows deleting Grafana objects configuration.
