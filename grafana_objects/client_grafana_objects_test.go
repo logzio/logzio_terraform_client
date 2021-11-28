@@ -12,14 +12,6 @@ var (
 	server *httptest.Server
 )
 
-//func fixture(path string) string {
-//	b, err := ioutil.ReadFile("testdata/fixtures/" + path)
-//	if err != nil {
-//		panic(err)
-//	}
-//	return string(b)
-//}
-
 func setupGrafanaObjectsTest() (*grafana_objects.GrafanaObjectsClient, error, func()) {
 	mux = http.NewServeMux()
 	server = httptest.NewServer(mux)
