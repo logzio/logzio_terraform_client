@@ -21,7 +21,7 @@ func deleteMockHandler(t *testing.T) func(http.ResponseWriter, *http.Request) {
 		}
 		w.Header().Set("Content-Type", "application/json")
 
-		if path.Base(r.URL.Path) == "test1" {
+		if path.Base(r.URL.Path) == "deleteOK" {
 			fileDelete, _ := ioutil.ReadFile("testdata/delete.json")
 
 			resp := grafana_objects.DeleteResults{}
@@ -32,7 +32,7 @@ func deleteMockHandler(t *testing.T) func(http.ResponseWriter, *http.Request) {
 			w.Write(bytes)
 		}
 
-		if path.Base(r.URL.Path) == "test2" {
+		if path.Base(r.URL.Path) == "deleteNOK" {
 			resp := make(map[string]string)
 			resp["message"] = "Dashboard Not found"
 			bytes, _ := json.Marshal(resp)
@@ -42,15 +42,30 @@ func deleteMockHandler(t *testing.T) func(http.ResponseWriter, *http.Request) {
 	}
 }
 
-func TestGrafanaObjects_Delete(t *testing.T) {
+func TestGrafanaObjects_DeleteOK(t *testing.T) {
 	underTest, err, teardown := setupGrafanaObjectsTest()
 	assert.NoError(t, err)
 	defer teardown()
 
 	mux.HandleFunc("/v1/grafana/api/dashboards/uid/", deleteMockHandler(t))
 
-	_, err = underTest.Delete("test1")
+	result, err := underTest.Delete("deleteOK")
 	assert.NoError(t, err)
-	_, err = underTest.Delete("test2")
+	assert.Equal(t, result, &grafana_objects.DeleteResults{
+		Title:   "testDeleteOK",
+		Message: "deleteOK",
+		Id:      1,
+	},
+	)
+}
+
+func TestGrafanaObjects_DeleteNOK(t *testing.T) {
+	underTest, err, teardown := setupGrafanaObjectsTest()
+	assert.NoError(t, err)
+	defer teardown()
+
+	mux.HandleFunc("/v1/grafana/api/dashboards/uid/", deleteMockHandler(t))
+
+	_, err = underTest.Delete("deleteNOK")
 	assert.Error(t, err)
 }
