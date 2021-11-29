@@ -1,13 +1,13 @@
 {
    "dashboard":{
-      "title":"Test",
+      "title":"getOK",
       "uid":"test1"
    },
    "meta":{
       "isStarred":true,
-      "url":"test",
+      "url":"testUrl",
       "folderId": 1,
-      "folderUid":"test",
-      "slug":"test"
+      "folderUid":"testUid",
+      "slug":"testSlug"
    }
 }

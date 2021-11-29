@@ -21,7 +21,7 @@ func getMockHandler(t *testing.T) func(http.ResponseWriter, *http.Request) {
 		}
 		w.Header().Set("Content-Type", "application/json")
 
-		if path.Base(r.URL.Path) == "test1" {
+		if path.Base(r.URL.Path) == "getOK" {
 			fileGet, _ := ioutil.ReadFile("testdata/get.json")
 
 			resp := grafana_objects.GetResults{}
@@ -32,7 +32,7 @@ func getMockHandler(t *testing.T) func(http.ResponseWriter, *http.Request) {
 			w.Write(bytes)
 		}
 
-		if path.Base(r.URL.Path) == "test2" {
+		if path.Base(r.URL.Path) == "getNOK" {
 			resp := make(map[string]string)
 			resp["message"] = "Dashboard Not found"
 			bytes, _ := json.Marshal(resp)
@@ -42,15 +42,35 @@ func getMockHandler(t *testing.T) func(http.ResponseWriter, *http.Request) {
 	}
 }
 
-func TestGrafanaObjects_Get(t *testing.T) {
+func TestGrafanaObjects_GetOK(t *testing.T) {
 	underTest, err, teardown := setupGrafanaObjectsTest()
 	assert.NoError(t, err)
 	defer teardown()
 
 	mux.HandleFunc("/v1/grafana/api/dashboards/uid/", getMockHandler(t))
 
-	_, err = underTest.Get("test1")
+	result, err := underTest.Get("getOK")
 	assert.NoError(t, err)
-	_, err = underTest.Get("test2")
+	assert.Equal(t, result, &grafana_objects.GetResults{
+		Dashboard: map[string]interface{}{"title": "getOK", "uid": "test1"},
+		Meta: grafana_objects.DashboardMeta{
+			IsStarred: true,
+			Url:       "testUrl",
+			FolderId:  1,
+			FolderUid: "testUid",
+			Slug:      "testSlug",
+		},
+	},
+	)
+}
+
+func TestGrafanaObjects_GetNOK(t *testing.T) {
+	underTest, err, teardown := setupGrafanaObjectsTest()
+	assert.NoError(t, err)
+	defer teardown()
+
+	mux.HandleFunc("/v1/grafana/api/dashboards/uid/", getMockHandler(t))
+
+	_, err = underTest.Get("getNOK")
 	assert.Error(t, err)
 }
