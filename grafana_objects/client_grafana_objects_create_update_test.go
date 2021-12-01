@@ -28,8 +28,8 @@ func createUpdateMockHandler(t *testing.T) func(http.ResponseWriter, *http.Reque
 		}
 		w.Header().Set("Content-Type", "application/json")
 
-		if payload.Dashboard["uid"] == "test1" {
-			fileGet, err := ioutil.ReadFile("testdata/createupdate_ok_resp.json")
+		if payload.Dashboard.Uid == "test1" {
+			fileGet, err := ioutil.ReadFile("testdata/fixture/createupdate_ok_resp.json")
 			if err != nil {
 				w.WriteHeader(http.StatusBadRequest)
 				fmt.Fprintln(w, "Unable to open resp file")
@@ -48,8 +48,8 @@ func createUpdateMockHandler(t *testing.T) func(http.ResponseWriter, *http.Reque
 			w.Write(bytes)
 		}
 
-		if payload.Dashboard["uid"] == "test2" {
-			fileGet, err := ioutil.ReadFile("testdata/createupdate_nok_resp.json")
+		if payload.Dashboard.Uid == "test2" {
+			fileGet, err := ioutil.ReadFile("testdata/fixture/createupdate_nok_resp.json")
 			if err != nil {
 				w.WriteHeader(http.StatusBadRequest)
 				fmt.Fprintln(w, "Unable to open resp file")
@@ -77,7 +77,7 @@ func TestGrafanaObjects_CreateUpdateOK(t *testing.T) {
 
 	mux.HandleFunc("/v1/grafana/api/dashboards/db", createUpdateMockHandler(t))
 
-	file, _ := ioutil.ReadFile("testdata/createupdate_ok.json")
+	file, _ := ioutil.ReadFile("testdata/fixture/createupdate_ok.json")
 	payload := grafana_objects.CreateUpdatePayload{}
 	err = json.Unmarshal([]byte(file), &payload)
 	assert.NoError(t, err)
@@ -102,7 +102,7 @@ func TestGrafanaObjects_CreateUpdateNOK(t *testing.T) {
 
 	mux.HandleFunc("/v1/grafana/api/dashboards/db", createUpdateMockHandler(t))
 
-	file, _ := ioutil.ReadFile("testdata/createupdate_nok.json")
+	file, _ := ioutil.ReadFile("testdata/fixture/createupdate_nok.json")
 	payload := grafana_objects.CreateUpdatePayload{}
 	err = json.Unmarshal([]byte(file), &payload)
 	assert.NoError(t, err)

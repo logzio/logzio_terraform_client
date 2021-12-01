@@ -10,12 +10,6 @@ import (
 	"github.com/logzio/logzio_terraform_client/client"
 )
 
-type DeleteResults struct {
-	Title   string `json:"title"`
-	Message string `json:"message"`
-	Id      int    `json:"id"`
-}
-
 // Delete allows deleting Grafana objects configuration.
 // https://docs.logz.io/api/#operation/deleteDashboarById
 func (c *GrafanaObjectsClient) Delete(objectUid string) (*DeleteResults, error) {

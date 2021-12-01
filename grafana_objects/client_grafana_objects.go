@@ -8,14 +8,68 @@ import (
 )
 
 const (
-	grafanaObjectsDashboardsByUID        = "%s/v1/grafana/api/dashboards/uid/%s"
-	grafanaObjectsDashboardsCreateUpdate = "%s/v1/grafana/api/dashboards/db"
-	loggerName                           = "logzio-client"
+	grafanaObjectServiceEndpoint = "%s/v1/grafana/api/dashboards"
+	loggerName                   = "logzio-client"
 )
 
 type GrafanaObjectsClient struct {
 	*client.Client
 	logger hclog.Logger
+}
+
+type CreateUpdatePayload struct {
+	Dashboard DashboardObject `json:"dashboard"`
+	FolderId  int             `json:"folderId"`
+	FolderUid int             `json:"folderUid"`
+	Message   string          `json:"message"`
+	Overwrite bool            `json:"overwrite"`
+}
+
+type GetResults struct {
+	Dashboard DashboardObject `json:"dashboard"`
+	Meta      DashboardMeta   `json:"meta"`
+}
+
+type DeleteResults struct {
+	Title   string `json:"title"`
+	Message string `json:"message"`
+	Id      int    `json:"id"`
+}
+
+type CreateUpdateResults struct {
+	Id      int    `json:"id"`
+	Uid     string `json:"uid"`
+	Status  string `json:"status"`
+	Version int    `json:"version"`
+	Url     string `json:"url"`
+	Slug    string `json:"slug"`
+}
+
+type DashboardMeta struct {
+	IsStarred bool   `json:"isStarred"`
+	Url       string `json:"url"`
+	FolderId  int    `json:"folderId"`
+	FolderUid string `json:"folderUid"`
+	Slug      string `json:"slug"`
+}
+
+type DashboardObject struct {
+	Id            int           `json:"id"`
+	Uid           string        `json:"uid"`
+	Title         string        `json:"title`
+	Tags          []string      `json:"tags"`
+	Style         string        `json:"style"`
+	Timezone      string        `json:"timezone"`
+	Editable      bool          `json:"editable"`
+	GraphToolTip  int           `json:"graphTooltip"`
+	Time          string        `json:"time"`
+	Timepicker    []interface{} `json:"timepicker"`
+	Templating    []interface{} `json:"templating"`
+	Annotations   []interface{} `json:"annotations"`
+	Refresh       string        `json:"refresh"`
+	SchemaVersion int           `json:"schemaVersion"`
+	Version       int           `json:"version"`
+	Panels        []interface{} `json:"panels"`
 }
 
 // Creates a new entry point into the grafana objects functions, accepts the

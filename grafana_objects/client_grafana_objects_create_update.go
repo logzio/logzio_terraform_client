@@ -11,24 +11,11 @@ import (
 	"github.com/logzio/logzio_terraform_client/client"
 )
 
-type CreateUpdatePayload struct {
-	Dashboard map[string]interface{} `json:"dashboard"`
-	FolderId  int                    `json:"folderId"`
-	FolderUid int                    `json:"folderUid"`
-	Message   string                 `json:"message"`
-	Overwrite bool                   `json:"overwrite"`
-}
+const (
+	grafanaObjectsDashboardsCreateUpdate = grafanaObjectServiceEndpoint + "/db"
+)
 
-type CreateUpdateResults struct {
-	Id      int    `json:"id"`
-	Uid     string `json:"uid"`
-	Status  string `json:"status"`
-	Version int    `json:"version"`
-	Url     string `json:"url"`
-	Slug    string `json:"slug"`
-}
-
-// Get allows the creation or update of a Grafana dashboard
+// CreateUpdate allows the creation or update of a Grafana dashboard
 // https://docs.logz.io/api/#operation/createDashboard
 func (c *GrafanaObjectsClient) CreateUpdate(payload CreateUpdatePayload) (*CreateUpdateResults, error) {
 

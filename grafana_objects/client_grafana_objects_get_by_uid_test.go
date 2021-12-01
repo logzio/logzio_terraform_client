@@ -22,7 +22,7 @@ func getMockHandler(t *testing.T) func(http.ResponseWriter, *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 
 		if path.Base(r.URL.Path) == "getOK" {
-			fileGet, _ := ioutil.ReadFile("testdata/get.json")
+			fileGet, _ := ioutil.ReadFile("testdata/fixture/get.json")
 
 			resp := grafana_objects.GetResults{}
 			_ = json.Unmarshal([]byte(fileGet), &resp)
@@ -52,7 +52,10 @@ func TestGrafanaObjects_GetOK(t *testing.T) {
 	result, err := underTest.Get("getOK")
 	assert.NoError(t, err)
 	assert.Equal(t, result, &grafana_objects.GetResults{
-		Dashboard: map[string]interface{}{"title": "getOK", "uid": "test1"},
+		Dashboard: grafana_objects.DashboardObject{
+			Title: "getOK",
+			Uid:   "test1",
+		},
 		Meta: grafana_objects.DashboardMeta{
 			IsStarred: true,
 			Url:       "testUrl",

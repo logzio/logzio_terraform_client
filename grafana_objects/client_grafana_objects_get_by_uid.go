@@ -10,18 +10,9 @@ import (
 	"github.com/logzio/logzio_terraform_client/client"
 )
 
-type GetResults struct {
-	Dashboard map[string]interface{} `json:"dashboard"`
-	Meta      DashboardMeta          `json:"meta"`
-}
-
-type DashboardMeta struct {
-	IsStarred bool   `json:"isStarred"`
-	Url       string `json:"url"`
-	FolderId  int    `json:"folderId"`
-	FolderUid string `json:"folderUid"`
-	Slug      string `json:"slug"`
-}
+const (
+	grafanaObjectsDashboardsByUID = grafanaObjectServiceEndpoint + "/uid/%s"
+)
 
 // Get allows getting a Grafana objects configuration.
 // https://docs.logz.io/api/#operation/getDashboarById

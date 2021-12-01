@@ -22,7 +22,7 @@ func deleteMockHandler(t *testing.T) func(http.ResponseWriter, *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 
 		if path.Base(r.URL.Path) == "deleteOK" {
-			fileDelete, _ := ioutil.ReadFile("testdata/delete.json")
+			fileDelete, _ := ioutil.ReadFile("testdata/fixture/delete.json")
 
 			resp := grafana_objects.DeleteResults{}
 			_ = json.Unmarshal([]byte(fileDelete), &resp)
