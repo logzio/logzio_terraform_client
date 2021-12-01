@@ -22,7 +22,7 @@ func getMockHandler(t *testing.T) func(http.ResponseWriter, *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 
 		if path.Base(r.URL.Path) == "getOK" {
-			fileGet, _ := ioutil.ReadFile("testdata/fixture/get.json")
+			fileGet, _ := ioutil.ReadFile("testdata/fixtures/get.json")
 
 			resp := grafana_objects.GetResults{}
 			_ = json.Unmarshal([]byte(fileGet), &resp)

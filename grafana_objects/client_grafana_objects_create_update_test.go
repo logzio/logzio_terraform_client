@@ -2,7 +2,6 @@ package grafana_objects_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"testing"
@@ -11,74 +10,34 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func createUpdateMockHandler(t *testing.T) func(http.ResponseWriter, *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != http.MethodPost {
-			w.WriteHeader(http.StatusMethodNotAllowed)
-			fmt.Fprintln(w, "this endpoint only supports the POST method")
-			return
-		}
-		jsonBytes, _ := ioutil.ReadAll(r.Body)
-		payload := grafana_objects.CreateUpdatePayload{}
-		err := json.Unmarshal(jsonBytes, &payload)
-		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			fmt.Fprintln(w, "could not unmarshal request's payload")
-			return
-		}
-		w.Header().Set("Content-Type", "application/json")
-
-		if payload.Dashboard.Uid == "test1" {
-			fileGet, err := ioutil.ReadFile("testdata/fixture/createupdate_ok_resp.json")
-			if err != nil {
-				w.WriteHeader(http.StatusBadRequest)
-				fmt.Fprintln(w, "Unable to open resp file")
-				return
-			}
-			resp := grafana_objects.CreateUpdateResults{}
-			err = json.Unmarshal([]byte(fileGet), &resp)
-			if err != nil {
-				w.WriteHeader(http.StatusBadRequest)
-				fmt.Fprintln(w, "Unable to unmarshall resp file")
-				return
-			}
-
-			bytes, _ := json.Marshal(resp)
-			w.WriteHeader(http.StatusOK)
-			w.Write(bytes)
-		}
-
-		if payload.Dashboard.Uid == "test2" {
-			fileGet, err := ioutil.ReadFile("testdata/fixture/createupdate_nok_resp.json")
-			if err != nil {
-				w.WriteHeader(http.StatusBadRequest)
-				fmt.Fprintln(w, "Unable to open resp file")
-				return
-			}
-			resp := make(map[string]string)
-			err = json.Unmarshal([]byte(fileGet), &resp)
-			if err != nil {
-				w.WriteHeader(http.StatusBadRequest)
-				fmt.Fprintln(w, "Unable to unmarshall resp file")
-				return
-			}
-
-			bytes, _ := json.Marshal(resp)
-			w.WriteHeader(http.StatusNotFound)
-			w.Write(bytes)
-		}
-	}
-}
-
 func TestGrafanaObjects_CreateUpdateOK(t *testing.T) {
 	underTest, err, teardown := setupGrafanaObjectsTest()
 	assert.NoError(t, err)
 	defer teardown()
 
-	mux.HandleFunc("/v1/grafana/api/dashboards/db", createUpdateMockHandler(t))
+	mux.HandleFunc("/v1/grafana/api/dashboards/db", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method)
+		jsonBytes, err := ioutil.ReadAll(r.Body)
+		assert.NoError(t, err)
+		var payload grafana_objects.CreateUpdatePayload
+		err = json.Unmarshal(jsonBytes, &payload)
+		assert.NoError(t, err)
+		assert.NotNil(t, payload)
 
-	file, _ := ioutil.ReadFile("testdata/fixture/createupdate_ok.json")
-	payload := grafana_objects.CreateUpdatePayload{}
+		fileGet, err := ioutil.ReadFile("testdata/fixtures/createupdate_ok_resp.json")
+		var resp grafana_objects.CreateUpdateResults
+		err = json.Unmarshal([]byte(fileGet), &resp)
+		assert.NoError(t, err)
+
+    bytes, err := json.Marshal(resp)
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write(bytes)
+		assert.NoError(t, err)
+	})
+
+	file, err := ioutil.ReadFile("testdata/fixtures/createupdate_ok.json")
+	var payload grafana_objects.CreateUpdatePayload
 	err = json.Unmarshal([]byte(file), &payload)
 	assert.NoError(t, err)
 
@@ -100,10 +59,34 @@ func TestGrafanaObjects_CreateUpdateNOK(t *testing.T) {
 	assert.NoError(t, err)
 	defer teardown()
 
-	mux.HandleFunc("/v1/grafana/api/dashboards/db", createUpdateMockHandler(t))
+	mux.HandleFunc("/v1/grafana/api/dashboards/db", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method)
+		jsonBytes, err := ioutil.ReadAll(r.Body)
+		assert.NoError(t, err)
+		var payload grafana_objects.CreateUpdatePayload
+		err = json.Unmarshal(jsonBytes, &payload)
+		assert.NoError(t, err)
+		assert.NotNil(t, payload)
 
-	file, _ := ioutil.ReadFile("testdata/fixture/createupdate_nok.json")
-	payload := grafana_objects.CreateUpdatePayload{}
+		fileGet, err := ioutil.ReadFile("testdata/fixtures/createupdate_nok_resp.json")
+		assert.NoError(t, err)
+
+		var resp grafana_objects.CreateUpdateResults
+		err = json.Unmarshal([]byte(fileGet), &resp)
+		assert.NoError(t, err)
+
+    bytes, err := json.Marshal(resp)
+		assert.NoError(t, err)
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusNotFound)
+		w.Write(bytes)
+	})
+
+	file, err := ioutil.ReadFile("testdata/fixtures/createupdate_nok.json")
+	assert.NoError(t, err)
+
+	var payload grafana_objects.CreateUpdatePayload
 	err = json.Unmarshal([]byte(file), &payload)
 	assert.NoError(t, err)
 
