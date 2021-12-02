@@ -45,33 +45,6 @@ type CreateUpdateResults struct {
 	Slug    string `json:"slug"`
 }
 
-type DashboardMeta struct {
-	IsStarred bool   `json:"isStarred"`
-	Url       string `json:"url"`
-	FolderId  int    `json:"folderId"`
-	FolderUid string `json:"folderUid"`
-	Slug      string `json:"slug"`
-}
-
-type DashboardObject struct {
-	Id            int           `json:"id"`
-	Uid           string        `json:"uid"`
-	Title         string        `json:"title`
-	Tags          []string      `json:"tags"`
-	Style         string        `json:"style"`
-	Timezone      string        `json:"timezone"`
-	Editable      bool          `json:"editable"`
-	GraphToolTip  int           `json:"graphTooltip"`
-	Time          string        `json:"time"`
-	Timepicker    []interface{} `json:"timepicker"`
-	Templating    []interface{} `json:"templating"`
-	Annotations   []interface{} `json:"annotations"`
-	Refresh       string        `json:"refresh"`
-	SchemaVersion int           `json:"schemaVersion"`
-	Version       int           `json:"version"`
-	Panels        []interface{} `json:"panels"`
-}
-
 // Creates a new entry point into the grafana objects functions, accepts the
 // user's logz.io API token and API base URL
 func New(apiToken string, baseUrl string) (*GrafanaObjectsClient, error) {

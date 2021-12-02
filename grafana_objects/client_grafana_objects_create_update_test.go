@@ -29,7 +29,7 @@ func TestGrafanaObjects_CreateUpdateOK(t *testing.T) {
 		err = json.Unmarshal([]byte(fileGet), &resp)
 		assert.NoError(t, err)
 
-    bytes, err := json.Marshal(resp)
+		bytes, err := json.Marshal(resp)
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		w.Write(bytes)
@@ -75,7 +75,7 @@ func TestGrafanaObjects_CreateUpdateNOK(t *testing.T) {
 		err = json.Unmarshal([]byte(fileGet), &resp)
 		assert.NoError(t, err)
 
-    bytes, err := json.Marshal(resp)
+		bytes, err := json.Marshal(resp)
 		assert.NoError(t, err)
 
 		w.Header().Set("Content-Type", "application/json")
