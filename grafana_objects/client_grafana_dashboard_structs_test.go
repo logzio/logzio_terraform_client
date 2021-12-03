@@ -11,24 +11,27 @@ import (
 
 func Test_ValidateTimepickerStruct(t *testing.T) {
 	timepickerFile, err := ioutil.ReadFile("testdata/fixtures/timepicker.json")
+	assert.NoError(t, err)
 
-	resp := grafana_objects.Timepicker{}
-	err = json.Unmarshal([]byte(timepickerFile), &resp)
+	obj := grafana_objects.Timepicker{}
+	err = json.Unmarshal([]byte(timepickerFile), &obj)
 	assert.NoError(t, err)
 }
 
 func Test_ValidateTemplatingStruct(t *testing.T) {
 	templatingFile, err := ioutil.ReadFile("testdata/fixtures/templating.json")
+	assert.NoError(t, err)
 
-	resp := grafana_objects.TemplatingItem{}
-	err = json.Unmarshal([]byte(templatingFile), &resp)
+	obj := grafana_objects.TemplatingItem{}
+	err = json.Unmarshal([]byte(templatingFile), &obj)
 	assert.NoError(t, err)
 }
 
 func Test_ValidateDashboardObjectsStruct(t *testing.T) {
 	dashboardFile, err := ioutil.ReadFile("testdata/fixtures/dashboard.json")
+	assert.NoError(t, err)
 
-	resp := grafana_objects.DashboardObject{}
-	err = json.Unmarshal([]byte(dashboardFile), &resp)
+	obj := grafana_objects.DashboardObject{}
+	err = json.Unmarshal([]byte(dashboardFile), &obj)
 	assert.NoError(t, err)
 }
