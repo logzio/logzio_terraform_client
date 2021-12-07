@@ -43,20 +43,20 @@ type Timepicker struct {
 }
 
 type TemplatingList struct {
-	Enable bool                  `json:"enable"`
+	Enable bool             `json:"enable"`
 	List   []TemplatingItem `json:"list"`
 }
 
 type TemplatingItem struct {
-	AllFormat   string                       `json:"string"`
-	Current     map[string]string            `json:"current"`
-	Datasource  string                       `json:"datasource"`
-	IncludeAll  bool                         `json:"includeAll"`
-	Multi       bool                         `json:"multi"`
-	MultiFormat string                       `json:"multiFormat"`
-	Name        string                       `json:"name"`
+	AllFormat   string              `json:"string"`
+	Current     map[string]string   `json:"current"`
+	Datasource  string              `json:"datasource"`
+	IncludeAll  bool                `json:"includeAll"`
+	Multi       bool                `json:"multi"`
+	MultiFormat string              `json:"multiFormat"`
+	Name        string              `json:"name"`
 	Options     []TemplatingOptions `json:"options"`
-	Type        string                       `json:"type"`
+	Type        string              `json:"type"`
 }
 
 type TemplatingOptions struct {
