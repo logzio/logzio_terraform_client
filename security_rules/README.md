@@ -4,7 +4,7 @@ Compatible with Logz.io's [security rules API](https://docs.logz.io/api/#tag/Sec
 
 Security rules help you connect the dots between your data sources and events that could indicate a security threat or breach.
 
-**Note** that for this resource you'll need to use your security api token.
+**Note** that for this resource you'll need to use your **security api token**.
 
 To create a security rule:
 ```go
