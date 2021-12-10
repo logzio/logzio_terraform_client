@@ -20,7 +20,7 @@ type GrafanaObjectsClient struct {
 type CreateUpdatePayload struct {
 	Dashboard DashboardObject `json:"dashboard"`
 	FolderId  int             `json:"folderId"`
-	FolderUid int             `json:"folderUid"`
+	FolderUid string          `json:"folderUid"`
 	Message   string          `json:"message"`
 	Overwrite bool            `json:"overwrite"`
 }

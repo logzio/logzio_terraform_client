@@ -11,7 +11,7 @@ type DashboardMeta struct {
 type DashboardObject struct {
 	Id            int            `json:"id"`
 	Uid           string         `json:"uid"`
-	Title         string         `json:"title`
+	Title         string         `json:"title"`
 	Tags          []string       `json:"tags"`
 	Style         string         `json:"style"`
 	Timezone      string         `json:"timezone"`
@@ -48,15 +48,15 @@ type TemplatingList struct {
 }
 
 type TemplatingItem struct {
-	AllFormat   string              `json:"string"`
-	Current     map[string]string   `json:"current"`
-	Datasource  string              `json:"datasource"`
-	IncludeAll  bool                `json:"includeAll"`
-	Multi       bool                `json:"multi"`
-	MultiFormat string              `json:"multiFormat"`
-	Name        string              `json:"name"`
-	Options     []TemplatingOptions `json:"options"`
-	Type        string              `json:"type"`
+	AllFormat   string                 `json:"string"`
+	Current     map[string]interface{} `json:"current"`
+	Datasource  string                 `json:"datasource"`
+	IncludeAll  bool                   `json:"includeAll"`
+	Multi       bool                   `json:"multi"`
+	MultiFormat string                 `json:"multiFormat"`
+	Name        string                 `json:"name"`
+	Options     []TemplatingOptions    `json:"options"`
+	Type        string                 `json:"type"`
 }
 
 type TemplatingOptions struct {

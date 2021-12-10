@@ -4,7 +4,7 @@
       "uid":"test1"
    },
   "folderId": 1,
-  "folderUid": 1,
+  "folderUid": "1",
   "message": "test",
   "overwrite": true
 }
