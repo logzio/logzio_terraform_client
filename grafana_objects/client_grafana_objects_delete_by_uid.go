@@ -9,6 +9,7 @@ import (
 )
 
 const (
+	grafanaObjectsDeleteDashboardsByUID         = grafanaObjectServiceEndpoint + "/uid/%s"
 	grafanaObjectsDeleteDashboardsByUIDMethod   = http.MethodDelete
 	grafanaObjectsDeleteDashboardsByUIDSuccess  = http.StatusOK
 	grafanaObjectsDeleteDashboardsByUIDNotFound = http.StatusNotFound
@@ -20,13 +21,13 @@ func (c *GrafanaObjectsClient) Delete(objectUid string) (*DeleteResults, error) 
 	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
 		ApiToken:     c.ApiToken,
 		HttpMethod:   grafanaObjectsDeleteDashboardsByUIDMethod,
-		Url:          fmt.Sprintf(grafanaObjectsDashboardsByUID, c.BaseUrl, objectUid),
+		Url:          fmt.Sprintf(grafanaObjectsDeleteDashboardsByUID, c.BaseUrl, objectUid),
 		Body:         nil,
 		SuccessCodes: []int{grafanaObjectsDeleteDashboardsByUIDSuccess},
 		NotFoundCode: grafanaObjectsDeleteDashboardsByUIDNotFound,
-		ApiAction:    "DeleteDashboard",
+		ApiAction:    dashboardDelete,
 		ResourceId:   objectUid,
-		ResourceName: "Dashboard",
+		ResourceName: dashboardResourceName,
 	})
 
 	if err != nil {

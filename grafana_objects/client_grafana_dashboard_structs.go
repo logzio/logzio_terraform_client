@@ -9,22 +9,22 @@ type DashboardMeta struct {
 }
 
 type DashboardObject struct {
-	Id            int            `json:"id"`
-	Uid           string         `json:"uid"`
-	Title         string         `json:"title"`
-	Tags          []string       `json:"tags"`
-	Style         string         `json:"style"`
-	Timezone      string         `json:"timezone"`
-	Editable      bool           `json:"editable"`
-	GraphToolTip  int            `json:"graphTooltip"`
-	Time          TimeRange      `json:"time"`
-	Timepicker    Timepicker     `json:"timepicker"`
-	Templating    TemplatingList `json:"templating"`
-	Annotations   interface{}    `json:"annotations"`
-	Refresh       string         `json:"refresh"`
-	SchemaVersion int            `json:"schemaVersion"`
-	Version       int            `json:"version"`
-	Panels        []interface{}  `json:"panels"`
+	Id            int                      `json:"id"`
+	Uid           string                   `json:"uid"`
+	Title         string                   `json:"title"`
+	Tags          []string                 `json:"tags"`
+	Style         string                   `json:"style"`
+	Timezone      string                   `json:"timezone"`
+	Editable      bool                     `json:"editable"`
+	GraphToolTip  int                      `json:"graphTooltip"`
+	Time          TimeRange                `json:"time"`
+	Timepicker    Timepicker               `json:"timepicker"`
+	Templating    TemplatingList           `json:"templating"`
+	Annotations   interface{}              `json:"annotations"`
+	Refresh       string                   `json:"refresh"`
+	SchemaVersion int                      `json:"schemaVersion"`
+	Version       int                      `json:"version"`
+	Panels        []map[string]interface{} `json:"panels"`
 }
 
 type TimeRange struct {
@@ -33,13 +33,13 @@ type TimeRange struct {
 }
 
 type Timepicker struct {
-	Collapse          bool     `json:"collapse"`
-	Enable            bool     `json:"enable"`
-	Notice            bool     `json:"notice"`
-	Now               bool     `json:"now"`
-	Refresh_intervals []string `json:"refresh_intervales"`
-	Status            string   `json:"status"`
-	Type              string   `json:"type"`
+	Collapse         bool     `json:"collapse"`
+	Enable           bool     `json:"enable"`
+	Notice           bool     `json:"notice"`
+	Now              bool     `json:"now"`
+	RefreshIntervals []string `json:"refresh_intervals"`
+	Status           string   `json:"status"`
+	Type             string   `json:"type"`
 }
 
 type TemplatingList struct {

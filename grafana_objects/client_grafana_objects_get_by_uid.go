@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	grafanaObjectsDashboardsByUID            = grafanaObjectServiceEndpoint + "/uid/%s"
+	grafanaObjectsGetDashboardsByUID         = grafanaObjectServiceEndpoint + "/uid/%s"
 	grafanaObjectsGetDashboardsByUIDMethod   = http.MethodGet
 	grafanaObjectsGetDashboardsByUIDSuccess  = http.StatusOK
 	grafanaObjectsGetDashboardsByUIDNotFound = http.StatusNotFound
@@ -21,13 +21,13 @@ func (c *GrafanaObjectsClient) Get(objectUid string) (*GetResults, error) {
 	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
 		ApiToken:     c.ApiToken,
 		HttpMethod:   grafanaObjectsGetDashboardsByUIDMethod,
-		Url:          fmt.Sprintf(grafanaObjectsDashboardsByUID, c.BaseUrl, objectUid),
+		Url:          fmt.Sprintf(grafanaObjectsGetDashboardsByUID, c.BaseUrl, objectUid),
 		Body:         nil,
 		SuccessCodes: []int{grafanaObjectsGetDashboardsByUIDSuccess},
 		NotFoundCode: grafanaObjectsGetDashboardsByUIDNotFound,
-		ApiAction:    "GetDashboard",
+		ApiAction:    dashboardGet,
 		ResourceId:   objectUid,
-		ResourceName: "Dashboard",
+		ResourceName: dashboardResourceName,
 	})
 
 	if err != nil {

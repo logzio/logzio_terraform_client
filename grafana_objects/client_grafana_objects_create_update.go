@@ -16,7 +16,6 @@ const (
 )
 
 // CreateUpdate allows the creation or update of a Grafana dashboard
-// https://docs.logz.io/api/#operation/createDashboard
 func (c *GrafanaObjectsClient) CreateUpdate(payload CreateUpdatePayload) (*CreateUpdateResults, error) {
 	payloadJson, err := json.Marshal(payload)
 	if err != nil {
@@ -30,9 +29,9 @@ func (c *GrafanaObjectsClient) CreateUpdate(payload CreateUpdatePayload) (*Creat
 		Body:         payloadJson,
 		SuccessCodes: []int{grafanaObjectsCreateUpdateDashboardsByUIDSuccess},
 		NotFoundCode: grafanaObjectsCreateUpdateDashboardsByUIDNotFound,
-		ApiAction:    "CreateUpdate",
+		ApiAction:    dashboardCreateUpdate,
 		ResourceId:   payload.Dashboard.Id,
-		ResourceName: "Dashboard",
+		ResourceName: dashboardResourceName,
 	})
 
 	if err != nil {

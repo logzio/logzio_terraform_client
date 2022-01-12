@@ -10,6 +10,14 @@ import (
 const (
 	grafanaObjectServiceEndpoint = "%s/v1/grafana/api/dashboards"
 	loggerName                   = "logzio-client"
+
+	dashboardCreateUpdate = "CreateUpdateGrafanaDashboard"
+	dashboardDelete       = "DeleteGrafanaDashboard"
+	dashboardGet          = "GetGrafanaDashboard"
+
+	dashboardResourceName = "dashboard"
+
+	GrafanaSuccessStatus = "success"
 )
 
 type GrafanaObjectsClient struct {
@@ -45,7 +53,7 @@ type CreateUpdateResults struct {
 	Slug    string `json:"slug"`
 }
 
-// Creates a new entry point into the grafana objects functions, accepts the
+// New Creates a new entry point into the grafana objects functions, accepts the
 // user's logz.io API token and API base URL
 func New(apiToken string, baseUrl string) (*GrafanaObjectsClient, error) {
 	if len(apiToken) == 0 {

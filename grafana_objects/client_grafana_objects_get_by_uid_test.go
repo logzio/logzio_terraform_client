@@ -1,9 +1,9 @@
 package grafana_objects_test
 
 import (
-	"encoding/json"
-	"io/ioutil"
+	"fmt"
 	"net/http"
+	"strconv"
 	"testing"
 
 	"github.com/logzio/logzio_terraform_client/grafana_objects"
@@ -11,32 +11,24 @@ import (
 )
 
 func TestGrafanaObjects_GetOK(t *testing.T) {
-	underTest, err, teardown := setupGrafanaObjectsTest()
+	underTest, teardown, err := setupGrafanaObjectsTest()
 	assert.NoError(t, err)
 	defer teardown()
+	dashboardId := int64(1234)
 
-	mux.HandleFunc("/v1/grafana/api/dashboards/uid/", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc(dashboardsApiBasePath+"/uid/", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodGet, r.Method)
+		assert.Contains(t, r.URL.String(), strconv.FormatInt(dashboardId, 10))
 		w.Header().Set("Content-Type", "application/json")
-		fileGet, err := ioutil.ReadFile("testdata/fixtures/get.json")
-		assert.NoError(t, err)
+		fmt.Fprint(w, fixture("get.json"))
+	})
 
-		resp := grafana_objects.GetResults{}
-		err = json.Unmarshal([]byte(fileGet), &resp)
-		assert.NoError(t, err)
-
-		bytes, err := json.Marshal(resp)
-		w.WriteHeader(http.StatusOK)
-		w.Write(bytes)
-	},
-	)
-
-	result, err := underTest.Get("getOK")
+	result, err := underTest.Get(fmt.Sprint(dashboardId))
 	assert.NoError(t, err)
 	assert.Equal(t, result, &grafana_objects.GetResults{
 		Dashboard: grafana_objects.DashboardObject{
 			Title: "getOK",
-			Uid:   "test1",
+			Uid:   fmt.Sprint(dashboardId),
 		},
 		Meta: grafana_objects.DashboardMeta{
 			IsStarred: true,
@@ -50,39 +42,37 @@ func TestGrafanaObjects_GetOK(t *testing.T) {
 }
 
 func TestGrafanaObjects_GetNotFound(t *testing.T) {
-	underTest, err, teardown := setupGrafanaObjectsTest()
+	underTest, teardown, err := setupGrafanaObjectsTest()
 	assert.NoError(t, err)
 	defer teardown()
+	dashboardId := int64(1234)
 
-	mux.HandleFunc("/v1/grafana/api/dashboards/uid/", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc(dashboardsApiBasePath+"/uid/", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodGet, r.Method)
-		w.Header().Set("Content&grafana_objects.GetResults{-Type", "application/json")
-		resp := make(map[string]string)
-		resp["message"] = "Dashboard Not found"
-
-		bytes, _ := json.Marshal(resp)
+		assert.Contains(t, r.URL.String(), strconv.FormatInt(dashboardId, 10))
 		w.WriteHeader(http.StatusNotFound)
-		w.Write(bytes)
-	},
-	)
+	})
 
-	_, err = underTest.Get("getNOK")
+	dashboard, err := underTest.Get(fmt.Sprint(dashboardId))
 	assert.Error(t, err)
+	assert.Nil(t, dashboard)
+	assert.Contains(t, err.Error(), "failed with missing dashboard")
 }
 
 func TestGrafanaObjects_GetError(t *testing.T) {
-	underTest, err, teardown := setupGrafanaObjectsTest()
+	underTest, teardown, err := setupGrafanaObjectsTest()
 	assert.NoError(t, err)
 	defer teardown()
+	dashboardId := int64(1234)
 
-	mux.HandleFunc("/v1/grafana/api/dashboards/uid/", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc(dashboardsApiBasePath+"/uid/", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodGet, r.Method)
+		assert.Contains(t, r.URL.String(), strconv.FormatInt(dashboardId, 10))
 		w.Header().Set("Content-Type", "application/json")
-
 		w.WriteHeader(http.StatusInternalServerError)
-	},
-	)
+	})
 
-	_, err = underTest.Get("getNOK")
+	dashboard, err := underTest.Get(fmt.Sprint(dashboardId))
 	assert.Error(t, err)
+	assert.Nil(t, dashboard)
 }
