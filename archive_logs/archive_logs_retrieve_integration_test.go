@@ -10,6 +10,7 @@ import (
 
 func TestIntegrationArchiveLogs_RetrieveArchive(t *testing.T) {
 	underTest, err := setupArchiveLogsIntegrationTest()
+	defer test_utils.TestDoneTimeBuffer()
 
 	if assert.NoError(t, err) {
 		createArchive, err := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeS3)
@@ -30,6 +31,7 @@ func TestIntegrationArchiveLogs_RetrieveArchive(t *testing.T) {
 
 func TestIntegrationArchiveLogs_RetrieveArchiveIdNotFound(t *testing.T) {
 	underTest, err := setupArchiveLogsIntegrationTest()
+	defer test_utils.TestDoneTimeBuffer()
 
 	if assert.NoError(t, err) {
 		archive, err := underTest.RetrieveArchiveLogsSetting(int32(1234))

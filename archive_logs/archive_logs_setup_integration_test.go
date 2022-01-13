@@ -10,6 +10,8 @@ import (
 
 func TestIntegrationArchiveLogs_SetupArchiveS3Keys(t *testing.T) {
 	underTest, err := setupArchiveLogsIntegrationTest()
+	defer test_utils.TestDoneTimeBuffer()
+
 	if assert.NoError(t, err) {
 		createArchiveLogs, err := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeS3)
 		if assert.NoError(t, err) {
@@ -26,6 +28,8 @@ func TestIntegrationArchiveLogs_SetupArchiveS3Keys(t *testing.T) {
 
 func TestIntegrationArchiveLogs_SetupArchiveS3Iam(t *testing.T) {
 	underTest, err := setupArchiveLogsIntegrationTest()
+	defer test_utils.TestDoneTimeBuffer()
+
 	if assert.NoError(t, err) {
 		createArchiveLogs, err := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeS3)
 		createArchiveLogs.AmazonS3StorageSettings.CredentialsType = archive_logs.CredentialsTypeIam
@@ -50,6 +54,8 @@ func TestIntegrationArchiveLogs_SetupArchiveS3Iam(t *testing.T) {
 
 func TestIntegrationArchiveLogs_SetupArchiveBlob(t *testing.T) {
 	underTest, err := setupArchiveLogsIntegrationTest()
+	defer test_utils.TestDoneTimeBuffer()
+
 	if assert.NoError(t, err) {
 		createArchiveLogs, err := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeBlob)
 		if assert.NoError(t, err) {
@@ -66,6 +72,7 @@ func TestIntegrationArchiveLogs_SetupArchiveBlob(t *testing.T) {
 
 func TestIntegrationArchiveLogs_SetupArchiveInvalidStorageType(t *testing.T) {
 	underTest, err := setupArchiveLogsIntegrationTest()
+	defer test_utils.TestDoneTimeBuffer()
 
 	if assert.NoError(t, err) {
 		createArchiveLogs, _ := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeBlob)
@@ -79,6 +86,7 @@ func TestIntegrationArchiveLogs_SetupArchiveInvalidStorageType(t *testing.T) {
 
 func TestIntegrationArchiveLogs_SetupArchiveS3InvalidAccessKey(t *testing.T) {
 	underTest, err := setupArchiveLogsIntegrationTest()
+	defer test_utils.TestDoneTimeBuffer()
 
 	if assert.NoError(t, err) {
 		createArchiveLogs, _ := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeS3)
@@ -92,6 +100,7 @@ func TestIntegrationArchiveLogs_SetupArchiveS3InvalidAccessKey(t *testing.T) {
 
 func TestIntegrationArchiveLogs_SetupArchiveS3InvalidSecretKey(t *testing.T) {
 	underTest, err := setupArchiveLogsIntegrationTest()
+	defer test_utils.TestDoneTimeBuffer()
 
 	if assert.NoError(t, err) {
 		createArchiveLogs, _ := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeS3)
@@ -105,6 +114,7 @@ func TestIntegrationArchiveLogs_SetupArchiveS3InvalidSecretKey(t *testing.T) {
 
 func TestIntegrationArchiveLogs_SetupArchiveBlobInvalidTenantId(t *testing.T) {
 	underTest, err := setupArchiveLogsIntegrationTest()
+	defer test_utils.TestDoneTimeBuffer()
 
 	if assert.NoError(t, err) {
 		createArchiveLogs, _ := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeBlob)
@@ -118,6 +128,7 @@ func TestIntegrationArchiveLogs_SetupArchiveBlobInvalidTenantId(t *testing.T) {
 
 func TestIntegrationArchiveLogs_SetupArchiveBlobInvalidClientId(t *testing.T) {
 	underTest, err := setupArchiveLogsIntegrationTest()
+	defer test_utils.TestDoneTimeBuffer()
 
 	if assert.NoError(t, err) {
 		createArchiveLogs, _ := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeBlob)
@@ -131,6 +142,7 @@ func TestIntegrationArchiveLogs_SetupArchiveBlobInvalidClientId(t *testing.T) {
 
 func TestIntegrationArchiveLogs_SetupArchiveBlobInvalidClientSecret(t *testing.T) {
 	underTest, err := setupArchiveLogsIntegrationTest()
+	defer test_utils.TestDoneTimeBuffer()
 
 	if assert.NoError(t, err) {
 		createArchiveLogs, _ := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeBlob)
@@ -144,6 +156,7 @@ func TestIntegrationArchiveLogs_SetupArchiveBlobInvalidClientSecret(t *testing.T
 
 func TestIntegrationArchiveLogs_SetupArchiveBlobInvalidAccountName(t *testing.T) {
 	underTest, err := setupArchiveLogsIntegrationTest()
+	defer test_utils.TestDoneTimeBuffer()
 
 	if assert.NoError(t, err) {
 		createArchiveLogs, _ := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeBlob)
@@ -157,6 +170,7 @@ func TestIntegrationArchiveLogs_SetupArchiveBlobInvalidAccountName(t *testing.T)
 
 func TestIntegrationArchiveLogs_SetupArchiveBlobInvalidContainerName(t *testing.T) {
 	underTest, err := setupArchiveLogsIntegrationTest()
+	defer test_utils.TestDoneTimeBuffer()
 
 	if assert.NoError(t, err) {
 		createArchiveLogs, _ := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeBlob)
