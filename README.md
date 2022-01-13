@@ -28,6 +28,9 @@ The library currently supports the following API endpoints:
 `go test -v -race ./...`
 
 ### Changelog
+
+- v1.11.0
+  TBD
 - v1.10.0
     - Add [Authentication groups API](https://docs.logz.io/api/#tag/Authentication-groups).
     - Add tests to retrieve archive.
