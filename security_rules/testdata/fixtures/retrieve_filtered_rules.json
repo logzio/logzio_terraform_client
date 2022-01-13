@@ -1,0 +1,158 @@
+{
+  "total": 2,
+  "results": [
+    {
+      "id": 12345,
+      "updatedAt": "2021-11-04T12:54:34.000Z",
+      "updatedBy": "Preconfigured by Logz.io",
+      "createdAt": "2021-11-04T12:54:34.000Z",
+      "createdBy": "Preconfigured by Logz.io",
+      "enabled": true,
+      "title": "Zeek - Unique port scanning",
+      "description": "Scanning of known ports was detected on your network.",
+      "tags": [
+        "access",
+        "network_threat"
+      ],
+      "output": {
+        "recipients": {
+          "emails": [],
+          "notificationEndpointIds": []
+        },
+        "suppressNotificationsMinutes": 1440,
+        "type": "JSON"
+      },
+      "searchTimeFrameMinutes": 5,
+      "subComponents": [
+        {
+          "queryDefinition": {
+            "query": "type:\"zeek_alert\" AND note:\"Scan::Port_Scan\"",
+            "filters": {
+              "bool": {
+                "must": [],
+                "should": [],
+                "filter": [],
+                "must_not": []
+              }
+            },
+            "groupBy": [
+              "src",
+              "dst"
+            ],
+            "aggregation": {
+              "aggregationType": "COUNT",
+              "fieldToAggregateOn": null
+            },
+            "shouldQueryOnAllAccounts": true,
+            "accountIdsToQueryOn": []
+          },
+          "trigger": {
+            "operator": "GREATER_THAN",
+            "severityThresholdTiers": {
+              "MEDIUM": 0.0
+            }
+          },
+          "output": {
+            "columns": [],
+            "shouldUseAllFields": true
+          }
+        }
+      ],
+      "correlations": {
+        "correlationOperators": [
+          "AND"
+        ],
+        "joins": []
+      },
+      "schedule": {
+        "cronExpression": null,
+        "timezone": "UTC"
+      },
+      "isProtected": true,
+      "sortedCorrelations": {
+        "correlationOperators": [
+          "AND"
+        ],
+        "joins": []
+      }
+    },
+    {
+      "id": 67890,
+      "updatedAt": "2021-11-04T12:49:50.000Z",
+      "updatedBy": "Preconfigured by Logz.io",
+      "createdAt": "2021-11-04T12:49:50.000Z",
+      "createdBy": "Preconfigured by Logz.io",
+      "enabled": true,
+      "title": "Zeek - RDP vulnerability scan (CVE-2019-0708)",
+      "description": "An attempt to scan for RDP vulnerability (CVE-2019-0708) was detected on your network.\n\nDetails of CVE-2019-0708:\n\nWhen an unauthenticated user connects to Remote Desktop Services, they could exploit a vulnerability that allows them to perform remote code execution in the vulnerable system.",
+      "tags": [
+        "access",
+        "network_threat"
+      ],
+      "output": {
+        "recipients": {
+          "emails": [],
+          "notificationEndpointIds": []
+        },
+        "suppressNotificationsMinutes": 1440,
+        "type": "JSON"
+      },
+      "searchTimeFrameMinutes": 60,
+      "subComponents": [
+        {
+          "queryDefinition": {
+            "query": "type : \"zeek\" AND source :*rdp.log*",
+            "filters": {
+              "bool": {
+                "must": [],
+                "should": [],
+                "filter": [],
+                "must_not": []
+              }
+            },
+            "groupBy": [
+              "zeek_id.resp_h"
+            ],
+            "aggregation": {
+              "aggregationType": "UNIQUE_COUNT",
+              "fieldToAggregateOn": "cookie"
+            },
+            "shouldQueryOnAllAccounts": true,
+            "accountIdsToQueryOn": []
+          },
+          "trigger": {
+            "operator": "GREATER_THAN",
+            "severityThresholdTiers": {
+              "MEDIUM": 0.0
+            }
+          },
+          "output": {
+            "columns": [],
+            "shouldUseAllFields": true
+          }
+        }
+      ],
+      "correlations": {
+        "correlationOperators": [
+          "AND"
+        ],
+        "joins": []
+      },
+      "schedule": {
+        "cronExpression": null,
+        "timezone": "UTC"
+      },
+      "isProtected": true,
+      "sortedCorrelations": {
+        "correlationOperators": [
+          "AND"
+        ],
+        "joins": []
+      }
+    }
+  ],
+  "pagination": {
+    "pageNumber": 1,
+    "pageSize": 25
+  }
+}
