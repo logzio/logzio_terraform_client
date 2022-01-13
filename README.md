@@ -19,8 +19,11 @@ The library currently supports the following API endpoints:
 
 #### Contributing
 
-1. Clone this repo locally
+1. Clone this repo locally.
 2. As this package uses Go modules, make sure you are outside of `$GOPATH` or you have the `GO111MODULE=on` environment variable set. Then run `go get` to pull down the dependencies.
+3. Use `logzio_client.CallLogzioApi` when you need to make a Logz.io API call.
+4. Use structs to represent the requests/responses body, rather than maps.
+5. Sample responses for tests should be under `testdata/fixtures`.
 
 ##### Run tests
 `go test -v -race ./...`
