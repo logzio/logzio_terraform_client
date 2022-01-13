@@ -15,6 +15,7 @@ The library currently supports the following API endpoints:
 * [Archive logs](https://github.com/logzio/logzio_terraform_client/tree/master/archive_logs).
 * [Restore logs](https://github.com/logzio/logzio_terraform_client/tree/master/restore_logs).
 * [Authentication groups](https://docs.logz.io/api/#tag/Authentication-groups).
+* [Grafana dashboards](https://docs.logz.io/api/#operation/createDashboard).
 
 #### Contributing
 
@@ -30,15 +31,15 @@ The library currently supports the following API endpoints:
 ### Changelog
 
 - v1.11.0
-  TBD
+  - Add [Grafana dashboards](https://docs.logz.io/api/#operation/createDashboard).
 - v1.10.0
     - Add [Authentication groups API](https://docs.logz.io/api/#tag/Authentication-groups).
     - Add tests to retrieve archive.
     - Improve tests.
-- v1.9.1
-    - Bug fix - adjust "not found" message to all resources.
 <details>
   <summary markdown="span">Exapnd to check old versions </summary>
+- v1.9.1
+    - Bug fix - adjust "not found" message to all resources.
 - v1.9.0
     - Add [Archive logs API](https://docs.logz.io/api/#tag/Archive-logs).
     - Add [Restore logs API](https://docs.logz.io/api/#tag/Restore-logs).
