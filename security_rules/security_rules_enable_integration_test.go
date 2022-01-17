@@ -22,7 +22,7 @@ func TestIntegrationSecurityRules_EnableRule(t *testing.T) {
 			err = underTest.EnableSecurityRule(rule.Id)
 			assert.NoError(t, err)
 			// Double check if we disabled the rule
-			time.Sleep(2 * time.Second) // give time for the rule to be disabled
+			time.Sleep(3 * time.Second) // give time for the rule to be disabled
 			ruleGet, err := underTest.RetrieveSecurityRule(rule.Id)
 			assert.NoError(t, err)
 			assert.NotNil(t, ruleGet)
