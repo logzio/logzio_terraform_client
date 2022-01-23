@@ -32,6 +32,7 @@ The library currently supports the following API endpoints:
 
 - v1.11.0
   - Add [Grafana dashboards](https://docs.logz.io/api/#operation/createDashboard).
+  - Refactor Users endpoint.
 - v1.10.0
     - Add [Authentication groups API](https://docs.logz.io/api/#tag/Authentication-groups).
     - Add tests to retrieve archive.
