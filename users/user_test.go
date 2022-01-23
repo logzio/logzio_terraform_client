@@ -6,8 +6,9 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
-	"testing"
 )
+
+const usersApiBasePath = "/v1/user-management"
 
 var (
 	mux    *http.ServeMux
@@ -22,16 +23,16 @@ func fixture(path string) string {
 	return string(b)
 }
 
-func setupUsersTest() (*users.UsersClient, error, func()) {
+func setupUsersTest() (*users.UsersClient, func(), error) {
 	apiToken := "SOME_API_TOKEN"
 
 	mux = http.NewServeMux()
 	server = httptest.NewServer(mux)
-	underTest, _ := users.New(apiToken, server.URL)
+	underTest, err := users.New(apiToken, server.URL)
 
-	return underTest, nil, func() {
+	return underTest, func() {
 		server.Close()
-	}
+	}, err
 }
 
 func setupUsersIntegrationTest() (*users.UsersClient, error) {
@@ -44,25 +45,19 @@ func setupUsersIntegrationTest() (*users.UsersClient, error) {
 	return underTest, err
 }
 
-func TestNewWithEmptyBaseUrl(t *testing.T) {
-	_, err := users.New("any-api-token", "")
-	if err == nil {
-		t.Fatal("Expected error when baseUrl is empty")
+func getCreateUser() (users.CreateUpdateUser, error) {
+	createUser := users.CreateUpdateUser{
+		UserName:  "some_test@test.test",
+		FullName:  "user test",
+		AccountId: 0,
+		Role:      users.UserRoleReadOnly,
 	}
-	if err.Error() != "Base URL not defined" {
-		t.Fatalf("The expected error message to be '%s' but was '%s'",
-			"Base URL not defined", err.Error())
-	}
-}
 
-func TestNewWithEmptyApiToken(t *testing.T) {
-	_, err := users.New("", "any-base-url")
+	accountId, err := test_utils.GetAccountId()
+	if err != nil {
+		return createUser, err
+	}
 
-	if err == nil {
-		t.Fatal("Expected error when API token is empty")
-	}
-	if err.Error() != "API token not defined" {
-		t.Fatalf("The expected error message to be '%s' but was '%s'",
-			"API token not defined", err.Error())
-	}
+	createUser.AccountId = int32(accountId)
+	return createUser, nil
 }

@@ -1,12 +1,10 @@
 [
   {
     "id": 123414890,
-    "username": "dave.user@test.co",
-    "fullName": "dave user",
+    "username": "ron.user@test.co",
+    "fullName": "ron user",
     "accountID": 123456,
-    "roles": [
-      3
-    ],
+    "role": "USER_ROLE_READONLY",
     "active": true
   },
   {
@@ -14,19 +12,15 @@
     "username": "harry.user@test.co",
     "fullName": "harry user",
     "accountID": 123456,
-    "roles": [
-      2
-    ],
+    "role": "USER_ROLE_REGULAR",
     "active": true
   },
   {
     "id": 123412345,
-    "username": "mavis.user@test.co",
-    "fullName": "mavis user",
+    "username": "hermione.user@test.co",
+    "fullName": "hermione user",
     "accountID": 123456,
-    "roles": [
-      2
-    ],
+    "role": "USER_ROLE_ACCOUNT_ADMIN",
     "active": true
   }
 ]

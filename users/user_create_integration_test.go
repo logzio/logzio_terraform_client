@@ -1,90 +1,125 @@
-// +build integration
-
 package users_test
 
 import (
 	"github.com/logzio/logzio_terraform_client/test_utils"
-	"github.com/logzio/logzio_terraform_client/users"
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"time"
 )
 
-func TestIntegrationUsers_CreateValidUser(t *testing.T) {
+func TestIntegrationUsers_CreateUser(t *testing.T) {
 	underTest, err := setupUsersIntegrationTest()
-	accountId, _ := test_utils.GetAccountId()
-
-	if assert.NoError(t, err) && assert.NotZero(t, accountId) {
-		u := users.User{
-			Username:  "test_create_user@test.co",
-			Fullname:  "test create user",
-			AccountId: accountId,
-			Roles:     []int32{users.UserTypeUser},
-		}
-
-		user, err := underTest.CreateUser(u)
-		assert.NoError(t, err)
-		if assert.NotNil(t, user) {
-			v, err := underTest.GetUser(user.Id)
-
-			if assert.NoError(t, err) && assert.NotNil(t, v) {
-				assert.Equal(t, "test_create_user@test.co", v.Username)
-				assert.Equal(t, "test create user", v.Fullname)
-				assert.Equal(t, accountId, v.AccountId)
-				assert.True(t, v.Active)
-				assert.Equal(t, user.Id, user.Id)
-			}
-
-			err = underTest.DeleteUser(user.Id)
-			assert.NoError(t, err)
-		}
-	}
-}
-
-func TestIntegrationUsers_CreateDeleteDuplicateUser(t *testing.T) {
-	underTest, err := setupUsersIntegrationTest()
-	accountId, _ := test_utils.GetAccountId()
-
-	if assert.NoError(t, err) && assert.NotZero(t, accountId) {
-		u := users.User{
-			Username:  "test_duplicate_user@test.co",
-			Fullname:  "test duplicate user",
-			AccountId: accountId,
-			Roles:     []int32{users.UserTypeUser},
-		}
-
-		user, err := underTest.CreateUser(u)
-		if assert.NoError(t, err) {
-			_, err = underTest.CreateUser(u)
-			assert.Error(t, err)
-		}
-
-		defer underTest.DeleteUser(user.Id)
-	}
-}
-
-func TestIntegrationUsers_CreateInvalidUser_Email(t *testing.T) {
-	underTest, err := setupUsersIntegrationTest()
-	accountId, erx := test_utils.GetAccountId()
-
-	if assert.NoError(t, err) && assert.NoError(t, erx) && assert.NotZero(t, accountId) {
-		u := users.User{
-			Username:  "InvalidTestUser",
-			Fullname:  "Test User",
-			AccountId: accountId,
-			Roles:     []int32{users.UserTypeUser},
-		}
-
-		_, err := underTest.CreateUser(u)
-		assert.Error(t, err)
-	}
-}
-
-func TestIntegrationUsers_DeleteNonExistingUser(t *testing.T) {
-	underTest, err, teardown := setupUsersTest()
-	defer teardown()
+	defer test_utils.TestDoneTimeBuffer()
 
 	if assert.NoError(t, err) {
-		err = underTest.DeleteUser(21345)
-		assert.Error(t, err)
+		createUser, err := getCreateUser()
+		createUser.FullName += "-create"
+		if assert.NoError(t, err) {
+			resp, err := underTest.CreateUser(createUser)
+			if assert.NoError(t, err) && assert.NotNil(t, resp) {
+				defer underTest.DeleteUser(resp.Id)
+				assert.NotZero(t, resp.Id)
+				time.Sleep(2 * time.Second)
+			}
+		}
+	}
+}
+
+func TestIntegrationUsers_CreateUserNoUserName(t *testing.T) {
+	underTest, err := setupUsersIntegrationTest()
+	defer test_utils.TestDoneTimeBuffer()
+
+	if assert.NoError(t, err) {
+		createUser, err := getCreateUser()
+		createUser.UserName = ""
+		createUser.FullName += "-create-no-username"
+		if assert.NoError(t, err) {
+			resp, err := underTest.CreateUser(createUser)
+			assert.Error(t, err)
+			assert.Nil(t, resp)
+		}
+	}
+}
+
+func TestIntegrationUsers_CreateUserNoFullName(t *testing.T) {
+	underTest, err := setupUsersIntegrationTest()
+	defer test_utils.TestDoneTimeBuffer()
+
+	if assert.NoError(t, err) {
+		createUser, err := getCreateUser()
+		createUser.FullName = ""
+		if assert.NoError(t, err) {
+			resp, err := underTest.CreateUser(createUser)
+			assert.Error(t, err)
+			assert.Nil(t, resp)
+		}
+	}
+}
+
+func TestIntegrationUsers_CreateUserNoAccountId(t *testing.T) {
+	underTest, err := setupUsersIntegrationTest()
+	defer test_utils.TestDoneTimeBuffer()
+
+	if assert.NoError(t, err) {
+		createUser, err := getCreateUser()
+		createUser.AccountId = 0
+		createUser.FullName += "-create-no-account-id"
+		if assert.NoError(t, err) {
+			resp, err := underTest.CreateUser(createUser)
+			assert.Error(t, err)
+			assert.Nil(t, resp)
+		}
+	}
+}
+
+func TestIntegrationUsers_CreateUserNoRole(t *testing.T) {
+	underTest, err := setupUsersIntegrationTest()
+	defer test_utils.TestDoneTimeBuffer()
+
+	if assert.NoError(t, err) {
+		createUser, err := getCreateUser()
+		createUser.Role = ""
+		createUser.FullName += "-create-no-role"
+		if assert.NoError(t, err) {
+			resp, err := underTest.CreateUser(createUser)
+			assert.Error(t, err)
+			assert.Nil(t, resp)
+		}
+	}
+}
+
+func TestIntegrationUsers_CreateUserInvalidRole(t *testing.T) {
+	underTest, err := setupUsersIntegrationTest()
+	defer test_utils.TestDoneTimeBuffer()
+
+	if assert.NoError(t, err) {
+		createUser, err := getCreateUser()
+		createUser.Role = "SOME_ROLE"
+		createUser.FullName += "-create-invalid-role"
+		if assert.NoError(t, err) {
+			resp, err := underTest.CreateUser(createUser)
+			assert.Error(t, err)
+			assert.Nil(t, resp)
+		}
+	}
+}
+
+func TestIntegrationUsers_CreateUserDuplicateUser(t *testing.T) {
+	underTest, err := setupUsersIntegrationTest()
+	defer test_utils.TestDoneTimeBuffer()
+
+	if assert.NoError(t, err) {
+		createUser, err := getCreateUser()
+		createUser.FullName += "-create-dup"
+		if assert.NoError(t, err) {
+			resp, err := underTest.CreateUser(createUser)
+			if assert.NoError(t, err) && assert.NotNil(t, resp) {
+				defer underTest.DeleteUser(resp.Id)
+				time.Sleep(2 * time.Second)
+				_, err := underTest.CreateUser(createUser)
+				assert.Error(t, err)
+			}
+
+		}
 	}
 }
