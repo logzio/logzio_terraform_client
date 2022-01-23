@@ -1,0 +1,92 @@
+{
+  "id": 12345,
+  "updatedAt": "2021-11-21T12:46:51.000Z",
+  "updatedBy": "awesome user",
+  "createdAt": "2021-11-21T12:46:51.000Z",
+  "createdBy": "awesome user",
+  "enabled": true,
+  "title": "after update",
+  "description": "some description",
+  "tags": [
+    "some",
+    "tags"
+  ],
+  "output": {
+    "recipients": {
+      "emails": [
+        "some@email.test"
+      ],
+      "notificationEndpointIds": []
+    },
+    "suppressNotificationsMinutes": 60,
+    "type": "JSON"
+  },
+  "searchTimeFrameMinutes": 20,
+  "subComponents": [
+    {
+      "queryDefinition": {
+        "query": "type:apache_access",
+        "filters": {
+          "bool": {
+            "must": [
+              {
+                "match_phrase": {
+                  "Field": {
+                    "query": "value"
+                  }
+                }
+              }
+            ],
+            "should": [],
+            "filter": [],
+            "must_not": [
+              {
+                "match_phrase": {
+                  "otherField": {
+                    "otherQuery": "otherValue"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "groupBy": [],
+        "shouldQueryOnAllAccounts": true,
+        "accountIdsToQueryOn": []
+      },
+      "trigger": {
+        "operator": "EQUALS",
+        "severityThresholdTiers": {
+          "HIGH": 10.0,
+          "LOW": 5.0
+        }
+      },
+      "output": {
+        "columns": [
+          {
+            "fieldName": "some_name",
+            "regex": "",
+            "sort": "ASC"
+          }
+        ],
+        "shouldUseAllFields": false
+      }
+    }
+  ],
+  "correlations": {
+    "correlationOperators": [
+      "AND"
+    ],
+    "joins": []
+  },
+  "schedule": {
+    "cronExpression": null,
+    "timezone": "UTC"
+  },
+  "sortedCorrelations": {
+    "correlationOperators": [
+      "AND"
+    ],
+    "joins": []
+  }
+}

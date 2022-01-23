@@ -16,6 +16,7 @@ The library currently supports the following API endpoints:
 * [Restore logs](https://github.com/logzio/logzio_terraform_client/tree/master/restore_logs).
 * [Authentication groups](https://docs.logz.io/api/#tag/Authentication-groups).
 * [Grafana dashboards](https://docs.logz.io/api/#operation/createDashboard).
+* [Security rules](https://docs.logz.io/api/#tag/Security-rules).
 
 #### Contributing
 
@@ -31,8 +32,9 @@ The library currently supports the following API endpoints:
 ### Changelog
 
 - v1.11.0
+  - **Breaking Changes**: Refactor Users endpoint.
   - Add [Grafana dashboards](https://docs.logz.io/api/#operation/createDashboard).
-  - Refactor Users endpoint.
+  - Add [Security rules](https://docs.logz.io/api/#tag/Security-rules).
 - v1.10.0
     - Add [Authentication groups API](https://docs.logz.io/api/#tag/Authentication-groups).
     - Add tests to retrieve archive.

@@ -10,6 +10,7 @@ import (
 
 func TestIntegrationArchiveLogs_UpdateArchiveLogsS3KeysToIam(t *testing.T) {
 	underTest, err := setupArchiveLogsIntegrationTest()
+	defer test_utils.TestDoneTimeBuffer()
 
 	if assert.NoError(t, err) {
 		createArchive, err := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeS3)
@@ -35,6 +36,7 @@ func TestIntegrationArchiveLogs_UpdateArchiveLogsS3KeysToIam(t *testing.T) {
 
 func TestIntegrationArchiveLogs_UpdateArchiveLogsS3toBlob(t *testing.T) {
 	underTest, err := setupArchiveLogsIntegrationTest()
+	defer test_utils.TestDoneTimeBuffer()
 
 	if assert.NoError(t, err) {
 		createArchive, err := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeS3)
@@ -58,6 +60,7 @@ func TestIntegrationArchiveLogs_UpdateArchiveLogsS3toBlob(t *testing.T) {
 
 func TestIntegrationArchiveLogs_UpdateArchiveLogsDisable(t *testing.T) {
 	underTest, err := setupArchiveLogsIntegrationTest()
+	defer test_utils.TestDoneTimeBuffer()
 
 	if assert.NoError(t, err) {
 		createArchive, err := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeBlob)
@@ -81,6 +84,7 @@ func TestIntegrationArchiveLogs_UpdateArchiveLogsDisable(t *testing.T) {
 
 func TestIntegrationArchiveLogs_UpdateArchiveLogsIdNotFound(t *testing.T) {
 	underTest, err := setupArchiveLogsIntegrationTest()
+	defer test_utils.TestDoneTimeBuffer()
 
 	if assert.NoError(t, err) {
 		createArchive, err := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeBlob)
