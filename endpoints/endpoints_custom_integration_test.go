@@ -193,7 +193,7 @@ func TestIntegrationEndpoints_GetEndpointCustom(t *testing.T) {
 			assert.Equal(t, strings.ToLower(createEndpoint.Type), strings.ToLower(endpointFromGet.Type))
 			assert.Equal(t, createEndpoint.Url, endpointFromGet.Url)
 			assert.Equal(t, createEndpoint.Method, endpointFromGet.Method)
-			assert.Equal(t, createEndpoint.Headers, endpointFromGet.Headers)
+			assert.Equal(t, *createEndpoint.Headers, endpointFromGet.Headers)
 			assert.NotEmpty(t, endpointFromGet.BodyTemplate)
 		}
 	}
