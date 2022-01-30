@@ -35,7 +35,7 @@ type CreateOrUpdateEndpoint struct {
 	Description   string      `json:"description"`             // all
 	Url           string      `json:"url,omitempty"`           // slack, custom, serviceNow, microsoftTeams
 	Method        string      `json:"method,omitempty'"`       // custom
-	Headers       string      `json:"headers,omitempty"`       // custom
+	Headers       *string     `json:"headers,omitempty"`       // custom. Set to pointer to allow an empty string
 	BodyTemplate  interface{} `json:"bodyTemplate,omitempty"`  // custom
 	ServiceKey    string      `json:"serviceKey,omitempty"`    // pagerDuty
 	ApiToken      string      `json:"apiToken,omitempty"`      // bigPanda

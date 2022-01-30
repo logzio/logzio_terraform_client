@@ -14,7 +14,8 @@ func TestIntegrationEndpoints_CreateEndpointNoType(t *testing.T) {
 		createEndpoint.Title = createEndpoint.Title + "_create_no_type"
 		createEndpoint.Url = testsUrl
 		createEndpoint.Method = http.MethodPost
-		createEndpoint.Headers = "hello=there,header=two"
+		createEndpoint.Headers = new(string)
+		*createEndpoint.Headers = "hello=there,header=two"
 		createEndpoint.BodyTemplate = map[string]string{"hello": "there", "header": "two"}
 		endpoint, err := underTest.CreateEndpoint(createEndpoint)
 		assert.Error(t, err)
@@ -29,7 +30,8 @@ func TestIntegrationEndpoints_CreateEndpointCaseInsensitivity(t *testing.T) {
 		createEndpoint.Title = createEndpoint.Title + "_create_case_insensitive"
 		createEndpoint.Url = testsUrl
 		createEndpoint.Method = http.MethodPost
-		createEndpoint.Headers = "hello=there,header=two"
+		createEndpoint.Headers = new(string)
+		*createEndpoint.Headers = "hello=there,header=two"
 		createEndpoint.Type = "Custom"
 		createEndpoint.BodyTemplate = map[string]string{"hello": "there", "header": "two"}
 		endpoint, err := underTest.CreateEndpoint(createEndpoint)
