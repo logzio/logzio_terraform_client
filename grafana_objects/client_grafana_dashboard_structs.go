@@ -9,25 +9,25 @@ type DashboardMeta struct {
 }
 
 type DashboardObject struct {
-	Id            int            `json:"id,omitempty"`
-	Uid           string         `json:"uid"`
-	GnetId        *string        `json:"gnetId"`
-	Title         string         `json:"title"`
-	Tags          []string       `json:"tags"`
-	Style         string         `json:"style"`
-	Iteration     int            `json:"iteration"`
-	Links         []string       `json:"links"`
-	Timezone      string         `json:"timezone"`
-	Editable      bool           `json:"editable"`
-	GraphToolTip  int            `json:"graphTooltip"`
-	Time          TimeRange      `json:"time"`
-	Timepicker    *Timepicker    `json:"timepicker,omitempty"`
-	Templating    TemplatingList `json:"templating"`
-	Annotations   interface{}    `json:"annotations"`
-	Refresh       string         `json:"refresh"`
-	SchemaVersion int            `json:"schemaVersion"`
-	Version       int            `json:"version,omitempty"`
-	Panels        []interface{}  `json:"panels"`
+	Id            int             `json:"id,omitempty"`
+	Uid           string          `json:"uid"`
+	GnetId        *string         `json:"gnetId"`
+	Title         string          `json:"title"`
+	Tags          []string        `json:"tags"`
+	Style         string          `json:"style,omitempty"`
+	Iteration     int             `json:"iteration,omitempty"`
+	Links         []string        `json:"links"`
+	Timezone      string          `json:"timezone"`
+	Editable      bool            `json:"editable,omitempty"`
+	GraphToolTip  int             `json:"graphTooltip"`
+	Time          *TimeRange      `json:"time"`
+	Timepicker    *Timepicker     `json:"timepicker"`
+	Templating    *TemplatingList `json:"templating"`
+	Annotations   interface{}     `json:"annotations,omitempty"`
+	Refresh       string          `json:"refresh"`
+	SchemaVersion int             `json:"schemaVersion,omitempty"`
+	Version       int             `json:"version,omitempty"`
+	Panels        []interface{}   `json:"panels,omitempty"`
 }
 
 type TimeRange struct {
