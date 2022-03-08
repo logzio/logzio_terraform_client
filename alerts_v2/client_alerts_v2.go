@@ -198,8 +198,10 @@ func validateCreateAlertRequest(alert CreateAlertType) error {
 
 		if subComponent.Output.Columns != nil && len(subComponent.Output.Columns) > 0 {
 			for _, column := range subComponent.Output.Columns {
-				if !logzio_client.Contains(validSorts, column.Sort) {
-					return fmt.Errorf("sort must be one of %s", validSorts)
+				if len(column.Sort) > 0 {
+					if !logzio_client.Contains(validSorts, column.Sort) {
+						return fmt.Errorf("sort must be one of %s", validSorts)
+					}
 				}
 			}
 		}
