@@ -29,6 +29,8 @@ The library currently supports the following API endpoints:
 
 ### Changelog
 
+- v1.10.2
+  - Bug fix - **alerts_v2**: allow sending with columns without sort.
 - v1.10.1
   - Bug fix - **custom endpoint**: allow empty string for Headers field. 
 - v1.10.0
