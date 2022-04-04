@@ -30,7 +30,7 @@ type CreateOrUpdateSubAccount struct {
 	AccountName            string                                   `json:"accountName"`
 	Flexible               string                                   `json:"isFlexible,omitempty"` // boolean
 	ReservedDailyGB        float32                                  `json:"reservedDailyGB,omitempty"`
-	MaxDailyGB             float32                                  `json:"maxDailyGB"`
+	MaxDailyGB             *float32                                 `json:"maxDailyGB,omitempty"`
 	RetentionDays          int32                                    `json:"retentionDays"`
 	Searchable             string                                   `json:"searchable,omitempty"` // boolean
 	Accessible             string                                   `json:"accessible,omitempty"` // boolean

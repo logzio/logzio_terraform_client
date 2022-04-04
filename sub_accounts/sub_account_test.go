@@ -50,14 +50,17 @@ func setupSubAccountsIntegrationTest() (*sub_accounts.SubAccountClient, string, 
 }
 
 func getCreatrOrUpdateSubAccount(email string) sub_accounts.CreateOrUpdateSubAccount {
-	return sub_accounts.CreateOrUpdateSubAccount{
+	subAccount := sub_accounts.CreateOrUpdateSubAccount{
 		Email:                  email,
 		AccountName:            "tf_client_test",
-		MaxDailyGB:             1,
+		MaxDailyGB:             new(float32),
 		RetentionDays:          1,
 		Searchable:             strconv.FormatBool(false),
 		Accessible:             strconv.FormatBool(true),
 		SharingObjectsAccounts: []int32{},
 		DocSizeSetting:         strconv.FormatBool(false),
 	}
+
+	*subAccount.MaxDailyGB = 1
+	return subAccount
 }
