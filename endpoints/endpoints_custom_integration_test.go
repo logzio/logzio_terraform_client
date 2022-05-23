@@ -54,7 +54,7 @@ func TestIntegrationEndpoints_CreateEndpointCustomEmptyBodyTemplate(t *testing.T
 		createEndpoint.Method = http.MethodPost
 		createEndpoint.Headers = new(string)
 		*createEndpoint.Headers = "hello=there,header=two"
-		createEndpoint.BodyTemplate = nil
+		createEndpoint.BodyTemplate = map[string]interface{}{}
 		endpoint, err := underTest.CreateEndpoint(createEndpoint)
 		if assert.NoError(t, err) && assert.NotNil(t, endpoint) {
 			defer underTest.DeleteEndpoint(int64(endpoint.Id))
