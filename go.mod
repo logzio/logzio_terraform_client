@@ -1,6 +1,6 @@
 module github.com/logzio/logzio_terraform_client
 
-go 1.15
+go 1.16
 
 require (
 	github.com/hashicorp/go-hclog v0.15.0

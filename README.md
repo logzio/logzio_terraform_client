@@ -15,6 +15,7 @@ The library currently supports the following API endpoints:
 * [Archive logs](https://github.com/logzio/logzio_terraform_client/tree/master/archive_logs).
 * [Restore logs](https://github.com/logzio/logzio_terraform_client/tree/master/restore_logs).
 * [Authentication groups](https://docs.logz.io/api/#tag/Authentication-groups).
+* [Kibana Objects](https://docs.logz.io/api/#tag/Import-or-export-Kibana-objects).
 
 #### Contributing
 
@@ -29,6 +30,8 @@ The library currently supports the following API endpoints:
 
 ### Changelog
 
+- v1.11.0
+  - Add [Kibana Objects](https://docs.logz.io/api/#tag/Import-or-export-Kibana-objects).
 - v1.10.3
   - Bug fix - **sub_accounts**: omit maxDailyGb if needed.
 - v1.10.2
