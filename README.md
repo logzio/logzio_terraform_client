@@ -36,10 +36,10 @@ The library currently supports the following API endpoints:
   - Bug fix - **sub_accounts**: omit maxDailyGb if needed.
 - v1.10.2
   - Bug fix - **alerts_v2**: allow sending with columns without sort.
-- v1.10.1
-  - Bug fix - **custom endpoint**: allow empty string for Headers field.
 <details>
   <summary markdown="span">Exapnd to check old versions </summary>
+- v1.10.1
+  - Bug fix - **custom endpoint**: allow empty string for Headers field.
 - v1.10.0
     - Add [Authentication groups API](https://docs.logz.io/api/#tag/Authentication-groups).
     - Add tests to retrieve archive.
