@@ -77,7 +77,7 @@ func getImportRequest() (kibana_objects.KibanaObjectImportRequest, error) {
 	err := json.Unmarshal([]byte(source), &sourceObj)
 
 	hitsObj := map[string]interface{}{
-		"_index":  "logzioCustomerKibanaIndex7",
+		"_index":  "logzioCustomerIndex*",
 		"_type":   "_doc",
 		"_id":     "search:tf-client-test",
 		"_source": sourceObj,
