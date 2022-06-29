@@ -2,15 +2,25 @@ package kibana_objects
 
 import (
 	"fmt"
-
 	"github.com/hashicorp/go-hclog"
 	"github.com/logzio/logzio_terraform_client/client"
 )
 
+type ExportType string
+
+// Enums for exportType
 const (
-	kibanaObjectsExportServiceEndpoint = "%s/v1/kibana/export"
-	kibanaObjectsImportServiceEndpoint = "%s/v1/kibana/import"
-	loggerName                         = "logzio-client"
+	kibanaObjectsServiceEndpoint = "%s/v1/kibana"
+	loggerName                   = "logzio-client"
+
+	ExportTypeSearch        ExportType = "search"
+	ExportTypeVisualization ExportType = "visualization"
+	ExportTypeDashboard     ExportType = "dashboard"
+
+	exportKibanaObjectOperation = "ExportKibanaObject"
+	importKibanaObjectOperation = "ImportKibanaObject"
+
+	kibanaObjectResourceName = "kibana object"
 )
 
 type KibanaObjectsClient struct {
@@ -18,23 +28,41 @@ type KibanaObjectsClient struct {
 	logger hclog.Logger
 }
 
-// Creates a new entry point into the kibana objects functions, accepts the
-// user's logz.io API token and API base URL
-func New(apiToken string, baseUrl string) (*KibanaObjectsClient, error) {
+type KibanaObjectExportRequest struct {
+	Type ExportType `json:"type"` // Required
+}
+
+type KibanaObjectExportResponse struct {
+	KibanaVersion string        `json:"kibanaVersion"`
+	Hits          []interface{} `json:"hits"`
+}
+
+type KibanaObjectImportRequest struct {
+	KibanaVersion string                   `json:"kibanaVersion"`
+	Override      *bool                    `json:"override,omitempty"`
+	Hits          []map[string]interface{} `json:"hits"`
+}
+
+type KibanaObjectImportResponse struct {
+	Created []string `json:"created"`
+	Updated []string `json:"updated,omitempty"`
+	Ignored []string `json:"ignored,omitempty"`
+	Failed  []string `json:"failed,omitempty"`
+}
+
+func New(apiToken, baseUrl string) (*KibanaObjectsClient, error) {
 	if len(apiToken) == 0 {
 		return nil, fmt.Errorf("API token not defined")
 	}
 	if len(baseUrl) == 0 {
 		return nil, fmt.Errorf("Base URL not defined")
 	}
-
-	client := &KibanaObjectsClient{
+	c := &KibanaObjectsClient{
 		Client: client.New(apiToken, baseUrl),
-		logger: hclog.New(&hclog.LoggerOptions{
-			Level:      hclog.Debug,
-			Name:       loggerName,
-			JSONFormat: true,
-		}),
 	}
-	return client, nil
+	return c, nil
+}
+
+func (s ExportType) String() string {
+	return string(s)
 }
