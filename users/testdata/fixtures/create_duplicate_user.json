@@ -1,6 +1,6 @@
 {
   "errorCode": "user-management/USER_ALREADY_EXIST",
-  "message": "User test_create_user@test.co already exists.",
+  "message": "User some_test@test.test already exists.",
   "requestId": "0eaa27dc-d558-4333-b7ff-644a3e1722bb",
   "parameters": {
     "username": "test_create_user@test.co"

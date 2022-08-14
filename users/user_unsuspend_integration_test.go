@@ -7,12 +7,12 @@ import (
 	"time"
 )
 
-func TestIntegrationUsers_SuspendUser(t *testing.T) {
+func TestIntegrationUsers_UnsuspendUser(t *testing.T) {
 	underTest, err := setupUsersIntegrationTest()
 	defer test_utils.TestDoneTimeBuffer()
 	if assert.NoError(t, err) {
 		createUser, err := getCreateUser()
-		createUser.FullName += "-suspend"
+		createUser.FullName += "-unsuspend"
 		if assert.NoError(t, err) && assert.NotNil(t, createUser) {
 			resp, err := underTest.CreateUser(createUser)
 			if assert.NoError(t, err) && assert.NotNil(t, resp) {
@@ -27,17 +27,25 @@ func TestIntegrationUsers_SuspendUser(t *testing.T) {
 				assert.NoError(t, err)
 				assert.NotNil(t, user)
 				assert.False(t, user.Active)
+				err = underTest.UnSuspendUser(resp.Id)
+				assert.NoError(t, err)
+				time.Sleep(2 * time.Second)
+				// double check that the user was suspended
+				user, err = underTest.GetUser(resp.Id)
+				assert.NoError(t, err)
+				assert.NotNil(t, user)
+				assert.True(t, user.Active)
 			}
 		}
 	}
 }
 
-func TestIntegrationUsers_SuspendUserIdNotFound(t *testing.T) {
+func TestIntegrationUsers_UnsuspendUserIdNotFound(t *testing.T) {
 	underTest, err := setupUsersIntegrationTest()
 	defer test_utils.TestDoneTimeBuffer()
 	if assert.NoError(t, err) {
 		id := int32(1234)
-		err := underTest.SuspendUser(id)
+		err := underTest.UnSuspendUser(id)
 		assert.Error(t, err)
 	}
 }

@@ -10,97 +10,90 @@ import (
 	"testing"
 )
 
-const (
-	test_fullname = "Test User"
-)
-
-func TestUsers_CreateValidUser(t *testing.T) {
-	underTest, err, teardown := setupUsersTest()
-	assert.NoError(t, err)
+func TestUsers_CreateUser(t *testing.T) {
+	underTest, teardown, err := setupUsersTest()
 	defer teardown()
+	if assert.NoError(t, err) {
+		createUser, err := getCreateUser()
+		if assert.NoError(t, err) {
+			mux.HandleFunc(usersApiBasePath, func(w http.ResponseWriter, r *http.Request) {
+				assert.Equal(t, http.MethodPost, r.Method)
+				jsonBytes, _ := ioutil.ReadAll(r.Body)
+				var target users.CreateUpdateUser
+				err = json.Unmarshal(jsonBytes, &target)
+				assert.NoError(t, err)
+				assert.NotNil(t, target)
+				assert.NotEmpty(t, target.UserName)
+				assert.NotEmpty(t, target.FullName)
+				assert.NotZero(t, target.AccountId)
+				assert.NotEmpty(t, target.Role)
+				assert.Contains(t, []string{users.UserRoleReadOnly, users.UserRoleRegular, users.UserRoleAccountAdmin}, target.Role)
+				w.Header().Set("Content-Type", "application/json")
+				fmt.Fprint(w, fixture("create_user.json"))
+			})
 
-	mux.HandleFunc("/v1/user-management", func(w http.ResponseWriter, r *http.Request) {
-		jsonBytes, _ := ioutil.ReadAll(r.Body)
-		var target map[string]interface{}
-		err = json.Unmarshal(jsonBytes, &target)
-		assert.Contains(t, target, "username")
-		assert.Contains(t, target, "accountID")
-		assert.Contains(t, target, "fullName")
-		assert.Contains(t, target, "roles")
-
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprint(w, fixture("create_user.json"))
-		w.WriteHeader(http.StatusOK)
-	})
-
-	u := users.User{
-		Username:  "test_create_user@test.co",
-		Fullname:  "test create user",
-		AccountId: int64(123456),
-		Roles:     []int32{users.UserTypeUser},
+			resp, err := underTest.CreateUser(createUser)
+			assert.NoError(t, err)
+			assert.NotNil(t, resp)
+			assert.Equal(t, int32(123456), resp.Id)
+		}
 	}
-
-	user, err := underTest.CreateUser(u)
-	assert.NoError(t, err)
-	assert.NotNil(t, user)
 }
 
-func TestUsers_CreateDuplicateUser(t *testing.T) {
-	underTest, err, teardown := setupUsersTest()
+func TestUsers_CreateUserApiFail(t *testing.T) {
+	underTest, teardown, err := setupUsersTest()
 	defer teardown()
+	if assert.NoError(t, err) {
+		createUser, err := getCreateUser()
+		if assert.NoError(t, err) {
+			mux.HandleFunc(usersApiBasePath, func(w http.ResponseWriter, r *http.Request) {
+				assert.Equal(t, http.MethodPost, r.Method)
+				jsonBytes, _ := ioutil.ReadAll(r.Body)
+				var target users.CreateUpdateUser
+				err = json.Unmarshal(jsonBytes, &target)
+				assert.NoError(t, err)
+				assert.NotNil(t, target)
+				assert.NotEmpty(t, target.UserName)
+				assert.NotEmpty(t, target.FullName)
+				assert.NotZero(t, target.AccountId)
+				assert.NotEmpty(t, target.Role)
+				assert.Contains(t, []string{users.UserRoleReadOnly, users.UserRoleRegular, users.UserRoleAccountAdmin}, target.Role)
+				w.WriteHeader(http.StatusInternalServerError)
+			})
 
-	mux.HandleFunc("/v1/user-management", func(w http.ResponseWriter, r *http.Request) {
-		jsonBytes, _ := ioutil.ReadAll(r.Body)
-		var target map[string]interface{}
-		err = json.Unmarshal(jsonBytes, &target)
-		assert.Contains(t, target, "username")
-		assert.Contains(t, target, "accountID")
-		assert.Contains(t, target, "fullName")
-		assert.Contains(t, target, "roles")
-
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprint(w, fixture("create_duplicate_user.json"))
-		w.WriteHeader(http.StatusOK)
-	})
-
-	u := users.User{
-		Username:  "test_duplicate_user@test.co",
-		Fullname:  "test duplicate user",
-		AccountId: int64(123456),
-		Roles:     []int32{users.UserTypeUser},
+			resp, err := underTest.CreateUser(createUser)
+			assert.Error(t, err)
+			assert.Nil(t, resp)
+		}
 	}
-
-	user, err := underTest.CreateUser(u)
-	assert.Error(t, err)
-	assert.Nil(t, user)
 }
 
-func TestUsers_CreateUserInvalidEmail(t *testing.T) {
-	underTest, err, teardown := setupUsersTest()
+func TestUsers_CreateUserDuplicateUser(t *testing.T) {
+	underTest, teardown, err := setupUsersTest()
 	defer teardown()
+	if assert.NoError(t, err) {
+		createUser, err := getCreateUser()
+		createUser.FullName += "-dup"
+		if assert.NoError(t, err) {
+			mux.HandleFunc(usersApiBasePath, func(w http.ResponseWriter, r *http.Request) {
+				assert.Equal(t, http.MethodPost, r.Method)
+				jsonBytes, _ := ioutil.ReadAll(r.Body)
+				var target users.CreateUpdateUser
+				err = json.Unmarshal(jsonBytes, &target)
+				assert.NoError(t, err)
+				assert.NotNil(t, target)
+				assert.NotEmpty(t, target.UserName)
+				assert.NotEmpty(t, target.FullName)
+				assert.NotZero(t, target.AccountId)
+				assert.NotEmpty(t, target.Role)
+				assert.Contains(t, []string{users.UserRoleReadOnly, users.UserRoleRegular, users.UserRoleAccountAdmin}, target.Role)
+				w.WriteHeader(http.StatusBadRequest)
+				fmt.Fprint(w, fixture("create_duplicate_user.json"))
+			})
 
-	mux.HandleFunc("/v1/user-management", func(w http.ResponseWriter, r *http.Request) {
-		jsonBytes, _ := ioutil.ReadAll(r.Body)
-		var target map[string]interface{}
-		err = json.Unmarshal(jsonBytes, &target)
-		assert.Contains(t, target, "username")
-		assert.Contains(t, target, "accountID")
-		assert.Contains(t, target, "fullName")
-		assert.Contains(t, target, "roles")
-
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprint(w, fixture("create_invalid_email.json"))
-		w.WriteHeader(http.StatusOK)
-	})
-
-	u := users.User{
-		Username:  "AnInvalidEmailAddress",
-		Fullname:  "test duplicate user",
-		AccountId: int64(123456),
-		Roles:     []int32{users.UserTypeUser},
+			resp, err := underTest.CreateUser(createUser)
+			assert.Error(t, err)
+			assert.Nil(t, resp)
+		}
 	}
-
-	user, err := underTest.CreateUser(u)
-	assert.Error(t, err)
-	assert.Nil(t, user)
 }
