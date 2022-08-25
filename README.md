@@ -30,7 +30,7 @@ The library currently supports the following API endpoints:
 
 ### Changelog
 
-- v1.12.0
+- v1.12.0 [WIP]
   - Refactor `users`, adjust to the recent API fields.
 - v1.11.0
   - Add [Kibana Objects](https://docs.logz.io/api/#tag/Import-or-export-Kibana-objects).
