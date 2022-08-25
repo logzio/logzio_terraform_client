@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"time"
 )
 
@@ -83,6 +84,7 @@ func getInitiateRestoreOperationIntegrationTest() restore_logs.InitiateRestore {
 	hourAgo := currentTime.Add(-time.Hour)
 	return restore_logs.InitiateRestore{
 		AccountName: fmt.Sprintf("test-account-%s", currentTime.Format("2006-01-02,15:04:05")),
+		UserName:    os.Getenv(test_utils.EnvLogzioEmail),
 		StartTime:   hourAgo.Unix(),
 		EndTime:     currentTime.Unix(),
 	}
@@ -91,6 +93,7 @@ func getInitiateRestoreOperationIntegrationTest() restore_logs.InitiateRestore {
 func getInitiateRestoreOperationTest() restore_logs.InitiateRestore {
 	return restore_logs.InitiateRestore{
 		AccountName: "test_account",
+		UserName:    "test@test.com",
 		StartTime:   1634437185,
 		EndTime:     1634444385,
 	}
