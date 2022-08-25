@@ -2,9 +2,7 @@
   "id": 123456,
   "username": "test_create_user@test.co",
   "fullName": "test create user",
-  "accountID": 123456,
-  "roles": [
-    2
-  ],
+  "accountID": 1234567,
+  "role": "USER_ROLE_READONLY",
   "active": true
 }

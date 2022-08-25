@@ -2,74 +2,92 @@ package users
 
 import (
 	"fmt"
+	logzio_client "github.com/logzio/logzio_terraform_client"
 	"github.com/logzio/logzio_terraform_client/client"
 )
 
 const (
-	userServiceEndpoint = "%s/v1/user-management"
+	userServiceEndpoint  = "%s/v1/user-management"
+	UserRoleReadOnly     = "USER_ROLE_READONLY"
+	UserRoleRegular      = "USER_ROLE_REGULAR"
+	UserRoleAccountAdmin = "USER_ROLE_ACCOUNT_ADMIN"
+
+	createUserAction    = "CreateUpdateUser"
+	deleteUserAction    = "DeleteUser"
+	getUserAction       = "GetUser"
+	listUserAction      = "ListUser"
+	suspendUserAction   = "SuspendUser"
+	unsuspendUserAction = "UnsuspendUser"
+	updateUserAction    = "UpdateUser"
+
+	userResourceName = "user"
 )
 
-const (
-	fldUserId        string = "id"
-	fldUserUsername  string = "username"
-	fldUserFullname  string = "fullName"
-	fldUserAccountId string = "accountID"
-	fldUserRoles     string = "roles"
-	fldUserActive    string = "active"
-)
-
-const (
-	UserTypeUser  int32 = 2
-	UserTypeAdmin int32 = 3
-)
-
-type User struct {
-	Id        int64
-	Username  string
-	Fullname  string
-	AccountId int64
-	Roles     []int32
-	Active    bool
+type CreateUpdateUser struct {
+	UserName  string `json:"username"`
+	FullName  string `json:"fullName"`
+	AccountId int32  `json:"accountID"`
+	Role      string `json:"role"`
 }
 
-type UserError struct {
-	errorCode  string
-	message    string
-	requestId  string
-	parameters map[string]interface{}
+type ResponseId struct {
+	Id int32 `json:"id"`
+}
+
+type User struct {
+	Id        int32  `json:"id"`
+	UserName  string `json:"username"`
+	FullName  string `json:"fullName"`
+	AccountId int32  `json:"accountID"`
+	Role      string `json:"role"`
+	Active    bool   `json:"active"`
 }
 
 type UsersClient struct {
 	*client.Client
 }
 
-// Creates a new entry point into the users functions, accepts the user's logz.io API token and account Id
-func New(apiToken, baseUrl string) (*UsersClient, error) {
+// New Creates a new entry point into the users functions, accepts the user's logz.io API token and base url
+func New(apiToken string, baseUrl string) (*UsersClient, error) {
 	if len(apiToken) == 0 {
 		return nil, fmt.Errorf("API token not defined")
 	}
 	if len(baseUrl) == 0 {
 		return nil, fmt.Errorf("Base URL not defined")
 	}
+
 	c := &UsersClient{
 		Client: client.New(apiToken, baseUrl),
 	}
 	return c, nil
 }
 
-func jsonToUser(json map[string]interface{}) User {
-	user := User{
-		Id:        int64(json[fldUserId].(float64)),
-		Username:  json[fldUserUsername].(string),
-		Fullname:  json[fldUserFullname].(string),
-		AccountId: int64(json[fldUserAccountId].(float64)),
-		Active:    json[fldUserActive].(bool),
+func validateCreateUpdateUser(createUser CreateUpdateUser) error {
+	if len(createUser.UserName) == 0 {
+		return fmt.Errorf("UserName must be set")
 	}
-	roles := json[fldUserRoles].([]interface{})
-	var rs []int32
-	for _, num := range roles {
-		rs = append(rs, int32(num.(float64)))
+
+	if len(createUser.FullName) == 0 {
+		return fmt.Errorf("FullName must be set")
 	}
-	user.Roles = rs
-	return user
+
+	if createUser.AccountId == 0 {
+		return fmt.Errorf("AccountId must be set")
+	}
+
+	if len(createUser.Role) == 0 {
+		return fmt.Errorf("Role must be set")
+	}
+
+	validRoles := []string{
+		UserRoleReadOnly,
+		UserRoleRegular,
+		UserRoleAccountAdmin,
+	}
+
+	if !logzio_client.Contains(validRoles, createUser.Role) {
+		return fmt.Errorf("Role must be one of %s", validRoles)
+	}
+
+	return nil
 }

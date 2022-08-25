@@ -4,37 +4,53 @@ import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"net/http"
+	"strconv"
 	"testing"
 )
 
 func TestUsers_DeleteUser(t *testing.T) {
-	underTest, err, teardown := setupUsersTest()
+	underTest, teardown, err := setupUsersTest()
 	defer teardown()
+	if assert.NoError(t, err) {
+		id := int32(123456)
+		mux.HandleFunc(usersApiBasePath+"/", func(w http.ResponseWriter, r *http.Request) {
+			assert.Contains(t, r.URL.String(), strconv.FormatInt(int64(id), 10))
+			w.WriteHeader(http.StatusNoContent)
+		})
 
-	mux.HandleFunc("/v1/user-management/", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		if r.Method == http.MethodDelete {
-			fmt.Fprint(w, fixture("delete_valid_user.json"))
-		}
-		w.WriteHeader(http.StatusOK)
-	})
-
-	err = underTest.DeleteUser(int64(123456))
-	assert.NoError(t, err)
+		err = underTest.DeleteUser(id)
+		assert.NoError(t, err)
+	}
 }
 
-func TestUsers_DeleteNotExistantUser(t *testing.T) {
-	underTest, err, teardown := setupUsersTest()
+func TestUsers_DeleteUserIdNotFound(t *testing.T) {
+	underTest, teardown, err := setupUsersTest()
 	defer teardown()
-
-	mux.HandleFunc("/v1/user-management/", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		if r.Method == http.MethodDelete {
+	if assert.NoError(t, err) {
+		id := int32(123456)
+		mux.HandleFunc(usersApiBasePath+"/", func(w http.ResponseWriter, r *http.Request) {
+			assert.Contains(t, r.URL.String(), strconv.FormatInt(int64(id), 10))
+			w.WriteHeader(http.StatusUnauthorized)
 			fmt.Fprint(w, fixture("delete_not_exist.json"))
-		}
-		w.WriteHeader(http.StatusOK)
-	})
 
-	err = underTest.DeleteUser(int64(123456))
-	assert.Error(t, err)
+		})
+
+		err = underTest.DeleteUser(id)
+		assert.Error(t, err)
+	}
+}
+
+func TestUsers_DeleteUserApiFail(t *testing.T) {
+	underTest, teardown, err := setupUsersTest()
+	defer teardown()
+	if assert.NoError(t, err) {
+		id := int32(123456)
+		mux.HandleFunc(usersApiBasePath+"/", func(w http.ResponseWriter, r *http.Request) {
+			assert.Contains(t, r.URL.String(), strconv.FormatInt(int64(id), 10))
+			w.WriteHeader(http.StatusInternalServerError)
+		})
+
+		err = underTest.DeleteUser(id)
+		assert.Error(t, err)
+	}
 }

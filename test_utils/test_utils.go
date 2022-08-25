@@ -4,23 +4,26 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"time"
 )
 
 const (
-	EnvLogzioBaseUrl = "LOGZIO_BASE_URL"
-	EnvLogzioApiToken string = "LOGZIO_API_TOKEN"
-	EnvLogzioAccountId string = "LOGZIO_ACCOUNT_ID"
-	LogzioBaseUrl string = "https://api.logz.io"
-	EnvLogzioEmail string = "LOGZIO_EMAIL"
-	EnvS3Path string = "S3_PATH"
-	EnvAwsAccessKey string = "AWS_ACCESS_KEY"
-	EnvAwsSecretKey string = "AWS_SECRET_KEY"
-	EnvAwsArn string = "AWS_ARN"
-	EnvAzureTenantId string = "AZURE_TENANT_ID"
-	EnvAzureClientId string = "AZURE_CLIENT_ID"
-	EnvAzureClientSecret string = "AZURE_CLIENT_SECRET"
-	EnvAzureAccountName string = "AZURE_ACCOUNT_NAME"
+	EnvLogzioBaseUrl             = "LOGZIO_BASE_URL"
+	EnvLogzioApiToken     string = "LOGZIO_API_TOKEN"
+	EnvLogzioAccountId    string = "LOGZIO_ACCOUNT_ID"
+	LogzioBaseUrl         string = "https://api.logz.io"
+	EnvLogzioEmail        string = "LOGZIO_EMAIL"
+	EnvS3Path             string = "S3_PATH"
+	EnvAwsAccessKey       string = "AWS_ACCESS_KEY"
+	EnvAwsSecretKey       string = "AWS_SECRET_KEY"
+	EnvAwsArn             string = "AWS_ARN"
+	EnvAzureTenantId      string = "AZURE_TENANT_ID"
+	EnvAzureClientId      string = "AZURE_CLIENT_ID"
+	EnvAzureClientSecret  string = "AZURE_CLIENT_SECRET"
+	EnvAzureAccountName   string = "AZURE_ACCOUNT_NAME"
 	EnvAzureContainerName string = "AZURE_CONTAINER_NAME"
+
+	TestTimeSeparator = time.Millisecond * 500
 )
 
 func GetApiToken() (string, error) {
@@ -125,4 +128,8 @@ func GetAzureContainerName() (string, error) {
 		return tenantId, nil
 	}
 	return "", fmt.Errorf("%s env var not specified", EnvAzureContainerName)
+}
+
+func TestDoneTimeBuffer() {
+	time.Sleep(TestTimeSeparator)
 }
