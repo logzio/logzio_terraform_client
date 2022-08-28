@@ -30,8 +30,10 @@ The library currently supports the following API endpoints:
 
 ### Changelog
 
-- v1.12.0 [WIP]
+- v1.12.0
+  - Upgrade to Go 1.18.
   - Refactor `users`, adjust to the recent API fields.
+  - Add field `UserName` to `restore` initiate request, to match recent API fields.
 - v1.11.0
   - Add [Kibana Objects](https://docs.logz.io/api/#tag/Import-or-export-Kibana-objects).
 - v1.10.3

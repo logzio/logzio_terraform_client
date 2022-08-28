@@ -30,6 +30,7 @@ type RestoreClient struct {
 
 type InitiateRestore struct {
 	AccountName string `json:"accountName"` // Name of the restored account
+	UserName    string `json:"username"`
 	StartTime   int64  `json:"startTime"`
 	EndTime     int64  `json:"endTime"`
 }

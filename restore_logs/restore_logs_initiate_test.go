@@ -23,6 +23,7 @@ func TestRestoreLogs_InitiateRestore(t *testing.T) {
 			assert.NoError(t, err)
 			assert.NotNil(t, target)
 			assert.NotEmpty(t, target.AccountName)
+			assert.NotEmpty(t, target.UserName)
 			assert.NotZero(t, target.StartTime)
 			assert.NotZero(t, target.EndTime)
 			w.Header().Set("Content-Type", "application/json")
