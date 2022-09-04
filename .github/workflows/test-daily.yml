@@ -2,8 +2,8 @@ name: Daily test
 
 on:
   schedule:
-    # Every day at 07:00 (AM)
-    - cron: "0 7 * * *"
+    # Every day at 07:00 (AM), Sun-Thu
+    - cron: "0 7 * * 0-4"
 
 
 jobs:
