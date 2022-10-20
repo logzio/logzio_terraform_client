@@ -30,18 +30,20 @@ The library currently supports the following API endpoints:
 
 ### Changelog
 
+- v1.13.0
+  - Bug fix - **sub_accounts**: field `ReservedDailyGB` in requests can be 0.
 - v1.12.0
   - Upgrade to Go 1.18.
   - Refactor `users`, adjust to the recent API fields.
   - Add field `UserName` to `restore` initiate request, to match recent API fields.
 - v1.11.0
   - Add [Kibana Objects](https://docs.logz.io/api/#tag/Import-or-export-Kibana-objects).
-- v1.10.3
-  - Bug fix - **sub_accounts**: omit maxDailyGb if needed.
 
 <details>
   <summary markdown="span">Exapnd to check old versions </summary>
 
+- v1.10.3
+  - Bug fix - **sub_accounts**: omit maxDailyGb if needed.
 - v1.10.2
   - Bug fix - **alerts_v2**: allow sending with columns without sort.
 - v1.10.1

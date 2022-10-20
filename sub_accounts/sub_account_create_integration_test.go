@@ -77,7 +77,28 @@ this test will be tested locally by uncommenting it, and not as part of the auto
 //		createSubAccount := getCreatrOrUpdateSubAccount(email)
 //		createSubAccount.AccountName = createSubAccount.AccountName + "_create_flexible"
 //		createSubAccount.Flexible = strconv.FormatBool(true)
-//		createSubAccount.ReservedDailyGB = 1
+//		createSubAccount.ReservedDailyGB = new(float32)
+//		*createSubAccount.ReservedDailyGB = 1
+//		subAccount, err := underTest.CreateSubAccount(createSubAccount)
+//
+//		if assert.NoError(t, err) && assert.NotNil(t, subAccount) {
+//			time.Sleep(4 * time.Second)
+//			defer underTest.DeleteSubAccount(int64(subAccount.AccountId))
+//			assert.NotEmpty(t, subAccount.AccountToken)
+//			assert.NotEmpty(t, subAccount.AccountId)
+//		}
+//	}
+//}
+//
+//func TestIntegrationSubAccount_CreateSubAccountFlexibleReservedZero(t *testing.T) {
+//	underTest, email, err := setupSubAccountsIntegrationTest()
+//
+//	if assert.NoError(t, err) {
+//		createSubAccount := getCreatrOrUpdateSubAccount(email)
+//		createSubAccount.AccountName = createSubAccount.AccountName + "_create_flexible"
+//		createSubAccount.Flexible = strconv.FormatBool(true)
+//		createSubAccount.ReservedDailyGB = new(float32)
+//		*createSubAccount.ReservedDailyGB = 0
 //		subAccount, err := underTest.CreateSubAccount(createSubAccount)
 //
 //		if assert.NoError(t, err) && assert.NotNil(t, subAccount) {

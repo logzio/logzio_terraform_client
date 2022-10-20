@@ -84,7 +84,7 @@ func validateCreateSubAccount(createSubAccount CreateOrUpdateSubAccount) error {
 			return fmt.Errorf("flexible field is not set to boolean value")
 		}
 	} else {
-		if createSubAccount.ReservedDailyGB != 0 {
+		if createSubAccount.ReservedDailyGB != nil {
 			return fmt.Errorf("when isFlexible=false reservedDailyGB should be 0, empty, or emitted")
 		}
 	}
