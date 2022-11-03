@@ -8,3 +8,4 @@ vendor
 # swagger server
 swagger
 
+.DS_store
