@@ -12,7 +12,7 @@ func TestIntegrationSubAccount_CreateSubAccount(t *testing.T) {
 	underTest, email, err := setupSubAccountsIntegrationTest()
 
 	if assert.NoError(t, err) {
-		createSubAccount := getCreatrOrUpdateSubAccount(email)
+		createSubAccount := getCreateOrUpdateSubAccount(email)
 		createSubAccount.AccountName = createSubAccount.AccountName + "_create"
 
 		subAccount, err := underTest.CreateSubAccount(createSubAccount)
@@ -32,7 +32,7 @@ func TestIntegrationSubAccount_CreateSubAccountWithSharingAccount(t *testing.T) 
 		accountId, err := test_utils.GetAccountId()
 		assert.NoError(t, err)
 
-		createSubAccount := getCreatrOrUpdateSubAccount(email)
+		createSubAccount := getCreateOrUpdateSubAccount(email)
 		createSubAccount.AccountName = createSubAccount.AccountName + "_create_with_sharing_account"
 		createSubAccount.SharingObjectsAccounts = []int32{int32(accountId)}
 		subAccount, err := underTest.CreateSubAccount(createSubAccount)
@@ -49,7 +49,7 @@ func TestIntegrationSubAccount_CreateSubAccountWithUtilization(t *testing.T) {
 	underTest, email, err := setupSubAccountsIntegrationTest()
 
 	if assert.NoError(t, err) {
-		createSubAccount := getCreatrOrUpdateSubAccount(email)
+		createSubAccount := getCreateOrUpdateSubAccount(email)
 		createSubAccount.AccountName = createSubAccount.AccountName + "_create_utilization"
 		createSubAccount.UtilizationSettings.UtilizationEnabled = strconv.FormatBool(true)
 		createSubAccount.UtilizationSettings.FrequencyMinutes = 5
@@ -74,7 +74,7 @@ this test will be tested locally by uncommenting it, and not as part of the auto
 //	underTest, email, err := setupSubAccountsIntegrationTest()
 //
 //	if assert.NoError(t, err) {
-//		createSubAccount := getCreatrOrUpdateSubAccount(email)
+//		createSubAccount := getCreateOrUpdateSubAccount(email)
 //		createSubAccount.AccountName = createSubAccount.AccountName + "_create_flexible"
 //		createSubAccount.Flexible = strconv.FormatBool(true)
 //		createSubAccount.ReservedDailyGB = new(float32)
@@ -94,7 +94,7 @@ this test will be tested locally by uncommenting it, and not as part of the auto
 //	underTest, email, err := setupSubAccountsIntegrationTest()
 //
 //	if assert.NoError(t, err) {
-//		createSubAccount := getCreatrOrUpdateSubAccount(email)
+//		createSubAccount := getCreateOrUpdateSubAccount(email)
 //		createSubAccount.AccountName = createSubAccount.AccountName + "_create_flexible"
 //		createSubAccount.Flexible = strconv.FormatBool(true)
 //		createSubAccount.ReservedDailyGB = new(float32)
@@ -114,7 +114,7 @@ func TestIntegrationSubAccount_CreateSubAccountInvalidMail(t *testing.T) {
 	underTest, _, err := setupSubAccountsIntegrationTest()
 
 	if assert.NoError(t, err) {
-		createSubAccount := getCreatrOrUpdateSubAccount("invalid@mail.test")
+		createSubAccount := getCreateOrUpdateSubAccount("invalid@mail.test")
 		subAccount, err := underTest.CreateSubAccount(createSubAccount)
 
 		assert.Error(t, err)
@@ -126,7 +126,7 @@ func TestIntegrationSubAccount_CreateSubAccountNoMail(t *testing.T) {
 	underTest, _, err := setupSubAccountsIntegrationTest()
 
 	if assert.NoError(t, err) {
-		createSubAccount := getCreatrOrUpdateSubAccount("")
+		createSubAccount := getCreateOrUpdateSubAccount("")
 		subAccount, err := underTest.CreateSubAccount(createSubAccount)
 
 		assert.Error(t, err)
@@ -138,7 +138,7 @@ func TestIntegrationSubAccount_CreateSubAccountNoAccountName(t *testing.T) {
 	underTest, email, err := setupSubAccountsIntegrationTest()
 
 	if assert.NoError(t, err) {
-		createSubAccount := getCreatrOrUpdateSubAccount(email)
+		createSubAccount := getCreateOrUpdateSubAccount(email)
 		createSubAccount.AccountName = ""
 		subAccount, err := underTest.CreateSubAccount(createSubAccount)
 
@@ -151,7 +151,7 @@ func TestIntegrationSubAccount_CreateSubAccountNoRetention(t *testing.T) {
 	underTest, email, err := setupSubAccountsIntegrationTest()
 
 	if assert.NoError(t, err) {
-		createSubAccount := getCreatrOrUpdateSubAccount(email)
+		createSubAccount := getCreateOrUpdateSubAccount(email)
 		createSubAccount.AccountName = createSubAccount.AccountName + "_no_retention"
 		createSubAccount.RetentionDays = 0
 		subAccount, err := underTest.CreateSubAccount(createSubAccount)

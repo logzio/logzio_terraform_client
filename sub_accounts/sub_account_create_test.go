@@ -28,7 +28,7 @@ func TestSubAccount_CreateValidSubAccount(t *testing.T) {
 			fmt.Fprint(w, fixture("create_subaccount.json"))
 		})
 
-		createSubAccount := getCreatrOrUpdateSubAccount("test.user@test.user")
+		createSubAccount := getCreateOrUpdateSubAccount("test.user@test.user")
 		createSubAccount.AccountName = createSubAccount.AccountName + "_test_create"
 		subAccount, err := underTest.CreateSubAccount(createSubAccount)
 		assert.NoError(t, err)
@@ -49,7 +49,7 @@ func TestSubAccount_CreateValidSubAccountAPIFail(t *testing.T) {
 			fmt.Fprint(w, fixture("create_subaccount_failed.txt"))
 		})
 
-		createSubAccount := getCreatrOrUpdateSubAccount("test.user@test.user")
+		createSubAccount := getCreateOrUpdateSubAccount("test.user@test.user")
 		createSubAccount.AccountName = createSubAccount.AccountName + "_test_create"
 		subAccount, err := underTest.CreateSubAccount(createSubAccount)
 		assert.Error(t, err)
@@ -61,7 +61,7 @@ func TestSubAccount_CreateSubAccountNoEmail(t *testing.T) {
 	underTest, err, teardown := setupSubAccountsTest()
 	defer teardown()
 
-	createSubAccount := getCreatrOrUpdateSubAccount("")
+	createSubAccount := getCreateOrUpdateSubAccount("")
 	createSubAccount.AccountName = createSubAccount.AccountName + "_test_create_no_email"
 	subAccount, err := underTest.CreateSubAccount(createSubAccount)
 	assert.Error(t, err)
@@ -72,7 +72,7 @@ func TestSubAccount_CreateSubAccountNoAccountName(t *testing.T) {
 	underTest, err, teardown := setupSubAccountsTest()
 	defer teardown()
 
-	createSubAccount := getCreatrOrUpdateSubAccount("test.user@test.user")
+	createSubAccount := getCreateOrUpdateSubAccount("test.user@test.user")
 	createSubAccount.AccountName = ""
 	subAccount, err := underTest.CreateSubAccount(createSubAccount)
 	assert.Error(t, err)
@@ -83,7 +83,7 @@ func TestSubAccount_CreateSubAccountNoRetentionDays(t *testing.T) {
 	underTest, err, teardown := setupSubAccountsTest()
 	defer teardown()
 
-	createSubAccount := getCreatrOrUpdateSubAccount("test.user@test.user")
+	createSubAccount := getCreateOrUpdateSubAccount("test.user@test.user")
 	createSubAccount.AccountName = createSubAccount.AccountName + "_test_create_no_retention"
 	createSubAccount.RetentionDays = 0
 	subAccount, err := underTest.CreateSubAccount(createSubAccount)
@@ -95,7 +95,7 @@ func TestSubAccount_CreateSubAccountNoSharingAccount(t *testing.T) {
 	underTest, err, teardown := setupSubAccountsTest()
 	defer teardown()
 
-	createSubAccount := getCreatrOrUpdateSubAccount("test.user@test.user")
+	createSubAccount := getCreateOrUpdateSubAccount("test.user@test.user")
 	createSubAccount.AccountName = createSubAccount.AccountName + "_test_create_no_sharing"
 	createSubAccount.SharingObjectsAccounts = nil
 	subAccount, err := underTest.CreateSubAccount(createSubAccount)

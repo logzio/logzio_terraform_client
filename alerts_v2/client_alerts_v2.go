@@ -65,6 +65,7 @@ type CreateAlertType struct {
 	SubComponents          []SubAlert          `json:"subComponents,omitempty"`
 	Correlations           SubAlertCorrelation `json:"correlations,omitempty"`
 	Enabled                string              `json:"enabled,omitempty"`
+	Schedule               ScheduleObj         `json:"schedule,omitempty"`
 }
 
 type AlertOutput struct {
@@ -128,6 +129,16 @@ type SubAlertCorrelation struct {
 	Joins                []map[string]string `json:"joins,omitempty"`
 }
 
+type ScheduleObj struct {
+	CronExpression string `json:"cronExpression,omitempty"`
+	Timezone       string `json:"timezone,omitempty"`
+}
+
+//type ScheduleObj struct {
+//	Cron     string `json:"cron,omitempty"`
+//	Timezone string `json:"timezone,omitempty"`
+//}
+
 type AlertType struct {
 	AlertId                int64               `json:"id"`
 	UpdatedAt              string              `json:"updatedAt"`
@@ -142,6 +153,7 @@ type AlertType struct {
 	SearchTimeFrameMinutes int                 `json:"searchTimeFrameMinutes"`
 	SubComponents          []SubAlert          `json:"subComponents"`
 	Correlations           SubAlertCorrelation `json:"correlations,omitempty"`
+	Schedule               ScheduleObj         `json:"schedule,omitempty"`
 }
 
 func New(apiToken, baseUrl string) (*AlertsV2Client, error) {

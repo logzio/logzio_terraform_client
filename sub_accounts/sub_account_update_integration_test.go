@@ -10,7 +10,7 @@ func TestIntegrationSubAccount_UpdateSubAccount(t *testing.T) {
 	underTest, email, err := setupSubAccountsIntegrationTest()
 
 	if assert.NoError(t, err) {
-		createSubAccount := getCreatrOrUpdateSubAccount(email)
+		createSubAccount := getCreateOrUpdateSubAccount(email)
 
 		subAccount, err := underTest.CreateSubAccount(createSubAccount)
 		if assert.NoError(t, err) && assert.NotNil(t, subAccount) {
@@ -35,7 +35,7 @@ func TestIntegrationSubAccount_UpdateSubAccount(t *testing.T) {
 func TestIntegrationSubAccount_UpdateSubAccountIdNotExists(t *testing.T) {
 	underTest, email, err := setupSubAccountsIntegrationTest()
 	if assert.NoError(t, err) {
-		createSubAccount := getCreatrOrUpdateSubAccount(email)
+		createSubAccount := getCreateOrUpdateSubAccount(email)
 		if assert.NoError(t, err) && assert.NotNil(t, createSubAccount) {
 			err = underTest.UpdateSubAccount(int64(1234567), createSubAccount)
 			assert.Error(t, err)

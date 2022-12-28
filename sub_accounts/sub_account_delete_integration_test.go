@@ -9,7 +9,7 @@ import (
 func TestIntegrationSubAccount_DeleteSubAccount(t *testing.T) {
 	underTest, email, err := setupSubAccountsIntegrationTest()
 	if assert.NoError(t, err) {
-		createSubAccount := getCreatrOrUpdateSubAccount(email)
+		createSubAccount := getCreateOrUpdateSubAccount(email)
 		createSubAccount.AccountName = createSubAccount.AccountName + "_delete"
 		subAccount, err := underTest.CreateSubAccount(createSubAccount)
 		if assert.NoError(t, err) && assert.NotNil(t, subAccount) {
