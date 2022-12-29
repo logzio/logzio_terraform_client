@@ -134,11 +134,6 @@ type ScheduleObj struct {
 	Timezone       string `json:"timezone,omitempty"`
 }
 
-//type ScheduleObj struct {
-//	Cron     string `json:"cron,omitempty"`
-//	Timezone string `json:"timezone,omitempty"`
-//}
-
 type AlertType struct {
 	AlertId                int64               `json:"id"`
 	UpdatedAt              string              `json:"updatedAt"`
