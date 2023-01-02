@@ -29,7 +29,7 @@ func TestSubAccount_UpdateValidSubAccount(t *testing.T) {
 		w.WriteHeader(http.StatusNoContent)
 	})
 
-	updateSubAccount := getCreatrOrUpdateSubAccount("test@user.test")
+	updateSubAccount := getCreateOrUpdateSubAccount("test@user.test")
 	err = underTest.UpdateSubAccount(subAccountId, updateSubAccount)
 	assert.NoError(t, err)
 }
@@ -53,7 +53,7 @@ func TestSubAccount_UpdateSubAccountIdNotFound(t *testing.T) {
 		fmt.Fprint(w, fixture("update_subaccount_not_fount.txt"))
 	})
 
-	updateSubAccount := getCreatrOrUpdateSubAccount("test@user.test")
+	updateSubAccount := getCreateOrUpdateSubAccount("test@user.test")
 	err = underTest.UpdateSubAccount(subAccountId, updateSubAccount)
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "failed with missing sub account")

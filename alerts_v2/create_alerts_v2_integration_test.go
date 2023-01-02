@@ -185,3 +185,21 @@ func TestIntegrationAlertsV2_CreateAlertOutputTypeTableSortAsc(t *testing.T) {
 		}
 	}
 }
+
+func TestIntegrationAlertsV2_CreateAlertWithSchedule(t *testing.T) {
+	underTest, err := setupAlertsV2IntegrationTest()
+
+	if assert.NoError(t, err) {
+		createAlert := getCreateAlertType()
+		createAlert.Title = "test alerts v2 with schedule"
+		createAlert.Schedule.CronExpression = "0 0/5 9-17 ? * * *"
+		createAlert.Schedule.Timezone = "Asia/Jerusalem"
+		alert, err := underTest.CreateAlert(createAlert)
+
+		time.Sleep(4 * time.Second)
+		if assert.NoError(t, err) && assert.NotNil(t, alert) {
+			assert.Equal(t, createAlert.Schedule.Timezone, alert.Schedule.Timezone)
+			defer underTest.DeleteAlert(alert.AlertId)
+		}
+	}
+}
