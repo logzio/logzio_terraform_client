@@ -6,15 +6,13 @@ import (
 )
 
 const (
-	s3BucketsServiceEndpoint         string = "%s/v1/log-shipping/s3-buckets"
-	createS3BucketConnectorOperation        = "CreateS3BucketConnector"
-	deleteDropFilterOperation               = "DeleteDropFilter"
-	retrieveDropFiltersOperation            = "RetrieveDropFilters"
+	s3BucketsServiceEndpoint string = "%s/v1/log-shipping/s3-buckets"
 
 	s3BucketConnectorResourceName = "s3 bucket connector"
 
 	operationCreateS3BucketConnector = "CreateS3BucketConnector"
 	operationGetS3BucketConnector    = "GetS3BucketConnector"
+	operationListS3BucketConnector   = "ListS3BucketConnector"
 )
 
 type S3BucketsConnectorClient struct {
