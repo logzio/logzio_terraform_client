@@ -14,7 +14,7 @@ const (
 	getS3BucketConnectorServiceNotFound = http.StatusNotFound
 )
 
-// GetS3BucketConnector returns a sub account given its unique identifier, an error otherwise
+// GetS3BucketConnector returns a s3 bucket connector given its unique identifier, an error otherwise
 func (c *S3BucketsConnectorClient) GetS3BucketConnector(s3BucketConnectorId int64) (*S3BucketConnector, error) {
 	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
 		ApiToken:     c.ApiToken,
