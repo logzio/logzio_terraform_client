@@ -14,6 +14,7 @@ const (
 	operationGetS3BucketConnector    = "GetS3BucketConnector"
 	operationListS3BucketConnector   = "ListS3BucketConnector"
 	operationUpdateS3BucketConnector = "UpdateS3BucketConnector"
+	operationDeleteS3BucketConnector = "DeleteS3BucketConnector"
 )
 
 type S3BucketsConnectorClient struct {
