@@ -13,6 +13,7 @@ const (
 	operationCreateS3BucketConnector = "CreateS3BucketConnector"
 	operationGetS3BucketConnector    = "GetS3BucketConnector"
 	operationListS3BucketConnector   = "ListS3BucketConnector"
+	operationUpdateS3BucketConnector = "UpdateS3BucketConnector"
 )
 
 type S3BucketsConnectorClient struct {
@@ -79,9 +80,17 @@ func New(apiToken, baseUrl string) (*S3BucketsConnectorClient, error) {
 	return c, nil
 }
 
-func validateCreateS3BucketRequest(req S3BucketConnector) error {
+func validateCreateUpdateS3BucketRequest(req S3BucketConnector) error {
 	if len(req.Bucket) == 0 {
 		return fmt.Errorf("field bucket must be set")
+	}
+
+	if len(req.Region) == 0 {
+		fmt.Errorf("field region must be set")
+	}
+
+	if len(req.LogsType) == 0 {
+		fmt.Errorf("field logsType must be set")
 	}
 
 	return nil
