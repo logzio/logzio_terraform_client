@@ -21,16 +21,28 @@ type S3BucketsConnectorClient struct {
 	*client.Client
 }
 
-type S3BucketConnector struct {
+type S3BucketConnectorRequest struct {
 	AccessKey                string      `json:"accessKey,omitempty"`
 	SecretKey                string      `json:"secretKey,omitempty"`
 	Arn                      string      `json:"arn,omitempty"`
 	Bucket                   string      `json:"bucket"`
 	Prefix                   string      `json:"prefix,omitempty"`
-	Active                   *bool       `json:"active,omitempty"`
+	Active                   *bool       `json:"active"`
 	AddS3ObjectKeyAsLogField *bool       `json:"addS3ObjectKeyAsLogField,omitempty"`
 	Region                   AwsRegion   `json:"region"`
 	LogsType                 AwsLogsType `json:"logsType"`
+}
+
+type S3BucketConnectorResponse struct {
+	AccessKey                string      `json:"accessKey,omitempty"`
+	Arn                      string      `json:"arn,omitempty"`
+	Bucket                   string      `json:"bucket"`
+	Prefix                   string      `json:"prefix,omitempty"`
+	Active                   bool        `json:"active"`
+	AddS3ObjectKeyAsLogField bool        `json:"addS3ObjectKeyAsLogField,omitempty"`
+	Region                   AwsRegion   `json:"region"`
+	LogsType                 AwsLogsType `json:"logsType"`
+	Id                       int64       `json:"id,omitempty"`
 }
 
 type AwsRegion string
@@ -81,7 +93,7 @@ func New(apiToken, baseUrl string) (*S3BucketsConnectorClient, error) {
 	return c, nil
 }
 
-func validateCreateUpdateS3BucketRequest(req S3BucketConnector) error {
+func validateCreateUpdateS3BucketRequest(req S3BucketConnectorRequest) error {
 	if len(req.Bucket) == 0 {
 		return fmt.Errorf("field bucket must be set")
 	}
@@ -92,6 +104,10 @@ func validateCreateUpdateS3BucketRequest(req S3BucketConnector) error {
 
 	if len(req.LogsType) == 0 {
 		fmt.Errorf("field logsType must be set")
+	}
+
+	if req.Active == nil {
+		fmt.Errorf("field active must be set")
 	}
 
 	return nil

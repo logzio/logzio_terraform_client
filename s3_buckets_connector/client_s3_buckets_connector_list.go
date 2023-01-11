@@ -15,7 +15,7 @@ const (
 )
 
 // ListS3BucketConnectors returns all the s3 bucket connectors in an array, returns an error if any problem occurs during the API call
-func (c *S3BucketsConnectorClient) ListS3BucketConnectors() ([]S3BucketConnector, error) {
+func (c *S3BucketsConnectorClient) ListS3BucketConnectors() ([]S3BucketConnectorResponse, error) {
 	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
 		ApiToken:     c.ApiToken,
 		HttpMethod:   listS3BucketConnectorServiceMethod,
@@ -32,7 +32,7 @@ func (c *S3BucketsConnectorClient) ListS3BucketConnectors() ([]S3BucketConnector
 		return nil, err
 	}
 
-	var s3BucketConnectors []S3BucketConnector
+	var s3BucketConnectors []S3BucketConnectorResponse
 	err = json.Unmarshal(res, &s3BucketConnectors)
 	if err != nil {
 		return nil, err

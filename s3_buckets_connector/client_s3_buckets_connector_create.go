@@ -15,7 +15,7 @@ const (
 )
 
 // CreateS3BucketConnector creates a new S3 bucket connector if successful, an error otherwise
-func (c *S3BucketsConnectorClient) CreateS3BucketConnector(create S3BucketConnector) (*S3BucketConnector, error) {
+func (c *S3BucketsConnectorClient) CreateS3BucketConnector(create S3BucketConnectorRequest) (*S3BucketConnectorResponse, error) {
 	err := validateCreateUpdateS3BucketRequest(create)
 	if err != nil {
 		return nil, err
@@ -42,7 +42,7 @@ func (c *S3BucketsConnectorClient) CreateS3BucketConnector(create S3BucketConnec
 		return nil, err
 	}
 
-	var retVal S3BucketConnector
+	var retVal S3BucketConnectorResponse
 	err = json.Unmarshal(res, &retVal)
 	if err != nil {
 		return nil, err

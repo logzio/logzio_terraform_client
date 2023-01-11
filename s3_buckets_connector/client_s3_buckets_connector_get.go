@@ -15,7 +15,7 @@ const (
 )
 
 // GetS3BucketConnector returns a s3 bucket connector given its unique identifier, an error otherwise
-func (c *S3BucketsConnectorClient) GetS3BucketConnector(s3BucketConnectorId int64) (*S3BucketConnector, error) {
+func (c *S3BucketsConnectorClient) GetS3BucketConnector(s3BucketConnectorId int64) (*S3BucketConnectorResponse, error) {
 	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
 		ApiToken:     c.ApiToken,
 		HttpMethod:   getS3BucketConnectorServiceMethod,
@@ -32,7 +32,7 @@ func (c *S3BucketsConnectorClient) GetS3BucketConnector(s3BucketConnectorId int6
 		return nil, err
 	}
 
-	var s3BucketConnector S3BucketConnector
+	var s3BucketConnector S3BucketConnectorResponse
 	err = json.Unmarshal(res, &s3BucketConnector)
 	if err != nil {
 		return nil, err
