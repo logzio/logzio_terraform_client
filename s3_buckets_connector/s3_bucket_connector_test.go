@@ -12,6 +12,10 @@ import (
 const (
 	keys = "keys"
 	arn  = "arn"
+
+	envArn       = "AWS_ARN_S3_CONNECTOR"
+	envAccessKey = "AWS_ACCESS_KEY"
+	envSecretKey = "AWS_SECRET_KEY"
 )
 
 var (
@@ -61,10 +65,10 @@ func getCreateOrUpdateS3BucketConnector(authType string) s3_buckets_connector.S3
 	}
 
 	if authType == keys {
-		request.AccessKey = os.Getenv("AWS_ACCESS_KEY")
-		request.SecretKey = os.Getenv("AWS_SECRET_KEY")
+		request.AccessKey = os.Getenv(envAccessKey)
+		request.SecretKey = os.Getenv(envSecretKey)
 	} else {
-		request.Arn = os.Getenv("AWS_ARN")
+		request.Arn = os.Getenv(envArn)
 	}
 
 	return request

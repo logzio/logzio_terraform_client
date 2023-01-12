@@ -1,6 +1,7 @@
 package s3_buckets_connector_test
 
 import (
+	"github.com/logzio/logzio_terraform_client/test_utils"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
@@ -9,6 +10,7 @@ import (
 
 func TestIntegrationS3BucketConnector_CreateS3BucketConnectorKeys(t *testing.T) {
 	underTest, err := setupS3BucketConnectorIntegrationTest()
+	defer test_utils.TestDoneTimeBuffer()
 
 	if assert.NoError(t, err) {
 		createConnector := getCreateOrUpdateS3BucketConnector(keys)
@@ -21,19 +23,20 @@ func TestIntegrationS3BucketConnector_CreateS3BucketConnectorKeys(t *testing.T) 
 	}
 }
 
-//func TestIntegrationS3BucketConnector_CreateS3BucketConnectorArn(t *testing.T) {
-//	underTest, err := setupS3BucketConnectorIntegrationTest()
-//
-//	if assert.NoError(t, err) {
-//		createConnector := getCreateOrUpdateS3BucketConnector(arn)
-//		connector, err := underTest.CreateS3BucketConnector(createConnector)
-//		if assert.NoError(t, err) && assert.NotNil(t, connector) {
-//			time.Sleep(4 * time.Second)
-//			defer underTest.DeleteS3BucketConnector(connector.Id)
-//			assert.NotZero(t, connector.Id)
-//		}
-//	}
-//}
+func TestIntegrationS3BucketConnector_CreateS3BucketConnectorArn(t *testing.T) {
+	underTest, err := setupS3BucketConnectorIntegrationTest()
+	defer test_utils.TestDoneTimeBuffer()
+
+	if assert.NoError(t, err) {
+		createConnector := getCreateOrUpdateS3BucketConnector(arn)
+		connector, err := underTest.CreateS3BucketConnector(createConnector)
+		if assert.NoError(t, err) && assert.NotNil(t, connector) {
+			time.Sleep(4 * time.Second)
+			defer underTest.DeleteS3BucketConnector(connector.Id)
+			assert.NotZero(t, connector.Id)
+		}
+	}
+}
 
 func TestIntegrationS3BucketConnector_CreateS3BucketConnectorInvalidKeys(t *testing.T) {
 	underTest, err := setupS3BucketConnectorIntegrationTest()
