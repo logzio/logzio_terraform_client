@@ -11,9 +11,9 @@ func TestIntegrationS3BucketConnector_ListS3BucketConnector(t *testing.T) {
 	underTest, err := setupS3BucketConnectorIntegrationTest()
 
 	if assert.NoError(t, err) {
-		subAccounts, err := underTest.ListS3BucketConnectors()
+		connectors, err := underTest.ListS3BucketConnectors()
 		assert.NoError(t, err)
-		assert.NotNil(t, subAccounts)
+		assert.NotNil(t, connectors)
 	}
 }
 

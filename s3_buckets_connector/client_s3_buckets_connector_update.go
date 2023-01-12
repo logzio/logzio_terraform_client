@@ -14,7 +14,7 @@ const (
 	updateS3BucketConnectorServiceNotFound = http.StatusNotFound
 )
 
-func (c *S3BucketsConnectorClient) UpdateSubAccount(s3BucketConnectorId int64, update S3BucketConnectorRequest) error {
+func (c *S3BucketsConnectorClient) UpdateS3BucketConnector(s3BucketConnectorId int64, update S3BucketConnectorRequest) error {
 	err := validateCreateUpdateS3BucketRequest(update)
 	if err != nil {
 		return err
