@@ -57,7 +57,7 @@ func getCreateOrUpdateS3BucketConnector(authType string, isLocalTest bool) s3_bu
 	addS3ObjectKeyAsLogField := true
 	active := false
 	request := s3_buckets_connector.S3BucketConnectorRequest{
-		Bucket:                   "miri-test-elb-tf", // TODO - change to a different bucket
+		Bucket:                   "terraform-auto-tests",
 		AddS3ObjectKeyAsLogField: &addS3ObjectKeyAsLogField,
 		Active:                   &active,
 		Region:                   s3_buckets_connector.RegionUsEast1,

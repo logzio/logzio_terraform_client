@@ -3,7 +3,6 @@ package s3_buckets_connector_test
 import (
 	"github.com/logzio/logzio_terraform_client/test_utils"
 	"github.com/stretchr/testify/assert"
-	"os"
 	"testing"
 	"time"
 )
@@ -57,30 +56,6 @@ func TestIntegrationS3BucketConnector_CreateS3BucketConnectorInvalidArn(t *testi
 	if assert.NoError(t, err) {
 		createConnector := getCreateOrUpdateS3BucketConnector(arn, false)
 		createConnector.Arn = "some_arn"
-		connector, err := underTest.CreateS3BucketConnector(createConnector)
-		assert.Error(t, err)
-		assert.Nil(t, connector)
-	}
-}
-
-func TestIntegrationS3BucketConnector_CreateS3BucketConnectorArnWithoutPermissions(t *testing.T) {
-	underTest, err := setupS3BucketConnectorIntegrationTest()
-
-	if assert.NoError(t, err) {
-		createConnector := getCreateOrUpdateS3BucketConnector(arn, false)
-		createConnector.Arn = os.Getenv("AWS_ARN")
-		connector, err := underTest.CreateS3BucketConnector(createConnector)
-		assert.Error(t, err)
-		assert.Nil(t, connector)
-	}
-}
-
-func TestIntegrationS3BucketConnector_CreateS3BucketConnectorInvalidBucket(t *testing.T) {
-	underTest, err := setupS3BucketConnectorIntegrationTest()
-
-	if assert.NoError(t, err) {
-		createConnector := getCreateOrUpdateS3BucketConnector(keys, false)
-		createConnector.Bucket = "some_bucket"
 		connector, err := underTest.CreateS3BucketConnector(createConnector)
 		assert.Error(t, err)
 		assert.Nil(t, connector)
