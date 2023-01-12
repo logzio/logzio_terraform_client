@@ -2,6 +2,7 @@ package s3_buckets_connector
 
 import (
 	"fmt"
+	logzio_client "github.com/logzio/logzio_terraform_client"
 	"github.com/logzio/logzio_terraform_client/client"
 )
 
@@ -99,15 +100,74 @@ func validateCreateUpdateS3BucketRequest(req S3BucketConnectorRequest) error {
 	}
 
 	if len(req.Region) == 0 {
-		fmt.Errorf("field region must be set")
+		return fmt.Errorf("field region must be set")
 	}
 
 	if len(req.LogsType) == 0 {
-		fmt.Errorf("field logsType must be set")
+		return fmt.Errorf("field logsType must be set")
 	}
 
 	if req.Active == nil {
-		fmt.Errorf("field active must be set")
+		return fmt.Errorf("field active must be set")
+	}
+
+	if (req.AccessKey != "" && req.SecretKey == "") || (req.AccessKey == "" && req.SecretKey != "") {
+		return fmt.Errorf("both aws keys must be set")
+	}
+
+	if req.AccessKey == "" && req.SecretKey == "" && req.Arn == "" {
+		return fmt.Errorf("either keys or arn must be set")
+	}
+
+	err := isValidRegion(req.Region)
+	if err != nil {
+		return err
+	}
+
+	err = isValidLogsType(req.LogsType)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func isValidRegion(region AwsRegion) error {
+	validRegions := []string{
+		RegionUsEast1.String(),
+		RegionUsEast2.String(),
+		RegionUsWest1.String(),
+		RegionUsWest2.String(),
+		RegionEuWest1.String(),
+		RegionEuWest2.String(),
+		RegionEuWest3.String(),
+		RegionEuCentral1.String(),
+		RegionApNortheast1.String(),
+		RegionApNortheast2.String(),
+		RegionApSoutheast1.String(),
+		RegionApSoutheast2.String(),
+		RegionSaEast1.String(),
+		RegionApSouth1.String(),
+		RegionCaCentral1.String(),
+	}
+
+	if !logzio_client.Contains(validRegions, region.String()) {
+		return fmt.Errorf("invalid region. region must be one of: %s", validRegions)
+	}
+
+	return nil
+}
+
+func isValidLogsType(logsType AwsLogsType) error {
+	validLogsTypes := []string{
+		LogsTypeElb.String(),
+		LogsTypeVpcFlow.String(),
+		LogsTypeS3Access.String(),
+		LogsTypeCloudfront.String(),
+	}
+
+	if !logzio_client.Contains(validLogsTypes, logsType.String()) {
+		return fmt.Errorf("invalid logs type. logs type must be one of: %s", validLogsTypes)
 	}
 
 	return nil

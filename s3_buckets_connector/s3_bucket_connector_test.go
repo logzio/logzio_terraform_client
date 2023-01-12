@@ -53,7 +53,7 @@ func setupS3BucketConnectorIntegrationTest() (*s3_buckets_connector.S3BucketsCon
 	return underTest, err
 }
 
-func getCreateOrUpdateS3BucketConnector(authType string) s3_buckets_connector.S3BucketConnectorRequest {
+func getCreateOrUpdateS3BucketConnector(authType string, isLocalTest bool) s3_buckets_connector.S3BucketConnectorRequest {
 	addS3ObjectKeyAsLogField := true
 	active := false
 	request := s3_buckets_connector.S3BucketConnectorRequest{
@@ -65,10 +65,19 @@ func getCreateOrUpdateS3BucketConnector(authType string) s3_buckets_connector.S3
 	}
 
 	if authType == keys {
-		request.AccessKey = os.Getenv(envAccessKey)
-		request.SecretKey = os.Getenv(envSecretKey)
+		if isLocalTest {
+			request.AccessKey = "my_access_key"
+			request.SecretKey = "my_secret_key"
+		} else {
+			request.AccessKey = os.Getenv(envAccessKey)
+			request.SecretKey = os.Getenv(envSecretKey)
+		}
 	} else {
-		request.Arn = os.Getenv(envArn)
+		if isLocalTest {
+			request.Arn = "my_arn"
+		} else {
+			request.Arn = os.Getenv(envArn)
+		}
 	}
 
 	return request

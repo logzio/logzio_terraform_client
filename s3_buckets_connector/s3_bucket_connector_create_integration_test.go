@@ -13,7 +13,7 @@ func TestIntegrationS3BucketConnector_CreateS3BucketConnectorKeys(t *testing.T) 
 	defer test_utils.TestDoneTimeBuffer()
 
 	if assert.NoError(t, err) {
-		createConnector := getCreateOrUpdateS3BucketConnector(keys)
+		createConnector := getCreateOrUpdateS3BucketConnector(keys, false)
 		connector, err := underTest.CreateS3BucketConnector(createConnector)
 		if assert.NoError(t, err) && assert.NotNil(t, connector) {
 			time.Sleep(4 * time.Second)
@@ -28,7 +28,7 @@ func TestIntegrationS3BucketConnector_CreateS3BucketConnectorArn(t *testing.T) {
 	defer test_utils.TestDoneTimeBuffer()
 
 	if assert.NoError(t, err) {
-		createConnector := getCreateOrUpdateS3BucketConnector(arn)
+		createConnector := getCreateOrUpdateS3BucketConnector(arn, false)
 		connector, err := underTest.CreateS3BucketConnector(createConnector)
 		if assert.NoError(t, err) && assert.NotNil(t, connector) {
 			time.Sleep(4 * time.Second)
@@ -42,7 +42,7 @@ func TestIntegrationS3BucketConnector_CreateS3BucketConnectorInvalidKeys(t *test
 	underTest, err := setupS3BucketConnectorIntegrationTest()
 
 	if assert.NoError(t, err) {
-		createConnector := getCreateOrUpdateS3BucketConnector(keys)
+		createConnector := getCreateOrUpdateS3BucketConnector(keys, false)
 		createConnector.AccessKey = "some_key"
 		createConnector.SecretKey = "some_key"
 		connector, err := underTest.CreateS3BucketConnector(createConnector)
@@ -55,7 +55,7 @@ func TestIntegrationS3BucketConnector_CreateS3BucketConnectorInvalidArn(t *testi
 	underTest, err := setupS3BucketConnectorIntegrationTest()
 
 	if assert.NoError(t, err) {
-		createConnector := getCreateOrUpdateS3BucketConnector(arn)
+		createConnector := getCreateOrUpdateS3BucketConnector(arn, false)
 		createConnector.Arn = "some_arn"
 		connector, err := underTest.CreateS3BucketConnector(createConnector)
 		assert.Error(t, err)
@@ -67,7 +67,7 @@ func TestIntegrationS3BucketConnector_CreateS3BucketConnectorArnWithoutPermissio
 	underTest, err := setupS3BucketConnectorIntegrationTest()
 
 	if assert.NoError(t, err) {
-		createConnector := getCreateOrUpdateS3BucketConnector(arn)
+		createConnector := getCreateOrUpdateS3BucketConnector(arn, false)
 		createConnector.Arn = os.Getenv("AWS_ARN")
 		connector, err := underTest.CreateS3BucketConnector(createConnector)
 		assert.Error(t, err)
@@ -79,7 +79,7 @@ func TestIntegrationS3BucketConnector_CreateS3BucketConnectorInvalidBucket(t *te
 	underTest, err := setupS3BucketConnectorIntegrationTest()
 
 	if assert.NoError(t, err) {
-		createConnector := getCreateOrUpdateS3BucketConnector(keys)
+		createConnector := getCreateOrUpdateS3BucketConnector(keys, false)
 		createConnector.Bucket = "some_bucket"
 		connector, err := underTest.CreateS3BucketConnector(createConnector)
 		assert.Error(t, err)
