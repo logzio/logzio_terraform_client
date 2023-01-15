@@ -1,4 +1,4 @@
-package s3_buckets_connector_test
+package s3_fetcher_test
 
 import (
 	"github.com/stretchr/testify/assert"
@@ -7,38 +7,38 @@ import (
 	"testing"
 )
 
-func TestS3BucketsConnector_DeleteConnector(t *testing.T) {
-	underTest, err, teardown := setupS3BucketConnectorTest()
+func TestS3Fetcher_DeleteFetcher(t *testing.T) {
+	underTest, err, teardown := setupS3FetcherTest()
 	defer teardown()
 
 	if assert.NoError(t, err) {
-		connectorId := int64(1234567)
+		fetcherId := int64(1234567)
 
 		mux.HandleFunc("/v1/log-shipping/s3-buckets/", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodDelete, r.Method)
-			assert.Contains(t, r.URL.String(), strconv.FormatInt(connectorId, 10))
+			assert.Contains(t, r.URL.String(), strconv.FormatInt(fetcherId, 10))
 			w.WriteHeader(http.StatusOK)
 		})
 
-		err = underTest.DeleteS3BucketConnector(connectorId)
+		err = underTest.DeleteS3Fetcher(fetcherId)
 		assert.NoError(t, err)
 	}
 }
 
-func TestS3BucketsConnector_DeleteConnectorInternalError(t *testing.T) {
-	underTest, err, teardown := setupS3BucketConnectorTest()
+func TestS3Fetcher_DeleteFetcherInternalError(t *testing.T) {
+	underTest, err, teardown := setupS3FetcherTest()
 	defer teardown()
 
 	if assert.NoError(t, err) {
-		connectorId := int64(1234567)
+		fetcherId := int64(1234567)
 
 		mux.HandleFunc("/v1/log-shipping/s3-buckets/", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodDelete, r.Method)
-			assert.Contains(t, r.URL.String(), strconv.FormatInt(connectorId, 10))
+			assert.Contains(t, r.URL.String(), strconv.FormatInt(fetcherId, 10))
 			w.WriteHeader(http.StatusInternalServerError)
 		})
 
-		err = underTest.DeleteS3BucketConnector(connectorId)
+		err = underTest.DeleteS3Fetcher(fetcherId)
 		assert.Error(t, err)
 	}
 }

@@ -1,4 +1,4 @@
-package s3_buckets_connector_test
+package s3_fetcher_test
 
 import (
 	"fmt"
@@ -7,8 +7,8 @@ import (
 	"testing"
 )
 
-func TestS3BucketConnector_ListConnectors(t *testing.T) {
-	underTest, err, teardown := setupS3BucketConnectorTest()
+func TestS3Fetcher_ListFetchers(t *testing.T) {
+	underTest, err, teardown := setupS3FetcherTest()
 	assert.NoError(t, err)
 	defer teardown()
 
@@ -16,17 +16,17 @@ func TestS3BucketConnector_ListConnectors(t *testing.T) {
 		assert.Equal(t, http.MethodGet, r.Method)
 		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprint(w, fixture("list_s3_bucket_connector.json"))
+		fmt.Fprint(w, fixture("list_s3_fetcher.json"))
 	})
 
-	connectors, err := underTest.ListS3BucketConnectors()
+	fetchers, err := underTest.ListS3Fetchers()
 	assert.NoError(t, err)
-	assert.NotNil(t, connectors)
-	assert.Equal(t, 2, len(connectors))
+	assert.NotNil(t, fetchers)
+	assert.Equal(t, 2, len(fetchers))
 }
 
-func TestS3BucketConnector_ListConnectorsInternalServer(t *testing.T) {
-	underTest, err, teardown := setupS3BucketConnectorTest()
+func TestS3Fetcher_ListFetchersInternalServer(t *testing.T) {
+	underTest, err, teardown := setupS3FetcherTest()
 	assert.NoError(t, err)
 	defer teardown()
 
@@ -35,7 +35,7 @@ func TestS3BucketConnector_ListConnectorsInternalServer(t *testing.T) {
 		w.WriteHeader(http.StatusInternalServerError)
 	})
 
-	connectors, err := underTest.ListS3BucketConnectors()
+	fetchers, err := underTest.ListS3Fetchers()
 	assert.Error(t, err)
-	assert.Nil(t, connectors)
+	assert.Nil(t, fetchers)
 }

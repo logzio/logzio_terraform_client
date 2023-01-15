@@ -1,4 +1,4 @@
-package s3_buckets_connector
+package s3_fetcher
 
 import (
 	"fmt"
@@ -7,22 +7,22 @@ import (
 )
 
 const (
-	s3BucketsServiceEndpoint string = "%s/v1/log-shipping/s3-buckets"
+	s3FetcherServiceEndpoint string = "%s/v1/log-shipping/s3-buckets"
 
-	s3BucketConnectorResourceName = "s3 bucket connector"
+	s3FetcherResourceName = "s3 fetcher"
 
-	operationCreateS3BucketConnector = "CreateS3BucketConnector"
-	operationGetS3BucketConnector    = "GetS3BucketConnector"
-	operationListS3BucketConnector   = "ListS3BucketConnector"
-	operationUpdateS3BucketConnector = "UpdateS3BucketConnector"
-	operationDeleteS3BucketConnector = "DeleteS3BucketConnector"
+	operationCreateS3Fetcher = "CreateS3Fetcher"
+	operationGetS3Fetcher    = "GetS3Fetcher"
+	operationListS3Fetcher   = "ListS3Fetcher"
+	operationUpdateS3Fetcher = "UpdateS3Fetcher"
+	operationDeleteS3Fetcher = "DeleteS3Fetcher"
 )
 
-type S3BucketsConnectorClient struct {
+type S3FetcherClient struct {
 	*client.Client
 }
 
-type S3BucketConnectorRequest struct {
+type S3FetcherRequest struct {
 	AccessKey                string      `json:"accessKey,omitempty"`
 	SecretKey                string      `json:"secretKey,omitempty"`
 	Arn                      string      `json:"arn,omitempty"`
@@ -34,7 +34,7 @@ type S3BucketConnectorRequest struct {
 	LogsType                 AwsLogsType `json:"logsType"`
 }
 
-type S3BucketConnectorResponse struct {
+type S3FetcherResponse struct {
 	AccessKey                string      `json:"accessKey,omitempty"`
 	Arn                      string      `json:"arn,omitempty"`
 	Bucket                   string      `json:"bucket"`
@@ -80,21 +80,21 @@ func (t AwsLogsType) String() string {
 	return string(t)
 }
 
-func New(apiToken, baseUrl string) (*S3BucketsConnectorClient, error) {
+func New(apiToken, baseUrl string) (*S3FetcherClient, error) {
 	if len(apiToken) == 0 {
 		return nil, fmt.Errorf("API token not defined")
 	}
 	if len(baseUrl) == 0 {
 		return nil, fmt.Errorf("Base URL not defined")
 	}
-	c := &S3BucketsConnectorClient{
+	c := &S3FetcherClient{
 		Client: client.New(apiToken, baseUrl),
 	}
 
 	return c, nil
 }
 
-func validateCreateUpdateS3BucketRequest(req S3BucketConnectorRequest) error {
+func validateCreateUpdateS3FetcherRequest(req S3FetcherRequest) error {
 	if len(req.Bucket) == 0 {
 		return fmt.Errorf("field bucket must be set")
 	}

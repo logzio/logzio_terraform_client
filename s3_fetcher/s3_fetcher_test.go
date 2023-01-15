@@ -1,7 +1,7 @@
-package s3_buckets_connector_test
+package s3_fetcher_test
 
 import (
-	"github.com/logzio/logzio_terraform_client/s3_buckets_connector"
+	"github.com/logzio/logzio_terraform_client/s3_fetcher"
 	"github.com/logzio/logzio_terraform_client/test_utils"
 	"io/ioutil"
 	"net/http"
@@ -31,37 +31,37 @@ func fixture(path string) string {
 	return string(b)
 }
 
-func setupS3BucketConnectorTest() (*s3_buckets_connector.S3BucketsConnectorClient, error, func()) {
+func setupS3FetcherTest() (*s3_fetcher.S3FetcherClient, error, func()) {
 	mux = http.NewServeMux()
 	server = httptest.NewServer(mux)
 
 	apiToken := "SOME_API_TOKEN"
-	underTest, _ := s3_buckets_connector.New(apiToken, server.URL)
+	underTest, _ := s3_fetcher.New(apiToken, server.URL)
 
 	return underTest, nil, func() {
 		server.Close()
 	}
 }
 
-func setupS3BucketConnectorIntegrationTest() (*s3_buckets_connector.S3BucketsConnectorClient, error) {
+func setupS3FetcherIntegrationTest() (*s3_fetcher.S3FetcherClient, error) {
 	apiToken, err := test_utils.GetApiToken()
 	if err != nil {
 		return nil, err
 	}
 
-	underTest, err := s3_buckets_connector.New(apiToken, test_utils.GetLogzIoBaseUrl())
+	underTest, err := s3_fetcher.New(apiToken, test_utils.GetLogzIoBaseUrl())
 	return underTest, err
 }
 
-func getCreateOrUpdateS3BucketConnector(authType string, isLocalTest bool) s3_buckets_connector.S3BucketConnectorRequest {
+func getCreateOrUpdateS3Fetcher(authType string, isLocalTest bool) s3_fetcher.S3FetcherRequest {
 	addS3ObjectKeyAsLogField := true
 	active := false
-	request := s3_buckets_connector.S3BucketConnectorRequest{
+	request := s3_fetcher.S3FetcherRequest{
 		Bucket:                   "terraform-auto-tests",
 		AddS3ObjectKeyAsLogField: &addS3ObjectKeyAsLogField,
 		Active:                   &active,
-		Region:                   s3_buckets_connector.RegionUsEast1,
-		LogsType:                 s3_buckets_connector.LogsTypeElb,
+		Region:                   s3_fetcher.RegionUsEast1,
+		LogsType:                 s3_fetcher.LogsTypeElb,
 	}
 
 	if authType == keys {
