@@ -16,7 +16,7 @@ The library currently supports the following API endpoints:
 * [Restore logs](https://github.com/logzio/logzio_terraform_client/tree/master/restore_logs).
 * [Authentication groups](https://docs.logz.io/api/#tag/Authentication-groups).
 * [Kibana Objects](https://docs.logz.io/api/#tag/Import-or-export-Kibana-objects).
-* [S3 Bucket Connector](https://docs.logz.io/api/#tag/Connect-to-S3-Buckets).
+* [S3 Fetcher](https://docs.logz.io/api/#tag/Connect-to-S3-Buckets).
 
 #### Contributing
 
@@ -32,7 +32,7 @@ The library currently supports the following API endpoints:
 ### Changelog
 
 - v1.15.0
-  - Add [S3 Bucket Connector](https://docs.logz.io/api/#tag/Connect-to-S3-Buckets).
+  - Add [S3 Fetcher](https://docs.logz.io/api/#tag/Connect-to-S3-Buckets).
 - v1.14.0
   - `alerts_v2` - support new field `schedule`
 - v1.13.1
