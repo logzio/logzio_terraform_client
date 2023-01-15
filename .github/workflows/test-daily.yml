@@ -15,6 +15,7 @@ jobs:
       S3_PATH: ${{ secrets.S3_PATH }}
       AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
       AWS_ARN: ${{ secrets.AWS_ARN }}
+      AWS_ARN_S3_CONNECTOR: ${{ secrets.AWS_ARN_S3_CONNECTOR }}
       AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
       AZURE_ACCOUNT_NAME: ${{ secrets.AZURE_ACCOUNT_NAME }}
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
