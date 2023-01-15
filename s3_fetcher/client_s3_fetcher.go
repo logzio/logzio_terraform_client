@@ -2,7 +2,6 @@ package s3_fetcher
 
 import (
 	"fmt"
-	logzio_client "github.com/logzio/logzio_terraform_client"
 	"github.com/logzio/logzio_terraform_client/client"
 )
 
@@ -132,43 +131,54 @@ func validateCreateUpdateS3FetcherRequest(req S3FetcherRequest) error {
 	return nil
 }
 
+func GetValidRegions() []AwsRegion {
+	return []AwsRegion{
+		RegionUsEast1,
+		RegionUsEast2,
+		RegionUsWest1,
+		RegionUsWest2,
+		RegionEuWest1,
+		RegionEuWest2,
+		RegionEuWest3,
+		RegionEuCentral1,
+		RegionApNortheast1,
+		RegionApNortheast2,
+		RegionApSoutheast1,
+		RegionApSoutheast2,
+		RegionSaEast1,
+		RegionApSouth1,
+		RegionCaCentral1,
+	}
+}
+
 func isValidRegion(region AwsRegion) error {
-	validRegions := []string{
-		RegionUsEast1.String(),
-		RegionUsEast2.String(),
-		RegionUsWest1.String(),
-		RegionUsWest2.String(),
-		RegionEuWest1.String(),
-		RegionEuWest2.String(),
-		RegionEuWest3.String(),
-		RegionEuCentral1.String(),
-		RegionApNortheast1.String(),
-		RegionApNortheast2.String(),
-		RegionApSoutheast1.String(),
-		RegionApSoutheast2.String(),
-		RegionSaEast1.String(),
-		RegionApSouth1.String(),
-		RegionCaCentral1.String(),
+	validRegions := GetValidRegions()
+	for _, validRegion := range validRegions {
+		if validRegion == region {
+			return nil
+		}
 	}
 
-	if !logzio_client.Contains(validRegions, region.String()) {
-		return fmt.Errorf("invalid region. region must be one of: %s", validRegions)
-	}
+	return fmt.Errorf("invalid region. region must be one of: %s", validRegions)
+}
 
-	return nil
+func GetValidLogsType() []AwsLogsType {
+	return []AwsLogsType{
+		LogsTypeElb,
+		LogsTypeVpcFlow,
+		LogsTypeS3Access,
+		LogsTypeCloudfront,
+	}
 }
 
 func isValidLogsType(logsType AwsLogsType) error {
-	validLogsTypes := []string{
-		LogsTypeElb.String(),
-		LogsTypeVpcFlow.String(),
-		LogsTypeS3Access.String(),
-		LogsTypeCloudfront.String(),
+	validLogsTypes := GetValidLogsType()
+
+	for _, validType := range validLogsTypes {
+		if validType == logsType {
+			return nil
+		}
 	}
 
-	if !logzio_client.Contains(validLogsTypes, logsType.String()) {
-		return fmt.Errorf("invalid logs type. logs type must be one of: %s", validLogsTypes)
-	}
-
-	return nil
+	return fmt.Errorf("invalid logs type. logs type must be one of: %s", validLogsTypes)
 }
