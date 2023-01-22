@@ -16,6 +16,7 @@ The library currently supports the following API endpoints:
 * [Restore logs](https://github.com/logzio/logzio_terraform_client/tree/master/restore_logs).
 * [Authentication groups](https://docs.logz.io/api/#tag/Authentication-groups).
 * [Kibana Objects](https://docs.logz.io/api/#tag/Import-or-export-Kibana-objects).
+* [S3 Fetcher](https://docs.logz.io/api/#tag/Connect-to-S3-Buckets).
 
 #### Contributing
 
@@ -30,17 +31,19 @@ The library currently supports the following API endpoints:
 
 ### Changelog
 
+- v1.15.0
+  - Add [S3 Fetcher](https://docs.logz.io/api/#tag/Connect-to-S3-Buckets).
 - v1.14.0
   - `alerts_v2` - support new field `schedule`
 - v1.13.1
   - Add retry mechanism for requests.
-- v1.13.0
-  - Bug fix - **sub_accounts**: field `ReservedDailyGB` in requests can be 0.
 
 
 <details>
   <summary markdown="span">Exapnd to check old versions </summary>
 
+- v1.13.0
+  - Bug fix - **sub_accounts**: field `ReservedDailyGB` in requests can be 0.
 - v1.12.0
   - Upgrade to Go 1.18.
   - Refactor `users`, adjust to the recent API fields.
