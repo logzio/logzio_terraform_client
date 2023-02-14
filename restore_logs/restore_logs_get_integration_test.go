@@ -1,7 +1,6 @@
 package restore_logs_test
 
 import (
-	"github.com/logzio/logzio_terraform_client/test_utils"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
@@ -9,8 +8,8 @@ import (
 
 func TestIntegrationRestoreLogs_GetRestoreOperation(t *testing.T) {
 	underTest, deleteArchive, err := setupRestoreLogsIntegrationTest(withArchive)
-	defer test_utils.TestDoneTimeBuffer()
 	defer deleteArchive()
+
 	if assert.NoError(t, err) {
 		initiateRestore := getInitiateRestoreOperationIntegrationTest()
 		restore, err := underTest.InitiateRestoreOperation(initiateRestore)

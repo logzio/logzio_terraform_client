@@ -2,7 +2,6 @@ package restore_logs_test
 
 import (
 	"github.com/logzio/logzio_terraform_client/restore_logs"
-	"github.com/logzio/logzio_terraform_client/test_utils"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
@@ -10,7 +9,6 @@ import (
 
 func TestIntegrationRestoreLogs_InitiateRestore(t *testing.T) {
 	underTest, deleteArchive, err := setupRestoreLogsIntegrationTest(withArchive)
-	defer test_utils.TestDoneTimeBuffer()
 	defer deleteArchive()
 	if assert.NoError(t, err) {
 		initiateRestore := getInitiateRestoreOperationIntegrationTest()
@@ -26,7 +24,6 @@ func TestIntegrationRestoreLogs_InitiateRestore(t *testing.T) {
 
 func TestIntegrationRestoreLogs_InitiateRestoreEmptyName(t *testing.T) {
 	underTest, _, err := setupRestoreLogsIntegrationTest(withoutArchive)
-	defer test_utils.TestDoneTimeBuffer()
 	if assert.NoError(t, err) {
 		initiateRestore := getInitiateRestoreOperationIntegrationTest()
 		initiateRestore.AccountName = ""
@@ -38,7 +35,6 @@ func TestIntegrationRestoreLogs_InitiateRestoreEmptyName(t *testing.T) {
 
 func TestIntegrationRestoreLogs_InitiateRestoreEmptyStartTime(t *testing.T) {
 	underTest, _, err := setupRestoreLogsIntegrationTest(withoutArchive)
-	defer test_utils.TestDoneTimeBuffer()
 	if assert.NoError(t, err) {
 		initiateRestore := getInitiateRestoreOperationIntegrationTest()
 		initiateRestore.StartTime = 0
@@ -50,7 +46,6 @@ func TestIntegrationRestoreLogs_InitiateRestoreEmptyStartTime(t *testing.T) {
 
 func TestIntegrationRestoreLogs_InitiateRestoreEmptyEndTime(t *testing.T) {
 	underTest, _, err := setupRestoreLogsIntegrationTest(withoutArchive)
-	defer test_utils.TestDoneTimeBuffer()
 	if assert.NoError(t, err) {
 		initiateRestore := getInitiateRestoreOperationIntegrationTest()
 		initiateRestore.EndTime = 0
