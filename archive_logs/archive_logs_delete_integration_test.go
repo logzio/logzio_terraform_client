@@ -10,7 +10,6 @@ import (
 
 func TestIntegrationArchiveLogs_DeleteArchive(t *testing.T) {
 	underTest, err := setupArchiveLogsIntegrationTest()
-	defer test_utils.TestDoneTimeBuffer()
 
 	if assert.NoError(t, err) {
 		createArchive, err := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeS3)
