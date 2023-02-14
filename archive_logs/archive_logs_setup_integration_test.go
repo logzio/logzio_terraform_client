@@ -50,7 +50,6 @@ func TestIntegrationArchiveLogs_SetupArchiveS3Iam(t *testing.T) {
 
 func TestIntegrationArchiveLogs_SetupArchiveBlob(t *testing.T) {
 	underTest, err := setupArchiveLogsIntegrationTest()
-
 	if assert.NoError(t, err) {
 		createArchiveLogs, err := test_utils.GetCreateOrUpdateArchiveLogs(archive_logs.StorageTypeBlob)
 		if assert.NoError(t, err) {
