@@ -4,9 +4,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/avast/retry-go"
 	"github.com/logzio/logzio_terraform_client/client"
 	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
 const (
@@ -89,21 +91,47 @@ func CallLogzioApi(logzioCall LogzioApiCallDetails) ([]byte, error) {
 	}
 
 	httpClient := client.GetHttpClient(req)
-	resp, err := httpClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
+	var resp *http.Response
+	var jsonBytes []byte
+
+	err = retry.Do(
+		func() error {
+			resp, err = httpClient.Do(req)
+			if err != nil {
+				return err
+			}
+
+			jsonBytes, _ = ioutil.ReadAll(resp.Body)
+			if !CheckValidStatus(resp, logzioCall.SuccessCodes) {
+				if resp.StatusCode == logzioCall.NotFoundCode {
+					return fmt.Errorf("API call %s failed with missing %s %d, data: %s",
+						logzioCall.ApiAction, logzioCall.ResourceName, logzioCall.ResourceId, jsonBytes)
+				}
+
+				return fmt.Errorf("API call %s failed with status code %d, data: %s",
+					logzioCall.ApiAction, resp.StatusCode, jsonBytes)
+			}
+
+			return nil
+		},
+		retry.RetryIf(
+			func(err error) bool {
+				if err != nil {
+					if strings.Contains(err.Error(), "status code 429") ||
+						strings.Contains(err.Error(), "failed with missing") ||
+						strings.Contains(err.Error(), "status code 500") {
+						return true
+					}
+				}
+				return false
+			}),
+		retry.DelayType(retry.BackOffDelay),
+		retry.Attempts(8),
+	)
 	defer resp.Body.Close()
 
-	jsonBytes, _ := ioutil.ReadAll(resp.Body)
-	if !CheckValidStatus(resp, logzioCall.SuccessCodes) {
-		if resp.StatusCode == logzioCall.NotFoundCode {
-			return nil, fmt.Errorf("API call %s failed with missing %s %d, data: %s",
-				logzioCall.ApiAction, logzioCall.ResourceName, logzioCall.ResourceId, jsonBytes)
-		}
-
-		return nil, fmt.Errorf("API call %s failed with status code %d, data: %s",
-			logzioCall.ApiAction, resp.StatusCode, jsonBytes)
+	if err != nil {
+		return nil, err
 	}
 
 	return jsonBytes, nil

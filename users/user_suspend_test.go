@@ -8,37 +8,32 @@ import (
 )
 
 func TestUsers_SuspendUser(t *testing.T) {
-	accountId := int64(123456)
-
-	underTest, err, teardown := setupUsersTest()
+	underTest, teardown, err := setupUsersTest()
 	defer teardown()
+	if assert.NoError(t, err) {
+		id := int32(123445)
+		mux.HandleFunc(usersApiBasePath+"/suspend/", func(w http.ResponseWriter, r *http.Request) {
+			assert.Contains(t, r.URL.String(), strconv.FormatInt(int64(id), 10))
+			assert.Equal(t, http.MethodPost, r.Method)
+			w.WriteHeader(http.StatusNoContent)
+		})
 
-	mux.HandleFunc("/v1/user-management/suspend/", func(w http.ResponseWriter, r *http.Request) {
-		assert.Contains(t, r.URL.String(), strconv.FormatInt(accountId, 10))
-		assert.Equal(t, http.MethodPost, r.Method)
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-	})
-
-	success, err := underTest.SuspendUser(accountId)
-	assert.True(t, success)
-	assert.NoError(t, err)
+		err = underTest.SuspendUser(id)
+		assert.NoError(t, err)
+	}
 }
 
-func TestUsers_UnSuspendUser(t *testing.T) {
-	accountId := int64(123456)
-
-	underTest, err, teardown := setupUsersTest()
+func TestUsers_SuspendUserApiFail(t *testing.T) {
+	underTest, teardown, err := setupUsersTest()
 	defer teardown()
+	if assert.NoError(t, err) {
+		id := int32(123445)
+		mux.HandleFunc(usersApiBasePath+"/suspend/", func(w http.ResponseWriter, r *http.Request) {
+			assert.Contains(t, r.URL.String(), strconv.FormatInt(int64(id), 10))
+			w.WriteHeader(http.StatusInternalServerError)
+		})
 
-	mux.HandleFunc("/v1/user-management/unsuspend/", func(w http.ResponseWriter, r *http.Request) {
-		assert.Contains(t, r.URL.String(), strconv.FormatInt(accountId, 10))
-		assert.Equal(t, http.MethodPost, r.Method)
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-	})
-
-	success, err := underTest.UnSuspendUser(accountId)
-	assert.True(t, success)
-	assert.NoError(t, err)
+		err = underTest.SuspendUser(id)
+		assert.Error(t, err)
+	}
 }

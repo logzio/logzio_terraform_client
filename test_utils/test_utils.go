@@ -8,22 +8,21 @@ import (
 )
 
 const (
-	EnvLogzioBaseUrl                 = "LOGZIO_BASE_URL"
-	EnvLogzioApiToken         string = "LOGZIO_API_TOKEN"
-	EnvLogzioAccountId        string = "LOGZIO_ACCOUNT_ID"
-	LogzioBaseUrl             string = "https://api.logz.io"
-	EnvLogzioEmail            string = "LOGZIO_EMAIL"
-	EnvLogzioSecurityApiToken string = "LOGZIO_SECURITY_API_TOKEN"
-	EnvS3Path                 string = "S3_PATH"
-	EnvAwsAccessKey           string = "AWS_ACCESS_KEY"
-	EnvAwsSecretKey           string = "AWS_SECRET_KEY"
-	EnvAwsArn                 string = "AWS_ARN"
-	EnvAzureTenantId          string = "AZURE_TENANT_ID"
-	EnvAzureClientId          string = "AZURE_CLIENT_ID"
-	EnvAzureClientSecret      string = "AZURE_CLIENT_SECRET"
-	EnvAzureAccountName       string = "AZURE_ACCOUNT_NAME"
-	EnvAzureContainerName     string = "AZURE_CONTAINER_NAME"
-	EnvMetricsFolderId        string = "METRICS_FOLDER_ID"
+	EnvLogzioBaseUrl             = "LOGZIO_BASE_URL"
+	EnvLogzioApiToken     string = "LOGZIO_API_TOKEN"
+	EnvLogzioAccountId    string = "LOGZIO_ACCOUNT_ID"
+	LogzioBaseUrl         string = "https://api.logz.io"
+	EnvLogzioEmail        string = "LOGZIO_EMAIL"
+	EnvS3Path             string = "S3_PATH"
+	EnvAwsAccessKey       string = "AWS_ACCESS_KEY"
+	EnvAwsSecretKey       string = "AWS_SECRET_KEY"
+	EnvAwsArn             string = "AWS_ARN"
+	EnvAzureTenantId      string = "AZURE_TENANT_ID"
+	EnvAzureClientId      string = "AZURE_CLIENT_ID"
+	EnvAzureClientSecret  string = "AZURE_CLIENT_SECRET"
+	EnvAzureAccountName   string = "AZURE_ACCOUNT_NAME"
+	EnvAzureContainerName string = "AZURE_CONTAINER_NAME"
+	EnvMetricsFolderId    string = "METRICS_FOLDER_ID"
 
 	TestTimeSeparator = time.Millisecond * 500
 )
@@ -132,22 +131,14 @@ func GetAzureContainerName() (string, error) {
 	return "", fmt.Errorf("%s env var not specified", EnvAzureContainerName)
 }
 
+func TestDoneTimeBuffer() {
+	time.Sleep(TestTimeSeparator)
+}
+
 func GetMetricsFolderId() (string, error) {
 	folderId := os.Getenv(EnvMetricsFolderId)
 	if len(folderId) > 0 {
 		return folderId, nil
 	}
 	return "", fmt.Errorf("%s env var not specified", EnvMetricsFolderId)
-}
-
-func TestDoneTimeBuffer() {
-	time.Sleep(TestTimeSeparator)
-}
-
-func GetLogzioSecurityApiToken() (string, error) {
-	apiToken := os.Getenv(EnvLogzioSecurityApiToken)
-	if len(apiToken) > 0 {
-		return apiToken, nil
-	}
-	return "", fmt.Errorf("%s env var not specified", EnvLogzioSecurityApiToken)
 }

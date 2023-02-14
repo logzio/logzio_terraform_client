@@ -1,134 +1,43 @@
-// +build integration
-
 package users_test
 
 import (
 	"github.com/logzio/logzio_terraform_client/test_utils"
-	"github.com/logzio/logzio_terraform_client/users"
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"time"
 )
 
 func TestIntegrationUsers_SuspendUser(t *testing.T) {
 	underTest, err := setupUsersIntegrationTest()
-
-	accountId, _ := test_utils.GetAccountId()
-
+	defer test_utils.TestDoneTimeBuffer()
 	if assert.NoError(t, err) {
-		user, err := underTest.CreateUser(users.User{
-			Username:  "testsuspenduser@massive.co",
-			Fullname:  test_fullname,
-			AccountId: accountId,
-			Roles:     []int32{users.UserTypeUser},
-			Active:    true,
-		})
-
-		assert.NoError(t, err)
-		if assert.NotNil(t, user) {
-			suspended, err := underTest.SuspendUser(user.Id)
-			assert.True(t, suspended)
-			assert.NoError(t, err)
-			assert.NotNil(t, user)
-
-			u, err := underTest.GetUser(user.Id)
-			assert.NoError(t, err)
-			assert.False(t, u.Active)
+		createUser, err := getCreateUser()
+		createUser.FullName += "-suspend"
+		if assert.NoError(t, err) && assert.NotNil(t, createUser) {
+			resp, err := underTest.CreateUser(createUser)
+			if assert.NoError(t, err) && assert.NotNil(t, resp) {
+				assert.NotEmpty(t, resp.Id)
+				time.Sleep(2 * time.Second)
+				defer underTest.DeleteUser(resp.Id)
+				err = underTest.SuspendUser(resp.Id)
+				assert.NoError(t, err)
+				time.Sleep(2 * time.Second)
+				// double check that the user was suspended
+				user, err := underTest.GetUser(resp.Id)
+				assert.NoError(t, err)
+				assert.NotNil(t, user)
+				assert.False(t, user.Active)
+			}
 		}
-
-		err = underTest.DeleteUser(user.Id)
-		assert.NoError(t, err)
 	}
 }
 
-func TestIntegrationUsers_UnsuspendUser(t *testing.T) {
+func TestIntegrationUsers_SuspendUserIdNotFound(t *testing.T) {
 	underTest, err := setupUsersIntegrationTest()
-	accountId, _ := test_utils.GetAccountId()
-
+	defer test_utils.TestDoneTimeBuffer()
 	if assert.NoError(t, err) {
-		user, err := underTest.CreateUser(users.User{
-			Username:  "testunsuspenduser@massive.co",
-			Fullname:  test_fullname,
-			AccountId: accountId,
-			Roles:     []int32{users.UserTypeUser},
-			Active:    true,
-		})
-		assert.NoError(t, err)
-
-		if assert.NotNil(t, user) {
-			success, err := underTest.SuspendUser(user.Id)
-			assert.NoError(t, err)
-			assert.True(t, success, "suspend request success should be TRUE")
-
-			u, err := underTest.GetUser(user.Id)
-			assert.NoError(t, err)
-			assert.False(t, u.Active, "user should be rendred inactive, ACTIVE should be FALSE")
-
-			success, err = underTest.UnSuspendUser(user.Id)
-			assert.NoError(t, err)
-			assert.True(t, success, "unsuspend request success should be TRUE")
-
-			u, err = underTest.GetUser(user.Id)
-			assert.NoError(t, err)
-			assert.True(t, u.Active)
-		}
-
-		err = underTest.DeleteUser(user.Id)
-		assert.NoError(t, err)
-	}
-}
-
-func TestIntegrationUsers_SuspendSuspendedUser(t *testing.T) {
-	underTest, err := setupUsersIntegrationTest()
-
-	accountId, _ := test_utils.GetAccountId()
-
-	if assert.NoError(t, err) {
-		user, err := underTest.CreateUser(users.User{
-			Username:  "testsuspenduser@massive.co",
-			Fullname:  test_fullname,
-			AccountId: accountId,
-			Roles:     []int32{users.UserTypeUser},
-			Active:    true,
-		})
-		assert.NoError(t, err)
-
-		if assert.NotNil(t, user) {
-			success, err := underTest.SuspendUser(user.Id)
-			assert.NoError(t, err)
-			assert.True(t, success, "suspend request success should be TRUE")
-
-			success, err = underTest.SuspendUser(user.Id)
-			assert.NoError(t, err)
-			assert.True(t, success, "suspend request success should be TRUE")
-		}
-
-		err = underTest.DeleteUser(user.Id)
-		assert.NoError(t, err)
-	}
-}
-
-func TestIntegrationUsers_UnsuspendActiveUser(t *testing.T) {
-	underTest, err := setupUsersIntegrationTest()
-
-	accountId, _ := test_utils.GetAccountId()
-
-	if assert.NoError(t, err) {
-		user, err := underTest.CreateUser(users.User{
-			Username:  "testunsuspendactiveuser@massive.co",
-			Fullname:  test_fullname,
-			AccountId: accountId,
-			Roles:     []int32{users.UserTypeUser},
-			Active:    true,
-		})
-		assert.NoError(t, err)
-
-		if assert.NotNil(t, user) {
-			success, err := underTest.UnSuspendUser(user.Id)
-			assert.NoError(t, err)
-			assert.True(t, success, "unsuspend request success should be TRUE")
-		}
-
-		err = underTest.DeleteUser(user.Id)
-		assert.NoError(t, err)
+		id := int32(1234)
+		err := underTest.SuspendUser(id)
+		assert.Error(t, err)
 	}
 }

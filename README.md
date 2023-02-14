@@ -15,8 +15,10 @@ The library currently supports the following API endpoints:
 * [Archive logs](https://github.com/logzio/logzio_terraform_client/tree/master/archive_logs).
 * [Restore logs](https://github.com/logzio/logzio_terraform_client/tree/master/restore_logs).
 * [Authentication groups](https://docs.logz.io/api/#tag/Authentication-groups).
+* [Kibana Objects](https://docs.logz.io/api/#tag/Import-or-export-Kibana-objects).
+* [S3 Fetcher](https://docs.logz.io/api/#tag/Connect-to-S3-Buckets).
 * [Grafana dashboards](https://docs.logz.io/api/#operation/createDashboard).
-* [Security rules](https://docs.logz.io/api/#tag/Security-rules).
+
 
 #### Contributing
 
@@ -31,15 +33,35 @@ The library currently supports the following API endpoints:
 
 ### Changelog
 
+- v1.15.0
+  - Add [S3 Fetcher](https://docs.logz.io/api/#tag/Connect-to-S3-Buckets).
+- v1.14.0
+  - `alerts_v2` - support new field `schedule`
+- v1.13.1
+  - Add retry mechanism for requests.
+
+
+<details>
+  <summary markdown="span">Exapnd to check old versions </summary>
+
+- v1.13.0
+  - Bug fix - **sub_accounts**: field `ReservedDailyGB` in requests can be 0.
+- v1.12.0
+  - Upgrade to Go 1.18.
+  - Refactor `users`, adjust to the recent API fields.
+  - Add field `UserName` to `restore` initiate request, to match recent API fields.
 - v1.11.0
-  - Add [Grafana dashboards](https://docs.logz.io/api/#operation/createDashboard).
-  - Add [Security rules](https://docs.logz.io/api/#tag/Security-rules).
+  - Add [Kibana Objects](https://docs.logz.io/api/#tag/Import-or-export-Kibana-objects).
+- v1.10.3
+  - Bug fix - **sub_accounts**: omit maxDailyGb if needed.
+- v1.10.2
+  - Bug fix - **alerts_v2**: allow sending with columns without sort.
+- v1.10.1
+  - Bug fix - **custom endpoint**: allow empty string for Headers field.
 - v1.10.0
     - Add [Authentication groups API](https://docs.logz.io/api/#tag/Authentication-groups).
     - Add tests to retrieve archive.
     - Improve tests.
-<details>
-  <summary markdown="span">Exapnd to check old versions </summary>
 - v1.9.1
     - Bug fix - adjust "not found" message to all resources.
 - v1.9.0

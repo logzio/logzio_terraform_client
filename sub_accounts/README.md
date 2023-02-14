@@ -5,10 +5,12 @@ Compatible with Logz.io's [sub-accounts API](https://docs.logz.io/api/#tag/Manag
 To create a new sub-account, on a main account.
 ```go
 client, _ := sub_accounts.New(apiToken, apiServerAddress)
+maxDailyGb := new(float32)
+*maxDailyGb = 1
 subaccount := sub_accounts.CreateOrUpdateSubAccount{
                 Email:                  "some@email.test",
                 AccountName:            "tf_client_test",
-                MaxDailyGB:             1,
+                MaxDailyGB:             maxDailyGb,
                 RetentionDays:          1,
                 Searchable:             strconv.FormatBool(false),
                 Accessible:             strconv.FormatBool(true),

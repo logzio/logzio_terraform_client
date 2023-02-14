@@ -35,7 +35,8 @@ func TestEndpoints_CreateCustomEndpoint(t *testing.T) {
 		createEndpoint.Type = endpoints.EndpointTypeCustom
 		createEndpoint.Url = testsUrl
 		createEndpoint.Method = http.MethodPost
-		createEndpoint.Headers = "hello=there,header=two"
+		createEndpoint.Headers = new(string)
+		*createEndpoint.Headers = "hello=there,header=two"
 		createEndpoint.BodyTemplate = map[string]string{"hello": "there", "header": "two"}
 		endpoint, err := underTest.CreateEndpoint(createEndpoint)
 		assert.NoError(t, err)
@@ -66,7 +67,8 @@ func TestEndpoints_CreateCustomEndpointApiFail(t *testing.T) {
 		createEndpoint.Type = endpoints.EndpointTypeCustom
 		createEndpoint.Url = testsUrl
 		createEndpoint.Method = http.MethodPost
-		createEndpoint.Headers = "hello=there,header=two"
+		createEndpoint.Headers = new(string)
+		*createEndpoint.Headers = "hello=there,header=two"
 		createEndpoint.BodyTemplate = map[string]string{"hello": "there", "header": "two"}
 		endpoint, err := underTest.CreateEndpoint(createEndpoint)
 		assert.Error(t, err)
@@ -99,7 +101,8 @@ func TestEndpoints_UpdateCustomEndpoint(t *testing.T) {
 		updateEndpoint.Type = endpoints.EndpointTypeCustom
 		updateEndpoint.Url = testsUrl
 		updateEndpoint.Method = http.MethodPost
-		updateEndpoint.Headers = "hello=there,header=two"
+		updateEndpoint.Headers = new(string)
+		*updateEndpoint.Headers = "hello=there,header=two"
 		updateEndpoint.BodyTemplate = map[string]string{"hello": "there", "header": "two"}
 		endpoint, err := underTest.UpdateEndpoint(endpointId, updateEndpoint)
 		assert.NoError(t, err)

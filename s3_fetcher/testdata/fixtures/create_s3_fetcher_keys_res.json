@@ -1,0 +1,11 @@
+{
+  "id": 12345,
+  "accessKey": "my_access_key",
+  "logsType": "elb",
+  "bucket": "my_bucket",
+  "prefix": "AWSLogs/987654321/elasticloadbalancing/us-east-1/",
+  "active": true,
+  "region": "US_EAST_1",
+  "arn": null,
+  "addS3ObjectKeyAsLogField": true
+}

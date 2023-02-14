@@ -63,5 +63,9 @@ func validateInitiateRestoreOperation(initiateRestore InitiateRestore) error {
 		return fmt.Errorf("EndTime must be set")
 	}
 
+	if len(initiateRestore.UserName) == 0 {
+		return fmt.Errorf("UserName must be set")
+	}
+
 	return nil
 }

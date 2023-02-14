@@ -1,90 +1,49 @@
-// +build integration
-
 package users_test
 
 import (
 	"github.com/logzio/logzio_terraform_client/test_utils"
-	"github.com/logzio/logzio_terraform_client/users"
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"time"
 )
 
-func TestIntegrationUsers_UpdateExistingUser(t *testing.T) {
+func TestIntegrationUsers_UpdateUser(t *testing.T) {
 	underTest, err := setupUsersIntegrationTest()
-
-	accountId, _ := test_utils.GetAccountId()
-
+	defer test_utils.TestDoneTimeBuffer()
 	if assert.NoError(t, err) {
-		user, err := underTest.CreateUser(users.User{
-			Username:  "updateexistinguser@massive.co",
-			Fullname:  test_fullname,
-			AccountId: accountId,
-			Roles:     []int32{users.UserTypeUser},
-		})
-
-		assert.NoError(t, err)
-		if assert.NotNil(t, user) {
-			user.Fullname = "test_updatedfullname"
-			user.Active = true
-
-			v, err := underTest.UpdateUser(*user)
-			assert.NoError(t, err)
-
-			v, err = underTest.GetUser(user.Id)
-
-			if assert.NoError(t, err) && assert.NotNil(t, v) {
-				assert.Equal(t, "test_updatedfullname", v.Fullname)
-				assert.Equal(t, accountId, v.AccountId)
-				assert.True(t, v.Active)
-				assert.Equal(t, user.Id, user.Id)
+		createUser, err := getCreateUser()
+		if assert.NoError(t, err) && assert.NotNil(t, createUser) {
+			createUser.FullName += "-to-update"
+			resp, err := underTest.CreateUser(createUser)
+			if assert.NoError(t, err) && assert.NotNil(t, resp) {
+				defer underTest.DeleteUser(resp.Id)
+				time.Sleep(2 * time.Second)
+				createUser.FullName += "-after"
+				resp, err = underTest.UpdateUser(resp.Id, createUser)
+				assert.NoError(t, err)
+				assert.NotNil(t, resp)
+				time.Sleep(2 * time.Second)
+				// Double check that the user was updated
+				user, err := underTest.GetUser(resp.Id)
+				assert.NoError(t, err)
+				assert.NotNil(t, user)
+				assert.Equal(t, createUser.FullName, user.FullName)
 			}
-
 		}
 
-		defer underTest.DeleteUser(user.Id)
 	}
 }
 
-func TestIntegrationUsers_UpdateNonExistingUser(t *testing.T) {
+func TestIntegrationUsers_UpdateUserIdNotExist(t *testing.T) {
 	underTest, err := setupUsersIntegrationTest()
-	accountId, _ := test_utils.GetAccountId()
-
+	defer test_utils.TestDoneTimeBuffer()
 	if assert.NoError(t, err) {
-		user := users.User{
-			Username:  "some@random.user",
-			Fullname:  test_fullname,
-			AccountId: accountId,
-			Roles:     []int32{users.UserTypeUser},
-			Id:        -1,
-		}
-
-		_, err := underTest.UpdateUser(user)
-		assert.Error(t, err)
-	}
-}
-
-func TestIntegrationUsers_UpdateExistingUserInvalidUpdate(t *testing.T) {
-	underTest, err := setupUsersIntegrationTest()
-	accountId, _ := test_utils.GetAccountId()
-
-	if assert.NoError(t, err) {
-		user, err := underTest.CreateUser(users.User{
-			Username:  "updateexistinguser.invalid@massive.co",
-			Fullname:  test_fullname,
-			AccountId: accountId,
-			Roles:     []int32{users.UserTypeUser},
-		})
-
-		assert.NoError(t, err)
-		if assert.NotNil(t, user) {
-			user.Username = "test_invalidusername"
-			user.Fullname = "test_updatedfullname"
-			user.Active = true
-
-			_, err := underTest.UpdateUser(*user)
+		createUser, err := getCreateUser()
+		if assert.NoError(t, err) && assert.NotNil(t, createUser) {
+			createUser.FullName += "-to-update-id-not-exist"
+			resp, err := underTest.UpdateUser(1234, createUser)
 			assert.Error(t, err)
+			assert.Nil(t, resp)
 		}
-
-		defer underTest.DeleteUser(user.Id)
 	}
 }

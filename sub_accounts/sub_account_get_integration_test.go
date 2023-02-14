@@ -10,7 +10,7 @@ func TestIntegrationSubAccount_GetSubAccount(t *testing.T) {
 	underTest, email, err := setupSubAccountsIntegrationTest()
 
 	if assert.NoError(t, err) {
-		createSubAccount := getCreatrOrUpdateSubAccount(email)
+		createSubAccount := getCreateOrUpdateSubAccount(email)
 		createSubAccount.AccountName = createSubAccount.AccountName + "_get"
 
 		subAccount, err := underTest.CreateSubAccount(createSubAccount)
