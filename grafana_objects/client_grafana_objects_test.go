@@ -3,9 +3,9 @@ package grafana_objects_test
 import (
 	"github.com/logzio/logzio_terraform_client/grafana_objects"
 	"github.com/logzio/logzio_terraform_client/test_utils"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"strconv"
 )
 
@@ -38,7 +38,7 @@ func setupGrafanaObjectsIntegrationTest() (*grafana_objects.GrafanaObjectsClient
 }
 
 func fixture(path string) string {
-	b, err := ioutil.ReadFile("testdata/fixtures/" + path)
+	b, err := os.ReadFile("testdata/fixtures/" + path)
 	if err != nil {
 		panic(err)
 	}
@@ -49,7 +49,7 @@ func getCreateUpdateDashboard() grafana_objects.CreateUpdatePayload {
 	dashboard := grafana_objects.DashboardObject{
 		Title:  "dashboard_test",
 		Tags:   []string{"some", "tags"},
-		Panels: make([]map[string]interface{}, 0),
+		Panels: make([]interface{}, 0),
 	}
 
 	return grafana_objects.CreateUpdatePayload{

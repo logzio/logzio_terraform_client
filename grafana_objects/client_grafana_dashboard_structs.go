@@ -27,7 +27,7 @@ type DashboardObject struct {
 	Refresh       string          `json:"refresh"`
 	SchemaVersion int             `json:"schemaVersion,omitempty"`
 	Version       int             `json:"version,omitempty"`
-	Panels        []interface{}   `json:"panels,omitempty"`
+	Panels        []interface{}   `json:"panels"`
 }
 
 type TimeRange struct {
