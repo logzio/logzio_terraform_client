@@ -3,7 +3,7 @@ package grafana_objects_test
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"testing"
 
@@ -22,7 +22,7 @@ func TestGrafanaObjects_CreateUpdateOK(t *testing.T) {
 
 	mux.HandleFunc(dashboardsApiBasePath+"/db", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodPost, r.Method)
-		jsonBytes, err := ioutil.ReadAll(r.Body)
+		jsonBytes, err := io.ReadAll(r.Body)
 		assert.NoError(t, err)
 		var target grafana_objects.CreateUpdatePayload
 		err = json.Unmarshal(jsonBytes, &target)
@@ -53,7 +53,7 @@ func TestGrafanaObjects_CreateUpdateNOKPreconditionFailed(t *testing.T) {
 
 	mux.HandleFunc(dashboardsApiBasePath+"/db", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodPost, r.Method)
-		jsonBytes, err := ioutil.ReadAll(r.Body)
+		jsonBytes, err := io.ReadAll(r.Body)
 		assert.NoError(t, err)
 		var target grafana_objects.CreateUpdatePayload
 		err = json.Unmarshal(jsonBytes, &target)
@@ -81,7 +81,7 @@ func TestGrafanaObjects_CreateUpdateNOKNotFound(t *testing.T) {
 
 	mux.HandleFunc(dashboardsApiBasePath+"/db", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodPost, r.Method)
-		jsonBytes, err := ioutil.ReadAll(r.Body)
+		jsonBytes, err := io.ReadAll(r.Body)
 		assert.NoError(t, err)
 		var target grafana_objects.CreateUpdatePayload
 		err = json.Unmarshal(jsonBytes, &target)
@@ -108,7 +108,7 @@ func TestGrafanaObjects_CreateUpdateNOKApiFail(t *testing.T) {
 
 	mux.HandleFunc(dashboardsApiBasePath+"/db", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodPost, r.Method)
-		jsonBytes, err := ioutil.ReadAll(r.Body)
+		jsonBytes, err := io.ReadAll(r.Body)
 		assert.NoError(t, err)
 		var target grafana_objects.CreateUpdatePayload
 		err = json.Unmarshal(jsonBytes, &target)
