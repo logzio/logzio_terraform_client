@@ -38,6 +38,6 @@ func TestIntegrationGrafanaObjects_GetByUidNotFound(t *testing.T) {
 		get, err := underTest.Get("not exist")
 		assert.Error(t, err)
 		assert.Nil(t, get)
-		assert.Contains(t, err.Error(), "failed with missing dashboard")
+		assert.Contains(t, err.Error(), "failed with missing grafana dashboard")
 	}
 }

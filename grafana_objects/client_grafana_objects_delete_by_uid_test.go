@@ -47,7 +47,7 @@ func TestGrafanaObjects_DeleteNotFound(t *testing.T) {
 	dashboard, err := underTest.Delete(fmt.Sprint(dashboardId))
 	assert.Error(t, err)
 	assert.Nil(t, dashboard)
-	assert.Contains(t, err.Error(), "failed with missing dashboard")
+	assert.Contains(t, err.Error(), "failed with missing grafana dashboard")
 }
 
 func TestGrafanaObjects_DeleteServerError(t *testing.T) {

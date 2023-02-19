@@ -15,7 +15,7 @@ const (
 	dashboardDelete       = "DeleteGrafanaDashboard"
 	dashboardGet          = "GetGrafanaDashboard"
 
-	dashboardResourceName = "dashboard"
+	dashboardResourceName = "grafana dashboard"
 
 	GrafanaSuccessStatus = "success"
 )

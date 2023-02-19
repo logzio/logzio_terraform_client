@@ -56,7 +56,7 @@ func TestGrafanaObjects_GetNotFound(t *testing.T) {
 	dashboard, err := underTest.Get(fmt.Sprint(dashboardId))
 	assert.Error(t, err)
 	assert.Nil(t, dashboard)
-	assert.Contains(t, err.Error(), "failed with missing dashboard")
+	assert.Contains(t, err.Error(), "failed with missing grafana dashboard")
 }
 
 func TestGrafanaObjects_GetError(t *testing.T) {

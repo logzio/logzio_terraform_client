@@ -36,6 +36,6 @@ func TestIntegrationGrafanaObjects_DeleteByUidNotFound(t *testing.T) {
 		deleteRes, err := underTest.Delete("not exist")
 		assert.Error(t, err)
 		assert.Nil(t, deleteRes)
-		assert.Contains(t, err.Error(), "failed with missing dashboard")
+		assert.Contains(t, err.Error(), "failed with missing grafana dashboard")
 	}
 }

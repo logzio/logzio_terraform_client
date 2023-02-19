@@ -94,7 +94,7 @@ func TestGrafanaObjects_CreateUpdateNOKNotFound(t *testing.T) {
 	dashboard, err := underTest.CreateUpdate(createDashboard)
 	assert.Error(t, err)
 	assert.Nil(t, dashboard)
-	assert.Contains(t, err.Error(), "failed with missing dashboard")
+	assert.Contains(t, err.Error(), "failed with missing grafana dashboard")
 }
 
 func TestGrafanaObjects_CreateUpdateNOKApiFail(t *testing.T) {
