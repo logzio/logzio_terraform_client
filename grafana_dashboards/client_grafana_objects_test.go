@@ -49,6 +49,7 @@ func getCreateUpdateDashboard() grafana_dashboards.CreateUpdatePayload {
 	dashboard := map[string]interface{}{
 		"title":  "dashboard_test",
 		"tags":   []string{"some", "tags"},
+		"uid":    "",
 		"panels": make([]interface{}, 0),
 	}
 
@@ -67,6 +68,6 @@ func getCreateDashboardIntegrationTests() (grafana_dashboards.CreateUpdatePayloa
 		return createUpdate, err
 	}
 
-	createUpdate.FolderId, err = strconv.Atoi(folderId)
+	createUpdate.FolderId, err = strconv.ParseFloat(folderId, 64)
 	return createUpdate, err
 }

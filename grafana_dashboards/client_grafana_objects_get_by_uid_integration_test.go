@@ -25,7 +25,7 @@ func TestIntegrationGrafanaObjects_GetByUid(t *testing.T) {
 				assert.NoError(t, err)
 				assert.NotNil(t, getDashboard)
 				assert.Equal(t, dashboard.Uid, getDashboard.Dashboard["uid"].(string))
-				assert.Equal(t, createDashboard.FolderId, getDashboard.Meta["folderId"].(int))
+				assert.Equal(t, createDashboard.FolderId, getDashboard.Meta["folderId"].(float64))
 				assert.Equal(t, createDashboard.Dashboard["title"].(string), getDashboard.Dashboard["title"].(string))
 			}
 		}
