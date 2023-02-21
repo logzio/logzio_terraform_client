@@ -1,4 +1,4 @@
-package grafana_objects
+package grafana_dashboards
 
 import (
 	"fmt"
@@ -26,16 +26,16 @@ type GrafanaObjectsClient struct {
 }
 
 type CreateUpdatePayload struct {
-	Dashboard DashboardObject `json:"dashboard"`
-	FolderId  int             `json:"folderId"`
-	FolderUid string          `json:"folderUid"`
-	Message   string          `json:"message"`
-	Overwrite bool            `json:"overwrite"`
+	Dashboard map[string]interface{} `json:"dashboard"`
+	FolderId  int                    `json:"folderId"`
+	FolderUid string                 `json:"folderUid"`
+	Message   string                 `json:"message"`
+	Overwrite bool                   `json:"overwrite"`
 }
 
 type GetResults struct {
-	Dashboard DashboardObject `json:"dashboard"`
-	Meta      DashboardMeta   `json:"meta"`
+	Dashboard map[string]interface{} `json:"dashboard"`
+	Meta      map[string]interface{} `json:"meta"`
 }
 
 type DeleteResults struct {

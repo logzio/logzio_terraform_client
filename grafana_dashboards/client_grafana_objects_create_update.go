@@ -1,4 +1,4 @@
-package grafana_objects
+package grafana_dashboards
 
 import (
 	"encoding/json"
@@ -15,11 +15,15 @@ const (
 	grafanaObjectsCreateUpdateDashboardsByUIDNotFound = http.StatusNotFound
 )
 
-// CreateUpdate allows the creation or update of a Grafana dashboard
-func (c *GrafanaObjectsClient) CreateUpdate(payload CreateUpdatePayload) (*CreateUpdateResults, error) {
+// CreateUpdateGrafanaDashboard allows the creation or update of a Grafana dashboard
+func (c *GrafanaObjectsClient) CreateUpdateGrafanaDashboard(payload CreateUpdatePayload) (*CreateUpdateResults, error) {
 	payloadJson, err := json.Marshal(payload)
 	if err != nil {
 		return nil, err
+	}
+	var dashboardUid string
+	if uid, ok := payload.Dashboard["uid"]; ok {
+		dashboardUid = uid.(string)
 	}
 
 	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
@@ -30,7 +34,7 @@ func (c *GrafanaObjectsClient) CreateUpdate(payload CreateUpdatePayload) (*Creat
 		SuccessCodes: []int{grafanaObjectsCreateUpdateDashboardsByUIDSuccess},
 		NotFoundCode: grafanaObjectsCreateUpdateDashboardsByUIDNotFound,
 		ApiAction:    dashboardCreateUpdate,
-		ResourceId:   payload.Dashboard.Id,
+		ResourceId:   dashboardUid,
 		ResourceName: dashboardResourceName,
 	})
 

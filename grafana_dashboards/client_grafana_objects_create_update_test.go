@@ -17,8 +17,8 @@ func TestGrafanaObjects_CreateUpdateOK(t *testing.T) {
 	defer teardown()
 
 	createDashboard := getCreateUpdateDashboard()
-	createDashboard.Dashboard.Title += "_create"
-	createDashboard.Dashboard.Uid += "test1"
+	createDashboard.Dashboard["title"] = fmt.Sprintf("%s%s", createDashboard.Dashboard["title"], "_create")
+	createDashboard.Dashboard["uid"] = fmt.Sprintf("%s%s", createDashboard.Dashboard["uid"], "test1")
 
 	mux.HandleFunc(dashboardsApiBasePath+"/db", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodPost, r.Method)
@@ -34,7 +34,7 @@ func TestGrafanaObjects_CreateUpdateOK(t *testing.T) {
 		fmt.Fprint(w, fixture("createupdate_ok_resp.json"))
 	})
 
-	resp, err := underTest.CreateUpdate(createDashboard)
+	resp, err := underTest.CreateUpdateGrafanaDashboard(createDashboard)
 	assert.NoError(t, err)
 	assert.NotNil(t, resp)
 	assert.NotZero(t, resp.Id)
@@ -65,7 +65,7 @@ func TestGrafanaObjects_CreateUpdateNOKPreconditionFailed(t *testing.T) {
 		fmt.Fprint(w, fixture("createupdate_nok_resp_412.json"))
 	})
 
-	dashboard, err := underTest.CreateUpdate(createDashboard)
+	dashboard, err := underTest.CreateUpdateGrafanaDashboard(createDashboard)
 	assert.Error(t, err)
 	assert.Nil(t, dashboard)
 }
@@ -91,7 +91,7 @@ func TestGrafanaObjects_CreateUpdateNOKNotFound(t *testing.T) {
 		w.WriteHeader(http.StatusNotFound)
 	})
 
-	dashboard, err := underTest.CreateUpdate(createDashboard)
+	dashboard, err := underTest.CreateUpdateGrafanaDashboard(createDashboard)
 	assert.Error(t, err)
 	assert.Nil(t, dashboard)
 	assert.Contains(t, err.Error(), "failed with missing grafana dashboard")
@@ -118,7 +118,7 @@ func TestGrafanaObjects_CreateUpdateNOKApiFail(t *testing.T) {
 		w.WriteHeader(http.StatusInternalServerError)
 	})
 
-	dashboard, err := underTest.CreateUpdate(createDashboard)
+	dashboard, err := underTest.CreateUpdateGrafanaDashboard(createDashboard)
 	assert.Error(t, err)
 	assert.Nil(t, dashboard)
 }

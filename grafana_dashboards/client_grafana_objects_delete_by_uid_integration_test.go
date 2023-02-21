@@ -15,7 +15,7 @@ func TestIntegrationGrafanaObjects_DeleteByUid(t *testing.T) {
 		if assert.NoError(t, err) {
 			createDashboard.Dashboard.Title += "_delete"
 			createDashboard.Dashboard.Uid += "_delete"
-			dashboard, err := underTest.CreateUpdate(createDashboard)
+			dashboard, err := underTest.CreateUpdateGrafanaDashboard(createDashboard)
 			if assert.NoError(t, err) && assert.NotNil(t, dashboard) {
 				time.Sleep(2 * time.Second)
 				assert.NotEmpty(t, dashboard.Uid)

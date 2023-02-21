@@ -23,7 +23,7 @@ func TestGrafanaObjects_GetOK(t *testing.T) {
 		fmt.Fprint(w, fixture("get.json"))
 	})
 
-	result, err := underTest.Get(fmt.Sprint(dashboardId))
+	result, err := underTest.GetGrafanaDashboard(fmt.Sprint(dashboardId))
 	assert.NoError(t, err)
 	assert.Equal(t, result, &grafana_objects.GetResults{
 		Dashboard: grafana_objects.DashboardObject{
@@ -53,7 +53,7 @@ func TestGrafanaObjects_GetNotFound(t *testing.T) {
 		w.WriteHeader(http.StatusNotFound)
 	})
 
-	dashboard, err := underTest.Get(fmt.Sprint(dashboardId))
+	dashboard, err := underTest.GetGrafanaDashboard(fmt.Sprint(dashboardId))
 	assert.Error(t, err)
 	assert.Nil(t, dashboard)
 	assert.Contains(t, err.Error(), "failed with missing grafana dashboard")
@@ -72,7 +72,7 @@ func TestGrafanaObjects_GetError(t *testing.T) {
 		w.WriteHeader(http.StatusInternalServerError)
 	})
 
-	dashboard, err := underTest.Get(fmt.Sprint(dashboardId))
+	dashboard, err := underTest.GetGrafanaDashboard(fmt.Sprint(dashboardId))
 	assert.Error(t, err)
 	assert.Nil(t, dashboard)
 }

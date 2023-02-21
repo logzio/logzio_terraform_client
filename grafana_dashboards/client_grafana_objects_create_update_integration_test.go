@@ -1,7 +1,8 @@
-package grafana_objects_test
+package grafana_dashboards_test
 
 import (
-	"github.com/logzio/logzio_terraform_client/grafana_objects"
+	"fmt"
+	"github.com/logzio/logzio_terraform_client/grafana_dashboards"
 	"github.com/logzio/logzio_terraform_client/test_utils"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -14,14 +15,14 @@ func TestIntegrationGrafanaObjects_CreateDashboard(t *testing.T) {
 	if assert.NoError(t, err) {
 		createDashboard, err := getCreateDashboardIntegrationTests()
 		if assert.NoError(t, err) {
-			createDashboard.Dashboard.Title += "_create"
-			createDashboard.Dashboard.Uid += "_create"
-			dashboard, err := underTest.CreateUpdate(createDashboard)
+			createDashboard.Dashboard["title"] = fmt.Sprintf("%s%s", createDashboard.Dashboard["title"], "_create")
+			createDashboard.Dashboard["uid"] = fmt.Sprintf("%s%s", createDashboard.Dashboard["uid"], "_create")
+			dashboard, err := underTest.CreateUpdateGrafanaDashboard(createDashboard)
 			if assert.NoError(t, err) && assert.NotNil(t, dashboard) {
 				time.Sleep(2 * time.Second)
 				assert.NotEmpty(t, dashboard.Uid)
 				defer underTest.Delete(dashboard.Uid)
-				assert.Equal(t, grafana_objects.GrafanaSuccessStatus, dashboard.Status)
+				assert.Equal(t, grafana_dashboards.GrafanaSuccessStatus, dashboard.Status)
 			}
 		}
 	}
@@ -33,20 +34,20 @@ func TestIntegrationGrafanaObjects_UpdateDashboard(t *testing.T) {
 	if assert.NoError(t, err) {
 		createDashboard, err := getCreateDashboardIntegrationTests()
 		if assert.NoError(t, err) {
-			createDashboard.Dashboard.Title += "_before_update"
-			createDashboard.Dashboard.Uid += "_update"
-			dashboard, err := underTest.CreateUpdate(createDashboard)
+			createDashboard.Dashboard["title"] = fmt.Sprintf("%s%s", createDashboard.Dashboard["title"], "_before_update")
+			createDashboard.Dashboard["uid"] = fmt.Sprintf("%s%s", createDashboard.Dashboard["uid"], "_update")
+			dashboard, err := underTest.CreateUpdateGrafanaDashboard(createDashboard)
 			if assert.NoError(t, err) && assert.NotNil(t, dashboard) {
 				time.Sleep(2 * time.Second)
 				assert.NotEmpty(t, dashboard.Uid)
 				defer underTest.Delete(dashboard.Uid)
-				assert.Equal(t, grafana_objects.GrafanaSuccessStatus, dashboard.Status)
-				createDashboard.Dashboard.Title = "after_update"
-				createDashboard.Dashboard.Id = dashboard.Id
-				createDashboard.Dashboard.Uid = dashboard.Uid
-				updated, err := underTest.CreateUpdate(createDashboard)
+				assert.Equal(t, grafana_dashboards.GrafanaSuccessStatus, dashboard.Status)
+				createDashboard.Dashboard["title"] = fmt.Sprintf("%s%s", createDashboard.Dashboard["title"], "after_update")
+				createDashboard.Dashboard["uid"] = dashboard.Uid
+				createDashboard.Dashboard["id"] = dashboard.Id
+				updated, err := underTest.CreateUpdateGrafanaDashboard(createDashboard)
 				if assert.NoError(t, err) && assert.NotNil(t, updated) {
-					assert.Equal(t, grafana_objects.GrafanaSuccessStatus, updated.Status)
+					assert.Equal(t, grafana_dashboards.GrafanaSuccessStatus, updated.Status)
 				}
 			}
 		}
@@ -59,10 +60,10 @@ func TestIntegrationGrafanaObjects_CreateUpdateDashboardInvalidPayload(t *testin
 	if assert.NoError(t, err) {
 		createDashboard, err := getCreateDashboardIntegrationTests()
 		if assert.NoError(t, err) {
-			createDashboard.Dashboard.Title += "_create_invalid"
-			createDashboard.Dashboard.Uid += "_create_invalid"
-			createDashboard.Dashboard.Panels = nil
-			dashboard, err := underTest.CreateUpdate(createDashboard)
+			createDashboard.Dashboard["title"] = fmt.Sprintf("%s%s", createDashboard.Dashboard["title"], "_create_invalid")
+			createDashboard.Dashboard["uid"] = fmt.Sprintf("%s%s", createDashboard.Dashboard["uid"], "_create_invalid")
+			createDashboard.Dashboard["panels"] = nil
+			dashboard, err := underTest.CreateUpdateGrafanaDashboard(createDashboard)
 			assert.Error(t, err)
 			assert.Nil(t, dashboard)
 		}
@@ -75,11 +76,11 @@ func TestIntegrationGrafanaObjects_UpdateDashboardNotFound(t *testing.T) {
 	if assert.NoError(t, err) {
 		createDashboard, err := getCreateDashboardIntegrationTests()
 		if assert.NoError(t, err) {
-			createDashboard.Dashboard.Title += "_update_not_found"
-			createDashboard.Dashboard.Uid += "_update_not_found"
-			createDashboard.Dashboard.Id = 1
+			createDashboard.Dashboard["title"] = fmt.Sprintf("%s%s", createDashboard.Dashboard["title"], "_update_not_found")
+			createDashboard.Dashboard["uid"] = fmt.Sprintf("%s%s", createDashboard.Dashboard["uid"], "_update_not_found")
+			createDashboard.Dashboard["id"] = 1
 			createDashboard.Overwrite = true
-			dashboard, err := underTest.CreateUpdate(createDashboard)
+			dashboard, err := underTest.CreateUpdateGrafanaDashboard(createDashboard)
 			assert.Error(t, err)
 			assert.Nil(t, dashboard)
 			assert.Contains(t, err.Error(), "failed with missing grafana dashboard")

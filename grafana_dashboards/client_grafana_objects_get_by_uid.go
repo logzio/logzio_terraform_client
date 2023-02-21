@@ -15,9 +15,9 @@ const (
 	grafanaObjectsGetDashboardsByUIDNotFound = http.StatusNotFound
 )
 
-// Get allows getting a Grafana objects configuration.
+// GetGrafanaDashboard allows getting a Grafana objects configuration.
 // https://docs.logz.io/api/#operation/getDashboarById
-func (c *GrafanaObjectsClient) Get(objectUid string) (*GetResults, error) {
+func (c *GrafanaObjectsClient) GetGrafanaDashboard(objectUid string) (*GetResults, error) {
 	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
 		ApiToken:     c.ApiToken,
 		HttpMethod:   grafanaObjectsGetDashboardsByUIDMethod,
