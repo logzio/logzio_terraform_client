@@ -1,6 +1,7 @@
-package grafana_objects_test
+package grafana_dashboards_test
 
 import (
+	"fmt"
 	"github.com/logzio/logzio_terraform_client/test_utils"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -13,19 +14,19 @@ func TestIntegrationGrafanaObjects_GetByUid(t *testing.T) {
 	if assert.NoError(t, err) {
 		createDashboard, err := getCreateDashboardIntegrationTests()
 		if assert.NoError(t, err) {
-			createDashboard.Dashboard.Title += "_get"
-			createDashboard.Dashboard.Uid += "_get"
+			createDashboard.Dashboard["title"] = fmt.Sprintf("%s%s", createDashboard.Dashboard["title"], "_get")
+			createDashboard.Dashboard["uid"] = fmt.Sprintf("%s%s", createDashboard.Dashboard["uid"], "_get")
 			dashboard, err := underTest.CreateUpdateGrafanaDashboard(createDashboard)
 			if assert.NoError(t, err) && assert.NotNil(t, dashboard) {
 				time.Sleep(2 * time.Second)
 				assert.NotEmpty(t, dashboard.Uid)
-				defer underTest.Delete(dashboard.Uid)
+				defer underTest.DeleteGrafanaDashboard(dashboard.Uid)
 				getDashboard, err := underTest.GetGrafanaDashboard(dashboard.Uid)
 				assert.NoError(t, err)
 				assert.NotNil(t, getDashboard)
-				assert.Equal(t, dashboard.Uid, getDashboard.Dashboard.Uid)
-				assert.Equal(t, createDashboard.FolderId, getDashboard.Meta.FolderId)
-				assert.Equal(t, createDashboard.Dashboard.Title, getDashboard.Dashboard.Title)
+				assert.Equal(t, dashboard.Uid, getDashboard.Dashboard["uid"].(string))
+				assert.Equal(t, createDashboard.FolderId, getDashboard.Meta["folderId"].(int))
+				assert.Equal(t, createDashboard.Dashboard["title"].(string), getDashboard.Dashboard["title"].(string))
 			}
 		}
 	}

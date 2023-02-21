@@ -1,4 +1,4 @@
-package grafana_objects_test
+package grafana_dashboards_test
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/logzio/logzio_terraform_client/grafana_objects"
+	"github.com/logzio/logzio_terraform_client/grafana_dashboards"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -25,17 +25,17 @@ func TestGrafanaObjects_GetOK(t *testing.T) {
 
 	result, err := underTest.GetGrafanaDashboard(fmt.Sprint(dashboardId))
 	assert.NoError(t, err)
-	assert.Equal(t, result, &grafana_objects.GetResults{
-		Dashboard: grafana_objects.DashboardObject{
-			Title: "getOK",
-			Uid:   fmt.Sprint(dashboardId),
+	assert.Equal(t, result, &grafana_dashboards.GetResults{
+		Dashboard: map[string]interface{}{
+			"title": "getOK",
+			"uid":   fmt.Sprint(dashboardId),
 		},
-		Meta: grafana_objects.DashboardMeta{
-			IsStarred: true,
-			Url:       "testUrl",
-			FolderId:  1,
-			FolderUid: "testUid",
-			Slug:      "testSlug",
+		Meta: map[string]interface{}{
+			"isStarred": true,
+			"url":       "testUrl",
+			"folderId":  1,
+			"folderUid": "testUid",
+			"slug":      "testSlug",
 		},
 	},
 	)

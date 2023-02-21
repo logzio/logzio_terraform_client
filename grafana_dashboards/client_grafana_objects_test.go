@@ -1,7 +1,7 @@
-package grafana_objects_test
+package grafana_dashboards_test
 
 import (
-	"github.com/logzio/logzio_terraform_client/grafana_objects"
+	"github.com/logzio/logzio_terraform_client/grafana_dashboards"
 	"github.com/logzio/logzio_terraform_client/test_utils"
 	"net/http"
 	"net/http/httptest"
@@ -16,24 +16,24 @@ var (
 	server *httptest.Server
 )
 
-func setupGrafanaObjectsTest() (*grafana_objects.GrafanaObjectsClient, func(), error) {
+func setupGrafanaObjectsTest() (*grafana_dashboards.GrafanaObjectsClient, func(), error) {
 	mux = http.NewServeMux()
 	server = httptest.NewServer(mux)
 
 	apiToken := "SOME_API_TOKEN"
-	underTest, err := grafana_objects.New(apiToken, server.URL)
+	underTest, err := grafana_dashboards.New(apiToken, server.URL)
 
 	return underTest, func() {
 		server.Close()
 	}, err
 }
 
-func setupGrafanaObjectsIntegrationTest() (*grafana_objects.GrafanaObjectsClient, error) {
+func setupGrafanaObjectsIntegrationTest() (*grafana_dashboards.GrafanaObjectsClient, error) {
 	apiToken, err := test_utils.GetApiToken()
 	if err != nil {
 		return nil, err
 	}
-	underTest, err := grafana_objects.New(apiToken, test_utils.GetLogzIoBaseUrl())
+	underTest, err := grafana_dashboards.New(apiToken, test_utils.GetLogzIoBaseUrl())
 	return underTest, err
 }
 
@@ -45,14 +45,14 @@ func fixture(path string) string {
 	return string(b)
 }
 
-func getCreateUpdateDashboard() grafana_objects.CreateUpdatePayload {
+func getCreateUpdateDashboard() grafana_dashboards.CreateUpdatePayload {
 	dashboard := map[string]interface{}{
 		"title":  "dashboard_test",
 		"tags":   []string{"some", "tags"},
 		"panels": make([]interface{}, 0),
 	}
 
-	return grafana_objects.CreateUpdatePayload{
+	return grafana_dashboards.CreateUpdatePayload{
 		Dashboard: dashboard,
 		FolderId:  1,
 		Message:   "some message",
@@ -60,7 +60,7 @@ func getCreateUpdateDashboard() grafana_objects.CreateUpdatePayload {
 	}
 }
 
-func getCreateDashboardIntegrationTests() (grafana_objects.CreateUpdatePayload, error) {
+func getCreateDashboardIntegrationTests() (grafana_dashboards.CreateUpdatePayload, error) {
 	createUpdate := getCreateUpdateDashboard()
 	folderId, err := test_utils.GetMetricsFolderId()
 	if err != nil {

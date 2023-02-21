@@ -1,4 +1,4 @@
-package grafana_objects
+package grafana_dashboards
 
 import (
 	"encoding/json"
