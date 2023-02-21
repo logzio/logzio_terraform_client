@@ -1,4 +1,4 @@
-package grafana_objects
+package grafana_dashboards
 
 import (
 	"encoding/json"
@@ -15,9 +15,9 @@ const (
 	grafanaObjectsDeleteDashboardsByUIDNotFound = http.StatusNotFound
 )
 
-// Delete allows deleting Grafana objects configuration.
+// DeleteGrafanaDashboard allows deleting Grafana objects configuration.
 // https://docs.logz.io/api/#operation/deleteDashboarById
-func (c *GrafanaObjectsClient) Delete(objectUid string) (*DeleteResults, error) {
+func (c *GrafanaObjectsClient) DeleteGrafanaDashboard(objectUid string) (*DeleteResults, error) {
 	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
 		ApiToken:     c.ApiToken,
 		HttpMethod:   grafanaObjectsDeleteDashboardsByUIDMethod,

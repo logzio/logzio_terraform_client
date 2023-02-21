@@ -21,7 +21,7 @@ func TestIntegrationGrafanaObjects_CreateDashboard(t *testing.T) {
 			if assert.NoError(t, err) && assert.NotNil(t, dashboard) {
 				time.Sleep(2 * time.Second)
 				assert.NotEmpty(t, dashboard.Uid)
-				defer underTest.Delete(dashboard.Uid)
+				defer underTest.DeleteGrafanaDashboard(dashboard.Uid)
 				assert.Equal(t, grafana_dashboards.GrafanaSuccessStatus, dashboard.Status)
 			}
 		}
@@ -40,7 +40,7 @@ func TestIntegrationGrafanaObjects_UpdateDashboard(t *testing.T) {
 			if assert.NoError(t, err) && assert.NotNil(t, dashboard) {
 				time.Sleep(2 * time.Second)
 				assert.NotEmpty(t, dashboard.Uid)
-				defer underTest.Delete(dashboard.Uid)
+				defer underTest.DeleteGrafanaDashboard(dashboard.Uid)
 				assert.Equal(t, grafana_dashboards.GrafanaSuccessStatus, dashboard.Status)
 				createDashboard.Dashboard["title"] = fmt.Sprintf("%s%s", createDashboard.Dashboard["title"], "after_update")
 				createDashboard.Dashboard["uid"] = dashboard.Uid

@@ -1,4 +1,4 @@
-package grafana_objects_test
+package grafana_dashboards_test
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/logzio/logzio_terraform_client/grafana_objects"
+	"github.com/logzio/logzio_terraform_client/grafana_dashboards"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -23,9 +23,9 @@ func TestGrafanaObjects_DeleteOK(t *testing.T) {
 		fmt.Fprint(w, fixture("delete.json"))
 	})
 
-	result, err := underTest.Delete(fmt.Sprint(dashboardId))
+	result, err := underTest.DeleteGrafanaDashboard(fmt.Sprint(dashboardId))
 	assert.NoError(t, err)
-	assert.Equal(t, result, &grafana_objects.DeleteResults{
+	assert.Equal(t, result, &grafana_dashboards.DeleteResults{
 		Title:   "testDeleteOK",
 		Message: "deleteOK",
 		Id:      1234,
@@ -44,7 +44,7 @@ func TestGrafanaObjects_DeleteNotFound(t *testing.T) {
 		w.WriteHeader(http.StatusNotFound)
 	})
 
-	dashboard, err := underTest.Delete(fmt.Sprint(dashboardId))
+	dashboard, err := underTest.DeleteGrafanaDashboard(fmt.Sprint(dashboardId))
 	assert.Error(t, err)
 	assert.Nil(t, dashboard)
 	assert.Contains(t, err.Error(), "failed with missing grafana dashboard")
@@ -62,7 +62,7 @@ func TestGrafanaObjects_DeleteServerError(t *testing.T) {
 		w.WriteHeader(http.StatusInternalServerError)
 	})
 
-	dashboard, err := underTest.Delete(fmt.Sprint(dashboardId))
+	dashboard, err := underTest.DeleteGrafanaDashboard(fmt.Sprint(dashboardId))
 	assert.Error(t, err)
 	assert.Nil(t, dashboard)
 }
