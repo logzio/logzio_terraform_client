@@ -1,4 +1,4 @@
-package grafana_objects_test
+package grafana_dashboards_test
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/logzio/logzio_terraform_client/grafana_objects"
+	"github.com/logzio/logzio_terraform_client/grafana_dashboards"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -24,7 +24,7 @@ func TestGrafanaObjects_CreateUpdateOK(t *testing.T) {
 		assert.Equal(t, http.MethodPost, r.Method)
 		jsonBytes, err := io.ReadAll(r.Body)
 		assert.NoError(t, err)
-		var target grafana_objects.CreateUpdatePayload
+		var target grafana_dashboards.CreateUpdatePayload
 		err = json.Unmarshal(jsonBytes, &target)
 		assert.NoError(t, err)
 		assert.NotNil(t, target)
@@ -39,7 +39,7 @@ func TestGrafanaObjects_CreateUpdateOK(t *testing.T) {
 	assert.NotNil(t, resp)
 	assert.NotZero(t, resp.Id)
 	assert.NotEmpty(t, resp.Uid)
-	assert.Equal(t, grafana_objects.GrafanaSuccessStatus, resp.Status)
+	assert.Equal(t, grafana_dashboards.GrafanaSuccessStatus, resp.Status)
 }
 
 func TestGrafanaObjects_CreateUpdateNOKPreconditionFailed(t *testing.T) {
@@ -48,14 +48,14 @@ func TestGrafanaObjects_CreateUpdateNOKPreconditionFailed(t *testing.T) {
 	defer teardown()
 
 	createDashboard := getCreateUpdateDashboard()
-	createDashboard.Dashboard.Title += "_create_412"
-	createDashboard.Dashboard.Uid += "_create_412"
+	createDashboard.Dashboard["title"] = fmt.Sprintf("%s%s", createDashboard.Dashboard["title"], "_create_412")
+	createDashboard.Dashboard["uid"] = fmt.Sprintf("%s%s", createDashboard.Dashboard["uid"], "_create_412")
 
 	mux.HandleFunc(dashboardsApiBasePath+"/db", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodPost, r.Method)
 		jsonBytes, err := io.ReadAll(r.Body)
 		assert.NoError(t, err)
-		var target grafana_objects.CreateUpdatePayload
+		var target grafana_dashboards.CreateUpdatePayload
 		err = json.Unmarshal(jsonBytes, &target)
 		assert.NoError(t, err)
 		assert.NotNil(t, target)
@@ -76,14 +76,14 @@ func TestGrafanaObjects_CreateUpdateNOKNotFound(t *testing.T) {
 	defer teardown()
 
 	createDashboard := getCreateUpdateDashboard()
-	createDashboard.Dashboard.Title += "_update_404"
-	createDashboard.Dashboard.Uid += "_update_404"
+	createDashboard.Dashboard["title"] = fmt.Sprintf("%s%s", createDashboard.Dashboard["title"], "_update_404")
+	createDashboard.Dashboard["uid"] = fmt.Sprintf("%s%s", createDashboard.Dashboard["uid"], "_update_404")
 
 	mux.HandleFunc(dashboardsApiBasePath+"/db", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodPost, r.Method)
 		jsonBytes, err := io.ReadAll(r.Body)
 		assert.NoError(t, err)
-		var target grafana_objects.CreateUpdatePayload
+		var target grafana_dashboards.CreateUpdatePayload
 		err = json.Unmarshal(jsonBytes, &target)
 		assert.NoError(t, err)
 		assert.NotNil(t, target)
@@ -103,14 +103,14 @@ func TestGrafanaObjects_CreateUpdateNOKApiFail(t *testing.T) {
 	defer teardown()
 
 	createDashboard := getCreateUpdateDashboard()
-	createDashboard.Dashboard.Title += "_create_500"
-	createDashboard.Dashboard.Uid += "_create_500"
+	createDashboard.Dashboard["title"] = fmt.Sprintf("%s%s", createDashboard.Dashboard["title"], "_create_500")
+	createDashboard.Dashboard["uid"] = fmt.Sprintf("%s%s", createDashboard.Dashboard["uid"], "_create_500")
 
 	mux.HandleFunc(dashboardsApiBasePath+"/db", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodPost, r.Method)
 		jsonBytes, err := io.ReadAll(r.Body)
 		assert.NoError(t, err)
-		var target grafana_objects.CreateUpdatePayload
+		var target grafana_dashboards.CreateUpdatePayload
 		err = json.Unmarshal(jsonBytes, &target)
 		assert.NoError(t, err)
 		assert.NotNil(t, target)
