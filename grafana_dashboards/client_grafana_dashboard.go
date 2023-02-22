@@ -63,7 +63,7 @@ func New(apiToken string, baseUrl string) (*GrafanaObjectsClient, error) {
 		return nil, fmt.Errorf("Base URL not defined")
 	}
 
-	client := &GrafanaObjectsClient{
+	grafanaDashboardClient := &GrafanaObjectsClient{
 		Client: client.New(apiToken, baseUrl),
 		logger: hclog.New(&hclog.LoggerOptions{
 			Level:      hclog.Debug,
@@ -71,5 +71,5 @@ func New(apiToken string, baseUrl string) (*GrafanaObjectsClient, error) {
 			JSONFormat: true,
 		}),
 	}
-	return client, nil
+	return grafanaDashboardClient, nil
 }
