@@ -33,17 +33,19 @@ The library currently supports the following API endpoints:
 
 ### Changelog
 
+- v1.16.0
+  - Add [Grafana Dashboards API](https://docs.logz.io/api/#operation/createDashboard) support.
 - v1.15.0
   - Add [S3 Fetcher](https://docs.logz.io/api/#tag/Connect-to-S3-Buckets).
 - v1.14.0
   - `alerts_v2` - support new field `schedule`
-- v1.13.1
-  - Add retry mechanism for requests.
 
 
 <details>
   <summary markdown="span">Exapnd to check old versions </summary>
 
+- v1.13.1
+  - Add retry mechanism for requests.
 - v1.13.0
   - Bug fix - **sub_accounts**: field `ReservedDailyGB` in requests can be 0.
 - v1.12.0

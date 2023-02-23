@@ -5,23 +5,24 @@ To create a Grafana Dashboard:
 
 ```go
 client, err := grafana_objects.New(apiToken, apiServerAddress)
-dashboardReq := grafana_objects.DashboardObject{
-                Title:  "dashboard_test",
-                Tags:   []string{"some", "tags"},
-                Panels: make([]map[string]interface{}, 0),
-            }
-
-request := grafana_objects.CreateUpdatePayload{
-                Dashboard: dashboardReq,
-                FolderId:  1,
-                Message:   "some message",
-                Overwrite: true,
-            }
+dashboardConfig := map[string]interface{}{
+        "title":  "dashboard_test",
+        "tags":   []string{"some", "tags"},
+        "uid":    "",
+        "panels": make([]interface{}, 0),
+    }
+    
+request := grafana_dashboards.CreateUpdatePayload{
+        Dashboard: dashboardConfig,
+        FolderId:  1,
+        Message:   "some message",
+        Overwrite: true,
+    }
 dashboard, err := client.CreateUpdate(request)
 ```
 
-| function                | func name                                                                                                |
-|-------------------------|----------------------------------------------------------------------------------------------------------|
-| create/update dashboard | `func (c *GrafanaObjectsClient) CreateUpdate(payload CreateUpdatePayload) (*CreateUpdateResults, error)` |
-| delete dashboard by uid | `func (c *GrafanaObjectsClient) Delete(objectUid string) (*DeleteResults, error)`                        |
-| get dashboard by uid    | `func (c *GrafanaObjectsClient) Get(objectUid string) (*GetResults, error)`                              |
+| function                | func name                                                                                                                |
+|-------------------------|--------------------------------------------------------------------------------------------------------------------------|
+| create/update dashboard | `func (c *GrafanaObjectsClient) CreateUpdateGrafanaDashboard(payload CreateUpdatePayload) (*CreateUpdateResults, error)` |
+| delete dashboard by uid | `func (c *GrafanaObjectsClient) DeleteGrafanaDashboard(objectUid string) (*DeleteResults, error)`                        |
+| get dashboard by uid    | `func (c *GrafanaObjectsClient) GetGrafanaDashboard(objectUid string) (*GetResults, error)`                              |
