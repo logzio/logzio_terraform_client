@@ -1,0 +1,13 @@
+{
+   "dashboard":{
+      "title":"getOK",
+      "uid":"1234"
+   },
+   "meta":{
+      "isStarred":true,
+      "url":"testUrl",
+      "folderId": 1,
+      "folderUid":"testUid",
+      "slug":"testSlug"
+   }
+}

@@ -22,6 +22,7 @@ const (
 	EnvAzureClientSecret  string = "AZURE_CLIENT_SECRET"
 	EnvAzureAccountName   string = "AZURE_ACCOUNT_NAME"
 	EnvAzureContainerName string = "AZURE_CONTAINER_NAME"
+	EnvMetricsFolderId    string = "METRICS_FOLDER_ID"
 
 	TestTimeSeparator = time.Millisecond * 500
 )
@@ -132,4 +133,12 @@ func GetAzureContainerName() (string, error) {
 
 func TestDoneTimeBuffer() {
 	time.Sleep(TestTimeSeparator)
+}
+
+func GetMetricsFolderId() (string, error) {
+	folderId := os.Getenv(EnvMetricsFolderId)
+	if len(folderId) > 0 {
+		return folderId, nil
+	}
+	return "", fmt.Errorf("%s env var not specified", EnvMetricsFolderId)
 }
