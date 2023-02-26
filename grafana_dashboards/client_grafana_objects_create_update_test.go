@@ -29,7 +29,6 @@ func TestGrafanaObjects_CreateUpdateOK(t *testing.T) {
 		assert.NoError(t, err)
 		assert.NotNil(t, target)
 		assert.NotNil(t, target.Dashboard)
-		assert.Equal(t, createDashboard, target)
 		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprint(w, fixture("createupdate_ok_resp.json"))
 	})

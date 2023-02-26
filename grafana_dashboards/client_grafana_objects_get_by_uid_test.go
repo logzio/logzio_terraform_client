@@ -33,7 +33,7 @@ func TestGrafanaObjects_GetOK(t *testing.T) {
 		Meta: map[string]interface{}{
 			"isStarred": true,
 			"url":       "testUrl",
-			"folderId":  1,
+			"folderId":  float64(1),
 			"folderUid": "testUid",
 			"slug":      "testSlug",
 		},
