@@ -12,7 +12,6 @@ const (
 
 	operationCreateGrafanaFolder = "CreateGrafanaFolder"
 	operationGetGrafanaFolder    = "GetGrafanaFolder"
-	operationListGrafanaFolder   = "ListGrafanaFolder"
 	operationUpdateGrafanaFolder = "UpdateGrafanaFolder"
 	operationDeleteGrafanaFolder = "DeleteGrafanaFolder"
 )
@@ -22,9 +21,13 @@ type GrafanaFolderClient struct {
 }
 
 type GrafanaFolder struct {
-	Uid   string `json:"uid"`
-	Title string `json:"title"`
-	Id    int64  `json:"id"`
+	Uid     string `json:"uid"`
+	Title   string `json:"title"`
+	Id      int64  `json:"id"`
+	Url     string `json:"url"`
+	Created string `json:"created"`
+	Updated string `json:"updated"`
+	Version int64  `json:"version"`
 }
 
 type CreateUpdateFolder struct {
@@ -33,8 +36,6 @@ type CreateUpdateFolder struct {
 	Overwrite bool   `json:"overwrite"`
 }
 
-// New Creates a new entry point into the grafana folder functions, accepts the
-// user's logz.io API token and API base URL
 func New(apiToken string, baseUrl string) (*GrafanaFolderClient, error) {
 	if len(apiToken) == 0 {
 		return nil, fmt.Errorf("API token not defined")
