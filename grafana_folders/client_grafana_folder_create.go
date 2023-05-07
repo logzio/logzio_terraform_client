@@ -8,10 +8,10 @@ import (
 )
 
 const (
-	createGrafanaFolderServiceUrl    = grafanaFolderServiceEndpoint
-	createGrafanaFolderServiceMethod = http.MethodPost
-	createGrafanaFolderMethodCreated = http.StatusOK
-	createS3FetcherStatusNotFound    = http.StatusNotFound
+	createGrafanaFolderServiceUrl     = grafanaFolderServiceEndpoint
+	createGrafanaFolderServiceMethod  = http.MethodPost
+	createGrafanaFolderMethodCreated  = http.StatusOK
+	createGrafanaFolderStatusNotFound = http.StatusNotFound
 )
 
 func (c *GrafanaFolderClient) CreateGrafanaFolder(payload CreateUpdateFolder) (*GrafanaFolder, error) {
@@ -31,7 +31,7 @@ func (c *GrafanaFolderClient) CreateGrafanaFolder(payload CreateUpdateFolder) (*
 		Url:          fmt.Sprintf(createGrafanaFolderServiceUrl, c.BaseUrl),
 		Body:         createGrafanaFolderJson,
 		SuccessCodes: []int{createGrafanaFolderMethodCreated},
-		NotFoundCode: createS3FetcherStatusNotFound,
+		NotFoundCode: createGrafanaFolderStatusNotFound,
 		ResourceId:   nil,
 		ApiAction:    operationCreateGrafanaFolder,
 		ResourceName: grafanaFolderResourceName,
