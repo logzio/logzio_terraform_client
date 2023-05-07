@@ -15,6 +15,11 @@ const (
 )
 
 func (c *GrafanaFolderClient) CreateGrafanaFolder(payload CreateUpdateFolder) (*GrafanaFolder, error) {
+	err := validateCreateGrafanaFolder(payload)
+	if err != nil {
+		return nil, err
+	}
+
 	createGrafanaFolderJson, err := json.Marshal(payload)
 	if err != nil {
 		return nil, err
@@ -43,4 +48,12 @@ func (c *GrafanaFolderClient) CreateGrafanaFolder(payload CreateUpdateFolder) (*
 	}
 
 	return &retVal, nil
+}
+
+func validateCreateGrafanaFolder(payload CreateUpdateFolder) error {
+	if len(payload.Title) == 0 {
+		return fmt.Errorf("Field title must be set!")
+	}
+
+	return nil
 }
