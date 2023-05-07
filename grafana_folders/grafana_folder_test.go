@@ -46,6 +46,6 @@ func setupGrafanaFolderIntegrationTest() (*grafana_folders.GrafanaFolderClient, 
 func getCreateOrUpdateGrafanaFolder() grafana_folders.CreateUpdateFolder {
 	return grafana_folders.CreateUpdateFolder{
 		Uid:   "client_test",
-		Title: "client_test",
+		Title: "client_test_title",
 	}
 }
