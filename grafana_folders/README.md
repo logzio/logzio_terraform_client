@@ -18,3 +18,4 @@ To create a Grafana Folder:
 | update folder        | `func (c *GrafanaFolderClient) UpdateGrafanaFolder(update CreateUpdateFolder) error`                    |
 | delete folder by uid | `func (c *GrafanaFolderClient) DeleteGrafanaFolder(uid string) error`                                   |
 | get folder by uid    | `func (c *GrafanaFolderClient) GetGrafanaFolder(uid string) (*GrafanaFolder, error)`                    |
+| list folders         | `func (c *GrafanaFolderClient) ListGrafanaFolders() ([]GrafanaFolder, error)`                           |
