@@ -14,6 +14,7 @@ const (
 	operationGetGrafanaFolder    = "GetGrafanaFolder"
 	operationUpdateGrafanaFolder = "UpdateGrafanaFolder"
 	operationDeleteGrafanaFolder = "DeleteGrafanaFolder"
+	operationListGrafanaFolders  = "ListGrafanaFolders"
 )
 
 type GrafanaFolderClient struct {
