@@ -36,6 +36,7 @@ The library currently supports the following API endpoints:
 
 - v1.17.0
   - Add Grafana Folders API.
+  - Remove deprecated `alerts` (v1).
 - v1.16.0
   - Add [Grafana Dashboards API](https://docs.logz.io/api/#operation/createDashboard) support.
 - v1.15.0
