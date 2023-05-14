@@ -22,25 +22,25 @@ type GrafanaAlertClient struct {
 	*client.Client
 }
 
-type AlertRule struct {
-	Annotations  map[string]string `json:"annotations,omitempty"`
-	Condition    string            `json:"condition"`    // Required
-	Data         []*AlertQuery     `json:"data"`         // Required
-	ExecErrState string            `json:"execErrState"` // Required
-	FolderUID    string            `json:"folderUID"`    // Required
-	For          string            `json:"for"`          // Required
-	Id           int64             `json:"id,omitempty"`
-	Labels       map[string]string `json:"labels,omitempty"`
-	NoDataState  string            `json:"noDataState"` // Required
-	OrgID        int64             `json:"orgID"`       // Required
-	Provenance   string            `json:"provenance,omitempty"`
-	RuleGroup    string            `json:"ruleGroup"` // Required
-	Title        string            `json:"title"`     // Required
-	Uid          string            `json:"uid,omitempty"`
-	Updated      time.Time         `json:"updated"`
+type GrafanaAlertRule struct {
+	Annotations  map[string]string    `json:"annotations,omitempty"`
+	Condition    string               `json:"condition"`    // Required
+	Data         []*GrafanaAlertQuery `json:"data"`         // Required
+	ExecErrState string               `json:"execErrState"` // Required
+	FolderUID    string               `json:"folderUID"`    // Required
+	For          string               `json:"for"`          // Required
+	Id           int64                `json:"id,omitempty"`
+	Labels       map[string]string    `json:"labels,omitempty"`
+	NoDataState  string               `json:"noDataState"` // Required
+	OrgID        int64                `json:"orgID"`       // Required
+	Provenance   string               `json:"provenance,omitempty"`
+	RuleGroup    string               `json:"ruleGroup"` // Required
+	Title        string               `json:"title"`     // Required
+	Uid          string               `json:"uid,omitempty"`
+	Updated      time.Time            `json:"updated"`
 }
 
-type AlertQuery struct {
+type GrafanaAlertQuery struct {
 	DatasourceUid     string               `json:"datasourceUid"`
 	Model             interface{}          `json:"model"`
 	QueryType         string               `json:"queryType"`
