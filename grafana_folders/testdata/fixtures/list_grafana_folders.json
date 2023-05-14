@@ -1,0 +1,16 @@
+[
+  {
+    "id":123456,
+    "uid":"client_test",
+    "title":"client_test_title",
+    "url":"/grafana-app/dashboards/f/client_test/client_test",
+    "version":1
+  },
+  {
+    "id":567890,
+    "uid":"client_test_2",
+    "title":"a_title",
+    "url":"/grafana-app/dashboards/f/client_test_2/a_title",
+    "version":3
+  }
+]

@@ -1,0 +1,7 @@
+{
+  "id":123456,
+  "uid":"client_test",
+  "title":"client_test_title",
+  "url":"/grafana-app/dashboards/f/client_test/client_test",
+  "version":1
+}
