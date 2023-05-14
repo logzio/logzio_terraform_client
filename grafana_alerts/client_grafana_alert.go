@@ -1,15 +1,24 @@
 package grafana_alerts
 
 import (
+	"fmt"
 	"github.com/logzio/logzio_terraform_client/client"
 	"time"
 )
 
 const (
 	grafanaObjectServiceEndpoint = "%s/v1/grafana/api/v1/provisioning/alert-rules"
+
+	grafanaAlertResourceName = "grafana alert"
+
+	operationCreateGrafanaAlert = "CreateGrafanaAlert"
+	operationGetGrafanaAlert    = "GetGrafanaAlert"
+	operationUpdateGrafanaAlert = "UpdateGrafanaAlert"
+	operationDeleteGrafanaAlert = "DeleteGrafanaAlert"
+	operationListGrafanaAlerts  = "ListGrafanaAlerts"
 )
 
-type GrafanaAlertsClient struct {
+type GrafanaAlertClient struct {
 	*client.Client
 }
 
@@ -24,7 +33,11 @@ type AlertRule struct {
 	Labels       map[string]string `json:"labels,omitempty"`
 	NoDataState  string            `json:"noDataState"` // Required
 	OrgID        int64             `json:"orgID"`       // Required
-	Provenance   ProvenanceObj     `json:"provenance"`
+	Provenance   string            `json:"provenance,omitempty"`
+	RuleGroup    string            `json:"ruleGroup"` // Required
+	Title        string            `json:"title"`     // Required
+	Uid          string            `json:"uid,omitempty"`
+	Updated      time.Time         `json:"updated"`
 }
 
 type AlertQuery struct {
@@ -38,4 +51,19 @@ type AlertQuery struct {
 type RelativeTimeRangeObj struct {
 	From time.Duration `json:"from"`
 	To   time.Duration `json:"to"`
+}
+
+func New(apiToken string, baseUrl string) (*GrafanaAlertClient, error) {
+	if len(apiToken) == 0 {
+		return nil, fmt.Errorf("API token not defined")
+	}
+	if len(baseUrl) == 0 {
+		return nil, fmt.Errorf("Base URL not defined")
+	}
+
+	grafanaAlertClient := &GrafanaAlertClient{
+		Client: client.New(apiToken, baseUrl),
+	}
+
+	return grafanaAlertClient, nil
 }
