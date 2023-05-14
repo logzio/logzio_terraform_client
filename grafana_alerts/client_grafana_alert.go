@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	grafanaObjectServiceEndpoint = "%s/v1/grafana/api/v1/provisioning/alert-rules"
+	grafanaAlertServiceEndpoint = "%s/v1/grafana/api/v1/provisioning/alert-rules"
 
 	grafanaAlertResourceName = "grafana alert"
 
