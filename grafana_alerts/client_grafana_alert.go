@@ -67,3 +67,43 @@ func New(apiToken string, baseUrl string) (*GrafanaAlertClient, error) {
 
 	return grafanaAlertClient, nil
 }
+
+func validateGrafanaAlertRule(payload GrafanaAlertRule) error {
+	if len(payload.Condition) == 0 {
+		return fmt.Errorf("Field condition must be set!")
+	}
+
+	if payload.Data == nil {
+		return fmt.Errorf("Field data must be set!")
+	}
+
+	if len(payload.ExecErrState) == 0 {
+		return fmt.Errorf("Field execErrState must be set!")
+	}
+
+	if len(payload.FolderUID) == 0 {
+		return fmt.Errorf("Field folderUID must be set!")
+	}
+
+	if len(payload.For) == 0 {
+		return fmt.Errorf("Field for must be set!")
+	}
+
+	if len(payload.NoDataState) == 0 {
+		return fmt.Errorf("Field noDataState must be set!")
+	}
+
+	if payload.OrgID == 0 {
+		return fmt.Errorf("Field orgID must be set!")
+	}
+
+	if len(payload.RuleGroup) == 0 {
+		return fmt.Errorf("Field ruleGroup must be set!")
+	}
+
+	if len(payload.Title) == 0 {
+		return fmt.Errorf("Field title must be set!")
+	}
+
+	return nil
+}
