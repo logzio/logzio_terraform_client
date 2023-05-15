@@ -9,7 +9,7 @@ import (
 const (
 	grafanaAlertServiceEndpoint = "%s/v1/grafana/api/v1/provisioning/alert-rules"
 
-	grafanaAlertResourceName = "grafana alert"
+	grafanaAlertResourceName = "grafana alert rule"
 
 	operationCreateGrafanaAlert = "CreateGrafanaAlert"
 	operationGetGrafanaAlert    = "GetGrafanaAlert"
