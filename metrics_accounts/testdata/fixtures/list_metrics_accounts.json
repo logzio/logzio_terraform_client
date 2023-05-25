@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1234567,
+    "accountName": "testAccount",
+    "token": "string",
+    "createdAt": 1685018347000,
+    "planUts": 0,
+    "authorizedAccountsIds": [
+      0
+    ]
+  }
+]
