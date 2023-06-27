@@ -10,6 +10,10 @@ import (
 	"time"
 )
 
+const (
+	envGrafanaFolderUid = "GRAFANA_FOLDER_UID"
+)
+
 var (
 	mux    *http.ServeMux
 	server *httptest.Server
@@ -60,7 +64,7 @@ func getGrafanaAlertRuleObject() grafana_alerts.GrafanaAlertRule {
 		Annotations: map[string]string{"key_test": "value_test"},
 		Condition:   "A",
 		Data:        []*grafana_alerts.GrafanaAlertQuery{&data},
-		FolderUID:   "",
+		FolderUID:   os.Getenv(envGrafanaFolderUid),
 		For:         "",
 		Id:          0,
 		Labels:      nil,
@@ -82,5 +86,4 @@ func getModel() interface{} {
 }
 
 func getTestFolderUid() string {
-
 }
