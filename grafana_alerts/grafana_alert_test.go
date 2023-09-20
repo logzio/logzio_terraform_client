@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
-	"time"
 )
 
 const (
@@ -39,7 +38,7 @@ func setupGrafanaAlertRuleTest() (*grafana_alerts.GrafanaAlertClient, error, fun
 	}
 }
 
-func setupGrafanaFolderIntegrationTest() (*grafana_alerts.GrafanaAlertClient, error) {
+func setupGrafanaAlertIntegrationTest() (*grafana_alerts.GrafanaAlertClient, error) {
 	apiToken, err := test_utils.GetApiToken()
 	if err != nil {
 		return nil, err
@@ -60,30 +59,16 @@ func getGrafanaAlertRuleObject() grafana_alerts.GrafanaAlertRule {
 		},
 	}
 
-	alertRule := grafana_alerts.GrafanaAlertRule{
-		Annotations: map[string]string{"key_test": "value_test"},
-		Condition:   "A",
-		Data:        []*grafana_alerts.GrafanaAlertQuery{&data},
-		FolderUID:   os.Getenv(envGrafanaFolderUid),
-		For:         "",
-		Id:          0,
-		Labels:      nil,
-		NoDataState: "",
-		OrgID:       0,
-		Provenance:  "",
-		RuleGroup:   "",
-		Title:       "",
-		Uid:         "",
-		Updated:     time.Time{},
+	return grafana_alerts.GrafanaAlertRule{
+		Annotations:  map[string]string{"key_test": "value_test"},
+		Condition:    "A",
+		Data:         []*grafana_alerts.GrafanaAlertQuery{&data},
+		FolderUID:    os.Getenv(envGrafanaFolderUid),
+		NoDataState:  grafana_alerts.NoDataOk,
+		ExecErrState: grafana_alerts.ErrOK,
+		OrgID:        1,
+		RuleGroup:    "rule_group_1",
+		Title:        "test_alert",
+		For:          int64(3),
 	}
-}
-
-func getModel() interface{} {
-	modelJson := "{\"conditions\":[{\"evaluator\":{\"params\":[0,0],\"type\":\"gt\"},\"operator\":{\"type\":\"and\"},\"query\":{\"params\":[]},\"reducer\":{\"params\":[],\"type\":\"avg\"},\"type\":\"query\"}],\"datasource\":{\"type\":\"__expr__\",\"uid\":\"__expr__\"},\"expression\":\"1 == 1\",\"hide\":false,\"intervalMs\":1000,\"maxDataPoints\":43200,\"refId\":\"A\",\"type\":\"math\"}"
-	var modelObj map[string]interface{}
-	_ = json.Unmarshal([]byte(modelJson), &modelObj)
-	return modelObj
-}
-
-func getTestFolderUid() string {
 }

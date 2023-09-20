@@ -6,6 +6,9 @@ import (
 	"time"
 )
 
+type ExecErrState string
+type NoDataState string
+
 const (
 	grafanaAlertServiceEndpoint = "%s/v1/grafana/api/v1/provisioning/alert-rules"
 
@@ -16,6 +19,13 @@ const (
 	operationUpdateGrafanaAlert = "UpdateGrafanaAlert"
 	operationDeleteGrafanaAlert = "DeleteGrafanaAlert"
 	operationListGrafanaAlerts  = "ListGrafanaAlerts"
+
+	ErrOK          ExecErrState = "OK"
+	ErrError       ExecErrState = "Error"
+	ErrAlerting    ExecErrState = "Alerting"
+	NoDataOk       NoDataState  = "OK"
+	NoData         NoDataState  = "NoData"
+	NoDataAlerting NoDataState  = "Alerting"
 )
 
 type GrafanaAlertClient struct {
@@ -26,12 +36,12 @@ type GrafanaAlertRule struct {
 	Annotations  map[string]string    `json:"annotations,omitempty"`
 	Condition    string               `json:"condition"`    // Required
 	Data         []*GrafanaAlertQuery `json:"data"`         // Required
-	ExecErrState string               `json:"execErrState"` // Required
+	ExecErrState ExecErrState         `json:"execErrState"` // Required
 	FolderUID    string               `json:"folderUID"`    // Required
-	For          string               `json:"for"`          // Required
+	For          int64                `json:"for"`          // Required
 	Id           int64                `json:"id,omitempty"`
 	Labels       map[string]string    `json:"labels,omitempty"`
-	NoDataState  string               `json:"noDataState"` // Required
+	NoDataState  NoDataState          `json:"noDataState"` // Required
 	OrgID        int64                `json:"orgID"`       // Required
 	Provenance   string               `json:"provenance,omitempty"`
 	RuleGroup    string               `json:"ruleGroup"` // Required
@@ -73,7 +83,7 @@ func validateGrafanaAlertRule(payload GrafanaAlertRule) error {
 		return fmt.Errorf("Field condition must be set!")
 	}
 
-	if payload.Data == nil {
+	if payload.Data == nil || len(payload.Data) == 0 {
 		return fmt.Errorf("Field data must be set!")
 	}
 
@@ -85,7 +95,7 @@ func validateGrafanaAlertRule(payload GrafanaAlertRule) error {
 		return fmt.Errorf("Field folderUID must be set!")
 	}
 
-	if len(payload.For) == 0 {
+	if payload.For == 0 {
 		return fmt.Errorf("Field for must be set!")
 	}
 
