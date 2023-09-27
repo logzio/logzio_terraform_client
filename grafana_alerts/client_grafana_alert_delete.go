@@ -14,6 +14,9 @@ const (
 )
 
 func (c *GrafanaAlertClient) DeleteGrafanaAlertRule(uid string) error {
+	if uid == "" {
+		return fmt.Errorf("uid is empty")
+	}
 	_, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
 		ApiToken:     c.ApiToken,
 		HttpMethod:   deleteGrafanaAlertServiceMethod,
