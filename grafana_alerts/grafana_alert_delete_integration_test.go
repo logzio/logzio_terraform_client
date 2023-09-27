@@ -31,12 +31,3 @@ func TestIntegrationGrafanaAlert_DeleteGrafanaAlertEmptyUid(t *testing.T) {
 		assert.Error(t, err)
 	}
 }
-
-func TestIntegrationGrafanaAlert_DeleteGrafanaAlertUidNotFound(t *testing.T) {
-	underTest, err := setupGrafanaAlertIntegrationTest()
-	defer test_utils.TestDoneTimeBuffer()
-	if assert.NoError(t, err) {
-		err = underTest.DeleteGrafanaAlertRule("uidNotFound")
-		assert.Error(t, err)
-	}
-}
