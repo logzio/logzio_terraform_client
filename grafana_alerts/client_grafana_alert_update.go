@@ -15,7 +15,7 @@ const (
 )
 
 func (c *GrafanaAlertClient) UpdateGrafanaAlertRule(payload GrafanaAlertRule) error {
-	err := validateUpdateGrafanaAlertRule(payload)
+	err := validateGrafanaAlertRuleCreateUpdate(payload, true)
 	if err != nil {
 		return err
 	}
@@ -38,17 +38,4 @@ func (c *GrafanaAlertClient) UpdateGrafanaAlertRule(payload GrafanaAlertRule) er
 	})
 
 	return err
-}
-
-func validateUpdateGrafanaAlertRule(payload GrafanaAlertRule) error {
-	err := validateGrafanaAlertRule(payload)
-	if err != nil {
-		return err
-	}
-
-	if len(payload.Uid) == 0 {
-		return fmt.Errorf("Field uid must be set when updating a Grafana alert rule!")
-	}
-
-	return nil
 }

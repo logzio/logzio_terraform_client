@@ -15,7 +15,7 @@ const (
 )
 
 func (c *GrafanaAlertClient) CreateGrafanaAlertRule(payload GrafanaAlertRule) (*GrafanaAlertRule, error) {
-	err := validateGrafanaAlertRule(payload)
+	err := validateGrafanaAlertRuleCreateUpdate(payload, false)
 	if err != nil {
 		return nil, err
 	}

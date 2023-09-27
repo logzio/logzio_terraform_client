@@ -1,6 +1,7 @@
 package grafana_alerts_test
 
 import (
+	"fmt"
 	"github.com/logzio/logzio_terraform_client/test_utils"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -14,6 +15,7 @@ func TestIntegrationGrafanaAlert_GetGrafanaAlert(t *testing.T) {
 	if assert.NoError(t, err) {
 		createGrafanaAlert := getGrafanaAlertRuleObject()
 		grafanaAlert, err := underTest.CreateGrafanaAlertRule(createGrafanaAlert)
+		createGrafanaAlert.Title = fmt.Sprintf("%s_%s", createGrafanaAlert.Title, "get")
 		if assert.NoError(t, err) && assert.NotNil(t, grafanaAlert) && assert.NotEmpty(t, grafanaAlert.Uid) {
 			defer underTest.DeleteGrafanaAlertRule(grafanaAlert.Uid)
 			time.Sleep(4 * time.Second)
