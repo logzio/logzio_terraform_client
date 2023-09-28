@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/avast/retry-go"
 	"github.com/logzio/logzio_terraform_client/client"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -101,7 +102,7 @@ func CallLogzioApi(logzioCall LogzioApiCallDetails) ([]byte, error) {
 				return err
 			}
 
-			jsonBytes, _ = ioutil.ReadAll(resp.Body)
+			jsonBytes, _ = io.ReadAll(resp.Body)
 			if !CheckValidStatus(resp, logzioCall.SuccessCodes) {
 				if resp.StatusCode == logzioCall.NotFoundCode {
 					return fmt.Errorf("API call %s failed with missing %s %d, data: %s",
