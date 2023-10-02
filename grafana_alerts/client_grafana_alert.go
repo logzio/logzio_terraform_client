@@ -48,6 +48,7 @@ type GrafanaAlertRule struct {
 	Title        string               `json:"title"`     // Required
 	Uid          string               `json:"uid,omitempty"`
 	Updated      time.Time            `json:"updated"`
+	IsPaused     bool                 `json:"isPaused"`
 }
 
 type GrafanaAlertQuery struct {
