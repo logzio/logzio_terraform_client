@@ -20,6 +20,7 @@ jobs:
       AZURE_CONTAINER_NAME: ${{ secrets.AZURE_CONTAINER_NAME }}
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       METRICS_FOLDER_ID: ${{ secrets.METRICS_FOLDER_ID }}
+      GRAFANA_FOLDER_UID: ${{ secrets.GRAFANA_FOLDER_UID }}
       GO111MODULE: on
     name: Test
     runs-on: ubuntu-20.04
