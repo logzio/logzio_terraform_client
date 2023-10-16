@@ -106,7 +106,6 @@ The library currently supports the following API endpoints:
 
 </details>
 
-
 ### Trademark Disclaimer
 
 Terraform is a trademark of HashiCorp, Inc.
