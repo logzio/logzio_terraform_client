@@ -38,7 +38,7 @@ type GrafanaAlertRule struct {
 	Data         []*GrafanaAlertQuery `json:"data"`         // Required
 	ExecErrState ExecErrState         `json:"execErrState"` // Required
 	FolderUID    string               `json:"folderUID"`    // Required
-	For          int64                `json:"for"`          // Required, representing nanosecondss
+	For          int64                `json:"for"`          // Required, representing nanoseconds
 	Id           int64                `json:"id,omitempty"`
 	Labels       map[string]string    `json:"labels,omitempty"`
 	NoDataState  NoDataState          `json:"noDataState"` // Required
