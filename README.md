@@ -34,18 +34,20 @@ The library currently supports the following API endpoints:
 
 ### Changelog
 
+- v1.18.0
+  - Add [Grafana Alert Rules API](https://docs.logz.io/api/#tag/Grafana-alerting-provisioning) support.
 - v1.17.0
   - Add Grafana Folders API.
   - Remove deprecated `alerts` (v1).
 - v1.16.0
   - Add [Grafana Dashboards API](https://docs.logz.io/api/#operation/createDashboard) support.
-- v1.15.0
-  - Add [S3 Fetcher](https://docs.logz.io/api/#tag/Connect-to-S3-Buckets).
 
 
 <details>
   <summary markdown="span">Exapnd to check old versions </summary>
 
+- v1.15.0
+  - Add [S3 Fetcher](https://docs.logz.io/api/#tag/Connect-to-S3-Buckets).
 - v1.14.0
   - `alerts_v2` - support new field `schedule`
 - v1.13.1

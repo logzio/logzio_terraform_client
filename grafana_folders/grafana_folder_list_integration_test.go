@@ -9,8 +9,8 @@ func TestIntegrationGrafanaFolder_ListGrafanaFolders(t *testing.T) {
 	underTest, err := setupGrafanaFolderIntegrationTest()
 
 	if assert.NoError(t, err) {
-		subAccounts, err := underTest.ListGrafanaFolders()
+		folders, err := underTest.ListGrafanaFolders()
 		assert.NoError(t, err)
-		assert.NotNil(t, subAccounts)
+		assert.NotNil(t, folders)
 	}
 }

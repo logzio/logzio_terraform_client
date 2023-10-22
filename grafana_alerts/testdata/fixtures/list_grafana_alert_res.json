@@ -1,0 +1,62 @@
+[
+  {
+    "id": 123456,
+    "uid": "some_uid",
+    "folderUID": "folder_uid",
+    "ruleGroup": "rule_group_1",
+    "title": "test_alert",
+    "condition": "A",
+    "data": [
+      {
+        "refId": "A",
+        "queryType": "",
+        "relativeTimeRange": {
+          "from": 0,
+          "to": 0
+        },
+        "datasourceUid": "__expr__",
+        "model": {
+          "conditions": [
+            {
+              "evaluator": {
+                "params": [
+                  0,
+                  0
+                ],
+                "type": "gt"
+              },
+              "operator": {
+                "type": "and"
+              },
+              "query": {
+                "params": []
+              },
+              "reducer": {
+                "params": [],
+                "type": "avg"
+              },
+              "type": "query"
+            }
+          ],
+          "datasource": {
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "1 == 1",
+          "hide": false,
+          "intervalMs": 1000,
+          "maxDataPoints": 43200,
+          "refId": "A",
+          "type": "math"
+        }
+      }
+    ],
+    "updated": "2023-09-20T09:47:10Z",
+    "noDataState": "OK",
+    "execErrState": "OK",
+    "for": 3,
+    "annotations": {
+      "key_test": "value_test"
+    }
+  }
+]
