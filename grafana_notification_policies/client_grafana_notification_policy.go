@@ -9,7 +9,8 @@ const (
 	grafanaNotificationPolicyServiceEndpoint = "%s/v1/grafana/api/v1/provisioning/policies"
 
 	grafanaNotificationPolicyResourceName = "grafana notification policy"
-	operationSetGrafanaNotificationPolicy = "SetNotificationPolicy"
+	operationSetGrafanaNotificationPolicy = "SetNotificationPolicyTree"
+	operationGetGrafanaNotificationPolicy = "GetNotificationPolicyTree"
 )
 
 type GrafanaNotificationPolicyClient struct {
