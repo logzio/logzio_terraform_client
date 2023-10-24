@@ -8,9 +8,10 @@ import (
 const (
 	grafanaNotificationPolicyServiceEndpoint = "%s/v1/grafana/api/v1/provisioning/policies"
 
-	grafanaNotificationPolicyResourceName = "grafana notification policy"
-	operationSetGrafanaNotificationPolicy = "SetNotificationPolicyTree"
-	operationGetGrafanaNotificationPolicy = "GetNotificationPolicyTree"
+	grafanaNotificationPolicyResourceName   = "grafana notification policy"
+	operationSetGrafanaNotificationPolicy   = "SetNotificationPolicyTree"
+	operationGetGrafanaNotificationPolicy   = "GetNotificationPolicyTree"
+	operationResetGrafanaNotificationPolicy = "ResetNotificationPolicyTree"
 )
 
 type GrafanaNotificationPolicyClient struct {
