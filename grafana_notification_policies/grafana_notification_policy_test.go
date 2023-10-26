@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	grafanaDefaultReceiver = "grafana-default-email"
+	grafanaDefaultReceiver = "default-email"
 )
 
 var (
