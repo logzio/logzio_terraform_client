@@ -35,6 +35,18 @@ func setupGrafanaNotificationPolicyIntegrationTest() (*grafana_notification_poli
 	return underTest, err
 }
 
+func setupGrafanaNotificationPolicyTest() (*grafana_notification_policies.GrafanaNotificationPolicyClient, error, func()) {
+	mux = http.NewServeMux()
+	server = httptest.NewServer(mux)
+
+	apiToken := "SOME_API_TOKEN"
+	underTest, _ := grafana_notification_policies.New(apiToken, server.URL)
+
+	return underTest, nil, func() {
+		server.Close()
+	}
+}
+
 func getGrafanaNotificationPolicyObject() grafana_notification_policies.GrafanaNotificationPolicyTree {
 	return grafana_notification_policies.GrafanaNotificationPolicyTree{
 		GroupBy:        []string{"hello-world", "alertname"},
