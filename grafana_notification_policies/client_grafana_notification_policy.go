@@ -12,10 +12,25 @@ const (
 	operationSetGrafanaNotificationPolicy   = "SetNotificationPolicyTree"
 	operationGetGrafanaNotificationPolicy   = "GetNotificationPolicyTree"
 	operationResetGrafanaNotificationPolicy = "ResetNotificationPolicyTree"
+
+	MatchTypeEqual     MatchType = 0
+	MatchTypeNotEqual            = 1
+	MatchTypeRegexp              = 2
+	MatchTypeNotRegexp           = 3
 )
 
 type GrafanaNotificationPolicyClient struct {
 	*client.Client
+}
+
+type GrafanaNotificationPolicyTree struct {
+	GroupBy        []string                    `json:"group_by,omitempty"`
+	GroupInterval  string                      `json:"group_interval,omitempty"`
+	GroupWait      string                      `json:"group_wait,omitempty"`
+	Provenance     string                      `json:"provenance,omitempty"`
+	Receiver       string                      `json:"receiver,omitempty"`
+	RepeatInterval string                      `json:"repeat_interval,omitempty"`
+	Routes         []GrafanaNotificationPolicy `json:"routes,omitempty"`
 }
 
 type GrafanaNotificationPolicy struct {
@@ -23,10 +38,8 @@ type GrafanaNotificationPolicy struct {
 	GroupBy           []string                    `json:"group_by,omitempty"`
 	GroupInterval     string                      `json:"group_interval,omitempty"`
 	GroupWait         string                      `json:"group_wait,omitempty"`
-	Matchers          MatchersObj                 `json:"matchers,omitempty"`
 	MuteTimeIntervals []string                    `json:"mute_time_intervals,omitempty"`
 	ObjectMatchers    MatchersObj                 `json:"object_matchers,omitempty"`
-	Provenance        string                      `json:"provenance,omitempty"`
 	Receiver          string                      `json:"receiver,omitempty"`
 	RepeatInterval    string                      `json:"repeat_interval,omitempty"`
 	Routes            []GrafanaNotificationPolicy `json:"routes,omitempty"`
@@ -34,11 +47,7 @@ type GrafanaNotificationPolicy struct {
 
 type MatchersObj []MatcherObj
 
-type MatcherObj struct {
-	Name  string    `json:"name"`
-	Type  MatchType `json:"type"`
-	Value string    `json:"value"`
-}
+type MatcherObj []string
 
 type MatchType int64
 
@@ -55,4 +64,18 @@ func New(apiToken string, baseUrl string) (*GrafanaNotificationPolicyClient, err
 	}
 
 	return grafanaNotificationPolicyClient, nil
+}
+
+func (mt MatchType) String() string {
+	typeToStr := map[MatchType]string{
+		MatchTypeEqual:     "=",
+		MatchTypeNotEqual:  "!=",
+		MatchTypeRegexp:    "=~",
+		MatchTypeNotRegexp: "!~",
+	}
+	if str, ok := typeToStr[mt]; ok {
+		return str
+	}
+
+	panic("invalid match type")
 }

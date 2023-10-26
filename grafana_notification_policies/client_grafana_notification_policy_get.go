@@ -14,8 +14,8 @@ const (
 	getGrafanaNotificationPolicyServiceNotFound = http.StatusNotFound
 )
 
-func (c *GrafanaNotificationPolicyClient) GetGrafanaNotificationPolicyTree() (GrafanaNotificationPolicy, error) {
-	var grafanaNotificationPolicy GrafanaNotificationPolicy
+func (c *GrafanaNotificationPolicyClient) GetGrafanaNotificationPolicyTree() (GrafanaNotificationPolicyTree, error) {
+	var grafanaNotificationPolicy GrafanaNotificationPolicyTree
 	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
 		ApiToken:     c.ApiToken,
 		HttpMethod:   getGrafanaNotificationPolicyServiceMethod,

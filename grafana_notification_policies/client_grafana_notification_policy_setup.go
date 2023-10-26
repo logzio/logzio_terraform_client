@@ -8,13 +8,13 @@ import (
 )
 
 const (
-	setGrafanaNotificationPolicyServiceUrl     = grafanaNotificationPolicyServiceEndpoint
-	setGrafanaNotificationPolicyServiceMethod  = http.MethodPut
-	setGrafanaNotificationPolicyMethodAccepted = http.StatusAccepted
-	setGrafanaNotificationPolicyStatusNotFound = http.StatusNotFound
+	setupGrafanaNotificationPolicyServiceUrl     = grafanaNotificationPolicyServiceEndpoint
+	setupGrafanaNotificationPolicyServiceMethod  = http.MethodPut
+	setupGrafanaNotificationPolicyMethodAccepted = http.StatusAccepted
+	setupGrafanaNotificationPolicyStatusNotFound = http.StatusNotFound
 )
 
-func (c *GrafanaNotificationPolicyClient) SetGrafanaNotificationPolicyTree(payload GrafanaNotificationPolicy) error {
+func (c *GrafanaNotificationPolicyClient) SetupGrafanaNotificationPolicyTree(payload GrafanaNotificationPolicyTree) error {
 	setGrafanaNotificationPolicyJson, err := json.Marshal(payload)
 	if err != nil {
 		return err
@@ -22,11 +22,11 @@ func (c *GrafanaNotificationPolicyClient) SetGrafanaNotificationPolicyTree(paylo
 
 	_, err = logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
 		ApiToken:     c.ApiToken,
-		HttpMethod:   setGrafanaNotificationPolicyServiceMethod,
-		Url:          fmt.Sprintf(setGrafanaNotificationPolicyServiceUrl, c.BaseUrl),
+		HttpMethod:   setupGrafanaNotificationPolicyServiceMethod,
+		Url:          fmt.Sprintf(setupGrafanaNotificationPolicyServiceUrl, c.BaseUrl),
 		Body:         setGrafanaNotificationPolicyJson,
-		SuccessCodes: []int{setGrafanaNotificationPolicyMethodAccepted},
-		NotFoundCode: setGrafanaNotificationPolicyStatusNotFound,
+		SuccessCodes: []int{setupGrafanaNotificationPolicyMethodAccepted},
+		NotFoundCode: setupGrafanaNotificationPolicyStatusNotFound,
 		ResourceId:   nil,
 		ApiAction:    operationSetGrafanaNotificationPolicy,
 		ResourceName: grafanaNotificationPolicyResourceName,
