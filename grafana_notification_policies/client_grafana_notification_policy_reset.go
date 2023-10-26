@@ -7,10 +7,10 @@ import (
 )
 
 const (
-	resetGrafanaNotificationPolicyServiceUrl    = grafanaNotificationPolicyServiceEndpoint
-	resetGrafanaNotificationPolicyServiceMethod = http.MethodDelete
-	resetGrafanaNotificationPolicyServiceOk     = http.StatusOK
-	resetGrafanaNotificationPolicyNotFound      = http.StatusNotFound
+	resetGrafanaNotificationPolicyServiceUrl      = grafanaNotificationPolicyServiceEndpoint
+	resetGrafanaNotificationPolicyServiceMethod   = http.MethodDelete
+	resetGrafanaNotificationPolicyServiceAccepted = http.StatusAccepted
+	resetGrafanaNotificationPolicyNotFound        = http.StatusNotFound
 )
 
 func (c *GrafanaNotificationPolicyClient) ResetGrafanaNotificationPolicyTree() error {
@@ -19,7 +19,7 @@ func (c *GrafanaNotificationPolicyClient) ResetGrafanaNotificationPolicyTree() e
 		HttpMethod:   resetGrafanaNotificationPolicyServiceMethod,
 		Url:          fmt.Sprintf(resetGrafanaNotificationPolicyServiceUrl, c.BaseUrl),
 		Body:         nil,
-		SuccessCodes: []int{resetGrafanaNotificationPolicyServiceOk},
+		SuccessCodes: []int{resetGrafanaNotificationPolicyServiceAccepted},
 		NotFoundCode: resetGrafanaNotificationPolicyNotFound,
 		ResourceId:   nil,
 		ApiAction:    operationResetGrafanaNotificationPolicy,
