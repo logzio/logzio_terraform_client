@@ -13,10 +13,10 @@ const (
 	operationGetGrafanaNotificationPolicy   = "GetNotificationPolicyTree"
 	operationResetGrafanaNotificationPolicy = "ResetNotificationPolicyTree"
 
-	MatchTypeEqual     MatchType = 0
-	MatchTypeNotEqual            = 1
-	MatchTypeRegexp              = 2
-	MatchTypeNotRegexp           = 3
+	MatchTypeEqual     MatchType = "="
+	MatchTypeNotEqual  MatchType = "!="
+	MatchTypeRegexp    MatchType = "=~"
+	MatchTypeNotRegexp MatchType = "!~"
 )
 
 type GrafanaNotificationPolicyClient struct {
@@ -49,7 +49,7 @@ type MatchersObj []MatcherObj
 
 type MatcherObj []string
 
-type MatchType int64
+type MatchType string
 
 func New(apiToken string, baseUrl string) (*GrafanaNotificationPolicyClient, error) {
 	if len(apiToken) == 0 {
@@ -64,18 +64,4 @@ func New(apiToken string, baseUrl string) (*GrafanaNotificationPolicyClient, err
 	}
 
 	return grafanaNotificationPolicyClient, nil
-}
-
-func (mt MatchType) String() string {
-	typeToStr := map[MatchType]string{
-		MatchTypeEqual:     "=",
-		MatchTypeNotEqual:  "!=",
-		MatchTypeRegexp:    "=~",
-		MatchTypeNotRegexp: "!~",
-	}
-	if str, ok := typeToStr[mt]; ok {
-		return str
-	}
-
-	panic("invalid match type")
 }
