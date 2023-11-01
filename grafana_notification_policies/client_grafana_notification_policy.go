@@ -74,3 +74,7 @@ func GetValidMatchTypes() []MatchType {
 		MatchTypeNotRegexp,
 	}
 }
+
+func (m MatchType) String() string {
+	return string(m)
+}
