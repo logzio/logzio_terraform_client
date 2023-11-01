@@ -65,3 +65,12 @@ func New(apiToken string, baseUrl string) (*GrafanaNotificationPolicyClient, err
 
 	return grafanaNotificationPolicyClient, nil
 }
+
+func GetValidMatchTypes() []MatchType {
+	return []MatchType{
+		MatchTypeEqual,
+		MatchTypeNotEqual,
+		MatchTypeRegexp,
+		MatchTypeNotRegexp,
+	}
+}
