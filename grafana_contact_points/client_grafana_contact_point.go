@@ -9,6 +9,7 @@ const (
 	grafanaContactPointServiceEndpoint = "%s/v1/grafana/api/v1/provisioning/contact-points"
 
 	operationCreateGrafanaContactPoint = "CreateGrafanaContactPoint"
+	operationGetAllGrafanaContactPoint = "GetAllGrafanaContactPoint"
 
 	grafanaContactPointResourceName = "grafana contact point"
 )
