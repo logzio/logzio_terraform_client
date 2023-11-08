@@ -31,6 +31,18 @@ func setupGrafanaContactPointIntegrationTest() (*grafana_contact_points.GrafanaC
 	return underTest, err
 }
 
+func setupGrafanaContactPointTest() (*grafana_contact_points.GrafanaContactPointClient, func(), error) {
+	mux = http.NewServeMux()
+	server = httptest.NewServer(mux)
+
+	apiToken := "SOME_API_TOKEN"
+	underTest, _ := grafana_contact_points.New(apiToken, server.URL)
+
+	return underTest, func() {
+		server.Close()
+	}, nil
+}
+
 func getGrafanaContactPointObject() grafana_contact_points.GrafanaContactPoint {
 	return grafana_contact_points.GrafanaContactPoint{
 		Name: "tf-client-test",
