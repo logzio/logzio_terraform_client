@@ -11,6 +11,7 @@ const (
 	operationCreateGrafanaContactPoint = "CreateGrafanaContactPoint"
 	operationGetAllGrafanaContactPoint = "GetAllGrafanaContactPoint"
 	operationUpdateGrafanaContactPoint = "UpdateGrafanaContactPoint"
+	operationDeleteGrafanaContactPoint = "DeleteGrafanaContactPoint"
 
 	grafanaContactPointResourceName = "grafana contact point"
 )
