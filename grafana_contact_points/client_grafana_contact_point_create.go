@@ -14,13 +14,18 @@ const (
 	createGrafanaContactPointStatusNotFound = http.StatusNotFound
 )
 
-func (c *GrafanaContactPointClient) CreateGrafanaContactPoint(payload GrafanaContactPoint) error {
-	grafanaContactPointJson, err := json.Marshal(payload)
+func (c *GrafanaContactPointClient) CreateGrafanaContactPoint(payload GrafanaContactPoint) (GrafanaContactPoint, error) {
+	err := validateContactPoint(payload)
 	if err != nil {
-		return err
+		return GrafanaContactPoint{}, err
 	}
 
-	_, err = logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
+	grafanaContactPointJson, err := json.Marshal(payload)
+	if err != nil {
+		return GrafanaContactPoint{}, err
+	}
+
+	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
 		ApiToken:     c.ApiToken,
 		HttpMethod:   createGrafanaContactPointServiceMethod,
 		Url:          fmt.Sprintf(createGrafanaContactPointServiceUrl, c.BaseUrl),
@@ -32,5 +37,31 @@ func (c *GrafanaContactPointClient) CreateGrafanaContactPoint(payload GrafanaCon
 		ResourceName: grafanaContactPointResourceName,
 	})
 
-	return err
+	if err != nil {
+		return GrafanaContactPoint{}, err
+	}
+
+	var grafanaContactPoint GrafanaContactPoint
+	err = json.Unmarshal(res, &grafanaContactPoint)
+	if err != nil {
+		return GrafanaContactPoint{}, err
+	}
+
+	return grafanaContactPoint, nil
+}
+
+func validateContactPoint(payload GrafanaContactPoint) error {
+	if len(payload.Name) == 0 {
+		return fmt.Errorf("name must be set!")
+	}
+
+	if len(payload.Type) == 0 {
+		return fmt.Errorf("type must be set!")
+	}
+
+	if payload.Settings == nil || len(payload.Settings) == 0 {
+		return fmt.Errorf("settings must be set!")
+	}
+
+	return nil
 }
