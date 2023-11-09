@@ -10,6 +10,7 @@ const (
 	deleteGrafanaContactPointServiceUrl             = grafanaContactPointServiceEndpoint + "/%s"
 	deleteGrafanaContactPointServiceMethod          = http.MethodDelete
 	deleteGrafanaContactPointMethodSuccessNoContent = http.StatusNoContent
+	deleteGrafanaContactPointMethodSuccessAccepted  = http.StatusAccepted
 	deleteGrafanaContactPointMethodNotFound         = http.StatusNotFound
 )
 
@@ -19,7 +20,7 @@ func (c *GrafanaContactPointClient) DeleteGrafanaContactPoint(uid string) error 
 		HttpMethod:   deleteGrafanaContactPointServiceMethod,
 		Url:          fmt.Sprintf(deleteGrafanaContactPointServiceUrl, c.BaseUrl, uid),
 		Body:         nil,
-		SuccessCodes: []int{deleteGrafanaContactPointMethodSuccessNoContent},
+		SuccessCodes: []int{deleteGrafanaContactPointMethodSuccessNoContent, deleteGrafanaContactPointMethodSuccessAccepted},
 		NotFoundCode: deleteGrafanaContactPointMethodNotFound,
 		ResourceId:   uid,
 		ApiAction:    operationDeleteGrafanaContactPoint,

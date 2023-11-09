@@ -39,3 +39,14 @@ func TestIntegrationGrafanaContactPoint_UpdateGrafanaContactPointUidNotFound(t *
 		assert.Error(t, err)
 	}
 }
+
+func TestIntegrationGrafanaContactPoint_UpdateGrafanaContactPointUidEmpty(t *testing.T) {
+	underTest, err := setupGrafanaContactPointIntegrationTest()
+
+	if assert.NoError(t, err) {
+		grafanaContactPoint := getGrafanaContactPointObject()
+		grafanaContactPoint.Uid = ""
+		err = underTest.UpdateContactPoint(grafanaContactPoint)
+		assert.Error(t, err)
+	}
+}
