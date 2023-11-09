@@ -40,7 +40,7 @@ func (c *GrafanaContactPointClient) GetAllGrafanaContactPoints() ([]GrafanaConta
 	return grafanaContactPoints, nil
 }
 
-func (c *GrafanaContactPointClient) GetGrafanaContactPointsByUid(uid string) (GrafanaContactPoint, error) {
+func (c *GrafanaContactPointClient) GetGrafanaContactPointByUid(uid string) (GrafanaContactPoint, error) {
 	if len(uid) == 0 {
 		return GrafanaContactPoint{}, fmt.Errorf("uid must be set")
 	}

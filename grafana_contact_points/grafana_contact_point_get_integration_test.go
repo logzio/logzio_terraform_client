@@ -31,7 +31,7 @@ func TestIntegrationGrafanaContactPoint_GetGrafanaContactPoint(t *testing.T) {
 		if assert.NoError(t, err) && assert.NotEmpty(t, contactPoint) {
 			time.Sleep(4 * time.Second)
 			defer underTest.DeleteGrafanaContactPoint(contactPoint.Uid)
-			getContactPoint, err := underTest.GetGrafanaContactPointsByUid(contactPoint.Uid)
+			getContactPoint, err := underTest.GetGrafanaContactPointByUid(contactPoint.Uid)
 			assert.NoError(t, err)
 			assert.NotEmpty(t, getContactPoint)
 			assert.True(t, reflect.DeepEqual(contactPoint, getContactPoint))
@@ -44,7 +44,7 @@ func TestIntegrationGrafanaContactPoint_GetGrafanaContactPointIdNotFound(t *test
 	defer test_utils.TestDoneTimeBuffer()
 
 	if assert.NoError(t, err) {
-		getContactPoint, err := underTest.GetGrafanaContactPointsByUid("some-uid")
+		getContactPoint, err := underTest.GetGrafanaContactPointByUid("some-uid")
 		assert.Error(t, err)
 		assert.Empty(t, getContactPoint)
 	}
