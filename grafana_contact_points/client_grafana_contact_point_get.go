@@ -40,6 +40,8 @@ func (c *GrafanaContactPointClient) GetAllGrafanaContactPoints() ([]GrafanaConta
 	return grafanaContactPoints, nil
 }
 
+// GetGrafanaContactPointByUid - The actual API doesn't have functionality of getting specific Contact Point by uid.
+// This function wraps the GetAllGrafanaContactPoints function, and looks for a match of a given uid
 func (c *GrafanaContactPointClient) GetGrafanaContactPointByUid(uid string) (GrafanaContactPoint, error) {
 	if len(uid) == 0 {
 		return GrafanaContactPoint{}, fmt.Errorf("uid must be set")
