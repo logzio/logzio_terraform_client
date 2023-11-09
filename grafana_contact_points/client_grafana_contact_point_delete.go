@@ -11,7 +11,9 @@ const (
 	deleteGrafanaContactPointServiceMethod          = http.MethodDelete
 	deleteGrafanaContactPointMethodSuccessNoContent = http.StatusNoContent
 	deleteGrafanaContactPointMethodSuccessAccepted  = http.StatusAccepted
-	deleteGrafanaContactPointMethodNotFound         = http.StatusNotFound
+	// The status not found part is just for compatability with the CallLogzioApi function,
+	// The actual API doesn't return an error if you try to delete a contact point that doesn't exist
+	deleteGrafanaContactPointMethodNotFound = http.StatusNotFound
 )
 
 func (c *GrafanaContactPointClient) DeleteGrafanaContactPoint(uid string) error {
