@@ -14,6 +14,15 @@ const (
 	operationDeleteGrafanaContactPoint = "DeleteGrafanaContactPoint"
 
 	grafanaContactPointResourceName = "grafana contact point"
+
+	grafanaContactPointTypeEmail          ContactPointType = "email"
+	grafanaContactPointTypeGoogleChat     ContactPointType = "googlechat"
+	grafanaContactPointTypeOpsgenie       ContactPointType = "opsgenie"
+	grafanaContactPointTypePagerduty      ContactPointType = "pagerduty"
+	grafanaContactPointTypeSlack          ContactPointType = "slack"
+	grafanaContactPointTypeMicrosoftTeams ContactPointType = "teams"
+	grafanaContactPointTypeVictorps       ContactPointType = "victorops"
+	grafanaContactPointTypeWebhook        ContactPointType = "webhook"
 )
 
 type GrafanaContactPointClient struct {
@@ -42,4 +51,23 @@ func New(apiToken string, baseUrl string) (*GrafanaContactPointClient, error) {
 	}
 
 	return grafanaContactPointClient, nil
+}
+
+type ContactPointType string
+
+func (cpt ContactPointType) String() string {
+	return string(cpt)
+}
+
+func GetSupportedContactPointTypes() []ContactPointType {
+	return []ContactPointType{
+		grafanaContactPointTypeEmail,
+		grafanaContactPointTypeGoogleChat,
+		grafanaContactPointTypeOpsgenie,
+		grafanaContactPointTypePagerduty,
+		grafanaContactPointTypeSlack,
+		grafanaContactPointTypeMicrosoftTeams,
+		grafanaContactPointTypeVictorps,
+		grafanaContactPointTypeWebhook,
+	}
 }
