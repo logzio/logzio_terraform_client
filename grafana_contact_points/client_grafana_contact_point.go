@@ -15,14 +15,14 @@ const (
 
 	grafanaContactPointResourceName = "grafana contact point"
 
-	grafanaContactPointTypeEmail          ContactPointType = "email"
-	grafanaContactPointTypeGoogleChat     ContactPointType = "googlechat"
-	grafanaContactPointTypeOpsgenie       ContactPointType = "opsgenie"
-	grafanaContactPointTypePagerduty      ContactPointType = "pagerduty"
-	grafanaContactPointTypeSlack          ContactPointType = "slack"
-	grafanaContactPointTypeMicrosoftTeams ContactPointType = "teams"
-	grafanaContactPointTypeVictorps       ContactPointType = "victorops"
-	grafanaContactPointTypeWebhook        ContactPointType = "webhook"
+	GrafanaContactPointTypeEmail          ContactPointType = "email"
+	GrafanaContactPointTypeGoogleChat     ContactPointType = "googlechat"
+	GrafanaContactPointTypeOpsgenie       ContactPointType = "opsgenie"
+	GrafanaContactPointTypePagerduty      ContactPointType = "pagerduty"
+	GrafanaContactPointTypeSlack          ContactPointType = "slack"
+	GrafanaContactPointTypeMicrosoftTeams ContactPointType = "teams"
+	GrafanaContactPointTypeVictorps       ContactPointType = "victorops"
+	GrafanaContactPointTypeWebhook        ContactPointType = "webhook"
 )
 
 type GrafanaContactPointClient struct {
@@ -61,13 +61,13 @@ func (cpt ContactPointType) String() string {
 
 func GetSupportedContactPointTypes() []ContactPointType {
 	return []ContactPointType{
-		grafanaContactPointTypeEmail,
-		grafanaContactPointTypeGoogleChat,
-		grafanaContactPointTypeOpsgenie,
-		grafanaContactPointTypePagerduty,
-		grafanaContactPointTypeSlack,
-		grafanaContactPointTypeMicrosoftTeams,
-		grafanaContactPointTypeVictorps,
-		grafanaContactPointTypeWebhook,
+		GrafanaContactPointTypeEmail,
+		GrafanaContactPointTypeGoogleChat,
+		GrafanaContactPointTypeOpsgenie,
+		GrafanaContactPointTypePagerduty,
+		GrafanaContactPointTypeSlack,
+		GrafanaContactPointTypeMicrosoftTeams,
+		GrafanaContactPointTypeVictorps,
+		GrafanaContactPointTypeWebhook,
 	}
 }
