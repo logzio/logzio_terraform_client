@@ -58,5 +58,6 @@ func (c *GrafanaContactPointClient) GetGrafanaContactPointByUid(uid string) (Gra
 		}
 	}
 
-	return GrafanaContactPoint{}, fmt.Errorf("failed with missing %s %s", grafanaContactPointResourceName, uid)
+	return GrafanaContactPoint{}, fmt.Errorf("API call %s failed with missing %s %s, data: %s",
+		operationGetByUidGrafanaContactPoint, grafanaContactPointResourceName, uid, "")
 }

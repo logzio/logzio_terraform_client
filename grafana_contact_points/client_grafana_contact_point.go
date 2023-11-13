@@ -8,10 +8,11 @@ import (
 const (
 	grafanaContactPointServiceEndpoint = "%s/v1/grafana/api/v1/provisioning/contact-points"
 
-	operationCreateGrafanaContactPoint = "CreateGrafanaContactPoint"
-	operationGetAllGrafanaContactPoint = "GetAllGrafanaContactPoint"
-	operationUpdateGrafanaContactPoint = "UpdateGrafanaContactPoint"
-	operationDeleteGrafanaContactPoint = "DeleteGrafanaContactPoint"
+	operationCreateGrafanaContactPoint   = "CreateGrafanaContactPoint"
+	operationGetAllGrafanaContactPoint   = "GetAllGrafanaContactPoint"
+	operationGetByUidGrafanaContactPoint = "GetByUidGrafanaContactPoint"
+	operationUpdateGrafanaContactPoint   = "UpdateGrafanaContactPoint"
+	operationDeleteGrafanaContactPoint   = "DeleteGrafanaContactPoint"
 
 	grafanaContactPointResourceName = "grafana contact point"
 
