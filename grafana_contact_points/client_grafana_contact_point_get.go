@@ -61,3 +61,27 @@ func (c *GrafanaContactPointClient) GetGrafanaContactPointByUid(uid string) (Gra
 	return GrafanaContactPoint{}, fmt.Errorf("API call %s failed with missing %s %s, data: %s",
 		operationGetByUidGrafanaContactPoint, grafanaContactPointResourceName, uid, "")
 }
+
+func (c *GrafanaContactPointClient) GetGrafanaContactPointByName(name string) ([]GrafanaContactPoint, error) {
+	var contactPoints []GrafanaContactPoint
+	if len(name) == 0 {
+		return nil, fmt.Errorf("uid must be set")
+	}
+
+	contactPoints, err := c.GetAllGrafanaContactPoints()
+	if err != nil {
+		return nil, err
+	}
+
+	for _, cp := range contactPoints {
+		if cp.Name == name {
+			contactPoints = append(contactPoints, cp)
+		}
+	}
+
+	if len(contactPoints) == 0 {
+		return nil, fmt.Errorf("could not find grafana contact points with name %s", name)
+	}
+
+	return contactPoints, nil
+}
