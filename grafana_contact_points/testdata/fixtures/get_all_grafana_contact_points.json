@@ -1,0 +1,22 @@
+[
+  {
+    "uid": "some-uid",
+    "name": "tf-client-test",
+    "type": "email",
+    "settings": {
+      "addresses": "example@email.com",
+      "singleEmail": false
+    },
+    "disableResolveMessage": false
+  },
+  {
+    "uid": "another-uid",
+    "name": "slack-test",
+    "type": "slack",
+    "settings": {
+      "recipient": "hello",
+      "token": "[REDACTED]"
+    },
+    "disableResolveMessage": false
+  }
+]
