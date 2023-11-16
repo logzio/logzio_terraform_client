@@ -62,18 +62,18 @@ func (c *GrafanaContactPointClient) GetGrafanaContactPointByUid(uid string) (Gra
 		operationGetByUidGrafanaContactPoint, grafanaContactPointResourceName, uid, "")
 }
 
-func (c *GrafanaContactPointClient) GetGrafanaContactPointByName(name string) ([]GrafanaContactPoint, error) {
+func (c *GrafanaContactPointClient) GetGrafanaContactPointsByName(name string) ([]GrafanaContactPoint, error) {
 	var contactPoints []GrafanaContactPoint
 	if len(name) == 0 {
 		return nil, fmt.Errorf("uid must be set")
 	}
 
-	contactPoints, err := c.GetAllGrafanaContactPoints()
+	getContactPoints, err := c.GetAllGrafanaContactPoints()
 	if err != nil {
 		return nil, err
 	}
 
-	for _, cp := range contactPoints {
+	for _, cp := range getContactPoints {
 		if cp.Name == name {
 			contactPoints = append(contactPoints, cp)
 		}

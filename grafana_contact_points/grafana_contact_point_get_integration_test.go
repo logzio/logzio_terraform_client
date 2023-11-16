@@ -49,3 +49,14 @@ func TestIntegrationGrafanaContactPoint_GetGrafanaContactPointIdNotFound(t *test
 		assert.Empty(t, getContactPoint)
 	}
 }
+
+func TestIntegrationGrafanaContactPoint_GetGrafanaContactPointByName(t *testing.T) {
+	underTest, err := setupGrafanaContactPointIntegrationTest()
+	defer test_utils.TestDoneTimeBuffer()
+
+	if assert.NoError(t, err) {
+		contactPoints, err := underTest.GetGrafanaContactPointsByName("miri-slack2")
+		assert.NoError(t, err)
+		assert.NotEmpty(t, contactPoints)
+	}
+}
