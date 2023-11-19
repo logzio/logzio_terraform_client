@@ -21,6 +21,7 @@ The library currently supports the following API endpoints:
 * Grafana folders.
 * [Grafana Alert Rules API](https://docs.logz.io/api/#tag/Grafana-alerting-provisioning).
 * Grafana Notification Policy.
+* [Grafana datasource](https://docs.logz.io/api/#operation/getDatasourceByAccount).
 
 
 #### Contributing
@@ -36,8 +37,8 @@ The library currently supports the following API endpoints:
 
 ### Changelog
 
-- v1.19.0
-  - Add Grafana Notification Policy API support.
+- 1.19.0
+  - Add [Grafana Datasource API](https://docs.logz.io/api/#operation/getDatasourceByAccount) partial support for specific endpoint. 
 - v1.18.0
   - Add [Grafana Alert Rules API](https://docs.logz.io/api/#tag/Grafana-alerting-provisioning) support.
 - v1.17.0
