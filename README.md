@@ -20,9 +20,9 @@ The library currently supports the following API endpoints:
 * [Grafana dashboards](https://docs.logz.io/api/#operation/createDashboard).
 * Grafana folders.
 * [Grafana Alert Rules API](https://docs.logz.io/api/#tag/Grafana-alerting-provisioning).
-* Grafana Notification Policy.
 * [Grafana datasource](https://docs.logz.io/api/#operation/getDatasourceByAccount).
-
+* Grafana Notification Policy.
+* [Grafana Contact Point](https://docs.logz.io/api/#tag/Grafana-contact-points).
 
 #### Contributing
 
@@ -37,6 +37,9 @@ The library currently supports the following API endpoints:
 
 ### Changelog
 
+- 1.20.0
+  - Add [Grafana Contact Point API](https://docs.logz.io/api/#tag/Grafana-contact-points).
+  - Add Grafana Notification Policy API.
 - 1.19.0
   - Add [Grafana Datasource API](https://docs.logz.io/api/#operation/getDatasourceByAccount) partial support for specific endpoint. 
 - v1.18.0
