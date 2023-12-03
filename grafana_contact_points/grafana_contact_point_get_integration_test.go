@@ -55,8 +55,15 @@ func TestIntegrationGrafanaContactPoint_GetGrafanaContactPointByName(t *testing.
 	defer test_utils.TestDoneTimeBuffer()
 
 	if assert.NoError(t, err) {
-		contactPoints, err := underTest.GetGrafanaContactPointsByName("miri-slack2")
-		assert.NoError(t, err)
-		assert.NotEmpty(t, contactPoints)
+		createGrafanaContactPoint := getGrafanaContactPointObject()
+		createGrafanaContactPoint.Name = fmt.Sprintf("%s_%s", createGrafanaContactPoint.Name, "by_name")
+		contactPoint, err := underTest.CreateGrafanaContactPoint(createGrafanaContactPoint)
+		if assert.NoError(t, err) && assert.NotEmpty(t, contactPoint) {
+			time.Sleep(4 * time.Second)
+			defer underTest.DeleteGrafanaContactPoint(contactPoint.Uid)
+			contactPoints, err := underTest.GetGrafanaContactPointsByName(createGrafanaContactPoint.Name)
+			assert.NoError(t, err)
+			assert.NotEmpty(t, contactPoints)
+		}
 	}
 }
