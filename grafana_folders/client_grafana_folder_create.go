@@ -54,8 +54,8 @@ func (c *GrafanaFolderClient) CreateGrafanaFolder(payload CreateUpdateFolder) (*
 func validateCreateGrafanaFolder(payload CreateUpdateFolder) error {
 	if len(payload.Title) == 0 {
 		return fmt.Errorf("Field title must be set!")
-	} else if strings.Contains(payload.Title, "/") {
-		return fmt.Errorf("invalid charchter '/' in folder name")
+	} else if strings.Contains(payload.Title, "/") || strings.Contains(payload.Title, "\\") {
+		return fmt.Errorf("folder name cannot contain '/' or '\\' charchters")
 	}
 
 	return nil

@@ -44,9 +44,17 @@ func TestIntegrationGrafanaFolder_CreateGrafanaFolderInvalidTitle(t *testing.T) 
 	defer test_utils.TestDoneTimeBuffer()
 
 	if assert.NoError(t, err) {
-		createGrafanaFolder := createFolderInvalidName()
+		createGrafanaFolder := getCreateOrUpdateGrafanaFolder()
+
+		// test `/` naming limitation
 		createGrafanaFolder.Title = "client/test/title"
 		grafanaFolder, err := underTest.CreateGrafanaFolder(createGrafanaFolder)
+		assert.Error(t, err)
+		assert.Nil(t, grafanaFolder)
+
+		// test `\` naming limitation
+		createGrafanaFolder.Title = "client\\test\\title"
+		grafanaFolder, err = underTest.CreateGrafanaFolder(createGrafanaFolder)
 		assert.Error(t, err)
 		assert.Nil(t, grafanaFolder)
 	}

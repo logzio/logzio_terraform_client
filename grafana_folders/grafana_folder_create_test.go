@@ -80,10 +80,18 @@ func TestGrafanaFolder_CreateGrafanaFolderInvalidFolderNameError(t *testing.T) {
 			assert.NotEmpty(t, target.Uid)
 			w.Header().Set("Content-Type", "application/json")
 		})
-
-		createGrafanaFolder := createFolderInvalidName()
+		// test `/` naming limitation
+		createGrafanaFolder := getCreateOrUpdateGrafanaFolder()
+		createGrafanaFolder.Title = "client/test/title"
 		grafanaFolder, err := underTest.CreateGrafanaFolder(createGrafanaFolder)
 		assert.Error(t, err)
 		assert.Nil(t, grafanaFolder)
+
+		// test `\` naming limitation
+		createGrafanaFolder.Title = "client\\test\\title"
+		grafanaFolder, err = underTest.CreateGrafanaFolder(createGrafanaFolder)
+		assert.Error(t, err)
+		assert.Nil(t, grafanaFolder)
+
 	}
 }
