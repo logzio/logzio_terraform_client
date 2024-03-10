@@ -3,7 +3,7 @@ module github.com/logzio/logzio_terraform_client
 go 1.18
 
 require (
-	github.com/avast/retry-go v3.0.0+incompatible
+	github.com/avast/retry-go v3.0.0+incompatible // indirect
 	github.com/hashicorp/go-hclog v0.15.0
 	github.com/stretchr/testify v1.3.0
 
