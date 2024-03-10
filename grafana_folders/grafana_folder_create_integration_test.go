@@ -38,3 +38,16 @@ func TestIntegrationGrafanaFolder_CreateGrafanaFolderNoTitle(t *testing.T) {
 		assert.Nil(t, grafanaFolder)
 	}
 }
+
+func TestIntegrationGrafanaFolder_CreateGrafanaFolderInvalidTitle(t *testing.T) {
+	underTest, err := setupGrafanaFolderIntegrationTest()
+	defer test_utils.TestDoneTimeBuffer()
+
+	if assert.NoError(t, err) {
+		createGrafanaFolder := createFolderInvalidName()
+		createGrafanaFolder.Title = "client/test/title"
+		grafanaFolder, err := underTest.CreateGrafanaFolder(createGrafanaFolder)
+		assert.Error(t, err)
+		assert.Nil(t, grafanaFolder)
+	}
+}

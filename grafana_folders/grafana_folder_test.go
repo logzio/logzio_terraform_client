@@ -49,3 +49,10 @@ func getCreateOrUpdateGrafanaFolder() grafana_folders.CreateUpdateFolder {
 		Title: "client_test_title",
 	}
 }
+
+func createFolderInvalidName() grafana_folders.CreateUpdateFolder {
+	return grafana_folders.CreateUpdateFolder{
+		Uid:   "client_test",
+		Title: "client/test/title",
+	}
+}

@@ -63,3 +63,27 @@ func TestGrafanaFolder_CreateGrafanaFolderInternalServerError(t *testing.T) {
 		assert.Nil(t, grafanaFolder)
 	}
 }
+
+func TestGrafanaFolder_CreateGrafanaFolderInvalidFolderNameError(t *testing.T) {
+	underTest, err, teardown := setupGrafanaFolderTest()
+	defer teardown()
+
+	if assert.NoError(t, err) {
+		mux.HandleFunc("/v1/grafana/api/folders", func(w http.ResponseWriter, r *http.Request) {
+			assert.Equal(t, http.MethodPost, r.Method)
+			jsonBytes, _ := io.ReadAll(r.Body)
+			var target grafana_folders.CreateUpdateFolder
+			err = json.Unmarshal(jsonBytes, &target)
+			assert.NoError(t, err)
+			assert.NotNil(t, target)
+			assert.NotEmpty(t, target.Title)
+			assert.NotEmpty(t, target.Uid)
+			w.Header().Set("Content-Type", "application/json")
+		})
+
+		createGrafanaFolder := createFolderInvalidName()
+		grafanaFolder, err := underTest.CreateGrafanaFolder(createGrafanaFolder)
+		assert.Error(t, err)
+		assert.Nil(t, grafanaFolder)
+	}
+}

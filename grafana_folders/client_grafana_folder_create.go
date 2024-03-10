@@ -5,6 +5,7 @@ import (
 	"fmt"
 	logzio_client "github.com/logzio/logzio_terraform_client"
 	"net/http"
+	"strings"
 )
 
 const (
@@ -53,6 +54,8 @@ func (c *GrafanaFolderClient) CreateGrafanaFolder(payload CreateUpdateFolder) (*
 func validateCreateGrafanaFolder(payload CreateUpdateFolder) error {
 	if len(payload.Title) == 0 {
 		return fmt.Errorf("Field title must be set!")
+	} else if strings.Contains(payload.Title, "/") {
+		return fmt.Errorf("invalid charchter '/' in folder name")
 	}
 
 	return nil
