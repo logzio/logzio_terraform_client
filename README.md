@@ -53,7 +53,7 @@ The library currently supports the following API endpoints:
   <summary markdown="span">Exapnd to check old versions </summary>
 
 - v1.16.1
-  - Add limitation, Grafana Folder name cannot contain `/`.
+  - Add limitation, Grafana Folder name cannot contain `/` or `\`.
 - v1.16.0
   - Add [Grafana Dashboards API](https://docs.logz.io/api/#operation/createDashboard) support.
 - v1.15.0
