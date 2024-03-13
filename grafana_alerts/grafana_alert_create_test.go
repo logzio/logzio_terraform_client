@@ -61,3 +61,34 @@ func TestGrafanaAlert_CreateGrafanaAlertInternalServerError(t *testing.T) {
 		assert.Nil(t, grafanaAlert)
 	}
 }
+
+func TestGrafanaAlert_CreateGrafanaAlertInvalidTitle(t *testing.T) {
+	underTest, err, teardown := setupGrafanaAlertRuleTest()
+	defer teardown()
+
+	if assert.NoError(t, err) {
+		mux.HandleFunc("/v1/grafana/api/v1/provisioning/alert-rules", func(w http.ResponseWriter, r *http.Request) {
+			assert.Equal(t, http.MethodPost, r.Method)
+			jsonBytes, _ := io.ReadAll(r.Body)
+			var target grafana_alerts.GrafanaAlertRule
+			err = json.Unmarshal(jsonBytes, &target)
+			assert.NoError(t, err)
+			assert.NotNil(t, target)
+			assert.NotEmpty(t, target.Title)
+			w.WriteHeader(http.StatusInternalServerError)
+		})
+
+		// test '/' naming limitation
+		createGrafanaAlert := getGrafanaAlertRuleObject()
+		createGrafanaAlert.Title = "client/test/title"
+		grafanaAlert, err := underTest.CreateGrafanaAlertRule(createGrafanaAlert)
+		assert.Error(t, err)
+		assert.Nil(t, grafanaAlert)
+
+		// test '\' naming limitation
+		createGrafanaAlert.Title = "client\\test\\title"
+		grafanaAlert, err = underTest.CreateGrafanaAlertRule(createGrafanaAlert)
+		assert.Error(t, err)
+		assert.Nil(t, grafanaAlert)
+	}
+}

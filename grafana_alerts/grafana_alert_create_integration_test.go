@@ -102,3 +102,23 @@ func TestIntegrationGrafanaAlert_CreateGrafanaAlertNoOrgRuleGroup(t *testing.T) 
 		assert.Nil(t, grafanaAlert)
 	}
 }
+
+func TestIntegrationGrafanaAlert_CreateGrafanaAlertInvalidTitle(t *testing.T) {
+	underTest, err := setupGrafanaAlertIntegrationTest()
+	defer test_utils.TestDoneTimeBuffer()
+
+	if assert.NoError(t, err) {
+		// test '/' naming limitation
+		createGrafanaAlert := getGrafanaAlertRuleObject()
+		createGrafanaAlert.Title = "client/test/title"
+		grafanaAlert, err := underTest.CreateGrafanaAlertRule(createGrafanaAlert)
+		assert.Error(t, err)
+		assert.Nil(t, grafanaAlert)
+
+		// test '\' naming limitation
+		createGrafanaAlert.Title = "client\\test\\title"
+		grafanaAlert, err = underTest.CreateGrafanaAlertRule(createGrafanaAlert)
+		assert.Error(t, err)
+		assert.Nil(t, grafanaAlert)
+	}
+}
