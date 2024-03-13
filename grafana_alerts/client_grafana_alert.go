@@ -3,6 +3,7 @@ package grafana_alerts
 import (
 	"fmt"
 	"github.com/logzio/logzio_terraform_client/client"
+	"strings"
 	"time"
 )
 
@@ -110,6 +111,8 @@ func validateGrafanaAlertRuleCreateUpdate(payload GrafanaAlertRule, isUpdate boo
 
 	if len(payload.Title) == 0 {
 		return fmt.Errorf("Field title must be set!")
+	} else if strings.Contains(payload.Title, "\\") || strings.Contains(payload.Title, "/") {
+		return fmt.Errorf("alert Title cannot contain '/' or '\\\\' charchters")
 	}
 
 	if isUpdate {
