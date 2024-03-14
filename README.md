@@ -37,6 +37,8 @@ The library currently supports the following API endpoints:
 
 ### Changelog
 
+- 1.20.1
+  - Add limitation, Grafana Alert name cannot contain `/` or `\`.
 - 1.20.0
   - Add [Grafana Contact Point API](https://docs.logz.io/api/#tag/Grafana-contact-points).
   - Add Grafana Notification Policy API.
@@ -52,8 +54,6 @@ The library currently supports the following API endpoints:
 <details>
   <summary markdown="span">Exapnd to check old versions </summary>
 
-- v1.16.1
-  - Add limitation, Grafana Alert name cannot contain `/` or `\`.
 - v1.16.0
   - Add [Grafana Dashboards API](https://docs.logz.io/api/#operation/createDashboard) support.
 - v1.15.0
