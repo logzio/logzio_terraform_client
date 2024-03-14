@@ -38,9 +38,9 @@ The library currently supports the following API endpoints:
 
 ### Changelog
 
-- v1.21.0
+- 1.21.0
   - Add [Metrics Accounts API](https://api-docs.logz.io/docs/logz/create-a-new-metrics-account).
-- v1.20.1
+- 1.20.1
   - Add limitation, Grafana Alert name cannot contain `/` or `\`.
 - 1.20.0
   - Add [Grafana Contact Point API](https://api-docs.logz.io/docs/logz/route-get-contactpoints).
