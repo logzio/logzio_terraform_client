@@ -32,11 +32,11 @@ func (c *MetricsAccountClient) GetMetricsAccount(metricsAccountId int64) (*Metri
 		return nil, err
 	}
 
-	var subAccount MetricsAccount
-	err = json.Unmarshal(res, &subAccount)
+	var metricsAccount MetricsAccount
+	err = json.Unmarshal(res, &metricsAccount)
 	if err != nil {
 		return nil, err
 	}
 
-	return &subAccount, nil
+	return &metricsAccount, nil
 }

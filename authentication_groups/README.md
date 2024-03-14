@@ -1,6 +1,6 @@
 # Authentication Groups
 
-Compatible with Logz.io's [Authentication Groups API](https://docs.logz.io/api/#tag/Authentication-groups).
+Compatible with Logz.io's [Authentication Groups API](https://api-docs.logz.io/docs/logz/authentication-groups).
 
 This is an example to a request that creates a new authentication group:
 

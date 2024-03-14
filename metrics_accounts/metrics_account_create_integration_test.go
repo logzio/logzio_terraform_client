@@ -11,15 +11,15 @@ func TestIntegrationMetricsAccount_CreateMetricsAccount(t *testing.T) {
 	underTest, email, err := setupMetricsAccountsIntegrationTest()
 
 	if assert.NoError(t, err) {
-		createSubAccount := getCreateOrUpdateMetricsAccount(email)
-		createSubAccount.AccountName = createSubAccount.AccountName + "_create"
+		createMetricsAccount := getCreateOrUpdateMetricsAccount(email)
+		createMetricsAccount.AccountName = createMetricsAccount.AccountName + "_create"
 
-		subAccount, err := underTest.CreateMetricsAccount(createSubAccount)
-		if assert.NoError(t, err) && assert.NotNil(t, subAccount) {
+		metricsAccount, err := underTest.CreateMetricsAccount(createMetricsAccount)
+		if assert.NoError(t, err) && assert.NotNil(t, metricsAccount) {
 			time.Sleep(4 * time.Second)
-			defer underTest.DeleteMetricsAccount(int64(subAccount.Id))
-			assert.NotEmpty(t, subAccount.Token)
-			assert.NotEmpty(t, subAccount.Id)
+			defer underTest.DeleteMetricsAccount(int64(metricsAccount.Id))
+			assert.NotEmpty(t, metricsAccount.Token)
+			assert.NotEmpty(t, metricsAccount.Id)
 		}
 	}
 }
@@ -31,15 +31,15 @@ func TestIntegrationMetricsAccount_CreateMetricsAccountWithSharingAccount(t *tes
 		accountId, err := test_utils.GetAccountId()
 		assert.NoError(t, err)
 
-		createSubAccount := getCreateOrUpdateMetricsAccount(email)
-		createSubAccount.AccountName = createSubAccount.AccountName + "_create_with_sharing_account"
-		createSubAccount.AuthorizedAccountsIds = []int32{int32(accountId)}
-		subAccount, err := underTest.CreateMetricsAccount(createSubAccount)
-		if assert.NoError(t, err) && assert.NotNil(t, subAccount) {
+		createMetricsAccount := getCreateOrUpdateMetricsAccount(email)
+		createMetricsAccount.AccountName = createMetricsAccount.AccountName + "_create_with_sharing_account"
+		createMetricsAccount.AuthorizedAccountsIds = []int32{int32(accountId)}
+		metricsAccount, err := underTest.CreateMetricsAccount(createMetricsAccount)
+		if assert.NoError(t, err) && assert.NotNil(t, metricsAccount) {
 			time.Sleep(4 * time.Second)
-			defer underTest.DeleteMetricsAccount(int64(subAccount.Id))
-			assert.NotEmpty(t, subAccount.Token)
-			assert.NotEmpty(t, subAccount.Id)
+			defer underTest.DeleteMetricsAccount(int64(metricsAccount.Id))
+			assert.NotEmpty(t, metricsAccount.Token)
+			assert.NotEmpty(t, metricsAccount.Id)
 		}
 	}
 }
@@ -48,11 +48,11 @@ func TestIntegrationMetricsAccount_CreateMetricsAccountInvalidMail(t *testing.T)
 	underTest, _, err := setupMetricsAccountsIntegrationTest()
 
 	if assert.NoError(t, err) {
-		createSubAccount := getCreateOrUpdateMetricsAccount("invalid@mail.test")
-		subAccount, err := underTest.CreateMetricsAccount(createSubAccount)
+		createMetricsAccount := getCreateOrUpdateMetricsAccount("invalid@mail.test")
+		metricsAccount, err := underTest.CreateMetricsAccount(createMetricsAccount)
 
 		assert.Error(t, err)
-		assert.Nil(t, subAccount)
+		assert.Nil(t, metricsAccount)
 	}
 }
 
@@ -60,23 +60,23 @@ func TestIntegrationMetricsAccount_CreateMetricsAccountNoMail(t *testing.T) {
 	underTest, _, err := setupMetricsAccountsIntegrationTest()
 
 	if assert.NoError(t, err) {
-		createSubAccount := getCreateOrUpdateMetricsAccount("")
-		subAccount, err := underTest.CreateMetricsAccount(createSubAccount)
+		createMetricsAccount := getCreateOrUpdateMetricsAccount("")
+		metricsAccount, err := underTest.CreateMetricsAccount(createMetricsAccount)
 
 		assert.Error(t, err)
-		assert.Nil(t, subAccount)
+		assert.Nil(t, metricsAccount)
 	}
 }
 
-func TestIntegrationMetricsAccount_CreateMetricsAccountNoAccountName(t *testing.T) { //TODO rewrite
+func TestIntegrationMetricsAccount_CreateMetricsAccountNoAccountName(t *testing.T) {
 	underTest, email, err := setupMetricsAccountsIntegrationTest()
 
 	if assert.NoError(t, err) {
-		createSubAccount := getCreateOrUpdateMetricsAccount(email)
-		createSubAccount.AccountName = ""
-		subAccount, err := underTest.CreateMetricsAccount(createSubAccount)
+		createMetricsAccount := getCreateOrUpdateMetricsAccount(email)
+		createMetricsAccount.AccountName = ""
+		metricsAccount, err := underTest.CreateMetricsAccount(createMetricsAccount)
 
 		assert.Error(t, err)
-		assert.Nil(t, subAccount)
+		assert.Nil(t, metricsAccount)
 	}
 }

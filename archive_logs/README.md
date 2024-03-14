@@ -1,6 +1,6 @@
 # Archive logs
 
-Compatible with Logz.io's [archive logs API](https://docs.logz.io/api/#tag/Archive-logs).
+Compatible with Logz.io's [archive logs API](https://api-docs.logz.io/docs/logz/archive-logs).
 You can archive logs to an AWS S3 bucket or Azure Blob Storage. Archiving gives you the option to restore logs and query them after they have expired from your time-based account.
 To create a new S3 archive:
 ```go

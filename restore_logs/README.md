@@ -1,6 +1,6 @@
 # Restore logs
 
-Compatible with Logz.io's [restore logs API](https://docs.logz.io/api/#tag/Restore-logs).
+Compatible with Logz.io's [restore logs API](https://api-docs.logz.io/docs/logz/restore-logs).
 
 You can restore data from your active archiving account, whether an AWS S3 bucket or Azure Blob Storage. Restoring data gives you the option to query logs after they have expired from your time-based account.
 To initiate a restore operation:

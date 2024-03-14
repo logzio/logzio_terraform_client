@@ -1,8 +1,8 @@
 # Users
 
-Compatible with Logz.io's [manage users API](https://docs.logz.io/api/#tag/Manage-users).
+Compatible with Logz.io's [manage users API](https://api-docs.logz.io/docs/logz/manage-users).
 
-To create a new user, on a specific account or sub-account. you'll need [your account Id](https://docs.logz.io/user-guide/accounts/finding-your-account-id.html).
+To create a new user, on a specific account or sub-account. you'll need [your account Id](https://docs.logz.io/docs/user-guide/admin/logzio-accounts/manage-the-main-account-and-sub-accounts#view-log-management-plan-summary).
 
 ```go
 client, _ := users.New(apiToken, apiServerAddress)

@@ -1,6 +1,6 @@
 # Sub-accounts
 
-Compatible with Logz.io's [sub-accounts API](https://docs.logz.io/api/#tag/Manage-time-based-log-accounts).
+Compatible with Logz.io's [sub-accounts API](https://api-docs.logz.io/docs/logz/manage-time-based-log-accounts).
 
 To create a new sub-account, on a main account.
 ```go

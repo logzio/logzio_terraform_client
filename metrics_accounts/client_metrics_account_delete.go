@@ -9,7 +9,7 @@ import (
 const (
 	deleteMetricsAccountServiceUrl     = metricsAccountServiceEndpoint + "/%d"
 	deleteMetricsAccountServiceMethod  = http.MethodDelete
-	deleteMetricsAccountServiceSuccess = 200
+	deleteMetricsAccountServiceSuccess = http.StatusOK
 	deleteMetricsAccountMethodNotFound = http.StatusNoContent
 )
 

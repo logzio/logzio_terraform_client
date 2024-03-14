@@ -23,6 +23,7 @@ The library currently supports the following API endpoints:
 * [Grafana datasource](https://docs.logz.io/api/#operation/getDatasourceByAccount).
 * Grafana Notification Policy.
 * [Grafana Contact Point](https://docs.logz.io/api/#tag/Grafana-contact-points).
+* [Metrics Accounts](https://api-docs.logz.io/docs/logz/create-a-new-metrics-account)
 
 #### Contributing
 
@@ -37,13 +38,17 @@ The library currently supports the following API endpoints:
 
 ### Changelog
 
+- v1.21.0
+  - Add [Metrics Accounts API](https://api-docs.logz.io/docs/logz/create-a-new-metrics-account).
+- v1.20.1
+  - Add limitation, Grafana Alert name cannot contain `/` or `\`.
 - 1.20.0
-  - Add [Grafana Contact Point API](https://docs.logz.io/api/#tag/Grafana-contact-points).
+  - Add [Grafana Contact Point API](https://api-docs.logz.io/docs/logz/route-get-contactpoints).
   - Add Grafana Notification Policy API.
 - 1.19.0
-  - Add [Grafana Datasource API](https://docs.logz.io/api/#operation/getDatasourceByAccount) partial support for specific endpoint. 
+  - Add [Grafana Datasource API](https://api-docs.logz.io/docs/logz/get-datasource-by-account) partial support for specific endpoint. 
 - v1.18.0
-  - Add [Grafana Alert Rules API](https://docs.logz.io/api/#tag/Grafana-alerting-provisioning) support.
+  - Add [Grafana Alert Rules API](https://api-docs.logz.io/docs/logz/get-alert-rules) support.
 - v1.17.0
   - Add Grafana Folders API.
   - Remove deprecated `alerts` (v1).
@@ -52,12 +57,10 @@ The library currently supports the following API endpoints:
 <details>
   <summary markdown="span">Exapnd to check old versions </summary>
 
-- v1.16.1
-  - Add limitation, Grafana Alert name cannot contain `/` or `\`.
 - v1.16.0
-  - Add [Grafana Dashboards API](https://docs.logz.io/api/#operation/createDashboard) support.
+  - Add [Grafana Dashboards API](https://api-docs.logz.io/docs/logz/create-dashboard) support.
 - v1.15.0
-  - Add [S3 Fetcher](https://docs.logz.io/api/#tag/Connect-to-S3-Buckets).
+  - Add [S3 Fetcher](https://api-docs.logz.io/docs/logz/create-buckets).
 - v1.14.0
   - `alerts_v2` - support new field `schedule`
 - v1.13.1
@@ -69,7 +72,7 @@ The library currently supports the following API endpoints:
   - Refactor `users`, adjust to the recent API fields.
   - Add field `UserName` to `restore` initiate request, to match recent API fields.
 - v1.11.0
-  - Add [Kibana Objects](https://docs.logz.io/api/#tag/Import-or-export-Kibana-objects).
+  - Add [Kibana Objects](https://api-docs.logz.io/docs/logz/import-or-export-kibana-objects).
 - v1.10.3
   - Bug fix - **sub_accounts**: omit maxDailyGb if needed.
 - v1.10.2
@@ -77,14 +80,14 @@ The library currently supports the following API endpoints:
 - v1.10.1
   - Bug fix - **custom endpoint**: allow empty string for Headers field.
 - v1.10.0
-    - Add [Authentication groups API](https://docs.logz.io/api/#tag/Authentication-groups).
+    - Add [Authentication groups API](https://api-docs.logz.io/docs/logz/authentication-groups).
     - Add tests to retrieve archive.
     - Improve tests.
 - v1.9.1
     - Bug fix - adjust "not found" message to all resources.
 - v1.9.0
-    - Add [Archive logs API](https://docs.logz.io/api/#tag/Archive-logs).
-    - Add [Restore logs API](https://docs.logz.io/api/#tag/Restore-logs).
+    - Add [Archive logs API](https://api-docs.logz.io/docs/logz/archive-logs).
+    - Add [Restore logs API](https://api-docs.logz.io/docs/logz/restore-logs).
 - v1.8.0
     - `sub_accounts`:
         - Add `flexible` & `reservedDailyGB`.
@@ -93,9 +96,9 @@ The library currently supports the following API endpoints:
         - **Breaking changes:** refactor resource.
         - Add new endpoint types (OpsGenie, ServiceNow, Microsoft Teams).
 - v1.7.0
-    - Add [drop filters API](https://docs.logz.io/api/#tag/Drop-filters).
+    - Add [drop filters API](https://api-docs.logz.io/docs/logz/drop-filters).
 - v1.6.0
-    - Add [log shipping tokens API](https://docs.logz.io/api/#tag/Manage-log-shipping-tokens) compatibility.
+    - Add [log shipping tokens API](https://api-docs.logz.io/docs/logz/manage-log-shipping-tokens) compatibility.
 - v1.5.3
     - Fix for `sub account`: return token & account id on Create. 
 - v1.5.2

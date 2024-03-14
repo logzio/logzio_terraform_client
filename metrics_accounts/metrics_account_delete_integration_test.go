@@ -9,13 +9,13 @@ import (
 func TestIntegrationMetricsAccount_DeleteMetricsAccount(t *testing.T) {
 	underTest, email, err := setupMetricsAccountsIntegrationTest()
 	if assert.NoError(t, err) {
-		createSubAccount := getCreateOrUpdateMetricsAccount(email)
-		createSubAccount.AccountName = createSubAccount.AccountName + "_delete"
-		subAccount, err := underTest.CreateMetricsAccount(createSubAccount)
-		if assert.NoError(t, err) && assert.NotNil(t, subAccount) {
+		createMetricsAccount := getCreateOrUpdateMetricsAccount(email)
+		createMetricsAccount.AccountName = createMetricsAccount.AccountName + "_delete"
+		metricsAccount, err := underTest.CreateMetricsAccount(createMetricsAccount)
+		if assert.NoError(t, err) && assert.NotNil(t, metricsAccount) {
 			time.Sleep(2 * time.Second)
 			defer func() {
-				err = underTest.DeleteMetricsAccount(int64(subAccount.Id))
+				err = underTest.DeleteMetricsAccount(int64(metricsAccount.Id))
 				assert.NoError(t, err)
 			}()
 		}

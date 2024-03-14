@@ -1,6 +1,6 @@
 # Log Shipping Tokens
 
-Compatible with Logz.io's [Manage Log Shipping Tokens API](https://docs.logz.io/api/#tag/Manage-log-shipping-tokens).
+Compatible with Logz.io's [Manage Log Shipping Tokens API](https://api-docs.logz.io/docs/logz/manage-log-shipping-tokens).
 
 To create a new log shipping token:
 

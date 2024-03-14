@@ -1,11 +1,9 @@
 # Alerts V2
-Compatible with Logz.io's [alerts API](https://docs.logz.io/api/#tag/Alerts).
+Compatible with Logz.io's [alerts API](https://api-docs.logz.io/docs/logz/alerts).
 
 Logz.io alerts use a Kibana search query to continuously scan your logs and alert you when a certain set of conditions is met. The simplest alerts can use a simple search query or a particular filter, but others can be quite complex and involve several conditions with varying thresholds.
 
-To create an alert where the type field = 'mytype' and the loglevel field = ERROR, see the logz.io docs for more info
-
-https://support.logz.io/hc/en-us/articles/209487329-How-do-I-create-an-Alert-
+To create an alert where the type field = 'mytype' and the loglevel field = ERROR, [see the logz.io docs for more info](https://docs.logz.io/docs/user-guide/log-management/log-alerts/configure-alert/).
 
 ```go
 client, _ := alerts_v2.New(apiToken, apiServerAddress)

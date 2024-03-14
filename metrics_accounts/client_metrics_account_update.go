@@ -10,12 +10,12 @@ import (
 const (
 	updateMetricsAccountServiceUrl      = metricsAccountServiceEndpoint + "/%d"
 	updateMetricsAccountServiceMethod   = http.MethodPut
-	updateMetricsAccountServiceSuccess  = 200
+	updateMetricsAccountServiceSuccess  = http.StatusOK
 	updateMetricsAccountServiceNotFound = http.StatusNotFound
 )
 
 func (c *MetricsAccountClient) UpdateMetricsAccount(metricsAccountId int64, updateMetricsAccount CreateOrUpdateMetricsAccount) error {
-	err := validateUpdateSubAccount(updateMetricsAccount)
+	err := validateUpdateMetricsAccount(updateMetricsAccount)
 	if err != nil {
 		return err
 	}
@@ -40,14 +40,9 @@ func (c *MetricsAccountClient) UpdateMetricsAccount(metricsAccountId int64, upda
 	return err
 }
 
-func validateUpdateSubAccount(updateSubAccount CreateOrUpdateMetricsAccount) error {
-	if len(updateSubAccount.AccountName) == 0 {
-		return fmt.Errorf("account name must be set")
+func validateUpdateMetricsAccount(updateMetricsAccount CreateOrUpdateMetricsAccount) error {
+	if updateMetricsAccount.PlanUts != nil && *updateMetricsAccount.PlanUts < 100 {
+		return fmt.Errorf("PlanUts should be larger than 100 or empty")
 	}
-
-	if updateSubAccount.PlanUts < 0 {
-		return fmt.Errorf("PlanUts should be >=100 or empty")
-	}
-
 	return nil
 }

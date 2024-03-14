@@ -5,12 +5,12 @@ import (
 	"testing"
 )
 
-func TestIntegrationSubAccount_ListSubAccounts(t *testing.T) {
+func TestIntegrationMetricsAccount_ListMetricsAccounts(t *testing.T) {
 	underTest, _, err := setupMetricsAccountsIntegrationTest()
 
 	if assert.NoError(t, err) {
-		subAccounts, err := underTest.ListMetricsAccounts()
+		metricsAccounts, err := underTest.ListMetricsAccounts()
 		assert.NoError(t, err)
-		assert.NotNil(t, subAccounts)
+		assert.NotNil(t, metricsAccounts)
 	}
 }

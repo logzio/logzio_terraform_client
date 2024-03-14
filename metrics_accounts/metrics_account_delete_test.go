@@ -13,15 +13,15 @@ func TestMetricsAccount_DeleteValidMetricsAccount(t *testing.T) {
 	assert.NoError(t, err)
 	defer teardown()
 
-	subAccountId := int64(1234567)
+	metricsAccountId := int64(1234567)
 
 	mux.HandleFunc("/v1/account-management/metrics-accounts/", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodDelete, r.Method)
-		assert.Contains(t, r.URL.String(), strconv.FormatInt(subAccountId, 10))
+		assert.Contains(t, r.URL.String(), strconv.FormatInt(metricsAccountId, 10))
 		w.WriteHeader(200) //deleteAccountMetricsSuccess
 	})
 
-	err = underTest.DeleteMetricsAccount(subAccountId)
+	err = underTest.DeleteMetricsAccount(metricsAccountId)
 	assert.NoError(t, err)
 }
 
@@ -30,16 +30,16 @@ func TestMetricsAccount_DeleteValidMetricsAccountNotFound(t *testing.T) {
 	assert.NoError(t, err)
 	defer teardown()
 
-	subAccountId := int64(12345)
+	metricsAccountId := int64(12345)
 
 	mux.HandleFunc("/v1/account-management/metrics-accounts/", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodDelete, r.Method)
-		assert.Contains(t, r.URL.String(), strconv.FormatInt(subAccountId, 10))
+		assert.Contains(t, r.URL.String(), strconv.FormatInt(metricsAccountId, 10))
 		w.WriteHeader(http.StatusNoContent) //deleteMetricsAccountMethodNotFound
 		fmt.Fprint(w, fixture("delete_metrics_account_failed.txt"))
 	})
 
-	err = underTest.DeleteMetricsAccount(subAccountId)
+	err = underTest.DeleteMetricsAccount(metricsAccountId)
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "failed with missing metrics account")
 }

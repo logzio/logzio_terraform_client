@@ -33,11 +33,11 @@ func (c *MetricsAccountClient) ListMetricsAccounts() ([]MetricsAccount, error) {
 		return nil, err
 	}
 
-	var subAccounts []MetricsAccount
-	err = json.Unmarshal(res, &subAccounts)
+	var metricsAccounts []MetricsAccount
+	err = json.Unmarshal(res, &metricsAccounts)
 	if err != nil {
 		return nil, err
 	}
 
-	return subAccounts, nil
+	return metricsAccounts, nil
 }

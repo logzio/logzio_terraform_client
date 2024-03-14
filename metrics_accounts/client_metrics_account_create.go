@@ -24,13 +24,13 @@ func (e FieldError) Error() string {
 }
 
 // CreateMetricsAccount creates metrics account, return account's id & token if successful, an error otherwise
-func (c *MetricsAccountClient) CreateMetricsAccount(createSubAccount CreateOrUpdateMetricsAccount) (*MetricsAccountCreateResponse, error) {
-	err := validateCreateMetricsAccount(createSubAccount)
+func (c *MetricsAccountClient) CreateMetricsAccount(createMetricsAccount CreateOrUpdateMetricsAccount) (*MetricsAccountCreateResponse, error) {
+	err := validateCreateMetricsAccount(createMetricsAccount)
 	if err != nil {
 		return nil, err
 	}
 
-	SubAccountJson, err := json.Marshal(createSubAccount)
+	MetricsAccountJson, err := json.Marshal(createMetricsAccount)
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +39,7 @@ func (c *MetricsAccountClient) CreateMetricsAccount(createSubAccount CreateOrUpd
 		ApiToken:     c.ApiToken,
 		HttpMethod:   createMetricsAccountServiceMethod,
 		Url:          fmt.Sprintf(createMetricsAccountServiceUrl, c.BaseUrl),
-		Body:         SubAccountJson,
+		Body:         MetricsAccountJson,
 		SuccessCodes: []int{createMetricsAccountMethodSuccess},
 		NotFoundCode: createMetricsAccountStatusNotFound,
 		ResourceId:   nil,
@@ -60,18 +60,21 @@ func (c *MetricsAccountClient) CreateMetricsAccount(createSubAccount CreateOrUpd
 	return &reVal, nil
 }
 
-func validateCreateMetricsAccount(createSubAccount CreateOrUpdateMetricsAccount) error {
-	if len(createSubAccount.Email) == 0 {
+func validateCreateMetricsAccount(createMetricsAccount CreateOrUpdateMetricsAccount) error {
+	if len(createMetricsAccount.Email) == 0 {
 		return fmt.Errorf("email must be set")
 	}
 
-	if createSubAccount.AuthorizedAccountsIds == nil {
-		return fmt.Errorf("authorized accounts must be initialized, even without any ids")
+	if len(createMetricsAccount.AccountName) == 0 {
+		return fmt.Errorf("account name must be set")
 	}
 
-	if createSubAccount.PlanUts < 100 {
-		return fmt.Errorf("planUts should be >= 100")
+	if createMetricsAccount.AuthorizedAccountsIds == nil {
+		return fmt.Errorf("AuthorizedAccountsIds must be initialized, even without any ids")
 	}
 
+	if *createMetricsAccount.PlanUts < 100 {
+		return fmt.Errorf("PlanUts should be larger than 100")
+	}
 	return nil
 }

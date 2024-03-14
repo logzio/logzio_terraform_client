@@ -49,11 +49,11 @@ func TestMetricsAccount_CreateValidMetricsAccountAPIFail(t *testing.T) {
 			fmt.Fprint(w, fixture("create_metrics_account_failed.txt"))
 		})
 
-		createSubAccount := getCreateOrUpdateMetricsAccount("test.user@test.user")
-		createSubAccount.AccountName = createSubAccount.AccountName + "_test_create"
-		subAccount, err := underTest.CreateMetricsAccount(createSubAccount)
+		createMetricsAccount := getCreateOrUpdateMetricsAccount("test.user@test.user")
+		createMetricsAccount.AccountName = createMetricsAccount.AccountName + "_test_create"
+		MetricsAccount, err := underTest.CreateMetricsAccount(createMetricsAccount)
 		assert.Error(t, err)
-		assert.Nil(t, subAccount)
+		assert.Nil(t, MetricsAccount)
 	}
 }
 
@@ -61,11 +61,11 @@ func TestMetricsAccount_CreateMetricsAccountNoEmail(t *testing.T) {
 	underTest, err, teardown := setupMetricsAccountsTest()
 	defer teardown()
 
-	createSubAccount := getCreateOrUpdateMetricsAccount("")
-	createSubAccount.AccountName = createSubAccount.AccountName + "_test_create_no_email"
-	subAccount, err := underTest.CreateMetricsAccount(createSubAccount)
+	createMetricsAccount := getCreateOrUpdateMetricsAccount("")
+	createMetricsAccount.AccountName = createMetricsAccount.AccountName + "_test_create_no_email"
+	MetricsAccount, err := underTest.CreateMetricsAccount(createMetricsAccount)
 	assert.Error(t, err)
-	assert.Nil(t, subAccount)
+	assert.Nil(t, MetricsAccount)
 }
 
 func TestMetricsAccount_CreateMetricsAccountNoAccountName(t *testing.T) {
@@ -85,12 +85,12 @@ func TestMetricsAccount_CreateMetricsAccountNoAccountName(t *testing.T) {
 			fmt.Fprint(w, fixture("create_metrics_account_generatename.json"))
 		})
 
-		createSubAccount := getCreateOrUpdateMetricsAccount("test.user@test.user")
-		createSubAccount.AccountName = ""
-		subAccount, err := underTest.CreateMetricsAccount(createSubAccount)
+		createMetricsAccount := getCreateOrUpdateMetricsAccount("test.user@test.user")
+		createMetricsAccount.AccountName = ""
+		MetricsAccount, err := underTest.CreateMetricsAccount(createMetricsAccount)
 		assert.NoError(t, err)
-		assert.NotNil(t, subAccount)
-		assert.NotEmpty(t, subAccount.AccountName)
+		assert.NotNil(t, MetricsAccount)
+		assert.NotEmpty(t, MetricsAccount.AccountName)
 	}
 }
 
@@ -98,22 +98,22 @@ func TestMetricsAccount_CreateMetricsAccountNoPlanUts(t *testing.T) {
 	underTest, err, teardown := setupMetricsAccountsTest()
 	defer teardown()
 
-	createSubAccount := getCreateOrUpdateMetricsAccount("test.user@test.user")
-	createSubAccount.AccountName = createSubAccount.AccountName + "_test_create_no_planuts"
-	createSubAccount.PlanUts = -1
-	subAccount, err := underTest.CreateMetricsAccount(createSubAccount)
+	createMetricsAccount := getCreateOrUpdateMetricsAccount("test.user@test.user")
+	createMetricsAccount.AccountName = createMetricsAccount.AccountName + "_test_create_no_planuts"
+	*createMetricsAccount.PlanUts = 0
+	MetricsAccount, err := underTest.CreateMetricsAccount(createMetricsAccount)
 	assert.Error(t, err)
-	assert.Nil(t, subAccount)
+	assert.Nil(t, MetricsAccount)
 }
 
 func TestMetricsAccount_CreateMetricsAccountNoSharingAccount(t *testing.T) {
 	underTest, err, teardown := setupMetricsAccountsTest()
 	defer teardown()
 
-	createSubAccount := getCreateOrUpdateMetricsAccount("test.user@test.user")
-	createSubAccount.AccountName = createSubAccount.AccountName + "_test_create_no_sharing"
-	createSubAccount.AuthorizedAccountsIds = nil
-	subAccount, err := underTest.CreateMetricsAccount(createSubAccount)
+	createMetricsAccount := getCreateOrUpdateMetricsAccount("test.user@test.user")
+	createMetricsAccount.AccountName = createMetricsAccount.AccountName + "_test_create_no_sharing"
+	createMetricsAccount.AuthorizedAccountsIds = nil
+	MetricsAccount, err := underTest.CreateMetricsAccount(createMetricsAccount)
 	assert.Error(t, err)
-	assert.Nil(t, subAccount)
+	assert.Nil(t, MetricsAccount)
 }

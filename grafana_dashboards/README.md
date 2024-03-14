@@ -1,6 +1,6 @@
 # Grafana dashboards
 
-Compatible with Logz.io's [grafana dashboards API](https://docs.logz.io/api/#operation/createDashboard).
+Compatible with Logz.io's [grafana dashboards API](https://api-docs.logz.io/docs/logz/create-dashboard).
 To create a Grafana Dashboard:
 
 ```go

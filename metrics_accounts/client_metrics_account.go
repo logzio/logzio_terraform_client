@@ -25,35 +25,18 @@ type MetricsAccountClient struct {
 
 type CreateOrUpdateMetricsAccount struct {
 	Email                 string  `json:"email,omitempty"`
-	AccountName           string  `json:"accountName"`
-	PlanUts               int32   `json:"planUts"`
-	AuthorizedAccountsIds []int32 `json:"authorizedAccountsIds"`
-}
-
-type AccountUtilizationSettings struct {
-	FrequencyMinutes   int32 `json:"frequencyMinutes"`
-	UtilizationEnabled bool  `json:"utilizationEnabled"`
+	AccountName           string  `json:"accountName,omitempty"`
+	PlanUts               *int32  `json:"planUts,omitempty"`
+	AuthorizedAccountsIds []int32 `json:"authorizedAccountsIds,omitempty"`
 }
 
 type MetricsAccount struct {
 	Id                    int32   `json:"Id"`
 	AccountName           string  `json:"accountName"`
-	Token                 string  `json:"token"`
+	AccountToken          string  `json:"token"`
 	CreatedAt             int64   `json:"createdAt"`
 	PlanUts               int32   `json:"planUts"`
 	AuthorizedAccountsIds []int32 `json:"authorizedAccountsIds"`
-}
-
-type AccountView struct {
-	AccountId       int32   `json:"accountId"`
-	AccountName     string  `json:"accountName"`
-	AccountToken    string  `json:"accountToken"`
-	Active          bool    `json:"active"`
-	EsIndexPrefix   string  `json:"esIndexPrefix"`
-	Flexible        bool    `json:"isFlexible"`
-	ReservedDailyGB float32 `json:"reservedDailyGB"`
-	MaxDailyGB      float32 `json:"maxDailyGB"`
-	RetentionDays   int32   `json:"retentionDays"`
 }
 
 type MetricsAccountCreateResponse struct {

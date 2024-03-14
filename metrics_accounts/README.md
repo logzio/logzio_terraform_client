@@ -1,14 +1,16 @@
-# Metrics sub-accounts
+# Metrics Accounts
 
-Compatible with Logz.io's [account management API](https://docs.logz.io/api/#tag/Manage-metrics-account).
+Compatible with Logz.io's [account management API](https://api-docs.logz.io/docs/logz/create-a-new-metrics-account).
 
 To create a new metrics account, on a main account.
 ```go
 client, _ := metrics_accounts.New(apiToken, apiServerAddress)
+planUts := new(int32)
+*planUts = 1000
 account := metrics_accounts.CreateOrUpdateMetricsAccount{
                 Email:                  "some@email.test",
                 AccountName:            "tf_client_test",
-                PlanUts:                1000,
+                PlanUts:                planUts,
                 AuthorizedAccountsIds: []int32{},
             }
 ```

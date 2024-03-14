@@ -13,23 +13,22 @@ func TestMetricsAccount_GetValidMetricsAccount(t *testing.T) {
 	assert.NoError(t, err)
 	defer teardown()
 
-	subAccountId := int64(1234567)
+	metricsAccountId := int64(1234567)
 
 	mux.HandleFunc("/v1/account-management/metrics-accounts/", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodGet, r.Method)
-		assert.Contains(t, r.URL.String(), strconv.FormatInt(int64(subAccountId), 10))
+		assert.Contains(t, r.URL.String(), strconv.FormatInt(int64(metricsAccountId), 10))
 		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprint(w, fixture("get_metrics_account.json"))
 	})
 
-	subAccount, err := underTest.GetMetricsAccount(subAccountId)
+	metricsAccount, err := underTest.GetMetricsAccount(metricsAccountId)
 	assert.NoError(t, err)
-	assert.NotNil(t, subAccount)
-	assert.Equal(t, int32(1234567), subAccount.Id)
-	//assert.Empty(t, subAccount.Email)
-	assert.Equal(t, "testAccount", subAccount.AccountName)
-	assert.Equal(t, int32(5), subAccount.PlanUts)
-	assert.Equal(t, len(subAccount.AuthorizedAccountsIds), 1)
+	assert.NotNil(t, metricsAccount)
+	assert.Equal(t, int32(1234567), metricsAccount.Id)
+	assert.Equal(t, "testAccount", metricsAccount.AccountName)
+	assert.Equal(t, int32(5), metricsAccount.PlanUts)
+	assert.Equal(t, len(metricsAccount.AuthorizedAccountsIds), 1)
 }
 
 func TestMetricsAccount_GetValidMetricsAccountNotFound(t *testing.T) {
@@ -37,17 +36,17 @@ func TestMetricsAccount_GetValidMetricsAccountNotFound(t *testing.T) {
 	assert.NoError(t, err)
 	defer teardown()
 
-	subAccountId := int64(1234567)
+	metricsAccountId := int64(1234567)
 
 	mux.HandleFunc("/v1/account-management/metrics-accounts/", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodGet, r.Method)
-		assert.Contains(t, r.URL.String(), strconv.FormatInt(int64(subAccountId), 10))
+		assert.Contains(t, r.URL.String(), strconv.FormatInt(int64(metricsAccountId), 10))
 		w.WriteHeader(http.StatusNotFound)
 		fmt.Fprint(w, fixture("get_metrics_account_not_found.txt"))
 	})
 
-	subAccount, err := underTest.GetMetricsAccount(subAccountId)
+	metricsAccount, err := underTest.GetMetricsAccount(metricsAccountId)
 	assert.Error(t, err)
-	assert.Nil(t, subAccount)
+	assert.Nil(t, metricsAccount)
 	assert.Contains(t, err.Error(), "failed with missing metrics account")
 }

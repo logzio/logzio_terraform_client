@@ -49,12 +49,13 @@ func setupMetricsAccountsIntegrationTest() (*metrics_accounts.MetricsAccountClie
 }
 
 func getCreateOrUpdateMetricsAccount(email string) metrics_accounts.CreateOrUpdateMetricsAccount {
-	subAccount := metrics_accounts.CreateOrUpdateMetricsAccount{
+	metricsAccount := metrics_accounts.CreateOrUpdateMetricsAccount{
 		Email:                 email,
 		AccountName:           "tf_client_test",
-		PlanUts:               100,
+		PlanUts:               new(int32),
 		AuthorizedAccountsIds: []int32{},
 	}
 
-	return subAccount
+	*metricsAccount.PlanUts = 100
+	return metricsAccount
 }

@@ -19,13 +19,13 @@ func TestMetricsAccount_ListMetricsAccounts(t *testing.T) {
 		fmt.Fprint(w, fixture("list_metrics_accounts.json"))
 	})
 
-	subAccounts, err := underTest.ListMetricsAccounts()
+	metricsAccounts, err := underTest.ListMetricsAccounts()
 	assert.NoError(t, err)
-	assert.NotNil(t, subAccounts)
-	assert.Equal(t, 1, len(subAccounts))
+	assert.NotNil(t, metricsAccounts)
+	assert.Equal(t, 1, len(metricsAccounts))
 }
 
-func TestSubAccount_ListSubAccountsAPIFail(t *testing.T) {
+func TestMetricsAccount_ListMetricsAccountsAPIFail(t *testing.T) {
 	underTest, err, teardown := setupMetricsAccountsTest()
 	assert.NoError(t, err)
 	defer teardown()
@@ -36,7 +36,7 @@ func TestSubAccount_ListSubAccountsAPIFail(t *testing.T) {
 		fmt.Fprint(w, fixture("list_metrics_accounts_failed.txt"))
 	})
 
-	subAccounts, err := underTest.ListMetricsAccounts()
+	metricsAccounts, err := underTest.ListMetricsAccounts()
 	assert.Error(t, err)
-	assert.Nil(t, subAccounts)
+	assert.Nil(t, metricsAccounts)
 }
