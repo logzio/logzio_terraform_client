@@ -1,7 +1,7 @@
 {
   "id": 45678,
   "accessKey": null,
-  "logsType": "elb",
+  "logsType": "S3Access",
   "bucket": "my_bucket",
   "prefix": "AWSLogs/987654321/elasticloadbalancing/us-east-1/",
   "active": true,

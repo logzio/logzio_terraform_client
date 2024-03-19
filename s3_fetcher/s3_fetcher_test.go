@@ -61,7 +61,7 @@ func getCreateOrUpdateS3Fetcher(authType string, isLocalTest bool) s3_fetcher.S3
 		AddS3ObjectKeyAsLogField: &addS3ObjectKeyAsLogField,
 		Active:                   &active,
 		Region:                   s3_fetcher.RegionUsEast1,
-		LogsType:                 s3_fetcher.LogsTypeElb,
+		LogsType:                 s3_fetcher.LogsTypeS3Access,
 	}
 
 	if authType == keys {
