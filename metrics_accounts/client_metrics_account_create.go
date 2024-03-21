@@ -65,10 +65,6 @@ func validateCreateMetricsAccount(createMetricsAccount CreateOrUpdateMetricsAcco
 		return fmt.Errorf("email must be set")
 	}
 
-	if len(createMetricsAccount.AccountName) == 0 {
-		return fmt.Errorf("account name must be set")
-	}
-
 	if createMetricsAccount.AuthorizedAccountsIds == nil {
 		return fmt.Errorf("AuthorizedAccountsIds must be initialized, even without any ids")
 	}

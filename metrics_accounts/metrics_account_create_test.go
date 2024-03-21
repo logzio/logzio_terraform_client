@@ -28,13 +28,13 @@ func TestMetricsAccount_CreateValidMetricsAccount(t *testing.T) {
 			fmt.Fprint(w, fixture("create_metrics_account.json"))
 		})
 
-		createSubAccount := getCreateOrUpdateMetricsAccount("test.user@test.user")
-		createSubAccount.AccountName = createSubAccount.AccountName + "_test_create"
-		subAccount, err := underTest.CreateMetricsAccount(createSubAccount)
+		createMetricsAccount := getCreateOrUpdateMetricsAccount("test.user@test.user")
+		createMetricsAccount.AccountName = createMetricsAccount.AccountName + "_test_create"
+		metricsAccount, err := underTest.CreateMetricsAccount(createMetricsAccount)
 		assert.NoError(t, err)
-		assert.NotNil(t, subAccount)
-		assert.NotEmpty(t, subAccount.Id)
-		assert.NotEmpty(t, subAccount.Token)
+		assert.NotNil(t, metricsAccount)
+		assert.NotEmpty(t, metricsAccount.Id)
+		assert.NotEmpty(t, metricsAccount.Token)
 	}
 }
 

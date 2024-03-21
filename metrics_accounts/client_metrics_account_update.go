@@ -20,7 +20,7 @@ func (c *MetricsAccountClient) UpdateMetricsAccount(metricsAccountId int64, upda
 		return err
 	}
 
-	updateSubAccountJson, err := json.Marshal(updateMetricsAccount)
+	updateMetricsAccountJson, err := json.Marshal(updateMetricsAccount)
 	if err != nil {
 		return err
 	}
@@ -29,7 +29,7 @@ func (c *MetricsAccountClient) UpdateMetricsAccount(metricsAccountId int64, upda
 		ApiToken:     c.ApiToken,
 		HttpMethod:   updateMetricsAccountServiceMethod,
 		Url:          fmt.Sprintf(updateMetricsAccountServiceUrl, c.BaseUrl, metricsAccountId),
-		Body:         updateSubAccountJson,
+		Body:         updateMetricsAccountJson,
 		SuccessCodes: []int{updateMetricsAccountServiceSuccess},
 		NotFoundCode: updateMetricsAccountServiceNotFound,
 		ResourceId:   metricsAccountId,
