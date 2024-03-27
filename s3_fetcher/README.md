@@ -1,6 +1,6 @@
 # S3 Fetcher
 
-Compatible with Logz.io's [S3 Fetcher API](https://docs.logz.io/api/#tag/Connect-to-S3-Buckets).
+Compatible with Logz.io's [S3 Fetcher API](https://api-docs.logz.io/docs/logz/connect-to-s-3-buckets).
 
 To create a new S3 fetcher:
 

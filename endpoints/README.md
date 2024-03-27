@@ -1,9 +1,9 @@
 # Endpoints
 
-Compatible with Logz.io's [endpoints API](https://docs.logz.io/api/#tag/Manage-notification-endpoints).
+Compatible with Logz.io's [endpoints API](https://api-docs.logz.io/docs/logz/manage-notification-endpoints).
 
 For each type of endpoint there is a different structure, below you can find an example for creating a Slack endpoint.
-For more info, see: https://docs.logz.io/api/#tag/Manage-notification-endpoints or check our endpoints tests for more examples.
+For more info, [see Logz.io docs](https://docs.logz.io/docs/user-guide/integrations/notification-endpoints/endpoints/#manage-notification-endpoints) or check our endpoints tests for more examples.
 
 ```go
 client, _ := endpoints.New(apiToken, apiServerAddress)

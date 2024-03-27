@@ -1,5 +1,5 @@
 # Kibana Objects
-Compatible with Logz.io's [Kibana objects API](https://docs.logz.io/api/#tag/Import-or-export-Kibana-objects).
+Compatible with Logz.io's [Kibana objects API](https://api-docs.logz.io/docs/logz/import-or-export-kibana-objects).
 
 To import a new Kibana Object:
 

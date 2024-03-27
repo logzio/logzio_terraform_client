@@ -1,5 +1,5 @@
 # Drop Filters
-Compatible with Logz.io's [drop filters API](https://docs.logz.io/api/#tag/Drop-filters).
+Compatible with Logz.io's [drop filters API](https://api-docs.logz.io/docs/logz/drop-filters).
 
 Drop filters provide a solution for filtering out logs before they are indexed in your account to help lower costs and reduce account volume.
 To create a new drop filter:
