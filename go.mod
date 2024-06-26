@@ -3,17 +3,18 @@ module github.com/logzio/logzio_terraform_client
 go 1.18
 
 require (
-	github.com/hashicorp/go-hclog v0.15.0
-	github.com/stretchr/testify v1.3.0
+	github.com/avast/retry-go v3.0.0+incompatible
+	github.com/hashicorp/go-hclog v1.6.3
+	github.com/stretchr/testify v1.7.2
 
 )
 
 require (
-	github.com/avast/retry-go v3.0.0+incompatible // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/fatih/color v1.7.0 // indirect
-	github.com/mattn/go-colorable v0.1.4 // indirect
-	github.com/mattn/go-isatty v0.0.10 // indirect
+	github.com/fatih/color v1.13.0 // indirect
+	github.com/mattn/go-colorable v0.1.12 // indirect
+	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	golang.org/x/sys v0.0.0-20191008105621-543471e840be // indirect
+	golang.org/x/sys v0.0.0-20220503163025-988cb79eb6c6 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
