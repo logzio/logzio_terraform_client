@@ -76,7 +76,12 @@ func TestIntegrationMetricsAccount_CreateMetricsAccountNoAccountName(t *testing.
 		createMetricsAccount.AccountName = ""
 		metricsAccount, err := underTest.CreateMetricsAccount(createMetricsAccount)
 
-		assert.Error(t, err)
-		assert.Nil(t, metricsAccount)
+		if assert.NoError(t, err) && assert.NotNil(t, metricsAccount) {
+			time.Sleep(4 * time.Second)
+			defer underTest.DeleteMetricsAccount(int64(metricsAccount.Id))
+			assert.NotEmpty(t, metricsAccount.Token)
+			assert.NotEmpty(t, metricsAccount.Id)
+			assert.Equal(t, metricsAccount.AccountName, "IntegrationsTeamTesting_metrics")
+		}
 	}
 }
