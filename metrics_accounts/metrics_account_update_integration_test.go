@@ -31,6 +31,47 @@ func TestIntegrationMetricsAccount_UpdateMetricsAccount(t *testing.T) {
 		}
 	}
 }
+func TestIntegrationMetricsAccount_UpdateMetricsAccountPlanUts(t *testing.T) {
+	underTest, email, err := setupMetricsAccountsIntegrationTest()
+
+	if assert.NoError(t, err) {
+		createMetricsAccount := getCreateOrUpdateMetricsAccount(email)
+		metricsAccount, err := underTest.CreateMetricsAccount(createMetricsAccount)
+		if assert.NoError(t, err) && assert.NotNil(t, metricsAccount) {
+			defer underTest.DeleteMetricsAccount(int64(metricsAccount.Id))
+			time.Sleep(time.Second * 2)
+			// Update the plan_uts field without changing the account_name
+			createMetricsAccount.PlanUts = new(int32)
+			*createMetricsAccount.PlanUts = 200
+			err = underTest.UpdateMetricsAccount(int64(metricsAccount.Id), createMetricsAccount)
+			assert.Error(t, err)
+			// Check if the error message is as expected
+			assert.Contains(t, err.Error(), "Sub account with name (TEST_AUTOMATION_ACCOUNT) already exists on account")
+		}
+	}
+}
+
+func TestIntegrationMetricsAccount_UpdateMetricsAccountWithAuthorizedAccounts(t *testing.T) {
+	underTest, email, err := setupMetricsAccountsIntegrationTest()
+
+	if assert.NoError(t, err) {
+		createMetricsAccount := getCreateOrUpdateMetricsAccount(email)
+		// Add an authorized account
+		createMetricsAccount.AuthorizedAccountsIds = append(createMetricsAccount.AuthorizedAccountsIds, 123456)
+		metricsAccount, err := underTest.CreateMetricsAccount(createMetricsAccount)
+		if assert.NoError(t, err) && assert.NotNil(t, metricsAccount) {
+			defer underTest.DeleteMetricsAccount(int64(metricsAccount.Id))
+			time.Sleep(time.Second * 2)
+			// Update the plan_uts field
+			createMetricsAccount.PlanUts = new(int32)
+			*createMetricsAccount.PlanUts = 200
+			err = underTest.UpdateMetricsAccount(int64(metricsAccount.Id), createMetricsAccount)
+			assert.Error(t, err)
+			// Check if the error message is as expected
+			assert.Contains(t, err.Error(), "Sub account is not found for the owner account")
+		}
+	}
+}
 
 func TestIntegrationMetricsAccount_UpdateMetricsAccountIdNotExists(t *testing.T) {
 	underTest, email, err := setupMetricsAccountsIntegrationTest()
