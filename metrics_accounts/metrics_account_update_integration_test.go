@@ -42,7 +42,8 @@ func TestIntegrationMetricsAccount_UpdateMetricsAccountPlanUts(t *testing.T) {
 			*createMetricsAccount.PlanUts = 200
 			err = underTest.UpdateMetricsAccount(int64(metricsAccount.Id), createMetricsAccount)
 			assert.NoError(t, err)
-
+			assert.Equal(t, int32(200), *createMetricsAccount.PlanUts)
+			assert.Equal(t, "tf_client_test", metricsAccount.AccountName)
 		}
 	}
 }
