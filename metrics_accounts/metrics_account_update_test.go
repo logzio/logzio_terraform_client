@@ -19,7 +19,16 @@ func TestMetricsAccount_UpdateValidMetricsAccount(t *testing.T) {
 	metricsAccountId := int64(1234567)
 
 	mux.HandleFunc("/v1/account-management/metrics-accounts/", func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, http.MethodPut, r.Method)
+		if r.Method == http.MethodGet {
+			metricsAccount := &metrics_accounts.MetricsAccount{
+				AccountName: "testAccount",
+				Id:          int32(metricsAccountId),
+				PlanUts:     100,
+			}
+			jsonBytes, _ := json.Marshal(metricsAccount)
+			w.Write(jsonBytes)
+			return
+		}
 		assert.Contains(t, r.URL.String(), strconv.FormatInt(int64(metricsAccountId), 10))
 		jsonBytes, _ := ioutil.ReadAll(r.Body)
 		var target metrics_accounts.CreateOrUpdateMetricsAccount
@@ -42,7 +51,16 @@ func TestMetricsAccount_UpdateOnlySomeParamsCorrectly(t *testing.T) {
 	metricsAccountId := int64(1234567)
 
 	mux.HandleFunc("/v1/account-management/metrics-accounts/", func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, http.MethodPut, r.Method)
+		if r.Method == http.MethodGet {
+			metricsAccount := &metrics_accounts.MetricsAccount{
+				AccountName: "testAccount",
+				Id:          int32(metricsAccountId),
+				PlanUts:     100,
+			}
+			jsonBytes, _ := json.Marshal(metricsAccount)
+			w.Write(jsonBytes)
+			return
+		}
 		assert.Contains(t, r.URL.String(), strconv.FormatInt(int64(metricsAccountId), 10))
 		jsonBytes, _ := ioutil.ReadAll(r.Body)
 		var target metrics_accounts.CreateOrUpdateMetricsAccount
@@ -66,7 +84,16 @@ func TestMetricsAccount_UpdateMetricsAccountIdNotFound(t *testing.T) {
 	metricsAccountId := int64(1234567)
 
 	mux.HandleFunc("/v1/account-management/metrics-accounts/", func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, http.MethodPut, r.Method)
+		if r.Method == http.MethodGet {
+			metricsAccount := &metrics_accounts.MetricsAccount{
+				AccountName: "testAccount",
+				Id:          int32(metricsAccountId),
+				PlanUts:     100,
+			}
+			jsonBytes, _ := json.Marshal(metricsAccount)
+			w.Write(jsonBytes)
+			return
+		}
 		assert.Contains(t, r.URL.String(), strconv.FormatInt(int64(metricsAccountId), 10))
 		jsonBytes, _ := ioutil.ReadAll(r.Body)
 		var target metrics_accounts.CreateOrUpdateMetricsAccount

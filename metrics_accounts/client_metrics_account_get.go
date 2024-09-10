@@ -31,7 +31,9 @@ func (c *MetricsAccountClient) GetMetricsAccount(metricsAccountId int64) (*Metri
 	if err != nil {
 		return nil, err
 	}
-
+	if len(res) == 0 {
+		return nil, fmt.Errorf("failed with missing metrics account")
+	}
 	var metricsAccount MetricsAccount
 	err = json.Unmarshal(res, &metricsAccount)
 	if err != nil {

@@ -19,7 +19,13 @@ func (c *MetricsAccountClient) UpdateMetricsAccount(metricsAccountId int64, upda
 	if err != nil {
 		return err
 	}
-
+	currentAccount, err := c.GetMetricsAccount(metricsAccountId)
+	if err != nil {
+		return err
+	}
+	if currentAccount.AccountName == updateMetricsAccount.AccountName {
+		updateMetricsAccount.AccountName = ""
+	}
 	updateMetricsAccountJson, err := json.Marshal(updateMetricsAccount)
 	if err != nil {
 		return err

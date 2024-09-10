@@ -8,7 +8,6 @@ import (
 
 func TestIntegrationMetricsAccount_UpdateMetricsAccount(t *testing.T) {
 	underTest, email, err := setupMetricsAccountsIntegrationTest()
-
 	if assert.NoError(t, err) {
 		createMetricsAccount := getCreateOrUpdateMetricsAccount(email)
 		metricsAccount, err := underTest.CreateMetricsAccount(createMetricsAccount)
@@ -28,6 +27,23 @@ func TestIntegrationMetricsAccount_UpdateMetricsAccount(t *testing.T) {
 			getMetricsAccount, err = underTest.GetMetricsAccount(int64(metricsAccount.Id))
 			assert.NoError(t, err)
 			assert.Equal(t, "test_after_update", getMetricsAccount.AccountName)
+		}
+	}
+}
+func TestIntegrationMetricsAccount_UpdateMetricsAccountPlanUts(t *testing.T) {
+	underTest, email, err := setupMetricsAccountsIntegrationTest()
+	if assert.NoError(t, err) {
+		createMetricsAccount := getCreateOrUpdateMetricsAccount(email)
+		metricsAccount, err := underTest.CreateMetricsAccount(createMetricsAccount)
+		if assert.NoError(t, err) && assert.NotNil(t, metricsAccount) {
+			defer underTest.DeleteMetricsAccount(int64(metricsAccount.Id))
+			time.Sleep(time.Second * 2)
+			createMetricsAccount.PlanUts = new(int32)
+			*createMetricsAccount.PlanUts = 200
+			err = underTest.UpdateMetricsAccount(int64(metricsAccount.Id), createMetricsAccount)
+			assert.NoError(t, err)
+			assert.Equal(t, int32(200), *createMetricsAccount.PlanUts)
+			assert.Equal(t, "tf_client_test", metricsAccount.AccountName)
 		}
 	}
 }
