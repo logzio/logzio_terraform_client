@@ -38,6 +38,8 @@ The library currently supports the following API endpoints:
 
 ### Changelog
 
+- 1.22.0
+  - Validate account existence before updating it, and set an empty account name If the name did not change to prevent api errors.
 - 1.21.0
   - Add [Metrics Accounts API](https://api-docs.logz.io/docs/logz/create-a-new-metrics-account).
 - 1.20.1
