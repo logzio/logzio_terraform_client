@@ -39,7 +39,7 @@ type GrafanaAlertRule struct {
 	Data         []*GrafanaAlertQuery `json:"data"`         // Required
 	ExecErrState ExecErrState         `json:"execErrState"` // Required
 	FolderUID    string               `json:"folderUID"`    // Required
-	For          int64                `json:"for"`          // Required, representing nanoseconds
+	For          string               `json:"for"`          // Required, representing nanoseconds
 	Id           int64                `json:"id,omitempty"`
 	Labels       map[string]string    `json:"labels,omitempty"`
 	NoDataState  NoDataState          `json:"noDataState"` // Required
@@ -97,7 +97,7 @@ func validateGrafanaAlertRuleCreateUpdate(payload GrafanaAlertRule, isUpdate boo
 		return fmt.Errorf("Field folderUID must be set!")
 	}
 
-	if payload.For == 0 {
+	if payload.For == "" {
 		return fmt.Errorf("Field for must be set!")
 	}
 

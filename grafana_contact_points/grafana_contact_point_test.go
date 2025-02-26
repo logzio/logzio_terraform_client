@@ -8,6 +8,10 @@ import (
 	"os"
 )
 
+const (
+	grafanaDefaultProvenance = "api"
+)
+
 var (
 	mux    *http.ServeMux
 	server *httptest.Server

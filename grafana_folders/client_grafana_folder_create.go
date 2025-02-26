@@ -5,6 +5,7 @@ import (
 	"fmt"
 	logzio_client "github.com/logzio/logzio_terraform_client"
 	"net/http"
+	"time"
 )
 
 const (
@@ -47,6 +48,9 @@ func (c *GrafanaFolderClient) CreateGrafanaFolder(payload CreateUpdateFolder) (*
 		return nil, err
 	}
 
+	retVal.Updated = normalizeTimestamp(retVal.Updated)
+	retVal.Created = normalizeTimestamp(retVal.Created)
+
 	return &retVal, nil
 }
 
@@ -56,4 +60,12 @@ func validateCreateGrafanaFolder(payload CreateUpdateFolder) error {
 	}
 
 	return nil
+}
+
+func normalizeTimestamp(timestamp string) string {
+	parsedTime, err := time.Parse(time.RFC3339, timestamp)
+	if err != nil {
+		return timestamp
+	}
+	return parsedTime.Format(time.RFC3339)
 }
