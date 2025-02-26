@@ -70,7 +70,7 @@ func TestIntegrationGrafanaAlert_CreateGrafanaAlertNoFor(t *testing.T) {
 
 	if assert.NoError(t, err) {
 		createGrafanaAlert := getGrafanaAlertRuleObject()
-		createGrafanaAlert.For = 0
+		createGrafanaAlert.For = ""
 		grafanaAlert, err := underTest.CreateGrafanaAlertRule(createGrafanaAlert)
 		assert.Error(t, err)
 		assert.Nil(t, grafanaAlert)

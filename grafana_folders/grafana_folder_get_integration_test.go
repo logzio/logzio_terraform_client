@@ -32,6 +32,6 @@ func TestIntegrationGrafanaFolder_GetGrafanaFolderUidNotExists(t *testing.T) {
 		folder, err := underTest.GetGrafanaFolder("not-exist")
 		assert.Error(t, err)
 		assert.Nil(t, folder)
-		assert.Contains(t, err.Error(), "failed with missing grafana folder")
+		assert.Contains(t, err.Error(), "GetGrafanaFolder failed with status code 403")
 	}
 }

@@ -69,6 +69,6 @@ func getGrafanaAlertRuleObject() grafana_alerts.GrafanaAlertRule {
 		OrgID:        1,
 		RuleGroup:    "rule_group_1",
 		Title:        "test_alert",
-		For:          int64(3),
+		For:          "3m",
 	}
 }

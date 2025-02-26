@@ -28,6 +28,7 @@ func TestIntegrationGrafanaContactPoint_GetGrafanaContactPoint(t *testing.T) {
 		createGrafanaContactPoint := getGrafanaContactPointObject()
 		createGrafanaContactPoint.Name = fmt.Sprintf("%s_%s", createGrafanaContactPoint.Name, "get")
 		contactPoint, err := underTest.CreateGrafanaContactPoint(createGrafanaContactPoint)
+		contactPoint.Provenance = grafanaDefaultProvenance
 		if assert.NoError(t, err) && assert.NotEmpty(t, contactPoint) {
 			time.Sleep(4 * time.Second)
 			defer underTest.DeleteGrafanaContactPoint(contactPoint.Uid)

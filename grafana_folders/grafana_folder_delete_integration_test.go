@@ -28,6 +28,6 @@ func TestIntegrationGrafanaFolder_DeleteGrafanaFolderNotExists(t *testing.T) {
 	if assert.NoError(t, err) {
 		err = underTest.DeleteGrafanaFolder("not-exists")
 		assert.Error(t, err)
-		assert.Contains(t, err.Error(), "failed with missing grafana folder")
+		assert.Contains(t, err.Error(), "DeleteGrafanaFolder failed with status code 403")
 	}
 }
