@@ -35,11 +35,11 @@ type GrafanaAlertClient struct {
 
 type GrafanaAlertRule struct {
 	Annotations  map[string]string    `json:"annotations,omitempty"`
-	Condition    string               `json:"condition"`    // Required
-	Data         []*GrafanaAlertQuery `json:"data"`         // Required
+	Condition    string               `json:"condition"` // Required
+	Data         []*GrafanaAlertQuery `json:"data"`      // Required
 	ExecErrState ExecErrState         `json:"execErrState"`
-	FolderUID    string               `json:"folderUID"`    // Required
-	For          string               `json:"for"`          // Required
+	FolderUID    string               `json:"folderUID"` // Required
+	For          string               `json:"for"`       // Required
 	Id           int64                `json:"id,omitempty"`
 	Labels       map[string]string    `json:"labels,omitempty"`
 	NoDataState  NoDataState          `json:"noDataState"` // Required
