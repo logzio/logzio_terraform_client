@@ -2,6 +2,10 @@
 
 <!-- next version -->
 
+## v1.23.1
+- Grafana Alerts API `ExecErrState` is no longer configurable as of Grafana 10
+- Add new Microsoft Teams Workflows Contact Point
+
 ## v1.23.0
 - Upgrade to Go 1.24.
 - Upgrade Grafana API to match Grafana 10.
