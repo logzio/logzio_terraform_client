@@ -36,6 +36,6 @@ jobs:
           go-version: 1.24
       - name: Test
         # We exclude kibana_objects tests
-        run: |
-          go test $(go list ./... | grep -v kibana_objects | grep -v grafana_folders)
-          go test -parallel 1 ./grafana_folders
+        run: go test $(go list ./... | grep -v kibana_objects | grep -v grafana_folders)
+      - name: Test grafana folders
+        run: go test -parallel 1 ./grafana_folders

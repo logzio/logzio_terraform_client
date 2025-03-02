@@ -35,11 +35,11 @@ type GrafanaAlertClient struct {
 
 type GrafanaAlertRule struct {
 	Annotations  map[string]string    `json:"annotations,omitempty"`
-	Condition    string               `json:"condition"`    // Required
-	Data         []*GrafanaAlertQuery `json:"data"`         // Required
-	ExecErrState ExecErrState         `json:"execErrState"` // Required
-	FolderUID    string               `json:"folderUID"`    // Required
-	For          string               `json:"for"`          // Required, representing nanoseconds
+	Condition    string               `json:"condition"` // Required
+	Data         []*GrafanaAlertQuery `json:"data"`      // Required
+	ExecErrState ExecErrState         `json:"execErrState"`
+	FolderUID    string               `json:"folderUID"` // Required
+	For          string               `json:"for"`       // Required
 	Id           int64                `json:"id,omitempty"`
 	Labels       map[string]string    `json:"labels,omitempty"`
 	NoDataState  NoDataState          `json:"noDataState"` // Required
@@ -87,10 +87,6 @@ func validateGrafanaAlertRuleCreateUpdate(payload GrafanaAlertRule, isUpdate boo
 
 	if payload.Data == nil || len(payload.Data) == 0 {
 		return fmt.Errorf("Field data must be set!")
-	}
-
-	if len(payload.ExecErrState) == 0 {
-		return fmt.Errorf("Field execErrState must be set!")
 	}
 
 	if len(payload.FolderUID) == 0 {
