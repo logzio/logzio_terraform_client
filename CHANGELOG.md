@@ -2,6 +2,9 @@
 
 <!-- next version -->
 
+## v1.23.2
+- Grafana Contact Point `teams` now refers to Microsoft Teams Workflows Contact Point. The old `teams` endpoint was deprecated in grafana 10.
+
 ## v1.23.1
 - Grafana Alerts API `ExecErrState` is no longer configurable as of Grafana 10
 - Add new Microsoft Teams Workflows Contact Point
