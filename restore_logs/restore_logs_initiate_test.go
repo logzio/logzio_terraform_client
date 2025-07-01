@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/logzio/logzio_terraform_client/restore_logs"
 	"github.com/stretchr/testify/assert"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"testing"
 )
@@ -17,7 +17,7 @@ func TestRestoreLogs_InitiateRestore(t *testing.T) {
 	if assert.NoError(t, err) {
 		mux.HandleFunc(restoreApiBasePath, func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPost, r.Method)
-			jsonBytes, _ := ioutil.ReadAll(r.Body)
+			jsonBytes, _ := io.ReadAll(r.Body)
 			var target restore_logs.InitiateRestore
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)
@@ -49,7 +49,7 @@ func TestRestoreLogs_InitiateRestoreApiFail(t *testing.T) {
 	if assert.NoError(t, err) {
 		mux.HandleFunc(restoreApiBasePath, func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPost, r.Method)
-			jsonBytes, _ := ioutil.ReadAll(r.Body)
+			jsonBytes, _ := io.ReadAll(r.Body)
 			var target restore_logs.InitiateRestore
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)

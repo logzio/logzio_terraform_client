@@ -5,7 +5,6 @@ import (
 	"github.com/logzio/logzio_terraform_client/archive_logs"
 	"github.com/logzio/logzio_terraform_client/restore_logs"
 	"github.com/logzio/logzio_terraform_client/test_utils"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -25,7 +24,9 @@ const (
 	restoreApiBasePath = "/archive/restore"
 )
 
-/* setupRestoreLogsIntegrationTest sets up the resources that are needed to test the Restore API.
+/*
+	setupRestoreLogsIntegrationTest sets up the resources that are needed to test the Restore API.
+
 The function retrieves the api token, base url, and creates a new restore logs client.
 To initiate a restore operation, an active archive needs to be connected to the Logz.io account, so the function also
 creates an archive, and retrieves the function that deletes it.
@@ -112,7 +113,7 @@ func setupRestoreLogsTest() (*restore_logs.RestoreClient, func(), error) {
 }
 
 func fixture(path string) string {
-	b, err := ioutil.ReadFile("testdata/fixtures/" + path)
+	b, err := os.ReadFile("testdata/fixtures/" + path)
 	if err != nil {
 		panic(err)
 	}

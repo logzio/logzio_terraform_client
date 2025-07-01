@@ -3,7 +3,6 @@ package archive_logs_test
 import (
 	"github.com/logzio/logzio_terraform_client/archive_logs"
 	"github.com/logzio/logzio_terraform_client/test_utils"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 )
@@ -28,7 +27,7 @@ func setupArchiveLogsTest() (*archive_logs.ArchiveLogsClient, func(), error) {
 }
 
 func fixture(path string) string {
-	b, err := ioutil.ReadFile("testdata/fixtures/" + path)
+	b, err := os.ReadFile("testdata/fixtures/" + path)
 	if err != nil {
 		panic(err)
 	}

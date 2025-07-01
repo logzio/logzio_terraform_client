@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/logzio/logzio_terraform_client/kibana_objects"
 	"github.com/stretchr/testify/assert"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"testing"
 )
@@ -17,7 +17,7 @@ func TestKibanaObjects_ImportKibanaObject(t *testing.T) {
 	if assert.NoError(t, err) {
 		mux.HandleFunc(importPath, func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPost, r.Method)
-			jsonBytes, _ := ioutil.ReadAll(r.Body)
+			jsonBytes, _ := io.ReadAll(r.Body)
 			var target kibana_objects.KibanaObjectImportRequest
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)
@@ -46,7 +46,7 @@ func TestKibanaObjects_ImportKibanaObjectApiFail(t *testing.T) {
 	if assert.NoError(t, err) {
 		mux.HandleFunc(importPath, func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPost, r.Method)
-			jsonBytes, _ := ioutil.ReadAll(r.Body)
+			jsonBytes, _ := io.ReadAll(r.Body)
 			var target kibana_objects.KibanaObjectImportRequest
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)

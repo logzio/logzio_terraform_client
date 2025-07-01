@@ -2,6 +2,9 @@
 
 <!-- next version -->
 
+## v1.24.0
+- Add Warm Retention options in `sub_accounts`.
+
 ## v1.23.2
 - Grafana Contact Point `teams` now refers to Microsoft Teams Workflows Contact Point. The old `teams` endpoint was deprecated in grafana 10.
 

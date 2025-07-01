@@ -1,11 +1,12 @@
 package endpoints_test
 
 import (
+	""
 	"encoding/json"
 	"fmt"
 	"github.com/logzio/logzio_terraform_client/endpoints"
 	"github.com/stretchr/testify/assert"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strconv"
 	"strings"
@@ -18,7 +19,7 @@ func TestEndpoints_CreateEndpointServiceNow(t *testing.T) {
 
 	mux.HandleFunc("/v1/endpoints/service-now", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodPost, r.Method)
-		jsonBytes, _ := ioutil.ReadAll(r.Body)
+		jsonBytes, _ := io.ReadAll(r.Body)
 		var target endpoints.CreateOrUpdateEndpoint
 		err = json.Unmarshal(jsonBytes, &target)
 		assert.NotZero(t, len(target.Title))
@@ -47,7 +48,7 @@ func TestEndpoints_CreateEndpointServiceNowApiFail(t *testing.T) {
 	mux.HandleFunc("/v1/endpoints/service-now", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		assert.Equal(t, http.MethodPost, r.Method)
-		jsonBytes, _ := ioutil.ReadAll(r.Body)
+		jsonBytes, _ := io.ReadAll(r.Body)
 		var target endpoints.CreateOrUpdateEndpoint
 		err = json.Unmarshal(jsonBytes, &target)
 		assert.NotZero(t, len(target.Title))
@@ -77,7 +78,7 @@ func TestEndpoints_UpdateEndpointServiceNow(t *testing.T) {
 	mux.HandleFunc("/v1/endpoints/service-now/", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodPut, r.Method)
 		assert.Contains(t, r.URL.String(), strconv.FormatInt(endpointId, 10))
-		jsonBytes, _ := ioutil.ReadAll(r.Body)
+		jsonBytes, _ := io.ReadAll(r.Body)
 		var target endpoints.CreateOrUpdateEndpoint
 		err = json.Unmarshal(jsonBytes, &target)
 		assert.NotZero(t, len(target.Title))

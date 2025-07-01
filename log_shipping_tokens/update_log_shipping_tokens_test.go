@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/logzio/logzio_terraform_client/log_shipping_tokens"
 	"github.com/stretchr/testify/assert"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strconv"
 	"testing"
@@ -18,7 +18,7 @@ func TestLogShippingTokens_UpdateLogShippingToken(t *testing.T) {
 	if assert.NoError(t, err) {
 		mux.HandleFunc("/v1/log-shipping/tokens/", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPut, r.Method)
-			jsonBytes, _ := ioutil.ReadAll(r.Body)
+			jsonBytes, _ := io.ReadAll(r.Body)
 			var target log_shipping_tokens.UpdateLogShippingToken
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)
@@ -47,7 +47,7 @@ func TestLogShippingTokens_UpdateLogShippingTokenIdNotFound(t *testing.T) {
 	if assert.NoError(t, err) {
 		mux.HandleFunc("/v1/log-shipping/tokens/", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPut, r.Method)
-			jsonBytes, _ := ioutil.ReadAll(r.Body)
+			jsonBytes, _ := io.ReadAll(r.Body)
 			var target log_shipping_tokens.UpdateLogShippingToken
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)

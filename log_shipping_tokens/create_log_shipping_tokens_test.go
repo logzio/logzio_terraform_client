@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/logzio/logzio_terraform_client/log_shipping_tokens"
 	"github.com/stretchr/testify/assert"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"testing"
 )
@@ -17,7 +17,7 @@ func TestLogShippingTokens_CreateLogShippingToken(t *testing.T) {
 	if assert.NoError(t, err) {
 		mux.HandleFunc("/v1/log-shipping/tokens", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPost, r.Method)
-			jsonBytes, _ := ioutil.ReadAll(r.Body)
+			jsonBytes, _ := io.ReadAll(r.Body)
 			var target log_shipping_tokens.CreateLogShippingToken
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)

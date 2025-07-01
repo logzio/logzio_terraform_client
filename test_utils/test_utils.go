@@ -10,6 +10,7 @@ import (
 const (
 	EnvLogzioBaseUrl             = "LOGZIO_BASE_URL"
 	EnvLogzioApiToken     string = "LOGZIO_API_TOKEN"
+	EnvLogzioWarmApiToken string = "LOGZIO_WARM_API_TOKEN"
 	EnvLogzioAccountId    string = "LOGZIO_ACCOUNT_ID"
 	LogzioBaseUrl         string = "https://api.logz.io"
 	EnvLogzioEmail        string = "LOGZIO_EMAIL"
@@ -33,6 +34,14 @@ func GetApiToken() (string, error) {
 		return apiToken, nil
 	}
 	return "", fmt.Errorf("%s env var not specified", EnvLogzioApiToken)
+}
+
+func GetWarmApiToken() (string, error) {
+	apiToken := os.Getenv(EnvLogzioWarmApiToken)
+	if len(apiToken) > 0 {
+		return apiToken, nil
+	}
+	return "", fmt.Errorf("%s env var not specified", EnvLogzioWarmApiToken)
 }
 
 func GetAccountId() (int64, error) {

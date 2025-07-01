@@ -3,9 +3,9 @@ package kibana_objects_test
 import (
 	"encoding/json"
 	"github.com/logzio/logzio_terraform_client/test_utils"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"os"
 
 	"github.com/logzio/logzio_terraform_client/kibana_objects"
 )
@@ -21,7 +21,7 @@ const (
 )
 
 func fixture(path string) string {
-	b, err := ioutil.ReadFile("testdata/fixtures/" + path)
+	b, err := os.ReadFile("testdata/fixtures/" + path)
 	if err != nil {
 		panic(err)
 	}

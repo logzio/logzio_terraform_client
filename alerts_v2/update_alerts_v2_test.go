@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/logzio/logzio_terraform_client/alerts_v2"
 	"github.com/stretchr/testify/assert"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strconv"
 	"testing"
@@ -21,7 +21,7 @@ func TestAlertsV2_UpdateAlert(t *testing.T) {
 		assert.Equal(t, http.MethodPut, r.Method)
 		assert.Contains(t, r.URL.String(), strconv.FormatInt(alertId, 10))
 
-		jsonBytes, _ := ioutil.ReadAll(r.Body)
+		jsonBytes, _ := io.ReadAll(r.Body)
 		var target alerts_v2.CreateAlertType
 		err = json.Unmarshal(jsonBytes, &target)
 		assert.NotNil(t, target)

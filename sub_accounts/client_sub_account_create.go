@@ -95,5 +95,15 @@ func validateCreateSubAccount(createSubAccount CreateOrUpdateSubAccount) error {
 			return fmt.Errorf("utilizationEnabled field is not set to boolean value")
 		}
 	}
+
+	if createSubAccount.SnapSearchRetentionDays != nil {
+		if *createSubAccount.SnapSearchRetentionDays < 1 {
+			return fmt.Errorf("snapSearchRetentionDays should be >= 1")
+		}
+		if createSubAccount.RetentionDays < 4 {
+			return fmt.Errorf("SnapSearchRetentionDays cannot be set if retentionDays is less than 4")
+		}
+	}
+	
 	return nil
 }
