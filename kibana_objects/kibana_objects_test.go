@@ -3,9 +3,12 @@ package kibana_objects_test
 import (
 	"encoding/json"
 	"github.com/logzio/logzio_terraform_client/test_utils"
+	"math/rand"
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"strconv"
+	"time"
 
 	"github.com/logzio/logzio_terraform_client/kibana_objects"
 )
@@ -54,6 +57,7 @@ func getExportRequest() kibana_objects.KibanaObjectExportRequest {
 }
 
 func getImportRequest() (kibana_objects.KibanaObjectImportRequest, error) {
+	randomSuffix := getRandomId()
 	source := `{
         "search": {
           "columns": [
@@ -63,15 +67,15 @@ func getImportRequest() (kibana_objects.KibanaObjectImportRequest, error) {
             "@timestamp",
             "desc"
           ],
-          "id": "tf-client-test",
-          "title": "tf-client-test",
+          "id": "tf-client-test-` + randomSuffix + `",
+          "title": "tf-client-test-` + randomSuffix + `",
           "version": 1,
           "kibanaSavedObjectMeta": {
             "searchSourceJSON": "{\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"fragment_size\":2147483647},\"filter\":[],\"query\":{\"query\":\"type: tf-client-test\",\"language\":\"lucene\"},\"source\":{\"excludes\":[]},\"highlightAll\":true,\"version\":true,\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
           }
         },
         "type": "search",
-        "id": "tf-client-test"
+        "id": "tf-client-test-` + randomSuffix + `"
       }`
 	var sourceObj map[string]interface{}
 	err := json.Unmarshal([]byte(source), &sourceObj)
@@ -87,4 +91,9 @@ func getImportRequest() (kibana_objects.KibanaObjectImportRequest, error) {
 		KibanaVersion: "7.2.1",
 		Hits:          []map[string]interface{}{hitsObj},
 	}, err
+}
+
+func getRandomId() string {
+	rand.New(rand.NewSource(time.Now().UnixNano()))
+	return strconv.Itoa(rand.Intn(10000))
 }
