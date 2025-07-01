@@ -83,7 +83,7 @@ func getImportRequest() (kibana_objects.KibanaObjectImportRequest, error) {
 	hitsObj := map[string]interface{}{
 		"_index":  "logzioCustomerIndex*",
 		"_type":   "_doc",
-		"_id":     "search:tf-client-test",
+		"_id":     "search:tf-client-test-" + randomSuffix,
 		"_source": sourceObj,
 	}
 
