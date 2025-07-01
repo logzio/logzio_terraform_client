@@ -6,6 +6,7 @@ import (
 	"github.com/logzio/logzio_terraform_client/archive_logs"
 	"github.com/logzio/logzio_terraform_client/test_utils"
 	"github.com/stretchr/testify/assert"
+	"io"
 	"net/http"
 	"strconv"
 	"testing"

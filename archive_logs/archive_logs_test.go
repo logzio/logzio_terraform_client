@@ -5,6 +5,7 @@ import (
 	"github.com/logzio/logzio_terraform_client/test_utils"
 	"net/http"
 	"net/http/httptest"
+	"os"
 )
 
 var (

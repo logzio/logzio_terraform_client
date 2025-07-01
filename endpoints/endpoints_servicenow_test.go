@@ -1,7 +1,6 @@
 package endpoints_test
 
 import (
-	""
 	"encoding/json"
 	"fmt"
 	"github.com/logzio/logzio_terraform_client/endpoints"

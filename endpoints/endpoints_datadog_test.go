@@ -1,11 +1,11 @@
 package endpoints_test
 
 import (
-	""
 	"encoding/json"
 	"fmt"
 	"github.com/logzio/logzio_terraform_client/endpoints"
 	"github.com/stretchr/testify/assert"
+	"io"
 	"net/http"
 	"strconv"
 	"strings"

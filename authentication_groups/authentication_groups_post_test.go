@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/logzio/logzio_terraform_client/authentication_groups"
 	"github.com/stretchr/testify/assert"
+	"io"
 	"net/http"
 	"testing"
 )
