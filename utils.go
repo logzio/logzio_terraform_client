@@ -7,7 +7,6 @@ import (
 	"github.com/avast/retry-go"
 	"github.com/logzio/logzio_terraform_client/client"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"strings"
 )
@@ -76,7 +75,7 @@ func CreateHttpRequestBytesResponse(req *http.Request) ([]byte, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	jsonBytes, err := ioutil.ReadAll(resp.Body)
+	jsonBytes, err := io.ReadAll(resp.Body)
 
 	if !CheckValidStatus(resp, []int{serviceSuccess, serviceNoContent, serviceCreated}) {
 		return nil, fmt.Errorf("%d %s", resp.StatusCode, jsonBytes)

@@ -6,7 +6,7 @@ import (
 	"github.com/logzio/logzio_terraform_client/archive_logs"
 	"github.com/logzio/logzio_terraform_client/test_utils"
 	"github.com/stretchr/testify/assert"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strconv"
 	"testing"
@@ -20,7 +20,7 @@ func TestArchiveLogs_UpdateArchiveS3(t *testing.T) {
 	if assert.NoError(t, err) {
 		mux.HandleFunc(archiveApiBasePath+"/", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPut, r.Method)
-			jsonBytes, _ := ioutil.ReadAll(r.Body)
+			jsonBytes, _ := io.ReadAll(r.Body)
 			var target archive_logs.CreateOrUpdateArchiving
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)
@@ -57,7 +57,7 @@ func TestArchiveLogs_UpdateArchiveBlob(t *testing.T) {
 	if assert.NoError(t, err) {
 		mux.HandleFunc(archiveApiBasePath+"/", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPut, r.Method)
-			jsonBytes, _ := ioutil.ReadAll(r.Body)
+			jsonBytes, _ := io.ReadAll(r.Body)
 			var target archive_logs.CreateOrUpdateArchiving
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)
@@ -99,7 +99,7 @@ func TestArchiveLogs_UpdateArchiveIdNotFound(t *testing.T) {
 	if assert.NoError(t, err) {
 		mux.HandleFunc(archiveApiBasePath+"/", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPut, r.Method)
-			jsonBytes, _ := ioutil.ReadAll(r.Body)
+			jsonBytes, _ := io.ReadAll(r.Body)
 			var target archive_logs.CreateOrUpdateArchiving
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)

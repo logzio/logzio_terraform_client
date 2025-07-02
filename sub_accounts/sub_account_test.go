@@ -3,9 +3,9 @@ package sub_accounts_test
 import (
 	"github.com/logzio/logzio_terraform_client/sub_accounts"
 	"github.com/logzio/logzio_terraform_client/test_utils"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"strconv"
 )
 
@@ -15,7 +15,7 @@ var (
 )
 
 func fixture(path string) string {
-	b, err := ioutil.ReadFile("testdata/fixtures/" + path)
+	b, err := os.ReadFile("testdata/fixtures/" + path)
 	if err != nil {
 		panic(err)
 	}
@@ -34,12 +34,7 @@ func setupSubAccountsTest() (*sub_accounts.SubAccountClient, error, func()) {
 	}
 }
 
-func setupSubAccountsIntegrationTest() (*sub_accounts.SubAccountClient, string, error) {
-	apiToken, err := test_utils.GetApiToken()
-	if err != nil {
-		return nil, "", err
-	}
-
+func setupSubAccountsIntegrationTestHandler(apiToken string) (*sub_accounts.SubAccountClient, string, error) {
 	email, err := test_utils.GetLogzioEmail()
 	if err != nil {
 		return nil, "", err
@@ -47,6 +42,24 @@ func setupSubAccountsIntegrationTest() (*sub_accounts.SubAccountClient, string, 
 
 	underTest, err := sub_accounts.New(apiToken, test_utils.GetLogzIoBaseUrl())
 	return underTest, email, err
+}
+
+func setupSubAccountsIntegrationTest() (*sub_accounts.SubAccountClient, string, error) {
+	apiToken, err := test_utils.GetApiToken()
+	if err != nil {
+		return nil, "", err
+	}
+
+	return setupSubAccountsIntegrationTestHandler(apiToken)
+}
+
+func setupSubAccountsWarmIntegrationTest() (*sub_accounts.SubAccountClient, string, error) {
+	apiToken, err := test_utils.GetWarmApiToken()
+	if err != nil {
+		return nil, "", err
+	}
+
+	return setupSubAccountsIntegrationTestHandler(apiToken)
 }
 
 func getCreateOrUpdateSubAccount(email string) sub_accounts.CreateOrUpdateSubAccount {

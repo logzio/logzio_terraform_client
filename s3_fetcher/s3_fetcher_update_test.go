@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"github.com/logzio/logzio_terraform_client/s3_fetcher"
 	"github.com/stretchr/testify/assert"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strconv"
 	"testing"
@@ -20,7 +20,7 @@ func TestS3Fetcher_UpdateFetcher(t *testing.T) {
 	mux.HandleFunc("/v1/log-shipping/s3-buckets/", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodPut, r.Method)
 		assert.Contains(t, r.URL.String(), strconv.FormatInt(int64(fetcherId), 10))
-		jsonBytes, _ := ioutil.ReadAll(r.Body)
+		jsonBytes, _ := io.ReadAll(r.Body)
 		var target s3_fetcher.S3FetcherRequest
 		err = json.Unmarshal(jsonBytes, &target)
 		assert.NoError(t, err)
@@ -42,7 +42,7 @@ func TestS3Fetcher_UpdateFetcherInternalServerError(t *testing.T) {
 	mux.HandleFunc("/v1/log-shipping/s3-buckets/", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodPut, r.Method)
 		assert.Contains(t, r.URL.String(), strconv.FormatInt(int64(fetcherId), 10))
-		jsonBytes, _ := ioutil.ReadAll(r.Body)
+		jsonBytes, _ := io.ReadAll(r.Body)
 		var target s3_fetcher.S3FetcherRequest
 		err = json.Unmarshal(jsonBytes, &target)
 		assert.NoError(t, err)
@@ -65,7 +65,7 @@ func TestS3Fetcher_UpdateFetcherNoPermission(t *testing.T) {
 	mux.HandleFunc("/v1/log-shipping/s3-buckets/", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodPut, r.Method)
 		assert.Contains(t, r.URL.String(), strconv.FormatInt(int64(fetcherId), 10))
-		jsonBytes, _ := ioutil.ReadAll(r.Body)
+		jsonBytes, _ := io.ReadAll(r.Body)
 		var target s3_fetcher.S3FetcherRequest
 		err = json.Unmarshal(jsonBytes, &target)
 		assert.NoError(t, err)

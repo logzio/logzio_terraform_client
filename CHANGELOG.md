@@ -2,6 +2,11 @@
 
 <!-- next version -->
 
+## v1.24.0
+- Support Warm Retention settings in `sub_accounts`.
+  - Add `snapSearchRetentionDays` to create and update requests
+  - Add new fields to sub account data: `IsCapped`, `SharedGB`, `TotalTimeBasedDailyGB`, `IsOwner`.
+
 ## v1.23.2
 - Grafana Contact Point `teams` now refers to Microsoft Teams Workflows Contact Point. The old `teams` endpoint was deprecated in grafana 10.
 

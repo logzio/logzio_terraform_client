@@ -57,5 +57,9 @@ func validateUpdateSubAccount(updateSubAccount CreateOrUpdateSubAccount) error {
 		}
 	}
 
+	if updateSubAccount.SnapSearchRetentionDays != nil && *updateSubAccount.SnapSearchRetentionDays < 1 {
+		return fmt.Errorf("snapSearchRetentionDays should be >= 1")
+	}
+
 	return nil
 }

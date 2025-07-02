@@ -3,9 +3,9 @@ package users_test
 import (
 	"github.com/logzio/logzio_terraform_client/test_utils"
 	"github.com/logzio/logzio_terraform_client/users"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"os"
 )
 
 const usersApiBasePath = "/v1/user-management"
@@ -16,7 +16,7 @@ var (
 )
 
 func fixture(path string) string {
-	b, err := ioutil.ReadFile("testdata/fixtures/" + path)
+	b, err := os.ReadFile("testdata/fixtures/" + path)
 	if err != nil {
 		panic(err)
 	}

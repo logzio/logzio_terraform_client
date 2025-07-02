@@ -3,9 +3,9 @@ package alerts_v2_test
 import (
 	"github.com/logzio/logzio_terraform_client/alerts_v2"
 	"github.com/logzio/logzio_terraform_client/test_utils"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"strconv"
 	"testing"
 )
@@ -16,7 +16,7 @@ var (
 )
 
 func fixture(path string) string {
-	b, err := ioutil.ReadFile("testdata/fixtures/" + path)
+	b, err := os.ReadFile("testdata/fixtures/" + path)
 	if err != nil {
 		panic(err)
 	}

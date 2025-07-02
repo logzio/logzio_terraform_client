@@ -7,6 +7,7 @@ jobs:
   test:
     env:
       LOGZIO_API_TOKEN: ${{ secrets.LOGZIO_API_TOKEN }}
+      LOGZIO_WARM_API_TOKEN: ${{ secrets.LOGZIO_WARM_API_TOKEN }}
       LOGZIO_EMAIL: ${{ secrets.LOGZIO_EMAIL }}
       LOGZIO_ACCOUNT_ID: ${{ secrets.LOGZIO_ACCOUNT_ID }}
       S3_PATH: ${{ secrets.S3_PATH }}
@@ -35,6 +36,8 @@ jobs:
       run: |
         go get golang.org/x/tools/cmd/cover
         go get github.com/mattn/goveralls
+        go mod tidy
+        go mod download
     - name: Test
       run: go test -v -race $(go list ./... | grep -v grafana_folders) -covermode=atomic -coverprofile=coverage.out
     - name: Test grafana folders

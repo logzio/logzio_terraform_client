@@ -160,3 +160,23 @@ func TestIntegrationSubAccount_CreateSubAccountNoRetention(t *testing.T) {
 		assert.Nil(t, subAccount)
 	}
 }
+
+func TestIntegrationSubAccount_CreateSubAccountWarmRetention(t *testing.T) {
+	underTest, email, err := setupSubAccountsWarmIntegrationTest()
+
+	if assert.NoError(t, err) {
+		createSubAccount := getCreateOrUpdateSubAccount(email)
+		createSubAccount.AccountName = createSubAccount.AccountName + "_create"
+		createSubAccount.RetentionDays = 4
+		warmRetention := int32(2)
+		createSubAccount.SnapSearchRetentionDays = &warmRetention
+
+		subAccount, err := underTest.CreateSubAccount(createSubAccount)
+		if assert.NoError(t, err) && assert.NotNil(t, subAccount) {
+			time.Sleep(4 * time.Second)
+			defer underTest.DeleteSubAccount(int64(subAccount.AccountId))
+			assert.NotEmpty(t, subAccount.AccountToken)
+			assert.NotEmpty(t, subAccount.AccountId)
+		}
+	}
+}

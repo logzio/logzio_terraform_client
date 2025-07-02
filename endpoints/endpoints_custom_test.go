@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/logzio/logzio_terraform_client/endpoints"
 	"github.com/stretchr/testify/assert"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strconv"
 	"strings"
@@ -18,7 +18,7 @@ func TestEndpoints_CreateCustomEndpoint(t *testing.T) {
 
 	mux.HandleFunc("/v1/endpoints/custom", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodPost, r.Method)
-		jsonBytes, _ := ioutil.ReadAll(r.Body)
+		jsonBytes, _ := io.ReadAll(r.Body)
 		var target endpoints.CreateOrUpdateEndpoint
 		err = json.Unmarshal(jsonBytes, &target)
 		assert.NoError(t, err)
@@ -50,7 +50,7 @@ func TestEndpoints_CreateCustomEndpointApiFail(t *testing.T) {
 
 	mux.HandleFunc("/v1/endpoints/custom", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodPost, r.Method)
-		jsonBytes, _ := ioutil.ReadAll(r.Body)
+		jsonBytes, _ := io.ReadAll(r.Body)
 		var target endpoints.CreateOrUpdateEndpoint
 		err = json.Unmarshal(jsonBytes, &target)
 		assert.NoError(t, err)
@@ -84,7 +84,7 @@ func TestEndpoints_UpdateCustomEndpoint(t *testing.T) {
 	mux.HandleFunc("/v1/endpoints/custom/", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodPut, r.Method)
 		assert.Contains(t, r.URL.String(), strconv.FormatInt(endpointId, 10))
-		jsonBytes, _ := ioutil.ReadAll(r.Body)
+		jsonBytes, _ := io.ReadAll(r.Body)
 		var target endpoints.CreateOrUpdateEndpoint
 		err = json.Unmarshal(jsonBytes, &target)
 		assert.NoError(t, err)

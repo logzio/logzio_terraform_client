@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/logzio/logzio_terraform_client/users"
 	"github.com/stretchr/testify/assert"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strconv"
 	"testing"
@@ -19,7 +19,7 @@ func TestUsers_UpdateUser(t *testing.T) {
 		mux.HandleFunc(usersApiBasePath+"/", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPut, r.Method)
 			assert.Contains(t, r.URL.String(), strconv.FormatInt(int64(userId), 10))
-			jsonBytes, _ := ioutil.ReadAll(r.Body)
+			jsonBytes, _ := io.ReadAll(r.Body)
 			var target users.CreateUpdateUser
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)
@@ -49,7 +49,7 @@ func TestUsers_UpdateUserApiFail(t *testing.T) {
 		mux.HandleFunc(usersApiBasePath+"/", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPut, r.Method)
 			assert.Contains(t, r.URL.String(), strconv.FormatInt(int64(userId), 10))
-			jsonBytes, _ := ioutil.ReadAll(r.Body)
+			jsonBytes, _ := io.ReadAll(r.Body)
 			var target users.CreateUpdateUser
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)

@@ -3,9 +3,9 @@ package authentication_groups_test
 import (
 	"github.com/logzio/logzio_terraform_client/authentication_groups"
 	"github.com/logzio/logzio_terraform_client/test_utils"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"os"
 )
 
 var (
@@ -38,7 +38,7 @@ func setupAuthenticationGroupsIntegrationTest() (*authentication_groups.Authenti
 }
 
 func fixture(path string) string {
-	b, err := ioutil.ReadFile("testdata/fixtures/" + path)
+	b, err := os.ReadFile("testdata/fixtures/" + path)
 	if err != nil {
 		panic(err)
 	}

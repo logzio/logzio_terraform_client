@@ -42,3 +42,33 @@ func TestIntegrationSubAccount_UpdateSubAccountIdNotExists(t *testing.T) {
 		}
 	}
 }
+
+func TestIntegrationSubAccount_UpdateSubAccountWarmRetention(t *testing.T) {
+	underTest, email, err := setupSubAccountsIntegrationTest()
+
+	if assert.NoError(t, err) {
+		createSubAccount := getCreateOrUpdateSubAccount(email)
+
+		subAccount, err := underTest.CreateSubAccount(createSubAccount)
+		if assert.NoError(t, err) && assert.NotNil(t, subAccount) {
+			defer underTest.DeleteSubAccount(int64(subAccount.AccountId))
+			time.Sleep(time.Second * 2)
+			getSubAccount, err := underTest.GetSubAccount(int64(subAccount.AccountId))
+			assert.NoError(t, err)
+			assert.Equal(t, "tf_client_test", getSubAccount.AccountName)
+			createSubAccount.AccountName = "test_after_update"
+			createSubAccount.RetentionDays = 4
+			warmRetention := int32(2)
+			createSubAccount.SnapSearchRetentionDays = &warmRetention
+
+			time.Sleep(time.Second * 2)
+			err = underTest.UpdateSubAccount(int64(subAccount.AccountId), createSubAccount)
+			assert.NoError(t, err)
+			// verify that the update was made
+			time.Sleep(time.Second * 2)
+			getSubAccount, err = underTest.GetSubAccount(int64(subAccount.AccountId))
+			assert.NoError(t, err)
+			assert.Equal(t, "test_after_update", getSubAccount.AccountName)
+		}
+	}
+}

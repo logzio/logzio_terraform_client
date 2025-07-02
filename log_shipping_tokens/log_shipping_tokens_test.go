@@ -3,9 +3,9 @@ package log_shipping_tokens_test
 import (
 	"github.com/logzio/logzio_terraform_client/log_shipping_tokens"
 	"github.com/logzio/logzio_terraform_client/test_utils"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"strconv"
 )
 
@@ -42,7 +42,7 @@ func setupLogShippingTokenTest() (*log_shipping_tokens.LogShippingTokensClient, 
 }
 
 func fixture(path string) string {
-	b, err := ioutil.ReadFile("testdata/fixtures/" + path)
+	b, err := os.ReadFile("testdata/fixtures/" + path)
 	if err != nil {
 		panic(err)
 	}

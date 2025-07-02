@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/logzio/logzio_terraform_client/drop_filters"
 	"github.com/stretchr/testify/assert"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"testing"
 )
@@ -17,7 +17,7 @@ func TestDropFilters_CreateDropFilter(t *testing.T) {
 	if assert.NoError(t, err) {
 		mux.HandleFunc("/v1/drop-filters", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPost, r.Method)
-			jsonBytes, _ := ioutil.ReadAll(r.Body)
+			jsonBytes, _ := io.ReadAll(r.Body)
 			var target drop_filters.CreateDropFilter
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)

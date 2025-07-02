@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/logzio/logzio_terraform_client/metrics_accounts"
 	"github.com/stretchr/testify/assert"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strconv"
 	"testing"
@@ -30,7 +30,7 @@ func TestMetricsAccount_UpdateValidMetricsAccount(t *testing.T) {
 			return
 		}
 		assert.Contains(t, r.URL.String(), strconv.FormatInt(int64(metricsAccountId), 10))
-		jsonBytes, _ := ioutil.ReadAll(r.Body)
+		jsonBytes, _ := io.ReadAll(r.Body)
 		var target metrics_accounts.CreateOrUpdateMetricsAccount
 		err = json.Unmarshal(jsonBytes, &target)
 		assert.NoError(t, err)
@@ -62,7 +62,7 @@ func TestMetricsAccount_UpdateOnlySomeParamsCorrectly(t *testing.T) {
 			return
 		}
 		assert.Contains(t, r.URL.String(), strconv.FormatInt(int64(metricsAccountId), 10))
-		jsonBytes, _ := ioutil.ReadAll(r.Body)
+		jsonBytes, _ := io.ReadAll(r.Body)
 		var target metrics_accounts.CreateOrUpdateMetricsAccount
 		err = json.Unmarshal(jsonBytes, &target)
 		assert.NoError(t, err)
@@ -95,7 +95,7 @@ func TestMetricsAccount_UpdateMetricsAccountIdNotFound(t *testing.T) {
 			return
 		}
 		assert.Contains(t, r.URL.String(), strconv.FormatInt(int64(metricsAccountId), 10))
-		jsonBytes, _ := ioutil.ReadAll(r.Body)
+		jsonBytes, _ := io.ReadAll(r.Body)
 		var target metrics_accounts.CreateOrUpdateMetricsAccount
 		err = json.Unmarshal(jsonBytes, &target)
 		assert.NoError(t, err)

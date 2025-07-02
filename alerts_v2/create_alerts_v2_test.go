@@ -3,7 +3,7 @@ package alerts_v2_test
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"testing"
 
@@ -19,7 +19,7 @@ func TestAlertsV2_CreateAlert(t *testing.T) {
 		mux.HandleFunc("/v2/alerts", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPost, r.Method)
 
-			jsonBytes, _ := ioutil.ReadAll(r.Body)
+			jsonBytes, _ := io.ReadAll(r.Body)
 			var target alerts_v2.CreateAlertType
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NotNil(t, target)
