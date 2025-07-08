@@ -170,6 +170,8 @@ func TestIntegrationSubAccount_CreateSubAccountWarmRetention(t *testing.T) {
 		createSubAccount.RetentionDays = 4
 		warmRetention := int32(2)
 		createSubAccount.SnapSearchRetentionDays = &warmRetention
+		createSubAccount.ReservedDailyGB = new(float32)
+		createSubAccount.Flexible = "true"
 
 		subAccount, err := underTest.CreateSubAccount(createSubAccount)
 		if assert.NoError(t, err) && assert.NotNil(t, subAccount) {
