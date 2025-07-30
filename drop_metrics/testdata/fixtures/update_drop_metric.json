@@ -1,0 +1,20 @@
+{
+  "id": 1,
+  "accountId": 1234,
+  "enabled": false,
+  "filter": {
+    "operator": "and",
+    "expression": [
+      {
+        "name": "__name__",
+        "value": "UpdatedMetricName",
+        "comparisonFilter": "regex_match"
+      },
+      {
+        "name": "environment",
+        "value": "production",
+        "comparisonFilter": "not_eq"
+      }
+    ]
+  }
+} 

@@ -1,0 +1,21 @@
+[
+  {
+    "id": 1,
+    "accountId": 1234,
+    "enabled": true,
+    "filter": {
+      "operator": "and",
+      "expression": [
+        {
+          "name": "__name__",
+          "value": "CpuUsage",
+          "comparisonFilter": "eq"
+        }
+      ]
+    },
+    "createdAt": "2023-01-01T00:00:00Z",
+    "createdBy": "test-user",
+    "modifiedAt": "2023-01-01T00:00:00Z",
+    "modifiedBy": "test-user"
+  }
+] 
