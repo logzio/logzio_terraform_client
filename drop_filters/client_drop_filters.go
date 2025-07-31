@@ -37,7 +37,7 @@ type DropFilter struct {
 	Active         bool                   `json:"active"`
 	LogType        string                 `json:"logType"`
 	FieldCondition []FieldConditionObject `json:"fieldConditions"`
-	ThresholdInGB  *float64               `json:"thresholdInGB,omitempty"`
+	ThresholdInGB  float64                `json:"thresholdInGB,omitempty"`
 }
 
 func New(apiToken, baseUrl string) (*DropFiltersClient, error) {
