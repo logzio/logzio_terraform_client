@@ -24,17 +24,17 @@ func TestDropMetrics_UpdateDropMetric(t *testing.T) {
 		AccountId: 1234,
 		Enabled:   &enabled,
 		Filter: drop_metrics.FilterObject{
-			Operator: "and",
+			Operator: drop_metrics.OperatorAnd,
 			Expression: []drop_metrics.FilterExpression{
 				{
 					Name:             "__name__",
 					Value:            "UpdatedMetricName",
-					ComparisonFilter: "regex_match",
+					ComparisonFilter: drop_metrics.ComparisonEq,
 				},
 				{
 					Name:             "environment",
 					Value:            "production",
-					ComparisonFilter: "not_eq",
+					ComparisonFilter: drop_metrics.ComparisonEq,
 				},
 			},
 		},
@@ -46,10 +46,10 @@ func TestDropMetrics_UpdateDropMetric(t *testing.T) {
 	assert.Equal(t, int64(1), result.Id)
 	assert.Equal(t, int64(1234), result.AccountId)
 	assert.False(t, result.Enabled)
-	assert.Equal(t, "and", result.Filter.Operator)
+	assert.Equal(t, "AND", result.Filter.Operator)
 	assert.Len(t, result.Filter.Expression, 2)
-	assert.Equal(t, "regex_match", result.Filter.Expression[0].ComparisonFilter)
-	assert.Equal(t, "not_eq", result.Filter.Expression[1].ComparisonFilter)
+	assert.Equal(t, "EQ", result.Filter.Expression[0].ComparisonFilter)
+	assert.Equal(t, "EQ", result.Filter.Expression[1].ComparisonFilter)
 }
 
 func TestDropMetrics_UpdateDropMetricAPIFailed(t *testing.T) {
@@ -67,12 +67,12 @@ func TestDropMetrics_UpdateDropMetricAPIFailed(t *testing.T) {
 		AccountId: 1234,
 		Enabled:   &enabled,
 		Filter: drop_metrics.FilterObject{
-			Operator: "and",
+			Operator: drop_metrics.OperatorAnd,
 			Expression: []drop_metrics.FilterExpression{
 				{
 					Name:             "__name__",
 					Value:            "TestMetric",
-					ComparisonFilter: "eq",
+					ComparisonFilter: drop_metrics.ComparisonEq,
 				},
 			},
 		},
@@ -92,12 +92,12 @@ func TestDropMetrics_UpdateDropMetricInvalidId(t *testing.T) {
 		AccountId: 1234,
 		Enabled:   &enabled,
 		Filter: drop_metrics.FilterObject{
-			Operator: "and",
+			Operator: drop_metrics.OperatorAnd,
 			Expression: []drop_metrics.FilterExpression{
 				{
 					Name:             "__name__",
 					Value:            "TestMetric",
-					ComparisonFilter: "eq",
+					ComparisonFilter: drop_metrics.ComparisonEq,
 				},
 			},
 		},
@@ -117,7 +117,7 @@ func TestDropMetrics_UpdateDropMetricValidationError(t *testing.T) {
 	updateReq := drop_metrics.UpdateDropMetric{
 		AccountId: 0,
 		Filter: drop_metrics.FilterObject{
-			Operator:   "and",
+			Operator:   drop_metrics.OperatorAnd,
 			Expression: []drop_metrics.FilterExpression{},
 		},
 	}

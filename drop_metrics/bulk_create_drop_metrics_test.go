@@ -25,12 +25,12 @@ func TestDropMetrics_BulkCreateDropMetrics(t *testing.T) {
 			AccountId: 1234,
 			Enabled:   &enabled,
 			Filter: drop_metrics.FilterObject{
-				Operator: "and",
+				Operator: drop_metrics.OperatorAnd,
 				Expression: []drop_metrics.FilterExpression{
 					{
 						Name:             "__name__",
 						Value:            "CpuUsage",
-						ComparisonFilter: "eq",
+						ComparisonFilter: drop_metrics.ComparisonEq,
 					},
 				},
 			},
@@ -39,12 +39,12 @@ func TestDropMetrics_BulkCreateDropMetrics(t *testing.T) {
 			AccountId: 1235,
 			Enabled:   &enabled,
 			Filter: drop_metrics.FilterObject{
-				Operator: "and",
+				Operator: drop_metrics.OperatorAnd,
 				Expression: []drop_metrics.FilterExpression{
 					{
 						Name:             "__name__",
 						Value:            "MemoryUsage",
-						ComparisonFilter: "eq",
+						ComparisonFilter: drop_metrics.ComparisonEq,
 					},
 				},
 			},
@@ -85,12 +85,12 @@ func TestDropMetrics_BulkCreateDropMetricsAPIFailed(t *testing.T) {
 			AccountId: 1234,
 			Enabled:   &enabled,
 			Filter: drop_metrics.FilterObject{
-				Operator: "and",
+				Operator: drop_metrics.OperatorAnd,
 				Expression: []drop_metrics.FilterExpression{
 					{
 						Name:             "__name__",
 						Value:            "CpuUsage",
-						ComparisonFilter: "eq",
+						ComparisonFilter: drop_metrics.ComparisonEq,
 					},
 				},
 			},

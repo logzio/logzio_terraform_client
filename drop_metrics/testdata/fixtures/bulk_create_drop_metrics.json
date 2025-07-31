@@ -4,12 +4,12 @@
     "accountId": 1234,
     "enabled": true,
     "filter": {
-      "operator": "and",
+      "operator": "AND",
       "expression": [
         {
           "name": "__name__",
           "value": "CpuUsage",
-          "comparisonFilter": "eq"
+          "comparisonFilter": "EQ"
         }
       ]
     },
@@ -23,12 +23,12 @@
     "accountId": 1235,
     "enabled": true,
     "filter": {
-      "operator": "and",
+      "operator": "AND",
       "expression": [
         {
           "name": "__name__",
           "value": "MemoryUsage",
-          "comparisonFilter": "eq"
+          "comparisonFilter": "EQ"
         }
       ]
     },

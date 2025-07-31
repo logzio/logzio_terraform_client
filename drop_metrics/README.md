@@ -8,47 +8,68 @@ Drop metrics provide a solution for filtering out metrics before they are indexe
 ```go
 client, _ := drop_metrics.New(apiToken, apiServerAddress)
 
-// Create a drop metric filter with new comparison operators
+// Create a simple drop metric filter
 enabled := true
 dropMetric, err := client.CreateDropMetric(drop_metrics.CreateDropMetric{
     AccountId: 1234,
     Enabled:   &enabled,
     Filter: drop_metrics.FilterObject{
-        Operator: "and",
+        Operator: drop_metrics.OperatorAnd,
         Expression: []drop_metrics.FilterExpression{
             {
                 Name:             "__name__",
-                Value:            "cpu.*",
-                ComparisonFilter: "regex_match",  // New regex support
+                Value:            "CpuUsage",
+                ComparisonFilter: drop_metrics.ComparisonEq,
             },
             {
-                Name:             "environment",
-                Value:            "test",
-                ComparisonFilter: "not_eq",       // New not equals operator
+                Name:             "service",
+                Value:            "metrics-service",
+                ComparisonFilter: drop_metrics.ComparisonEq,
             },
         },
     },
 })
 
-// Update an existing drop metric
-updatedMetric, err := client.UpdateDropMetric(dropMetric.Id, drop_metrics.UpdateDropMetric{
+// Create filter for multiple conditions
+dropMetric, err = client.CreateDropMetric(drop_metrics.CreateDropMetric{
     AccountId: 1234,
     Enabled:   &enabled,
     Filter: drop_metrics.FilterObject{
-        Operator: "and",
+        Operator: drop_metrics.OperatorAnd,
         Expression: []drop_metrics.FilterExpression{
             {
                 Name:             "__name__",
-                Value:            "memory.*",
-                ComparisonFilter: "regex_no_match", // New regex no match operator
+                Value:            "MemoryUsage",
+                ComparisonFilter: drop_metrics.ComparisonEq,
+            },
+            {
+                Name:             "environment", 
+                Value:            "production",
+                ComparisonFilter: drop_metrics.ComparisonEq,
             },
         },
     },
 })
 
-// Bulk delete multiple drop metrics
-err = client.BulkDeleteDropMetrics([]int64{1, 2, 3})
+// Search for drop metrics
+searchResults, err := client.SearchDropMetrics(drop_metrics.SearchDropMetricsRequest{
+    Filter: &drop_metrics.SearchFilter{
+        AccountIds: []int64{1234},
+        Enabled:    &enabled,
+    },
+    Pagination: &drop_metrics.Pagination{
+        PageNumber: 1,
+        PageSize:   10,
+    },
+})
 ```
+
+## Supported Operators
+
+Currently supported comparison operators:
+- `EQ` - Equal comparison
+
+Additional operators (`NOT_EQ`, `REGEX_MATCH`, `REGEX_NO_MATCH`) will be available in future API versions.
 
 | Function | Signature |
 |----------|-----------|

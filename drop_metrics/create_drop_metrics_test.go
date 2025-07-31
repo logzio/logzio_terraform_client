@@ -24,17 +24,17 @@ func TestDropMetrics_CreateDropMetric(t *testing.T) {
 		AccountId: 1234,
 		Enabled:   &enabled,
 		Filter: drop_metrics.FilterObject{
-			Operator: "and",
+			Operator: drop_metrics.OperatorAnd,
 			Expression: []drop_metrics.FilterExpression{
 				{
 					Name:             "__name__",
 					Value:            "CpuUsage",
-					ComparisonFilter: "eq",
+					ComparisonFilter: drop_metrics.ComparisonEq,
 				},
 				{
 					Name:             "service",
 					Value:            "metrics-service",
-					ComparisonFilter: "eq",
+					ComparisonFilter: drop_metrics.ComparisonEq,
 				},
 			},
 		},
@@ -46,7 +46,7 @@ func TestDropMetrics_CreateDropMetric(t *testing.T) {
 	assert.Equal(t, int64(1), result.Id)
 	assert.Equal(t, int64(1234), result.AccountId)
 	assert.True(t, result.Enabled)
-	assert.Equal(t, "and", result.Filter.Operator)
+	assert.Equal(t, "AND", result.Filter.Operator)
 	assert.Len(t, result.Filter.Expression, 2)
 }
 
@@ -65,12 +65,12 @@ func TestDropMetrics_CreateDropMetricAPIFailed(t *testing.T) {
 		AccountId: 1234,
 		Enabled:   &enabled,
 		Filter: drop_metrics.FilterObject{
-			Operator: "and",
+			Operator: drop_metrics.OperatorAnd,
 			Expression: []drop_metrics.FilterExpression{
 				{
 					Name:             "__name__",
 					Value:            "CpuUsage",
-					ComparisonFilter: "eq",
+					ComparisonFilter: drop_metrics.ComparisonEq,
 				},
 			},
 		},
@@ -89,7 +89,7 @@ func TestDropMetrics_CreateDropMetricValidationError(t *testing.T) {
 	createReq := drop_metrics.CreateDropMetric{
 		AccountId: 0,
 		Filter: drop_metrics.FilterObject{
-			Operator:   "and",
+			Operator:   drop_metrics.OperatorAnd,
 			Expression: []drop_metrics.FilterExpression{},
 		},
 	}

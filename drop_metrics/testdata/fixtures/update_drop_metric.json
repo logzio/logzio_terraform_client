@@ -3,17 +3,17 @@
   "accountId": 1234,
   "enabled": false,
   "filter": {
-    "operator": "and",
+    "operator": "AND",
     "expression": [
       {
         "name": "__name__",
         "value": "UpdatedMetricName",
-        "comparisonFilter": "regex_match"
+        "comparisonFilter": "EQ"
       },
       {
         "name": "environment",
         "value": "production",
-        "comparisonFilter": "not_eq"
+        "comparisonFilter": "EQ"
       }
     ]
   }

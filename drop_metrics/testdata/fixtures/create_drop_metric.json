@@ -3,17 +3,17 @@
   "accountId": 1234,
   "enabled": true,
   "filter": {
-    "operator": "and",
+    "operator": "AND",
     "expression": [
       {
         "name": "__name__",
         "value": "CpuUsage",
-        "comparisonFilter": "eq"
+        "comparisonFilter": "EQ"
       },
       {
         "name": "service",
         "value": "metrics-service",
-        "comparisonFilter": "eq"
+        "comparisonFilter": "EQ"
       }
     ]
   },
