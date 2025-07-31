@@ -8,7 +8,8 @@
         "fieldName": "some_field",
         "value": "ok"
       }
-    ]
+    ],
+    "thresholdInGB": 10.5
   },
   {
     "id": "another-drop-filter-id",
@@ -19,6 +20,7 @@
         "fieldName": "field",
         "value": 200
       }
-    ]
+    ],
+    "thresholdInGB": 5.0
   }
 ]

@@ -1,7 +1,8 @@
 # Changes by Version
 
 <!-- next version -->
-
+## v1.24.1
+- Add `ThresholdInGB` support for drop filters api
 ## v1.24.0
 - Support Warm Retention settings in `sub_accounts`.
   - Add `snapSearchRetentionDays` to create and update requests

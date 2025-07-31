@@ -2,6 +2,7 @@ package drop_filters
 
 import (
 	"fmt"
+
 	"github.com/logzio/logzio_terraform_client/client"
 )
 
@@ -23,6 +24,7 @@ type DropFiltersClient struct {
 type CreateDropFilter struct {
 	LogType         string                 `json:"logType,omitempty"`
 	FieldConditions []FieldConditionObject `json:"fieldConditions"`
+	ThresholdInGB   float64                `json:"thresholdInGB,omitempty"`
 }
 
 type FieldConditionObject struct {
@@ -35,6 +37,7 @@ type DropFilter struct {
 	Active         bool                   `json:"active"`
 	LogType        string                 `json:"logType"`
 	FieldCondition []FieldConditionObject `json:"fieldConditions"`
+	ThresholdInGB  *float64               `json:"thresholdInGB,omitempty"`
 }
 
 func New(apiToken, baseUrl string) (*DropFiltersClient, error) {
