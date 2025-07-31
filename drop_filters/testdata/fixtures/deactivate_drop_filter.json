@@ -7,5 +7,6 @@
       "fieldName": "some_field",
       "value": "ok"
     }
-  ]
+  ],
+  "thresholdInGB": 10.5
 }

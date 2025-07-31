@@ -11,10 +11,12 @@ dropFilter, err := client.CreateDropFilter(drop_filters.CreateDropFilter{
                     FieldConditions: []drop_filters.FieldConditionObject{{
                         FieldName: "some_field_name",
                         Value:     "some_value",
+                        ThresholdInGB: 10,
                     }},
                 })
 ```
 
+## API Functions
 |function|func name|
 |---|---|
 |activate drop filter| `func (c *DropFiltersClient) ActivateDropFilter(dropFilterID string) (*DropFilter, error)` |

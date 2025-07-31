@@ -1,11 +1,12 @@
 package drop_filters_test
 
 import (
-	"github.com/logzio/logzio_terraform_client/drop_filters"
-	"github.com/logzio/logzio_terraform_client/test_utils"
 	"net/http"
 	"net/http/httptest"
 	"os"
+
+	"github.com/logzio/logzio_terraform_client/drop_filters"
+	"github.com/logzio/logzio_terraform_client/test_utils"
 )
 
 var (
@@ -52,5 +53,31 @@ func getCreateDropFilter() drop_filters.CreateDropFilter {
 	return drop_filters.CreateDropFilter{
 		LogType:         "some_type",
 		FieldConditions: []drop_filters.FieldConditionObject{fieldCondition},
+	}
+}
+
+func getCreateDropFilterWithThreshold() drop_filters.CreateDropFilter {
+	fieldCondition := drop_filters.FieldConditionObject{
+		FieldName: "some_field",
+		Value:     "ok",
+	}
+
+	return drop_filters.CreateDropFilter{
+		LogType:         "some_type",
+		FieldConditions: []drop_filters.FieldConditionObject{fieldCondition},
+		ThresholdInGB:   10.5,
+	}
+}
+
+func getCreateDropFilterWithZeroThreshold() drop_filters.CreateDropFilter {
+	fieldCondition := drop_filters.FieldConditionObject{
+		FieldName: "some_field",
+		Value:     "ok",
+	}
+
+	return drop_filters.CreateDropFilter{
+		LogType:         "some_type",
+		FieldConditions: []drop_filters.FieldConditionObject{fieldCondition},
+		ThresholdInGB:   0.0,
 	}
 }
