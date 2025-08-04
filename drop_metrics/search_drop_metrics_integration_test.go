@@ -31,7 +31,8 @@ func TestIntegrationDropMetrics_SearchDropMetrics(t *testing.T) {
 					if result.Id == created.Id {
 						found = true
 						assert.Equal(t, created.AccountId, result.AccountId)
-						assert.Equal(t, created.Enabled, result.Enabled)
+						// API uses "active" field - verify consistency
+						assert.Equal(t, created.Active, result.Active, "Active field should match in search results")
 						break
 					}
 				}
