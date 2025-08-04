@@ -2,12 +2,13 @@ package drop_filters_test
 
 import (
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
-func TestDropFilters_RetrieveDropFilter(t *testing.T) {
+func TestDropFilters_RetrieveDropFilters(t *testing.T) {
 	underTest, err, teardown := setupDropFiltersTest()
 	defer teardown()
 
@@ -18,14 +19,25 @@ func TestDropFilters_RetrieveDropFilter(t *testing.T) {
 			fmt.Fprint(w, fixture("retrieve_drop_filter.json"))
 		})
 
-		filters, err := underTest.RetrieveDropFilters()
+		dropFilters, err := underTest.RetrieveDropFilters()
 		assert.NoError(t, err)
-		assert.NotNil(t, filters)
-		assert.Equal(t, 2, len(filters))
+		assert.NotNil(t, dropFilters)
+		assert.NotEmpty(t, dropFilters)
+		assert.Equal(t, 2, len(dropFilters))
+
+		// Test first drop filter
+		assert.Equal(t, "some-drop-filter-id", dropFilters[0].Id)
+		assert.True(t, dropFilters[0].Active)
+		assert.Equal(t, 10.5, dropFilters[0].ThresholdInGB)
+
+		// Test second drop filter
+		assert.Equal(t, "another-drop-filter-id", dropFilters[1].Id)
+		assert.True(t, dropFilters[1].Active)
+		assert.Equal(t, 5.0, dropFilters[1].ThresholdInGB)
 	}
 }
 
-func TestDropFilters_RetrieveDropFilterAPIFail(t *testing.T) {
+func TestDropFilters_RetrieveDropFiltersAPIFail(t *testing.T) {
 	underTest, err, teardown := setupDropFiltersTest()
 	defer teardown()
 
@@ -36,8 +48,8 @@ func TestDropFilters_RetrieveDropFilterAPIFail(t *testing.T) {
 			fmt.Fprint(w, fixture("retrieve_drop_filter_failed.txt"))
 		})
 
-		filters, err := underTest.RetrieveDropFilters()
+		dropFilters, err := underTest.RetrieveDropFilters()
 		assert.Error(t, err)
-		assert.Nil(t, filters)
+		assert.Nil(t, dropFilters)
 	}
 }

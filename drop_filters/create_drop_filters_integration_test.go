@@ -1,21 +1,41 @@
 package drop_filters_test
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
-func TestIntegrationDropFilters_CreateDropFilter(t *testing.T) {
+func TestIntegrationDropFilter_CreateDropFilter(t *testing.T) {
 	underTest, err := setupDropFiltersIntegrationTest()
 
 	if assert.NoError(t, err) {
 		createDropFilter := getCreateDropFilter()
 		dropFilter, err := underTest.CreateDropFilter(createDropFilter)
 
-		time.Sleep(2 * time.Second)
 		if assert.NoError(t, err) && assert.NotNil(t, dropFilter) {
 			defer underTest.DeleteDropFilter(dropFilter.Id)
+			assert.NotEmpty(t, dropFilter.Id)
+			assert.NotEmpty(t, dropFilter.LogType)
+			assert.NotEmpty(t, dropFilter.FieldCondition)
+		}
+	}
+}
+
+func TestIntegrationDropFilter_CreateDropFilterWithThreshold(t *testing.T) {
+	underTest, err := setupDropFiltersIntegrationTest()
+
+	if assert.NoError(t, err) {
+		createDropFilter := getCreateDropFilterWithThreshold()
+		dropFilter, err := underTest.CreateDropFilter(createDropFilter)
+
+		if assert.NoError(t, err) && assert.NotNil(t, dropFilter) {
+			defer underTest.DeleteDropFilter(dropFilter.Id)
+			assert.NotEmpty(t, dropFilter.Id)
+			assert.NotEmpty(t, dropFilter.LogType)
+			assert.NotEmpty(t, dropFilter.FieldCondition)
+			assert.Equal(t, float64(10), dropFilter.ThresholdInGB)
 		}
 	}
 }
