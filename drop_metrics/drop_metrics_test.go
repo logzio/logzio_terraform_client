@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 
 	"github.com/logzio/logzio_terraform_client/drop_metrics"
+	"github.com/logzio/logzio_terraform_client/test_utils"
 )
 
 var (
@@ -31,4 +32,90 @@ func fixture(filename string) string {
 		return fmt.Sprintf("fixture file not found: %s", filename)
 	}
 	return string(content)
+}
+
+func setupDropMetricsIntegrationTest() (*drop_metrics.DropMetricsClient, error) {
+	apiToken, err := test_utils.GetApiToken()
+	if err != nil {
+		return nil, err
+	}
+	underTest, err := drop_metrics.New(apiToken, test_utils.GetLogzIoBaseUrl())
+	return underTest, err
+}
+
+func getCreateDropMetric() drop_metrics.CreateDropMetric {
+	accountId, _ := test_utils.GetAccountId()
+	enabled := true
+
+	return drop_metrics.CreateDropMetric{
+		AccountId: accountId,
+		Enabled:   &enabled,
+		Filter: drop_metrics.FilterObject{
+			Operator: drop_metrics.OperatorAnd,
+			Expression: []drop_metrics.FilterExpression{
+				{
+					Name:             "__name__",
+					Value:            "test_metric",
+					ComparisonFilter: drop_metrics.ComparisonEq,
+				},
+				{
+					Name:             "service",
+					Value:            "integration-test",
+					ComparisonFilter: drop_metrics.ComparisonEq,
+				},
+			},
+		},
+	}
+}
+
+func getBulkCreateDropMetrics() []drop_metrics.CreateDropMetric {
+	accountId, _ := test_utils.GetAccountId()
+	enabled := true
+
+	return []drop_metrics.CreateDropMetric{
+		{
+			AccountId: accountId,
+			Enabled:   &enabled,
+			Filter: drop_metrics.FilterObject{
+				Operator: drop_metrics.OperatorAnd,
+				Expression: []drop_metrics.FilterExpression{
+					{
+						Name:             "__name__",
+						Value:            "bulk_test_metric_1",
+						ComparisonFilter: drop_metrics.ComparisonEq,
+					},
+				},
+			},
+		},
+		{
+			AccountId: accountId,
+			Enabled:   &enabled,
+			Filter: drop_metrics.FilterObject{
+				Operator: drop_metrics.OperatorAnd,
+				Expression: []drop_metrics.FilterExpression{
+					{
+						Name:             "__name__",
+						Value:            "bulk_test_metric_2",
+						ComparisonFilter: drop_metrics.ComparisonEq,
+					},
+				},
+			},
+		},
+	}
+}
+
+func getSearchDropMetricsRequest() drop_metrics.SearchDropMetricsRequest {
+	accountId, _ := test_utils.GetAccountId()
+	enabled := true
+
+	return drop_metrics.SearchDropMetricsRequest{
+		Filter: &drop_metrics.SearchFilter{
+			AccountIds: []int64{accountId},
+			Enabled:    &enabled,
+		},
+		Pagination: &drop_metrics.Pagination{
+			PageNumber: 0,
+			PageSize:   10,
+		},
+	}
 }
