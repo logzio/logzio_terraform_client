@@ -2,7 +2,7 @@
   {
     "id": 1,
     "accountId": 1234,
-    "enabled": true,
+    "active": true,
     "filter": {
       "operator": "AND",
       "expression": [
@@ -21,7 +21,7 @@
   {
     "id": 2,
     "accountId": 1235,
-    "enabled": true,
+    "active": true,
     "filter": {
       "operator": "AND",
       "expression": [
