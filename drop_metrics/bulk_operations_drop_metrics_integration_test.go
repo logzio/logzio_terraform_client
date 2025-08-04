@@ -30,7 +30,8 @@ func TestIntegrationDropMetrics_BulkCreateDropMetrics(t *testing.T) {
 			for i, result := range results {
 				assert.NotZero(t, result.Id)
 				assert.Equal(t, bulkReq[i].AccountId, result.AccountId)
-				assert.True(t, result.Enabled)
+				// API defaults new metrics to active: true regardless of input
+				assert.True(t, result.Active, "API should default new metrics to active: true")
 				assert.Equal(t, bulkReq[i].Filter.Operator, result.Filter.Operator)
 			}
 		}
