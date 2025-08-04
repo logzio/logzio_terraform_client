@@ -19,10 +19,10 @@ func TestDropMetrics_UpdateDropMetric(t *testing.T) {
 		fmt.Fprint(w, fixture("update_drop_metric.json"))
 	})
 
-	enabled := false
+	disabled := false
 	updateReq := drop_metrics.UpdateDropMetric{
 		AccountId: 1234,
-		Enabled:   &enabled,
+		Active:    &disabled,
 		Filter: drop_metrics.FilterObject{
 			Operator: drop_metrics.OperatorAnd,
 			Expression: []drop_metrics.FilterExpression{
@@ -45,7 +45,7 @@ func TestDropMetrics_UpdateDropMetric(t *testing.T) {
 	assert.NotNil(t, result)
 	assert.Equal(t, int64(1), result.Id)
 	assert.Equal(t, int64(1234), result.AccountId)
-	assert.False(t, result.Enabled)
+	assert.False(t, result.Active)
 	assert.Equal(t, "AND", result.Filter.Operator)
 	assert.Len(t, result.Filter.Expression, 2)
 	assert.Equal(t, "EQ", result.Filter.Expression[0].ComparisonFilter)
@@ -65,7 +65,7 @@ func TestDropMetrics_UpdateDropMetricAPIFailed(t *testing.T) {
 	enabled := true
 	updateReq := drop_metrics.UpdateDropMetric{
 		AccountId: 1234,
-		Enabled:   &enabled,
+		Active:    &enabled,
 		Filter: drop_metrics.FilterObject{
 			Operator: drop_metrics.OperatorAnd,
 			Expression: []drop_metrics.FilterExpression{
@@ -90,7 +90,7 @@ func TestDropMetrics_UpdateDropMetricInvalidId(t *testing.T) {
 	enabled := true
 	updateReq := drop_metrics.UpdateDropMetric{
 		AccountId: 1234,
-		Enabled:   &enabled,
+		Active:    &enabled,
 		Filter: drop_metrics.FilterObject{
 			Operator: drop_metrics.OperatorAnd,
 			Expression: []drop_metrics.FilterExpression{

@@ -20,10 +20,10 @@ func TestIntegrationDropMetrics_UpdateDropMetric(t *testing.T) {
 			time.Sleep(2 * time.Second)
 
 			// Update the metric
-			enabled := created.Enabled
+			active := created.Active
 			updateReq := drop_metrics.UpdateDropMetric{
 				AccountId: created.AccountId,
-				Enabled:   &enabled,
+				Active:    &active,
 				Filter: drop_metrics.FilterObject{
 					Operator: drop_metrics.OperatorAnd,
 					Expression: []drop_metrics.FilterExpression{
@@ -68,7 +68,7 @@ func TestIntegrationDropMetrics_UpdateDropMetricNotFound(t *testing.T) {
 		createReq := getCreateDropMetric()
 		updateReq := drop_metrics.UpdateDropMetric{
 			AccountId: createReq.AccountId,
-			Enabled:   createReq.Enabled,
+			Active:    createReq.Active,
 			Filter:    createReq.Filter,
 		}
 
@@ -85,7 +85,7 @@ func TestIntegrationDropMetrics_UpdateDropMetricInvalidId(t *testing.T) {
 		createReq := getCreateDropMetric()
 		updateReq := drop_metrics.UpdateDropMetric{
 			AccountId: createReq.AccountId,
-			Enabled:   createReq.Enabled,
+			Active:    createReq.Active,
 			Filter:    createReq.Filter,
 		}
 
@@ -107,10 +107,10 @@ func TestIntegrationDropMetrics_UpdateDropMetricInvalidAccountId(t *testing.T) {
 			defer underTest.DeleteDropMetric(created.Id)
 			time.Sleep(2 * time.Second)
 
-			enabled := true
+			active := true
 			updateReq := drop_metrics.UpdateDropMetric{
 				AccountId: 0,
-				Enabled:   &enabled,
+				Active:    &active,
 				Filter:    createReq.Filter,
 			}
 
