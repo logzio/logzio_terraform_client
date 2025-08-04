@@ -35,7 +35,7 @@ func TestIntegrationDropFilter_CreateDropFilterWithThreshold(t *testing.T) {
 			assert.NotEmpty(t, dropFilter.Id)
 			assert.NotEmpty(t, dropFilter.LogType)
 			assert.NotEmpty(t, dropFilter.FieldCondition)
-			assert.Equal(t, 10, dropFilter.ThresholdInGB)
+			assert.Equal(t, float64(10), dropFilter.ThresholdInGB)
 		}
 	}
 }
