@@ -22,7 +22,8 @@ func TestIntegrationDropMetrics_GetDropMetric(t *testing.T) {
 			if assert.NoError(t, err) && assert.NotNil(t, result) {
 				assert.Equal(t, created.Id, result.Id)
 				assert.Equal(t, created.AccountId, result.AccountId)
-				assert.Equal(t, created.Enabled, result.Enabled)
+				// API uses "active" field - verify consistency
+				assert.Equal(t, created.Active, result.Active, "Active field should match between create and get")
 				assert.Equal(t, created.Filter.Operator, result.Filter.Operator)
 				assert.Len(t, result.Filter.Expression, len(created.Filter.Expression))
 			}

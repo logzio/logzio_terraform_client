@@ -18,7 +18,7 @@ const (
 // UpdateDropMetric represents the request payload for updating a drop metric filter
 type UpdateDropMetric struct {
 	AccountId int64        `json:"accountId"`
-	Enabled   *bool        `json:"enabled,omitempty"`
+	Active    *bool        `json:"active,omitempty"`
 	Filter    FilterObject `json:"filter"`
 }
 

@@ -19,10 +19,10 @@ func TestDropMetrics_CreateDropMetric(t *testing.T) {
 		fmt.Fprint(w, fixture("create_drop_metric.json"))
 	})
 
-	enabled := true
+	active := true
 	createReq := drop_metrics.CreateDropMetric{
 		AccountId: 1234,
-		Enabled:   &enabled,
+		Active:    &active,
 		Filter: drop_metrics.FilterObject{
 			Operator: drop_metrics.OperatorAnd,
 			Expression: []drop_metrics.FilterExpression{
@@ -45,7 +45,7 @@ func TestDropMetrics_CreateDropMetric(t *testing.T) {
 	assert.NotNil(t, result)
 	assert.Equal(t, int64(1), result.Id)
 	assert.Equal(t, int64(1234), result.AccountId)
-	assert.True(t, result.Enabled)
+	assert.True(t, result.Active)
 	assert.Equal(t, "AND", result.Filter.Operator)
 	assert.Len(t, result.Filter.Expression, 2)
 }
@@ -60,10 +60,10 @@ func TestDropMetrics_CreateDropMetricAPIFailed(t *testing.T) {
 		fmt.Fprint(w, fixture("api_error.txt"))
 	})
 
-	enabled := true
+	active := true
 	createReq := drop_metrics.CreateDropMetric{
 		AccountId: 1234,
-		Enabled:   &enabled,
+		Active:    &active,
 		Filter: drop_metrics.FilterObject{
 			Operator: drop_metrics.OperatorAnd,
 			Expression: []drop_metrics.FilterExpression{

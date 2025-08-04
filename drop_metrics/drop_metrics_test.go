@@ -45,11 +45,11 @@ func setupDropMetricsIntegrationTest() (*drop_metrics.DropMetricsClient, error) 
 
 func getCreateDropMetric() drop_metrics.CreateDropMetric {
 	accountId, _ := test_utils.GetAccountId()
-	enabled := true
+	active := true
 
 	return drop_metrics.CreateDropMetric{
 		AccountId: accountId,
-		Enabled:   &enabled,
+		Active:    &active,
 		Filter: drop_metrics.FilterObject{
 			Operator: drop_metrics.OperatorAnd,
 			Expression: []drop_metrics.FilterExpression{
@@ -70,12 +70,12 @@ func getCreateDropMetric() drop_metrics.CreateDropMetric {
 
 func getBulkCreateDropMetrics() []drop_metrics.CreateDropMetric {
 	accountId, _ := test_utils.GetAccountId()
-	enabled := true
+	active := true
 
 	return []drop_metrics.CreateDropMetric{
 		{
 			AccountId: accountId,
-			Enabled:   &enabled,
+			Active:    &active,
 			Filter: drop_metrics.FilterObject{
 				Operator: drop_metrics.OperatorAnd,
 				Expression: []drop_metrics.FilterExpression{
@@ -89,7 +89,7 @@ func getBulkCreateDropMetrics() []drop_metrics.CreateDropMetric {
 		},
 		{
 			AccountId: accountId,
-			Enabled:   &enabled,
+			Active:    &active,
 			Filter: drop_metrics.FilterObject{
 				Operator: drop_metrics.OperatorAnd,
 				Expression: []drop_metrics.FilterExpression{
@@ -106,12 +106,12 @@ func getBulkCreateDropMetrics() []drop_metrics.CreateDropMetric {
 
 func getSearchDropMetricsRequest() drop_metrics.SearchDropMetricsRequest {
 	accountId, _ := test_utils.GetAccountId()
-	enabled := true
+	active := true
 
 	return drop_metrics.SearchDropMetricsRequest{
 		Filter: &drop_metrics.SearchFilter{
 			AccountIds: []int64{accountId},
-			Enabled:    &enabled,
+			Active:     &active,
 		},
 		Pagination: &drop_metrics.Pagination{
 			PageNumber: 0,

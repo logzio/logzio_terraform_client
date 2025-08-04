@@ -19,11 +19,11 @@ func TestDropMetrics_BulkCreateDropMetrics(t *testing.T) {
 		fmt.Fprint(w, fixture("bulk_create_drop_metrics.json"))
 	})
 
-	enabled := true
+	active := true
 	requests := []drop_metrics.CreateDropMetric{
 		{
 			AccountId: 1234,
-			Enabled:   &enabled,
+			Active:    &active,
 			Filter: drop_metrics.FilterObject{
 				Operator: drop_metrics.OperatorAnd,
 				Expression: []drop_metrics.FilterExpression{
@@ -37,7 +37,7 @@ func TestDropMetrics_BulkCreateDropMetrics(t *testing.T) {
 		},
 		{
 			AccountId: 1235,
-			Enabled:   &enabled,
+			Active:    &active,
 			Filter: drop_metrics.FilterObject{
 				Operator: drop_metrics.OperatorAnd,
 				Expression: []drop_metrics.FilterExpression{
@@ -79,11 +79,11 @@ func TestDropMetrics_BulkCreateDropMetricsAPIFailed(t *testing.T) {
 		fmt.Fprint(w, fixture("api_error.txt"))
 	})
 
-	enabled := true
+	active := true
 	requests := []drop_metrics.CreateDropMetric{
 		{
 			AccountId: 1234,
-			Enabled:   &enabled,
+			Active:    &active,
 			Filter: drop_metrics.FilterObject{
 				Operator: drop_metrics.OperatorAnd,
 				Expression: []drop_metrics.FilterExpression{

@@ -33,7 +33,6 @@ const (
 	disableDropMetricOperation    = "DisableDropMetric"
 	deleteDropMetricOperation     = "DeleteDropMetric"
 	updateDropMetricOperation     = "UpdateDropMetric"
-	deleteBySearchOperation       = "DeleteDropMetricsBySearch"
 	bulkDeleteDropMetricOperation = "BulkDeleteDropMetric"
 
 	resourceName = "drop_metric"
@@ -46,7 +45,7 @@ type DropMetricsClient struct {
 // CreateDropMetric represents the request payload for creating a drop metric filter
 type CreateDropMetric struct {
 	AccountId int64        `json:"accountId"`
-	Enabled   *bool        `json:"enabled,omitempty"`
+	Active    *bool        `json:"active,omitempty"`
 	Filter    FilterObject `json:"filter"`
 }
 
@@ -73,12 +72,17 @@ type FilterExpression struct {
 type DropMetric struct {
 	Id         int64        `json:"id"`
 	AccountId  int64        `json:"accountId"`
-	Enabled    bool         `json:"enabled"`
+	Active     bool         `json:"active"`
 	Filter     FilterObject `json:"filter"`
 	CreatedAt  string       `json:"createdAt,omitempty"`
 	CreatedBy  string       `json:"createdBy,omitempty"`
 	ModifiedAt string       `json:"modifiedAt,omitempty"`
 	ModifiedBy string       `json:"modifiedBy,omitempty"`
+}
+
+// IsActive returns the active status of the drop metric filter
+func (d *DropMetric) IsActive() bool {
+	return d.Active
 }
 
 // SearchDropMetricsRequest represents the request payload for searching drop metrics
@@ -91,7 +95,7 @@ type SearchDropMetricsRequest struct {
 type SearchFilter struct {
 	AccountIds  []int64  `json:"accountIds,omitempty"`
 	MetricNames []string `json:"metricNames,omitempty"`
-	Enabled     *bool    `json:"enabled,omitempty"`
+	Active      *bool    `json:"active,omitempty"`
 }
 
 // Pagination represents pagination parameters

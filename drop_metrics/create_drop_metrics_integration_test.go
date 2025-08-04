@@ -21,7 +21,8 @@ func TestIntegrationDropMetrics_CreateDropMetric(t *testing.T) {
 			defer underTest.DeleteDropMetric(result.Id)
 			assert.NotZero(t, result.Id)
 			assert.Equal(t, createReq.AccountId, result.AccountId)
-			assert.True(t, result.Enabled)
+			// API defaults new metrics to active: true regardless of input
+			assert.True(t, result.Active, "API should default new metrics to active: true")
 			assert.Equal(t, drop_metrics.OperatorAnd, result.Filter.Operator)
 			assert.Len(t, result.Filter.Expression, 2)
 		}

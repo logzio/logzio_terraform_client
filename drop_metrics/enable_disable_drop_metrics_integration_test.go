@@ -14,24 +14,35 @@ func TestIntegrationDropMetrics_EnableDropMetric(t *testing.T) {
 		createReq.Filter.Expression[0].Value = "test-metric-enable"
 		// Create as disabled
 		disabled := false
-		createReq.Enabled = &disabled
+		createReq.Active = &disabled
 
 		created, err := underTest.CreateDropMetric(createReq)
 		if assert.NoError(t, err) && assert.NotNil(t, created) {
 			defer underTest.DeleteDropMetric(created.Id)
 			time.Sleep(2 * time.Second)
 
-			// Verify it's disabled initially
-			assert.False(t, created.Enabled)
+			t.Logf("Created metric - Active: %v, IsActive(): %v",
+				created.Active, created.IsActive())
+
+			// Note: API defaults to active: true regardless of input, so disable first if needed
+			if created.Active {
+				_ = underTest.DisableDropMetric(created.Id)
+				time.Sleep(2 * time.Second)
+			}
 
 			// Enable it
 			err := underTest.EnableDropMetric(created.Id)
 			if assert.NoError(t, err) {
-				// Verify by getting it again
-				time.Sleep(1 * time.Second)
+				// Verify by getting it again - wait longer for eventual consistency
+				time.Sleep(5 * time.Second)
 				retrieved, err := underTest.GetDropMetric(created.Id)
 				if assert.NoError(t, err) && assert.NotNil(t, retrieved) {
-					assert.True(t, retrieved.Enabled)
+					t.Logf("After enable - Active: %v, IsActive(): %v",
+						retrieved.Active, retrieved.IsActive())
+
+					// API uses "active" field - this should be true after enable
+					assert.True(t, retrieved.Active, "Active field should be true after enable")
+					assert.True(t, retrieved.IsActive(), "IsActive() should return true after enable")
 				}
 			}
 		}
@@ -45,24 +56,36 @@ func TestIntegrationDropMetrics_DisableDropMetric(t *testing.T) {
 		createReq.Filter.Expression[0].Value = "test-metric-disable"
 		// Create as enabled
 		enabled := true
-		createReq.Enabled = &enabled
+		createReq.Active = &enabled
 
 		created, err := underTest.CreateDropMetric(createReq)
 		if assert.NoError(t, err) && assert.NotNil(t, created) {
 			defer underTest.DeleteDropMetric(created.Id)
 			time.Sleep(2 * time.Second)
 
-			// Verify it's enabled initially
-			assert.True(t, created.Enabled)
+			t.Logf("Created metric - Active: %v, IsActive(): %v",
+				created.Active, created.IsActive())
+
+			// Note: API defaults to active: true, so metric should already be enabled
+			// If it's disabled for some reason, enable it first
+			if !created.Active {
+				_ = underTest.EnableDropMetric(created.Id)
+				time.Sleep(2 * time.Second)
+			}
 
 			// Disable it
 			err := underTest.DisableDropMetric(created.Id)
 			if assert.NoError(t, err) {
-				// Verify by getting it again
-				time.Sleep(1 * time.Second)
+				// Verify by getting it again - wait longer for eventual consistency
+				time.Sleep(5 * time.Second)
 				retrieved, err := underTest.GetDropMetric(created.Id)
 				if assert.NoError(t, err) && assert.NotNil(t, retrieved) {
-					assert.False(t, retrieved.Enabled)
+					t.Logf("After disable - Active: %v, IsActive(): %v",
+						retrieved.Active, retrieved.IsActive())
+
+					// API uses "active" field - this should be false after disable
+					assert.False(t, retrieved.Active, "Active field should be false after disable")
+					assert.False(t, retrieved.IsActive(), "IsActive() should return false after disable")
 				}
 			}
 		}
