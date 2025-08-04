@@ -25,7 +25,7 @@ func (c *DropMetricsClient) DisableDropMetric(dropFilterId int64) error {
 		HttpMethod:   disableDropMetricServiceMethod,
 		Url:          fmt.Sprintf(disableDropMetricServiceUrl, c.BaseUrl, dropFilterId),
 		Body:         nil,
-		SuccessCodes: []int{disableDropMetricServiceSuccess},
+		SuccessCodes: []int{disableDropMetricServiceSuccess, http.StatusAccepted, http.StatusCreated},
 		NotFoundCode: disableDropMetricServiceNotFound,
 		ResourceId:   dropFilterId,
 		ApiAction:    disableDropMetricOperation,

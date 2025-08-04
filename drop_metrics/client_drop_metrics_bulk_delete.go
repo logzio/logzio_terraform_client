@@ -38,7 +38,7 @@ func (c *DropMetricsClient) BulkDeleteDropMetrics(dropFilterIds []int64) error {
 		HttpMethod:   bulkDeleteDropMetricsServiceMethod,
 		Url:          fmt.Sprintf(bulkDeleteDropMetricsServiceUrl, c.BaseUrl),
 		Body:         body,
-		SuccessCodes: []int{bulkDeleteDropMetricsServiceSuccess},
+		SuccessCodes: []int{http.StatusOK, bulkDeleteDropMetricsServiceSuccess},
 		NotFoundCode: bulkDeleteDropMetricsServiceNotFound,
 		ResourceId:   nil,
 		ApiAction:    bulkDeleteDropMetricOperation,

@@ -38,7 +38,7 @@ func (c *DropMetricsClient) BulkCreateDropMetrics(requests []CreateDropMetric) (
 		HttpMethod:   bulkCreateDropMetricServiceMethod,
 		Url:          fmt.Sprintf(bulkCreateDropMetricServiceUrl, c.BaseUrl),
 		Body:         body,
-		SuccessCodes: []int{bulkCreateDropMetricServiceSuccess},
+		SuccessCodes: []int{bulkCreateDropMetricServiceSuccess, http.StatusCreated},
 		NotFoundCode: bulkCreateDropMetricServiceNotFound,
 		ResourceId:   nil,
 		ApiAction:    bulkCreateDropMetricOperation,

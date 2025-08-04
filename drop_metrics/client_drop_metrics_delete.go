@@ -25,7 +25,7 @@ func (c *DropMetricsClient) DeleteDropMetric(dropFilterId int64) error {
 		HttpMethod:   deleteDropMetricServiceMethod,
 		Url:          fmt.Sprintf(deleteDropMetricServiceUrl, c.BaseUrl, dropFilterId),
 		Body:         nil,
-		SuccessCodes: []int{deleteDropMetricServiceSuccess},
+		SuccessCodes: []int{http.StatusOK, deleteDropMetricServiceSuccess},
 		NotFoundCode: deleteDropMetricServiceNotFound,
 		ResourceId:   dropFilterId,
 		ApiAction:    deleteDropMetricOperation,
