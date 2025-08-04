@@ -1,65 +1,66 @@
 # Drop Metrics Objects
-Compatible with Logz.io's [drop metrics API](https://api-docs.logz.io/docs/logz/drop-metrics).
+Compatible with Logz.io's [Metrics Management API](https://docs.logz.io/api/#tag/Drop-Filters-For-Metrics).
 
-Drop metrics provide a solution for filtering out metrics before they are indexed in your account to help lower costs and reduce account volume.
+Manages drop metric filters for your Logz.io account.
 
 ## Usage
-
 ```go
-client, _ := drop_metrics.New(apiToken, apiServerAddress)
+client, _ := drop_metrics.New(apiToken, baseUrl)
 
-// Create a simple drop metric filter
-enabled := true
-dropMetric, err := client.CreateDropMetric(drop_metrics.CreateDropMetric{
+active := true
+result, err := client.CreateDropMetric(drop_metrics.CreateDropMetric{
     AccountId: 1234,
-    Enabled:   &enabled,
+    Active:    &active,
     Filter: drop_metrics.FilterObject{
         Operator: drop_metrics.OperatorAnd,
         Expression: []drop_metrics.FilterExpression{
             {
                 Name:             "__name__",
-                Value:            "CpuUsage",
-                ComparisonFilter: drop_metrics.ComparisonEq,
-            },
-            {
-                Name:             "service",
-                Value:            "metrics-service",
+                Value:            "CpuUsage", 
                 ComparisonFilter: drop_metrics.ComparisonEq,
             },
         },
     },
 })
 
-// Create filter for multiple conditions
-dropMetric, err = client.CreateDropMetric(drop_metrics.CreateDropMetric{
-    AccountId: 1234,
-    Enabled:   &enabled,
-    Filter: drop_metrics.FilterObject{
-        Operator: drop_metrics.OperatorAnd,
-        Expression: []drop_metrics.FilterExpression{
-            {
-                Name:             "__name__",
-                Value:            "MemoryUsage",
-                ComparisonFilter: drop_metrics.ComparisonEq,
-            },
-            {
-                Name:             "environment", 
-                Value:            "production",
-                ComparisonFilter: drop_metrics.ComparisonEq,
+// Bulk create multiple filters
+active := true
+bulkResult, err := client.BulkCreateDropMetrics([]drop_metrics.CreateDropMetric{
+    {
+        AccountId: 1234,
+        Active:    &active,
+        Filter: drop_metrics.FilterObject{
+            Operator: drop_metrics.OperatorAnd,
+            Expression: []drop_metrics.FilterExpression{
+                {
+                    Name:             "__name__",
+                    Value:            "MemoryUsage",
+                    ComparisonFilter: drop_metrics.ComparisonEq,
+                },
+                {
+                    Name:             "environment", 
+                    Value:            "production",
+                    ComparisonFilter: drop_metrics.ComparisonEq,
+                },
             },
         },
     },
 })
 
-// Search for drop metrics
-searchResults, err := client.SearchDropMetrics(drop_metrics.SearchDropMetricsRequest{
-    Filter: &drop_metrics.SearchFilter{
-        AccountIds: []int64{1234},
-        Enabled:    &enabled,
-    },
-    Pagination: &drop_metrics.Pagination{
-        PageNumber: 1,
-        PageSize:   10,
+// Update a filter
+active := true
+updateResult, err := client.UpdateDropMetric(filterId, drop_metrics.UpdateDropMetric{
+    AccountId: 1234,
+    Active:    &active,
+    Filter: drop_metrics.FilterObject{
+        Operator: drop_metrics.OperatorAnd,
+        Expression: []drop_metrics.FilterExpression{
+            {
+                Name:             "__name__",
+                Value:            "UpdatedMetricName",
+                ComparisonFilter: drop_metrics.ComparisonEq,
+            },
+        },
     },
 })
 ```
@@ -81,5 +82,4 @@ Additional operators (`NOT_EQ`, `REGEX_MATCH`, `REGEX_NO_MATCH`) will be availab
 | enable drop metric | `func (c *DropMetricsClient) EnableDropMetric(dropFilterId int64) error` |
 | disable drop metric | `func (c *DropMetricsClient) DisableDropMetric(dropFilterId int64) error` |
 | delete drop metric | `func (c *DropMetricsClient) DeleteDropMetric(dropFilterId int64) error` |
-| delete by search | `func (c *DropMetricsClient) DeleteDropMetricsBySearch(req SearchDropMetricsRequest) error` |
 | bulk delete drop metrics | `func (c *DropMetricsClient) BulkDeleteDropMetrics(dropFilterIds []int64) error` | 
