@@ -1,5 +1,5 @@
 # Drop Metrics Objects
-Compatible with Logz.io's [Metrics Management API](https://docs.logz.io/api/#tag/Drop-Filters-For-Metrics).
+Compatible with Logz.io's [Metrics Management API](https://docs.logz.io/api/).
 
 Manages drop metric filters for your Logz.io account.
 
