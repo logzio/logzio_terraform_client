@@ -11,11 +11,10 @@ const dropMetricsServiceEndpoint = "%s/v1/metrics-management/drop-filters"
 
 const (
 	// Comparison operations
-	ComparisonEq = "EQ"
-	// Future comparison operations (not yet implemented by API)
-	// ComparisonNotEq        = "NOT_EQ"
-	// ComparisonRegexMatch   = "REGEX_MATCH"
-	// ComparisonRegexNoMatch = "REGEX_NO_MATCH"
+	ComparisonEq           = "EQ"
+	ComparisonNotEq        = "NOT_EQ"
+	ComparisonRegexMatch   = "REGEX_MATCH"
+	ComparisonRegexNoMatch = "REGEX_NO_MATCH"
 
 	// Logical operations
 	OperatorAnd = "AND"
@@ -188,7 +187,7 @@ func validateFilterExpression(expr FilterExpression) error {
 			return fmt.Errorf("comparisonFilter must be set for single filter")
 		}
 
-		validComparisons := []string{ComparisonEq}
+		validComparisons := []string{ComparisonEq, ComparisonNotEq, ComparisonRegexMatch, ComparisonRegexNoMatch}
 		if !logzio_client.Contains(validComparisons, expr.ComparisonFilter) {
 			return fmt.Errorf("comparisonFilter must be one of %v", validComparisons)
 		}
