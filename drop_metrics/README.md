@@ -23,29 +23,6 @@ result, err := client.CreateDropMetric(drop_metrics.CreateDropMetric{
     },
 })
 
-// Bulk create multiple filters
-active := true
-bulkResult, err := client.BulkCreateDropMetrics([]drop_metrics.CreateDropMetric{
-    {
-        AccountId: 1234,
-        Active:    &active,
-        Filter: drop_metrics.FilterObject{
-            Operator: drop_metrics.OperatorAnd,
-            Expression: []drop_metrics.FilterExpression{
-                {
-                    Name:             "__name__",
-                    Value:            "MemoryUsage",
-                    ComparisonFilter: drop_metrics.ComparisonEq,
-                },
-                {
-                    Name:             "environment", 
-                    Value:            "production",
-                    ComparisonFilter: drop_metrics.ComparisonEq,
-                },
-            },
-        },
-    },
-})
 
 // Update a filter
 active := true
