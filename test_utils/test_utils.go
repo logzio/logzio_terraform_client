@@ -12,6 +12,7 @@ const (
 	EnvLogzioApiToken     string = "LOGZIO_API_TOKEN"
 	EnvLogzioWarmApiToken string = "LOGZIO_WARM_API_TOKEN"
 	EnvLogzioAccountId    string = "LOGZIO_ACCOUNT_ID"
+	EnvMetricsAccountId   string = "LOGZIO_METRICS_ACCOUNT_ID"
 	LogzioBaseUrl         string = "https://api.logz.io"
 	EnvLogzioEmail        string = "LOGZIO_EMAIL"
 	EnvS3Path             string = "S3_PATH"
@@ -150,4 +151,11 @@ func GetMetricsFolderId() (string, error) {
 		return folderId, nil
 	}
 	return "", fmt.Errorf("%s env var not specified", EnvMetricsFolderId)
+}
+func GetMetricsAccountId() (string, error) {
+	accountId := os.Getenv(EnvMetricsAccountId)
+	if len(accountId) > 0 {
+		return accountId, nil
+	}
+	return "", fmt.Errorf("%s env var not specified", EnvMetricsAccountId)
 }
