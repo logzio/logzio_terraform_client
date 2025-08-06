@@ -44,7 +44,7 @@ func setupDropMetricsIntegrationTest() (*drop_metrics.DropMetricsClient, error) 
 }
 
 func getCreateDropMetric() drop_metrics.CreateDropMetric {
-	accountId, _ := test_utils.GetAccountId()
+	accountId, _ := test_utils.GetMetricsAccountId()
 	active := true
 
 	return drop_metrics.CreateDropMetric{
@@ -69,7 +69,7 @@ func getCreateDropMetric() drop_metrics.CreateDropMetric {
 }
 
 func getBulkCreateDropMetrics() []drop_metrics.CreateDropMetric {
-	accountId, _ := test_utils.GetAccountId()
+	accountId, _ := test_utils.GetMetricsAccountId()
 	active := true
 
 	return []drop_metrics.CreateDropMetric{
@@ -105,7 +105,7 @@ func getBulkCreateDropMetrics() []drop_metrics.CreateDropMetric {
 }
 
 func getSearchDropMetricsRequest() drop_metrics.SearchDropMetricsRequest {
-	accountId, _ := test_utils.GetAccountId()
+	accountId, _ := test_utils.GetMetricsAccountId()
 	active := true
 
 	return drop_metrics.SearchDropMetricsRequest{

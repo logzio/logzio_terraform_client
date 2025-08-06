@@ -152,10 +152,12 @@ func GetMetricsFolderId() (string, error) {
 	}
 	return "", fmt.Errorf("%s env var not specified", EnvMetricsFolderId)
 }
-func GetMetricsAccountId() (string, error) {
-	accountId := os.Getenv(EnvMetricsAccountId)
-	if len(accountId) > 0 {
-		return accountId, nil
+
+func GetMetricsAccountId() (int64, error) {
+	account_id_string := os.Getenv(EnvMetricsAccountId)
+	if len(account_id_string) == 0 {
+		return -1, fmt.Errorf("%s env var not specified", EnvMetricsAccountId)
 	}
-	return "", fmt.Errorf("%s env var not specified", EnvMetricsAccountId)
+	account_id, _ := strconv.ParseInt(account_id_string, 10, 32)
+	return int64(account_id), nil
 }
