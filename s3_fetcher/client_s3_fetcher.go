@@ -22,31 +22,30 @@ type S3FetcherClient struct {
 }
 
 type S3FetcherRequest struct {
-	AccessKey                string      `json:"accessKey,omitempty"`
-	SecretKey                string      `json:"secretKey,omitempty"`
-	Arn                      string      `json:"arn,omitempty"`
-	Bucket                   string      `json:"bucket"`
-	Prefix                   string      `json:"prefix,omitempty"`
-	Active                   *bool       `json:"active"`
-	AddS3ObjectKeyAsLogField *bool       `json:"addS3ObjectKeyAsLogField,omitempty"`
-	Region                   AwsRegion   `json:"region"`
-	LogsType                 AwsLogsType `json:"logsType"`
+	AccessKey                string    `json:"accessKey,omitempty"`
+	SecretKey                string    `json:"secretKey,omitempty"`
+	Arn                      string    `json:"arn,omitempty"`
+	Bucket                   string    `json:"bucket"`
+	Prefix                   string    `json:"prefix,omitempty"`
+	Active                   *bool     `json:"active"`
+	AddS3ObjectKeyAsLogField *bool     `json:"addS3ObjectKeyAsLogField,omitempty"`
+	Region                   AwsRegion `json:"region"`
+	LogsType                 string    `json:"logsType"`
 }
 
 type S3FetcherResponse struct {
-	AccessKey                string      `json:"accessKey,omitempty"`
-	Arn                      string      `json:"arn,omitempty"`
-	Bucket                   string      `json:"bucket"`
-	Prefix                   string      `json:"prefix,omitempty"`
-	Active                   bool        `json:"active"`
-	AddS3ObjectKeyAsLogField bool        `json:"addS3ObjectKeyAsLogField,omitempty"`
-	Region                   AwsRegion   `json:"region"`
-	LogsType                 AwsLogsType `json:"logsType"`
-	Id                       int64       `json:"id,omitempty"`
+	AccessKey                string    `json:"accessKey,omitempty"`
+	Arn                      string    `json:"arn,omitempty"`
+	Bucket                   string    `json:"bucket"`
+	Prefix                   string    `json:"prefix,omitempty"`
+	Active                   bool      `json:"active"`
+	AddS3ObjectKeyAsLogField bool      `json:"addS3ObjectKeyAsLogField,omitempty"`
+	Region                   AwsRegion `json:"region"`
+	LogsType                 string    `json:"logsType"`
+	Id                       int64     `json:"id,omitempty"`
 }
 
 type AwsRegion string
-type AwsLogsType string
 
 const (
 	RegionUsEast1      AwsRegion = "US_EAST_1"
@@ -64,19 +63,10 @@ const (
 	RegionSaEast1      AwsRegion = "SA_EAST_1"
 	RegionApSouth1     AwsRegion = "AP_SOUTH_1"
 	RegionCaCentral1   AwsRegion = "CA_CENTRAL_1"
-
-	LogsTypeElb        AwsLogsType = "elb"
-	LogsTypeVpcFlow    AwsLogsType = "vpcflow"
-	LogsTypeS3Access   AwsLogsType = "S3Access"
-	LogsTypeCloudfront AwsLogsType = "cloudfront"
 )
 
 func (r AwsRegion) String() string {
 	return string(r)
-}
-
-func (t AwsLogsType) String() string {
-	return string(t)
 }
 
 func New(apiToken, baseUrl string) (*S3FetcherClient, error) {
@@ -123,11 +113,6 @@ func validateCreateUpdateS3FetcherRequest(req S3FetcherRequest) error {
 		return err
 	}
 
-	err = isValidLogsType(req.LogsType)
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -160,25 +145,4 @@ func isValidRegion(region AwsRegion) error {
 	}
 
 	return fmt.Errorf("invalid region. region must be one of: %s", validRegions)
-}
-
-func GetValidLogsType() []AwsLogsType {
-	return []AwsLogsType{
-		LogsTypeElb,
-		LogsTypeVpcFlow,
-		LogsTypeS3Access,
-		LogsTypeCloudfront,
-	}
-}
-
-func isValidLogsType(logsType AwsLogsType) error {
-	validLogsTypes := GetValidLogsType()
-
-	for _, validType := range validLogsTypes {
-		if validType == logsType {
-			return nil
-		}
-	}
-
-	return fmt.Errorf("invalid logs type. logs type must be one of: %s", validLogsTypes)
 }
