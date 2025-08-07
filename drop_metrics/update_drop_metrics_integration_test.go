@@ -11,7 +11,8 @@ import (
 func TestIntegrationDropMetrics_UpdateDropMetric(t *testing.T) {
 	underTest, err := setupDropMetricsIntegrationTest()
 	if assert.NoError(t, err) {
-		createReq := getCreateDropMetric()
+		createReq, err := getCreateDropMetric()
+		assert.NoError(t, err)
 		createReq.Filter.Expression[0].Value = "test-metric-update"
 
 		created, err := underTest.CreateDropMetric(createReq)
@@ -65,7 +66,8 @@ func TestIntegrationDropMetrics_UpdateDropMetric(t *testing.T) {
 func TestIntegrationDropMetrics_UpdateDropMetricNotFound(t *testing.T) {
 	underTest, err := setupDropMetricsIntegrationTest()
 	if assert.NoError(t, err) {
-		createReq := getCreateDropMetric()
+		createReq, err := getCreateDropMetric()
+		assert.NoError(t, err)
 		updateReq := drop_metrics.UpdateDropMetric{
 			AccountId: createReq.AccountId,
 			Active:    createReq.Active,
@@ -82,7 +84,8 @@ func TestIntegrationDropMetrics_UpdateDropMetricNotFound(t *testing.T) {
 func TestIntegrationDropMetrics_UpdateDropMetricInvalidId(t *testing.T) {
 	underTest, err := setupDropMetricsIntegrationTest()
 	if assert.NoError(t, err) {
-		createReq := getCreateDropMetric()
+		createReq, err := getCreateDropMetric()
+		assert.NoError(t, err)
 		updateReq := drop_metrics.UpdateDropMetric{
 			AccountId: createReq.AccountId,
 			Active:    createReq.Active,
@@ -99,7 +102,8 @@ func TestIntegrationDropMetrics_UpdateDropMetricInvalidId(t *testing.T) {
 func TestIntegrationDropMetrics_UpdateDropMetricInvalidAccountId(t *testing.T) {
 	underTest, err := setupDropMetricsIntegrationTest()
 	if assert.NoError(t, err) {
-		createReq := getCreateDropMetric()
+		createReq, err := getCreateDropMetric()
+		assert.NoError(t, err)
 		createReq.Filter.Expression[0].Value = "test-metric-update-invalid-account"
 
 		created, err := underTest.CreateDropMetric(createReq)

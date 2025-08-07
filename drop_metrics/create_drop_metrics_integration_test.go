@@ -11,7 +11,9 @@ import (
 func TestIntegrationDropMetrics_CreateDropMetric(t *testing.T) {
 	underTest, err := setupDropMetricsIntegrationTest()
 	if assert.NoError(t, err) {
-		createReq := getCreateDropMetric()
+		createReq, err := getCreateDropMetric()
+		assert.NoError(t, err)
+
 		createReq.Filter.Expression[0].Value = "test-metric-create"
 
 		result, err := underTest.CreateDropMetric(createReq)
@@ -32,7 +34,8 @@ func TestIntegrationDropMetrics_CreateDropMetric(t *testing.T) {
 func TestIntegrationDropMetrics_CreateDropMetricInvalidAccountId(t *testing.T) {
 	underTest, err := setupDropMetricsIntegrationTest()
 	if assert.NoError(t, err) {
-		createReq := getCreateDropMetric()
+		createReq, err := getCreateDropMetric()
+		assert.NoError(t, err)
 		createReq.AccountId = 0
 
 		result, err := underTest.CreateDropMetric(createReq)
@@ -45,7 +48,9 @@ func TestIntegrationDropMetrics_CreateDropMetricInvalidAccountId(t *testing.T) {
 func TestIntegrationDropMetrics_CreateDropMetricNoFilter(t *testing.T) {
 	underTest, err := setupDropMetricsIntegrationTest()
 	if assert.NoError(t, err) {
-		createReq := getCreateDropMetric()
+		createReq, err := getCreateDropMetric()
+		assert.NoError(t, err)
+
 		createReq.Filter.Expression = []drop_metrics.FilterExpression{}
 
 		result, err := underTest.CreateDropMetric(createReq)
@@ -58,7 +63,9 @@ func TestIntegrationDropMetrics_CreateDropMetricNoFilter(t *testing.T) {
 func TestIntegrationDropMetrics_CreateDropMetricInvalidOperator(t *testing.T) {
 	underTest, err := setupDropMetricsIntegrationTest()
 	if assert.NoError(t, err) {
-		createReq := getCreateDropMetric()
+		createReq, err := getCreateDropMetric()
+		assert.NoError(t, err)
+
 		createReq.Filter.Operator = "INVALID"
 
 		result, err := underTest.CreateDropMetric(createReq)
@@ -71,7 +78,9 @@ func TestIntegrationDropMetrics_CreateDropMetricInvalidOperator(t *testing.T) {
 func TestIntegrationDropMetrics_CreateDropMetricInvalidComparison(t *testing.T) {
 	underTest, err := setupDropMetricsIntegrationTest()
 	if assert.NoError(t, err) {
-		createReq := getCreateDropMetric()
+		createReq, err := getCreateDropMetric()
+		assert.NoError(t, err)
+
 		createReq.Filter.Expression[0].ComparisonFilter = "INVALID"
 
 		result, err := underTest.CreateDropMetric(createReq)
@@ -84,7 +93,9 @@ func TestIntegrationDropMetrics_CreateDropMetricInvalidComparison(t *testing.T) 
 func TestIntegrationDropMetrics_CreateDropMetricEmptyName(t *testing.T) {
 	underTest, err := setupDropMetricsIntegrationTest()
 	if assert.NoError(t, err) {
-		createReq := getCreateDropMetric()
+		createReq, err := getCreateDropMetric()
+		assert.NoError(t, err)
+
 		createReq.Filter.Expression[0].Name = ""
 
 		result, err := underTest.CreateDropMetric(createReq)
@@ -97,7 +108,8 @@ func TestIntegrationDropMetrics_CreateDropMetricEmptyName(t *testing.T) {
 func TestIntegrationDropMetrics_CreateDropMetricEmptyValue(t *testing.T) {
 	underTest, err := setupDropMetricsIntegrationTest()
 	if assert.NoError(t, err) {
-		createReq := getCreateDropMetric()
+		createReq, err := getCreateDropMetric()
+		assert.NoError(t, err)
 		createReq.Filter.Expression[0].Value = ""
 
 		result, err := underTest.CreateDropMetric(createReq)

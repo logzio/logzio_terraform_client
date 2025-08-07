@@ -11,7 +11,9 @@ import (
 func TestIntegrationDropMetrics_DeleteDropMetric(t *testing.T) {
 	underTest, err := setupDropMetricsIntegrationTest()
 	if assert.NoError(t, err) {
-		createReq := getCreateDropMetric()
+		createReq, err := getCreateDropMetric()
+		assert.NoError(t, err)
+
 		createReq.Filter.Expression[0].Value = "test-metric-delete"
 
 		created, err := underTest.CreateDropMetric(createReq)
@@ -37,7 +39,8 @@ func TestIntegrationDropMetrics_DeleteDropMetricMultiple(t *testing.T) {
 		var createdIds []int64
 
 		for i := 0; i < 3; i++ {
-			createReq := getCreateDropMetric()
+			createReq, err := getCreateDropMetric()
+			assert.NoError(t, err)
 			createReq.Filter.Expression[0].Value = fmt.Sprintf("test-metric-delete-multi-%d", i)
 
 			created, err := underTest.CreateDropMetric(createReq)
@@ -65,7 +68,8 @@ func TestIntegrationDropMetrics_DeleteDropMetricMultiple(t *testing.T) {
 func TestIntegrationDropMetrics_DeleteDropMetricAfterDisable(t *testing.T) {
 	underTest, err := setupDropMetricsIntegrationTest()
 	if assert.NoError(t, err) {
-		createReq := getCreateDropMetric()
+		createReq, err := getCreateDropMetric()
+		assert.NoError(t, err)
 		createReq.Filter.Expression[0].Value = "test-metric-delete-after-disable"
 
 		created, err := underTest.CreateDropMetric(createReq)
@@ -119,7 +123,8 @@ func TestIntegrationDropMetrics_DeleteDropMetricNegativeId(t *testing.T) {
 func TestIntegrationDropMetrics_DeleteDropMetricTwice(t *testing.T) {
 	underTest, err := setupDropMetricsIntegrationTest()
 	if assert.NoError(t, err) {
-		createReq := getCreateDropMetric()
+		createReq, err := getCreateDropMetric()
+		assert.NoError(t, err)
 		createReq.Filter.Expression[0].Value = "test-metric-delete-twice"
 
 		created, err := underTest.CreateDropMetric(createReq)

@@ -43,8 +43,11 @@ func setupDropMetricsIntegrationTest() (*drop_metrics.DropMetricsClient, error) 
 	return underTest, err
 }
 
-func getCreateDropMetric() drop_metrics.CreateDropMetric {
-	accountId, _ := test_utils.GetMetricsAccountId()
+func getCreateDropMetric() (drop_metrics.CreateDropMetric, error) {
+	accountId, err := test_utils.GetMetricsAccountId()
+	if err != nil {
+		return drop_metrics.CreateDropMetric{}, err
+	}
 	active := true
 
 	return drop_metrics.CreateDropMetric{
@@ -65,11 +68,14 @@ func getCreateDropMetric() drop_metrics.CreateDropMetric {
 				},
 			},
 		},
-	}
+	}, nil
 }
 
-func getBulkCreateDropMetrics() []drop_metrics.CreateDropMetric {
-	accountId, _ := test_utils.GetMetricsAccountId()
+func getBulkCreateDropMetrics() ([]drop_metrics.CreateDropMetric, error) {
+	accountId, err := test_utils.GetMetricsAccountId()
+	if err != nil {
+		return nil, err
+	}
 	active := true
 
 	return []drop_metrics.CreateDropMetric{
@@ -101,11 +107,14 @@ func getBulkCreateDropMetrics() []drop_metrics.CreateDropMetric {
 				},
 			},
 		},
-	}
+	}, nil
 }
 
-func getSearchDropMetricsRequest() drop_metrics.SearchDropMetricsRequest {
-	accountId, _ := test_utils.GetMetricsAccountId()
+func getSearchDropMetricsRequest() (drop_metrics.SearchDropMetricsRequest, error) {
+	accountId, err := test_utils.GetMetricsAccountId()
+	if err != nil {
+		return drop_metrics.SearchDropMetricsRequest{}, err
+	}
 	active := true
 
 	return drop_metrics.SearchDropMetricsRequest{
@@ -117,5 +126,5 @@ func getSearchDropMetricsRequest() drop_metrics.SearchDropMetricsRequest {
 			PageNumber: 0,
 			PageSize:   10,
 		},
-	}
+	}, nil
 }

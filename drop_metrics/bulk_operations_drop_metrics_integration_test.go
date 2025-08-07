@@ -10,7 +10,9 @@ import (
 func TestIntegrationDropMetrics_BulkCreateDropMetrics(t *testing.T) {
 	underTest, err := setupDropMetricsIntegrationTest()
 	if assert.NoError(t, err) {
-		bulkReq := getBulkCreateDropMetrics()
+		bulkReq, err := getBulkCreateDropMetrics()
+		assert.NoError(t, err)
+
 		// Make the metric names unique for this test
 		bulkReq[0].Filter.Expression[0].Value = "bulk-test-metric-1-create"
 		bulkReq[1].Filter.Expression[0].Value = "bulk-test-metric-2-create"
@@ -42,7 +44,9 @@ func TestIntegrationDropMetrics_BulkDeleteDropMetrics(t *testing.T) {
 	underTest, err := setupDropMetricsIntegrationTest()
 	if assert.NoError(t, err) {
 		// First create some metrics to delete
-		bulkCreateReq := getBulkCreateDropMetrics()
+		bulkCreateReq, err := getBulkCreateDropMetrics()
+		assert.NoError(t, err)
+
 		bulkCreateReq[0].Filter.Expression[0].Value = "bulk-test-metric-1-delete"
 		bulkCreateReq[1].Filter.Expression[0].Value = "bulk-test-metric-2-delete"
 
@@ -74,7 +78,9 @@ func TestIntegrationDropMetrics_BulkDeleteDropMetrics(t *testing.T) {
 func TestIntegrationDropMetrics_BulkCreateDropMetricsInvalidRequest(t *testing.T) {
 	underTest, err := setupDropMetricsIntegrationTest()
 	if assert.NoError(t, err) {
-		bulkReq := getBulkCreateDropMetrics()
+		bulkReq, err := getBulkCreateDropMetrics()
+		assert.NoError(t, err)
+
 		// Make one request invalid
 		bulkReq[0].AccountId = 0
 

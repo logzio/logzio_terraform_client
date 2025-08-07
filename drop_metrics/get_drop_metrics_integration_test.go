@@ -10,7 +10,8 @@ import (
 func TestIntegrationDropMetrics_GetDropMetric(t *testing.T) {
 	underTest, err := setupDropMetricsIntegrationTest()
 	if assert.NoError(t, err) {
-		createReq := getCreateDropMetric()
+		createReq, err := getCreateDropMetric()
+		assert.NoError(t, err)
 		createReq.Filter.Expression[0].Value = "test-metric-get"
 
 		created, err := underTest.CreateDropMetric(createReq)

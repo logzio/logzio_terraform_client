@@ -154,10 +154,10 @@ func GetMetricsFolderId() (string, error) {
 }
 
 func GetMetricsAccountId() (int64, error) {
-	account_id_string := os.Getenv(EnvMetricsAccountId)
-	if len(account_id_string) == 0 {
+	accountIdString := os.Getenv(EnvMetricsAccountId)
+	if len(accountIdString) == 0 {
 		return -1, fmt.Errorf("%s env var not specified", EnvMetricsAccountId)
 	}
-	account_id, _ := strconv.ParseInt(account_id_string, 10, 32)
-	return int64(account_id), nil
+	accountId, _ := strconv.ParseInt(accountIdString, 10, 32)
+	return int64(accountId), nil
 }

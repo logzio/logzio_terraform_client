@@ -11,7 +11,8 @@ import (
 func TestIntegrationDropMetrics_SearchDropMetrics(t *testing.T) {
 	underTest, err := setupDropMetricsIntegrationTest()
 	if assert.NoError(t, err) {
-		createReq := getCreateDropMetric()
+		createReq, err := getCreateDropMetric()
+		assert.NoError(t, err)
 		createReq.Filter.Expression[0].Value = "test-metric-search"
 
 		created, err := underTest.CreateDropMetric(createReq)
@@ -19,7 +20,8 @@ func TestIntegrationDropMetrics_SearchDropMetrics(t *testing.T) {
 			defer underTest.DeleteDropMetric(created.Id)
 			time.Sleep(2 * time.Second)
 
-			searchReq := getSearchDropMetricsRequest()
+			searchReq, err := getSearchDropMetricsRequest()
+			assert.NoError(t, err)
 			results, err := underTest.SearchDropMetrics(searchReq)
 
 			if assert.NoError(t, err) && assert.NotNil(t, results) {
@@ -45,7 +47,8 @@ func TestIntegrationDropMetrics_SearchDropMetrics(t *testing.T) {
 func TestIntegrationDropMetrics_SearchDropMetricsWithMetricName(t *testing.T) {
 	underTest, err := setupDropMetricsIntegrationTest()
 	if assert.NoError(t, err) {
-		createReq := getCreateDropMetric()
+		createReq, err := getCreateDropMetric()
+		assert.NoError(t, err)
 		testMetricName := "unique-test-metric-search-name"
 		createReq.Filter.Expression[0].Value = testMetricName
 
@@ -54,7 +57,8 @@ func TestIntegrationDropMetrics_SearchDropMetricsWithMetricName(t *testing.T) {
 			defer underTest.DeleteDropMetric(created.Id)
 			time.Sleep(2 * time.Second)
 
-			searchReq := getSearchDropMetricsRequest()
+			searchReq, err := getSearchDropMetricsRequest()
+			assert.NoError(t, err)
 			searchReq.Filter.MetricNames = []string{testMetricName}
 			results, err := underTest.SearchDropMetrics(searchReq)
 
@@ -80,7 +84,8 @@ func TestIntegrationDropMetrics_SearchDropMetricsWithMetricName(t *testing.T) {
 func TestIntegrationDropMetrics_SearchDropMetricsWithPagination(t *testing.T) {
 	underTest, err := setupDropMetricsIntegrationTest()
 	if assert.NoError(t, err) {
-		searchReq := getSearchDropMetricsRequest()
+		searchReq, err := getSearchDropMetricsRequest()
+		assert.NoError(t, err)
 		searchReq.Pagination.PageSize = 5
 		searchReq.Pagination.PageNumber = 0
 

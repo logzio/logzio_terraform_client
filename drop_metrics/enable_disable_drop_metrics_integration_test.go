@@ -10,7 +10,8 @@ import (
 func TestIntegrationDropMetrics_EnableDropMetric(t *testing.T) {
 	underTest, err := setupDropMetricsIntegrationTest()
 	if assert.NoError(t, err) {
-		createReq := getCreateDropMetric()
+		createReq, err := getCreateDropMetric()
+		assert.NoError(t, err)
 		createReq.Filter.Expression[0].Value = "test-metric-enable"
 		// Create as disabled
 		disabled := false
@@ -52,7 +53,9 @@ func TestIntegrationDropMetrics_EnableDropMetric(t *testing.T) {
 func TestIntegrationDropMetrics_DisableDropMetric(t *testing.T) {
 	underTest, err := setupDropMetricsIntegrationTest()
 	if assert.NoError(t, err) {
-		createReq := getCreateDropMetric()
+		createReq, err := getCreateDropMetric()
+		assert.NoError(t, err)
+
 		createReq.Filter.Expression[0].Value = "test-metric-disable"
 		// Create as enabled
 		enabled := true
