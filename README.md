@@ -24,6 +24,7 @@ The library currently supports the following API endpoints:
 * Grafana Notification Policy.
 * [Grafana Contact Point](https://docs.logz.io/api/#tag/Grafana-contact-points).
 * [Metrics Accounts](https://api-docs.logz.io/docs/logz/create-a-new-metrics-account)
+* [Metrics drop filters](./drop_metrics/README.md) <!--- This should be replaced with the proper docs link once released. -->
 
 #### Contributing
 
