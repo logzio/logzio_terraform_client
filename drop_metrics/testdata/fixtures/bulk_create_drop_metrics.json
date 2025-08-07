@@ -1,0 +1,40 @@
+[
+  {
+    "id": 1,
+    "accountId": 1234,
+    "active": true,
+    "filter": {
+      "operator": "AND",
+      "expression": [
+        {
+          "name": "__name__",
+          "value": "CpuUsage",
+          "comparisonFilter": "EQ"
+        }
+      ]
+    },
+    "createdAt": "2023-01-01T00:00:00Z",
+    "createdBy": "test-user",
+    "modifiedAt": "2023-01-01T00:00:00Z",
+    "modifiedBy": "test-user"
+  },
+  {
+    "id": 2,
+    "accountId": 1235,
+    "active": true,
+    "filter": {
+      "operator": "AND",
+      "expression": [
+        {
+          "name": "__name__",
+          "value": "MemoryUsage",
+          "comparisonFilter": "EQ"
+        }
+      ]
+    },
+    "createdAt": "2023-01-01T00:00:00Z",
+    "createdBy": "test-user",
+    "modifiedAt": "2023-01-01T00:00:00Z",
+    "modifiedBy": "test-user"
+  }
+] 
