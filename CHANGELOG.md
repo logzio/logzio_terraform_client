@@ -1,6 +1,10 @@
 # Changes by Version
 
 <!-- next version -->
+## v1.25.0
+- Add [Metrics drop filters API](./drop_metrics/README.md).
+- Remove restriction on `LogsType` in S3 Fetcher to allow custom type names.
+
 ## v1.24.1
 - Add `ThresholdInGB` support for drop filters api
 ## v1.24.0
