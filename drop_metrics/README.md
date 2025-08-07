@@ -46,8 +46,9 @@ updateResult, err := client.UpdateDropMetric(filterId, drop_metrics.UpdateDropMe
 
 Currently supported comparison operators:
 - `EQ` - Equal comparison
-
-Additional operators (`NOT_EQ`, `REGEX_MATCH`, `REGEX_NO_MATCH`) will be available in future API versions.
+- `NOT_EQ` - Not equal comparison
+- `REGEX_MATCH` - Regular expression match
+- `REGEX_NO_MATCH` - Regular expression no match
 
 | Function | Signature |
 |----------|-----------|
