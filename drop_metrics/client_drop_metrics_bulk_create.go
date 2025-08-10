@@ -16,14 +16,14 @@ const (
 )
 
 // BulkCreateDropMetrics creates multiple drop metric filters in bulk, returns the created filters if successful, an error otherwise
-func (c *DropMetricsClient) BulkCreateDropMetrics(requests []CreateDropMetric) ([]DropMetric, error) {
+func (c *DropMetricsClient) BulkCreateDropMetrics(requests []CreateUpdateDropMetric) ([]DropMetric, error) {
 	if len(requests) == 0 {
 		return nil, fmt.Errorf("requests array cannot be empty")
 	}
 
 	// Validate each request
 	for i, req := range requests {
-		if err := validateCreateDropMetricRequest(req); err != nil {
+		if err := validateCreateUpdateDropMetricRequest(req); err != nil {
 			return nil, fmt.Errorf("request[%d] validation failed: %w", i, err)
 		}
 	}

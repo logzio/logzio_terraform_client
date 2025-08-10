@@ -20,7 +20,7 @@ func TestDropMetrics_CreateDropMetric(t *testing.T) {
 	})
 
 	active := true
-	createReq := drop_metrics.CreateDropMetric{
+	createReq := drop_metrics.CreateUpdateDropMetric{
 		AccountId: 1234,
 		Active:    &active,
 		Filter: drop_metrics.FilterObject{
@@ -61,7 +61,7 @@ func TestDropMetrics_CreateDropMetricAPIFailed(t *testing.T) {
 	})
 
 	active := true
-	createReq := drop_metrics.CreateDropMetric{
+	createReq := drop_metrics.CreateUpdateDropMetric{
 		AccountId: 1234,
 		Active:    &active,
 		Filter: drop_metrics.FilterObject{
@@ -86,7 +86,7 @@ func TestDropMetrics_CreateDropMetricValidationError(t *testing.T) {
 	defer teardown()
 
 	// Test with invalid accountId
-	createReq := drop_metrics.CreateDropMetric{
+	createReq := drop_metrics.CreateUpdateDropMetric{
 		AccountId: 0,
 		Filter: drop_metrics.FilterObject{
 			Operator:   drop_metrics.OperatorAnd,

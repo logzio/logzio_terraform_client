@@ -43,14 +43,14 @@ func setupDropMetricsIntegrationTest() (*drop_metrics.DropMetricsClient, error) 
 	return underTest, err
 }
 
-func getCreateDropMetric() (drop_metrics.CreateDropMetric, error) {
+func getCreateDropMetric() (drop_metrics.CreateUpdateDropMetric, error) {
 	accountId, err := test_utils.GetMetricsAccountId()
 	if err != nil {
-		return drop_metrics.CreateDropMetric{}, err
+		return drop_metrics.CreateUpdateDropMetric{}, err
 	}
 	active := true
 
-	return drop_metrics.CreateDropMetric{
+	return drop_metrics.CreateUpdateDropMetric{
 		AccountId: accountId,
 		Active:    &active,
 		Filter: drop_metrics.FilterObject{
@@ -71,14 +71,14 @@ func getCreateDropMetric() (drop_metrics.CreateDropMetric, error) {
 	}, nil
 }
 
-func getBulkCreateDropMetrics() ([]drop_metrics.CreateDropMetric, error) {
+func getBulkCreateDropMetrics() ([]drop_metrics.CreateUpdateDropMetric, error) {
 	accountId, err := test_utils.GetMetricsAccountId()
 	if err != nil {
 		return nil, err
 	}
 	active := true
 
-	return []drop_metrics.CreateDropMetric{
+	return []drop_metrics.CreateUpdateDropMetric{
 		{
 			AccountId: accountId,
 			Active:    &active,

@@ -20,7 +20,7 @@ func TestDropMetrics_BulkCreateDropMetrics(t *testing.T) {
 	})
 
 	active := true
-	requests := []drop_metrics.CreateDropMetric{
+	requests := []drop_metrics.CreateUpdateDropMetric{
 		{
 			AccountId: 1234,
 			Active:    &active,
@@ -63,7 +63,7 @@ func TestDropMetrics_BulkCreateDropMetricsEmptyArray(t *testing.T) {
 	underTest, _, teardown := setupDropMetricsTest()
 	defer teardown()
 
-	results, err := underTest.BulkCreateDropMetrics([]drop_metrics.CreateDropMetric{})
+	results, err := underTest.BulkCreateDropMetrics([]drop_metrics.CreateUpdateDropMetric{})
 	assert.Error(t, err)
 	assert.Nil(t, results)
 	assert.Contains(t, err.Error(), "requests array cannot be empty")
@@ -80,7 +80,7 @@ func TestDropMetrics_BulkCreateDropMetricsAPIFailed(t *testing.T) {
 	})
 
 	active := true
-	requests := []drop_metrics.CreateDropMetric{
+	requests := []drop_metrics.CreateUpdateDropMetric{
 		{
 			AccountId: 1234,
 			Active:    &active,

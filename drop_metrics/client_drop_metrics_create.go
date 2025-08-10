@@ -16,8 +16,8 @@ const (
 )
 
 // CreateDropMetric creates a drop metric filter, returns the created filter if successful, an error otherwise
-func (c *DropMetricsClient) CreateDropMetric(req CreateDropMetric) (*DropMetric, error) {
-	if err := validateCreateDropMetricRequest(req); err != nil {
+func (c *DropMetricsClient) CreateDropMetric(req CreateUpdateDropMetric) (*DropMetric, error) {
+	if err := validateCreateUpdateDropMetricRequest(req); err != nil {
 		return nil, err
 	}
 
