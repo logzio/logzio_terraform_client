@@ -15,6 +15,8 @@ const (
 	envArn       = "AWS_ARN_S3_CONNECTOR"
 	envAccessKey = "AWS_ACCESS_KEY"
 	envSecretKey = "AWS_SECRET_KEY"
+
+	LogsTypeS3Access = "S3Access"
 )
 
 var (
@@ -60,7 +62,7 @@ func getCreateOrUpdateS3Fetcher(authType string, isLocalTest bool) s3_fetcher.S3
 		AddS3ObjectKeyAsLogField: &addS3ObjectKeyAsLogField,
 		Active:                   &active,
 		Region:                   s3_fetcher.RegionUsEast1,
-		LogsType:                 s3_fetcher.LogsTypeS3Access,
+		LogsType:                 LogsTypeS3Access,
 	}
 
 	if authType == keys {
