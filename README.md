@@ -12,6 +12,7 @@ The library currently supports the following API endpoints:
 * [Endpoints](https://github.com/logzio/logzio_terraform_client/tree/master/endpoints).
 * [Log shipping tokens](https://github.com/logzio/logzio_terraform_client/tree/master/log_shipping_tokens).
 * [Drop filters](https://github.com/logzio/logzio_terraform_client/tree/master/drop_filters).
+* [Drop metrics](https://github.com/logzio/logzio_terraform_client/tree/master/drop_metrics).
 * [Archive logs](https://github.com/logzio/logzio_terraform_client/tree/master/archive_logs).
 * [Restore logs](https://github.com/logzio/logzio_terraform_client/tree/master/restore_logs).
 * [Authentication groups](https://docs.logz.io/api/#tag/Authentication-groups).
