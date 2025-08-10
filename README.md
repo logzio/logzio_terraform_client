@@ -12,17 +12,16 @@ The library currently supports the following API endpoints:
 * [Endpoints](https://github.com/logzio/logzio_terraform_client/tree/master/endpoints).
 * [Log shipping tokens](https://github.com/logzio/logzio_terraform_client/tree/master/log_shipping_tokens).
 * [Drop filters](https://github.com/logzio/logzio_terraform_client/tree/master/drop_filters).
-* [Drop metrics](https://github.com/logzio/logzio_terraform_client/tree/master/drop_metrics).
 * [Archive logs](https://github.com/logzio/logzio_terraform_client/tree/master/archive_logs).
 * [Restore logs](https://github.com/logzio/logzio_terraform_client/tree/master/restore_logs).
 * [Authentication groups](https://docs.logz.io/api/#tag/Authentication-groups).
 * [Kibana Objects](https://docs.logz.io/api/#tag/Import-or-export-Kibana-objects).
 * [S3 Fetcher](https://docs.logz.io/api/#tag/Connect-to-S3-Buckets).
 * [Grafana dashboards](https://docs.logz.io/api/#operation/createDashboard).
-* Grafana folders.
+* [Grafana folders](https://api-docs.logz.io/docs/logz/get-all-folders).
 * [Grafana Alert Rules API](https://docs.logz.io/api/#tag/Grafana-alerting-provisioning).
 * [Grafana datasource](https://docs.logz.io/api/#operation/getDatasourceByAccount).
-* Grafana Notification Policy.
+* [Grafana Notification Policy](https://api-docs.logz.io/docs/logz/route-get-policy-tree).
 * [Grafana Contact Point](https://docs.logz.io/api/#tag/Grafana-contact-points).
 * [Metrics Accounts](https://api-docs.logz.io/docs/logz/create-a-new-metrics-account)
 * [Metrics drop filters](./drop_metrics/README.md) <!--- This should be replaced with the proper docs link once released. -->
