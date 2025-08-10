@@ -1,0 +1,24 @@
+{
+  "id": 1,
+  "accountId": 1234,
+  "active": false,
+  "filter": {
+    "operator": "AND",
+    "expression": [
+      {
+        "name": "__name__",
+        "value": "UpdatedCpuUsage",
+        "comparisonFilter": "EQ"
+      },
+      {
+        "name": "service", 
+        "value": "updated-metrics-service",
+        "comparisonFilter": "EQ"
+      }
+    ]
+  },
+  "createdAt": "2023-01-01T00:00:00Z",
+  "createdBy": "test-user",
+  "modifiedAt": "2023-01-01T01:00:00Z",
+  "modifiedBy": "test-user"
+} 

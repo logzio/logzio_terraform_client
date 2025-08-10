@@ -39,7 +39,7 @@ func TestS3Fetcher_CreateS3FetcherKeys(t *testing.T) {
 		assert.NotNil(t, fetcher)
 		assert.Equal(t, int64(12345), fetcher.Id)
 		assert.Equal(t, "my_access_key", fetcher.AccessKey)
-		assert.Equal(t, s3_fetcher.LogsTypeS3Access, fetcher.LogsType)
+		assert.Equal(t, LogsTypeS3Access, fetcher.LogsType)
 		assert.Equal(t, s3_fetcher.RegionUsEast1, fetcher.Region)
 		assert.Equal(t, "my_bucket", fetcher.Bucket)
 		assert.Equal(t, "AWSLogs/987654321/elasticloadbalancing/us-east-1/", fetcher.Prefix)
@@ -76,7 +76,7 @@ func TestS3Fetcher_CreateS3FetcherArn(t *testing.T) {
 		assert.NotNil(t, fetcher)
 		assert.Equal(t, int64(45678), fetcher.Id)
 		assert.Equal(t, "my_arn", fetcher.Arn)
-		assert.Equal(t, s3_fetcher.LogsTypeS3Access, fetcher.LogsType)
+		assert.Equal(t, LogsTypeS3Access, fetcher.LogsType)
 		assert.Equal(t, s3_fetcher.RegionUsEast1, fetcher.Region)
 		assert.Equal(t, "my_bucket", fetcher.Bucket)
 		assert.Equal(t, "AWSLogs/987654321/elasticloadbalancing/us-east-1/", fetcher.Prefix)
@@ -207,19 +207,5 @@ func TestS3Fetcher_CreateS3FetcherNoLogsType(t *testing.T) {
 		assert.Error(t, err)
 		assert.Nil(t, fetcher)
 		assert.Equal(t, "field logsType must be set", err.Error())
-	}
-}
-
-func TestS3Fetcher_CreateS3FetcherInvalidLogsType(t *testing.T) {
-	underTest, err, teardown := setupS3FetcherTest()
-	defer teardown()
-
-	if assert.NoError(t, err) {
-		createS3Fetcher := getCreateOrUpdateS3Fetcher(keys, true)
-		createS3Fetcher.LogsType = "some type"
-		fetcher, err := underTest.CreateS3Fetcher(createS3Fetcher)
-		assert.Error(t, err)
-		assert.Nil(t, fetcher)
-		assert.Contains(t, err.Error(), "invalid logs type. logs type must be one of")
 	}
 }

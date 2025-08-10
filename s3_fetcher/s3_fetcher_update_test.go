@@ -130,19 +130,6 @@ func TestS3Fetcher_UpdateFetcherNoLogsType(t *testing.T) {
 	assert.Equal(t, "field logsType must be set", err.Error())
 }
 
-func TestS3Fetcher_UpdateFetcherInvalidLogsType(t *testing.T) {
-	underTest, err, teardown := setupS3FetcherTest()
-	assert.NoError(t, err)
-	defer teardown()
-
-	fetcherId := int64(1234567)
-	updateFetcher := getCreateOrUpdateS3Fetcher(keys, true)
-	updateFetcher.LogsType = "some type"
-	err = underTest.UpdateS3Fetcher(fetcherId, updateFetcher)
-	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "invalid logs type. logs type must be one of:")
-}
-
 func TestS3Fetcher_UpdateFetcherMissingActive(t *testing.T) {
 	underTest, err, teardown := setupS3FetcherTest()
 	assert.NoError(t, err)

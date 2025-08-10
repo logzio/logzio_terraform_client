@@ -13,9 +13,14 @@ connector, err := underTest.CreateS3Fetcher(s3_fetcher.S3FetcherRequest{
                         AddS3ObjectKeyAsLogField: &addS3Buckt,
                         Active:                   &active,
                         Region:                   s3_fetcher.RegionUsEast1,
-                        LogsType:                 s3_fetcher.LogsTypeElb,
+                        LogsType:                 "my_log_type",
                     })
 ```
+
+> [!NOTE]
+> You can use any value for the `LogsType`.
+> Some values have built in parsing support, such as: `elb`, `vpcflow`, `S3Access` and `cloudfront`.
+> For a full list, see the [Logz.io documentation](https://docs.logz.io/docs/user-guide/data-hub/log-parsing/default-parsing/).
 
 | Function | Function Name                                                                                    |
 |----------|--------------------------------------------------------------------------------------------------|

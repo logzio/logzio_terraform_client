@@ -1,0 +1,337 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Logz.io Terraform Client Development Rules
+
+## Project Overview
+This is a Go client library for Logz.io APIs, designed primarily for the Logz.io Terraform provider. The architecture follows a strict pattern where each API area gets its own package with consistent structure and testing.
+
+## Core Architecture Principles
+
+### 1. Package Structure (MANDATORY)
+```
+api_area/                         # One directory per Logz.io API area
+├── client_<area>.go             # Client struct, constants, validation helpers
+├── client_<area>_create.go      # One file per REST verb
+├── client_<area>_get.go
+├── client_<area>_list.go
+├── client_<area>_update.go
+├── client_<area>_delete.go
+├── README.md                    # Usage documentation
+├── testdata/fixtures/           # Canned responses for tests
+│   ├── create_success.json
+│   ├── api_error.txt
+│   └── ...
+├── *_test.go                    # Unit tests with httptest.Server
+└── *_integration_test.go        # Real API tests (env-var gated)
+```
+
+### 2. Naming Conventions (STRICT)
+- Package name: `lower_snake_case` (matches directory)
+- Client struct: `<Area>Client` (exported, embeds `*client.Client`)
+- Factory function: `func New(apiToken, baseURL string) (*<Area>Client, error)`
+- Public methods: `CreateX`, `GetX`, `ListX`, `UpdateX`, `DeleteX`, `ActivateX`
+- Private helpers: `validateX`, `buildY`
+- Constants: Group at top of files, use descriptive names
+
+### 3. HTTP Call Pattern (REQUIRED)
+ALL network calls MUST use `logzio_client.CallLogzioApi`:
+
+```go
+res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
+    ApiToken:     c.ApiToken,
+    HttpMethod:   createMethod,
+    Url:          fmt.Sprintf(serviceEndpoint, c.BaseUrl),
+    Body:         jsonBytes,
+    SuccessCodes: []int{http.StatusCreated, http.StatusOK},
+    NotFoundCode: http.StatusNotFound,
+    ResourceId:   resourceId,
+    ApiAction:    "CreateResource",
+    ResourceName: "resource",
+})
+```
+
+## File Templates
+
+### Main Client File (`client_<area>.go`)
+```go
+package <area>
+
+import (
+    "fmt"
+    "github.com/logzio/logzio_terraform_client/client"
+)
+
+const <area>ServiceEndpoint = "%s/v1/<area>"
+
+const (
+    // Enum constants
+    TypeExample = "EXAMPLE"
+    
+    // Operation names for logging
+    createOperation = "Create<Area>"
+    getOperation    = "Get<Area>"
+    // ...
+    
+    resourceName = "<area>"
+)
+
+type <Area>Client struct {
+    *client.Client
+}
+
+// Request/Response structs with json tags
+type Create<Area> struct {
+    Name     string `json:"name,omitempty"`
+    Enabled  *bool  `json:"enabled,omitempty"` // pointer for optional booleans
+}
+
+type <Area> struct {
+    Id       int64  `json:"id"`
+    Name     string `json:"name"`
+    Enabled  bool   `json:"enabled"`
+}
+
+func New(apiToken, baseUrl string) (*<Area>Client, error) {
+    if len(apiToken) == 0 {
+        return nil, fmt.Errorf("API token not defined")
+    }
+    if len(baseUrl) == 0 {
+        return nil, fmt.Errorf("Base URL not defined")
+    }
+    return &<Area>Client{
+        Client: client.New(apiToken, baseUrl),
+    }, nil
+}
+
+// Validation helpers
+func validateCreate<Area>Request(req Create<Area>) error {
+    if len(req.Name) == 0 {
+        return fmt.Errorf("name must be set")
+    }
+    return nil
+}
+```
+
+### Operation File (`client_<area>_<verb>.go`)
+```go
+package <area>
+
+import (
+    "encoding/json"
+    "fmt"
+    "github.com/logzio/logzio_terraform_client"
+    "net/http"
+)
+
+const (
+    create<Area>Method   = http.MethodPost
+    create<Area>Success  = http.StatusCreated
+    create<Area>NotFound = http.StatusNotFound
+)
+
+func (c *<Area>Client) Create<Area>(req Create<Area>) (*<Area>, error) {
+    if err := validateCreate<Area>Request(req); err != nil {
+        return nil, err
+    }
+
+    body, err := json.Marshal(req)
+    if err != nil {
+        return nil, err
+    }
+
+    res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
+        ApiToken:     c.ApiToken,
+        HttpMethod:   create<Area>Method,
+        Url:          fmt.Sprintf(<area>ServiceEndpoint, c.BaseUrl),
+        Body:         body,
+        SuccessCodes: []int{create<Area>Success},
+        NotFoundCode: create<Area>NotFound,
+        ResourceId:   nil,
+        ApiAction:    createOperation,
+        ResourceName: resourceName,
+    })
+    if err != nil {
+        return nil, err
+    }
+
+    var result <Area>
+    if err := json.Unmarshal(res, &result); err != nil {
+        return nil, err
+    }
+
+    return &result, nil
+}
+```
+
+## Testing Requirements
+
+### Unit Test Setup
+Every package MUST have a test setup function:
+
+```go
+func setup<Area>Test() (*<Area>Client, *http.ServeMux, func()) {
+    server := httptest.NewServer(http.NewServeMux())
+    client, _ := New("test-token", server.URL)
+    return client, server.Config.Handler.(*http.ServeMux), server.Close
+}
+
+func fixture(filename string) string {
+    content, _ := os.ReadFile(filepath.Join("testdata", "fixtures", filename))
+    return string(content)
+}
+```
+
+### Test Coverage Requirements
+For EACH operation, write these tests:
+1. Success case
+2. API failure (500 error)
+3. Not found (404 error)
+4. Validation error (if applicable)
+
+### Integration Test Pattern
+```go
+// +build integration
+
+func TestCreate<Area>Integration(t *testing.T) {
+    if os.Getenv("LOGZIO_API_TOKEN") == "" {
+        t.Skip("LOGZIO_API_TOKEN not set")
+    }
+    // Real API test
+}
+```
+
+## Data Model Guidelines
+
+### JSON Mapping
+- ALWAYS use `json:"fieldName,omitempty"` tags
+- Optional booleans: use `*bool` so `false` can be omitted
+- Keep field order consistent with API spec
+- Use descriptive field names, not abbreviations
+
+### Validation
+- Validate ALL required fields before HTTP calls
+- Use `logzio_client.Contains()` for enum validation
+- Return descriptive error messages with field context
+
+### Backwards Compatibility
+- NEVER change exported struct fields once released
+- NEVER change method signatures
+- Use `omitempty` for new optional fields
+- Create v2 packages for breaking changes
+
+## Documentation Requirements
+
+### Package README.md
+```markdown
+# <Area> Objects
+Compatible with Logz.io's [<area> API](link-to-docs).
+
+Brief description of what this API does.
+
+## Usage
+```go
+client, _ := <area>.New(apiToken, baseUrl)
+result, err := client.Create<Area>(<area>.Create<Area>{
+    Name: "example",
+})
+```
+
+| Function | Signature |
+|----------|-----------|
+| create | `func (c *Client) Create<Area>(req Create<Area>) (*<Area>, error)` |
+| get | `func (c *Client) Get<Area>(id int64) (*<Area>, error)` |
+```
+
+### Root README Update
+Add new package to the main README.md list with link.
+
+## Code Quality Standards
+
+### Formatting
+- Run `go fmt ./...` before committing
+- Run `go vet ./...` and fix all issues
+- Use `goimports` for import organization
+
+### Error Handling
+- Return meaningful error messages
+- Don't swallow errors
+- Use fmt.Errorf for error context
+
+### Constants
+- Group related constants together
+- Use descriptive names
+- Define enums as string constants
+
+## Development Workflow
+
+### Adding New API Support Checklist
+- [ ] Create new directory with snake_case name
+- [ ] Implement client_<area>.go with New() factory
+- [ ] Create one client_<area>_<verb>.go per operation
+- [ ] Add validation helpers for all operations
+- [ ] Write unit tests with fixtures for each operation
+- [ ] Write integration tests (env-var gated)
+- [ ] Create package README.md
+- [ ] Update root README.md
+- [ ] Run `go test -race ./...` - must pass
+- [ ] Run `go fmt ./...` and `go vet ./...`
+
+### Testing Commands
+```bash
+# Unit tests only
+go test -v ./...
+
+# With integration tests
+LOGZIO_API_TOKEN=xxx LOGZIO_BASE_URL=xxx go test -v -tags=integration ./...
+
+# Race detection
+go test -race ./...
+```
+
+## Common Patterns to Follow
+
+### URL Construction
+```go
+const serviceEndpoint = "%s/v1/resource"
+const serviceEndpointWithId = "%s/v1/resource/%d"
+
+// Usage
+url := fmt.Sprintf(serviceEndpoint, c.BaseUrl)
+url := fmt.Sprintf(serviceEndpointWithId, c.BaseUrl, resourceId)
+```
+
+### Response Handling
+```go
+var result ResponseType
+if err := json.Unmarshal(res, &result); err != nil {
+    return nil, err
+}
+return &result, nil
+```
+
+### List Operations
+```go
+func (c *Client) List<Resources>() ([]<Resource>, error) {
+    // ... API call
+    var results []<Resource>
+    if err := json.Unmarshal(res, &results); err != nil {
+        return nil, err
+    }
+    return results, nil
+}
+```
+
+## Anti-Patterns to Avoid
+
+- ❌ Direct HTTP calls - use `logzio_client.CallLogzioApi`
+- ❌ Hardcoded URLs - use constants with fmt.Sprintf
+- ❌ Missing validation - always validate before API calls
+- ❌ Poor error messages - be specific about what failed
+- ❌ Missing tests - every operation needs tests
+- ❌ Breaking changes - maintain backwards compatibility
+- ❌ Inconsistent naming - follow the established patterns
+
+When in doubt, copy from an existing package (alerts_v2, drop_filters) and adapt the patterns. 
