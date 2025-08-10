@@ -1,6 +1,10 @@
 # Changes by Version
 
 <!-- next version -->
+## v1.25.1
+- Merge the `Create` and `Update` request schemas for `DropMetric` to simplify the API.
+- Remove redundant `FilterType` and filter type constants from `DropMetric` API.
+
 ## v1.25.0
 - Add [Metrics drop filters API](./drop_metrics/README.md).
 - Remove restriction on `LogsType` in S3 Fetcher to allow custom type names.

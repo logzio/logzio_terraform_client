@@ -8,7 +8,7 @@ Manages drop metric filters for your Logz.io account.
 client, _ := drop_metrics.New(apiToken, baseUrl)
 
 active := true
-result, err := client.CreateDropMetric(drop_metrics.CreateDropMetric{
+result, err := client.CreateDropMetric(drop_metrics.CreateUpdateDropMetric{
     AccountId: 1234,
     Active:    &active,
     Filter: drop_metrics.FilterObject{
@@ -26,7 +26,7 @@ result, err := client.CreateDropMetric(drop_metrics.CreateDropMetric{
 
 // Update a filter
 active := true
-updateResult, err := client.UpdateDropMetric(filterId, drop_metrics.UpdateDropMetric{
+updateResult, err := client.UpdateDropMetric(filterId, drop_metrics.CreateUpdateDropMetric{
     AccountId: 1234,
     Active:    &active,
     Filter: drop_metrics.FilterObject{

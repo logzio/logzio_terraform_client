@@ -19,10 +19,6 @@ const (
 	// Logical operations
 	OperatorAnd = "AND"
 
-	// Filter types
-	FilterTypeSingle  = "single"
-	FilterTypeComplex = "complex"
-
 	// Operation names for logging
 	createDropMetricOperation     = "CreateDropMetric"
 	bulkCreateDropMetricOperation = "BulkCreateDropMetric"
@@ -41,8 +37,8 @@ type DropMetricsClient struct {
 	*client.Client
 }
 
-// CreateDropMetric represents the request payload for creating a drop metric filter
-type CreateDropMetric struct {
+// CreateUpdateDropMetric represents the request payload for creating or updating a drop metric filter
+type CreateUpdateDropMetric struct {
 	AccountId int64        `json:"accountId"`
 	Active    *bool        `json:"active,omitempty"`
 	Filter    FilterObject `json:"filter"`
@@ -60,7 +56,6 @@ type FilterExpression struct {
 	Name             string `json:"name,omitempty"`
 	Value            string `json:"value,omitempty"`
 	ComparisonFilter string `json:"comparisonFilter,omitempty"`
-	FilterType       string `json:"filterType,omitempty"`
 
 	// For nested complex filters
 	Operator   string             `json:"operator,omitempty"`
@@ -117,8 +112,8 @@ func New(apiToken, baseUrl string) (*DropMetricsClient, error) {
 	}, nil
 }
 
-// validateCreateDropMetricRequest validates the create drop metric request
-func validateCreateDropMetricRequest(req CreateDropMetric) error {
+// validateCreateUpdateDropMetricRequest validates the create drop metric request
+func validateCreateUpdateDropMetricRequest(req CreateUpdateDropMetric) error {
 	if req.AccountId <= 0 {
 		return fmt.Errorf("accountId must be set and greater than 0")
 	}
