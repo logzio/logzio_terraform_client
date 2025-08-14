@@ -1,0 +1,28 @@
+[
+  {
+    "id": "a",
+    "accountId": 1,
+    "metricType": "GAUGE",
+    "rollupFunction": "LAST",
+    "labelsEliminationMethod": "EXCLUDE_BY",
+    "labels": [
+      "x"
+    ],
+    "isDeleted": false,
+    "dropOriginalMetric": false,
+    "version": 1
+  },
+  {
+    "id": "b",
+    "accountId": 1,
+    "metricType": "GAUGE",
+    "rollupFunction": "COUNT",
+    "labelsEliminationMethod": "EXCLUDE_BY",
+    "labels": [
+      "y"
+    ],
+    "isDeleted": false,
+    "dropOriginalMetric": false,
+    "version": 1
+  }
+]

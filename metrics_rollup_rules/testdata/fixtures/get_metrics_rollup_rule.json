@@ -1,0 +1,15 @@
+{
+  "id": "abc",
+  "accountId": 1,
+  "metricName": "cpu",
+  "metricType": "GAUGE",
+  "rollupFunction": "LAST",
+  "labelsEliminationMethod": "EXCLUDE_BY",
+  "labels": [
+    "x"
+  ],
+  "isDeleted": false,
+  "dropOriginalMetric": false,
+  "version": 1
+}
+

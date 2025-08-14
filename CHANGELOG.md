@@ -1,6 +1,9 @@
 # Changes by Version
 
 <!-- next version -->
+## v1.26.0
+- Add [Metrics rollup rules API](./metrics_rollup_rules/README.md)
+
 ## v1.25.1
 - Merge the `Create` and `Update` request schemas for `DropMetric` to simplify the API.
 - Remove redundant `FilterType` and filter type constants from `DropMetric` API.
