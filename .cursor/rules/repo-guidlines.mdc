@@ -36,6 +36,11 @@ api_area/                         # One directory per Logz.io API area
 - Private helpers: `validateX`, `buildY`
 - Constants: Group at top of files, use descriptive names
 
+#### File naming
+- Production files: `client_<area>_<verb>.go` (e.g., `client_metrics_rollup_rules_create.go`)
+- Unit tests: `<area>_<verb>_test.go` (e.g., `metrics_rollup_rules_create_test.go`)
+- Integration tests: `<area>_<verb>_integration_test.go` (e.g., `metrics_rollup_rules_create_integration_test.go`)
+
 ### 3. HTTP Call Pattern (REQUIRED)
 ALL network calls MUST use `logzio_client.CallLogzioApi`:
 
@@ -169,13 +174,17 @@ func (c *<Area>Client) Create<Area>(req Create<Area>) (*<Area>, error) {
 ## Testing Requirements
 
 ### Unit Test Setup
-Every package MUST have a test setup function:
+Every package MUST have a test setup function. The setup returns `underTest, err, teardown` in that order. The HTTP mux is a package-level global used inside tests and is not returned by the setup.
 
 ```go
-func setup<Area>Test() (*<Area>Client, *http.ServeMux, func()) {
-    server := httptest.NewServer(http.NewServeMux())
-    client, _ := New("test-token", server.URL)
-    return client, server.Config.Handler.(*http.ServeMux), server.Close
+func setup<Area>Test() (*<Area>Client, error, func()) {
+    mux = http.NewServeMux()
+    server = httptest.NewServer(mux)
+
+    underTest, _ := New("test-token", server.URL)
+    return underTest, nil, func() {
+        server.Close()
+    }
 }
 
 func fixture(filename string) string {
@@ -190,6 +199,25 @@ For EACH operation, write these tests:
 2. API failure (500 error)
 3. Not found (404 error)
 4. Validation error (if applicable)
+
+### Testing Conventions (MANDATORY)
+- Use the variable name `underTest` for the client returned from setup helpers. Avoid generic names like `client`.
+- Setup call order MUST be: `underTest, err, teardown := setup<Area>Test()`.
+- The test HTTP mux is a package-level global `mux` variable; it is NOT returned by setup.
+- Prefer `testify/assert` for expectations instead of manual if statements. Examples:
+```go
+underTest, err, teardown := setup<Area>Test()
+defer teardown()
+
+mux.HandleFunc("/path", func(w http.ResponseWriter, r *http.Request) {
+    assert.Equal(t, http.MethodGet, r.Method)
+    w.WriteHeader(http.StatusOK)
+})
+
+res, err := underTest.SomeOperation()
+assert.NoError(t, err)
+assert.NotNil(t, res)
+```
 
 ### Integration Test Pattern
 ```go
