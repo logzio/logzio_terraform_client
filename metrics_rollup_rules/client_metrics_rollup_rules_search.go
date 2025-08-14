@@ -21,8 +21,6 @@ func (c *MetricsRollupRulesClient) SearchRollupRules(req SearchRollupRulesReques
 		return nil, err
 	}
 
-	fmt.Printf("NAAMA TEST:")
-
 	body, err := json.Marshal(req)
 	if err != nil {
 		return nil, err
@@ -39,7 +37,6 @@ func (c *MetricsRollupRulesClient) SearchRollupRules(req SearchRollupRulesReques
 		ApiAction:    operationSearchMetricsRollupRules,
 		ResourceName: resourceName,
 	})
-	fmt.Printf("%s", res)
 	if err != nil {
 		return nil, err
 	}
