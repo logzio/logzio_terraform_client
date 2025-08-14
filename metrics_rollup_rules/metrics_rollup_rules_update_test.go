@@ -22,7 +22,11 @@ func TestUpdateRollupRuleSuccess(t *testing.T) {
 		})
 
 		request := metrics_rollup_rules.CreateUpdateRollupRule{
-			MetricName: "cpu2",
+			MetricName:              "cpu2",
+			MetricType:              metrics_rollup_rules.MetricTypeCounter,
+			RollupFunction:          metrics_rollup_rules.AggMax,
+			LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
+			Labels:                  []string{"host", "region"},
 		}
 
 		res, err := underTest.UpdateRollupRule("abc", request)

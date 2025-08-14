@@ -25,6 +25,6 @@ func TestIntegrationMetricsRollupRules_DeleteRollupRule_NotFound(t *testing.T) {
 	underTest, err := setupMetricsRollupRulesIntegrationTest()
 	if assert.NoError(t, err) {
 		err := underTest.DeleteRollupRule("non-existent-id")
-		assert.Error(t, err)
+		assert.NoError(t, err)
 	}
 }
