@@ -13,7 +13,7 @@ func TestGetRollupRuleSuccess(t *testing.T) {
 	defer teardown()
 
 	if assert.NoError(t, err) {
-		mux.HandleFunc("/v1/metrics-management/rollup-rules/abc", func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc(metricsRollupRulesPath+"/abc", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodGet, r.Method)
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)
@@ -40,7 +40,7 @@ func TestGetRollupRuleApiFailed(t *testing.T) {
 	defer teardown()
 
 	if assert.NoError(t, err) {
-		mux.HandleFunc("/v1/metrics-management/rollup-rules/abc", func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc(metricsRollupRulesPath+"/abc", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodGet, r.Method)
 			w.WriteHeader(http.StatusInternalServerError)
 			fmt.Fprint(w, fixture("api_error.txt"))
@@ -57,7 +57,7 @@ func TestGetRollupRuleNotFound(t *testing.T) {
 	defer teardown()
 
 	if assert.NoError(t, err) {
-		mux.HandleFunc("/v1/metrics-management/rollup-rules/missing", func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc(metricsRollupRulesPath+"/missing", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodGet, r.Method)
 			w.WriteHeader(http.StatusNotFound)
 		})

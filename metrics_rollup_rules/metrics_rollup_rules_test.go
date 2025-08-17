@@ -10,6 +10,8 @@ import (
 	"github.com/logzio/logzio_terraform_client/test_utils"
 )
 
+const metricsRollupRulesPath = "/v1/metrics-management/rollup-rules"
+
 var (
 	mux    *http.ServeMux
 	server *httptest.Server

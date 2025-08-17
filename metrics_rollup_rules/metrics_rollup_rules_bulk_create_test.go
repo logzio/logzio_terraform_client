@@ -15,7 +15,7 @@ func TestBulkCreateRollupRulesSuccess(t *testing.T) {
 	defer teardown()
 
 	if assert.NoError(t, err) {
-		mux.HandleFunc("/v1/metrics-management/rollup-rules/bulk/create", func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc(metricsRollupRulesPath+"/bulk/create", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPost, r.Method)
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)
@@ -55,7 +55,7 @@ func TestBulkCreateRollupRulesApiFailed(t *testing.T) {
 	defer teardown()
 
 	if assert.NoError(t, err) {
-		mux.HandleFunc("/v1/metrics-management/rollup-rules/bulk/create", func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc(metricsRollupRulesPath+"/bulk/create", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPost, r.Method)
 			w.WriteHeader(http.StatusInternalServerError)
 			fmt.Fprint(w, fixture("api_error.txt"))
@@ -81,7 +81,7 @@ func TestBulkCreateRollupRulesNotFound(t *testing.T) {
 	defer teardown()
 
 	if assert.NoError(t, err) {
-		mux.HandleFunc("/v1/metrics-management/rollup-rules/bulk/create", func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc(metricsRollupRulesPath+"/bulk/create", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPost, r.Method)
 			w.WriteHeader(http.StatusNotFound)
 		})

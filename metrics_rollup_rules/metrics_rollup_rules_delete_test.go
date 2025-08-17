@@ -13,7 +13,7 @@ func TestDeleteRollupRuleSuccess(t *testing.T) {
 	defer teardown()
 
 	if assert.NoError(t, err) {
-		mux.HandleFunc("/v1/metrics-management/rollup-rules/abc", func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc(metricsRollupRulesPath+"/abc", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodDelete, r.Method)
 			w.WriteHeader(http.StatusOK)
 		})
@@ -36,7 +36,7 @@ func TestDeleteRollupRuleApiFailed(t *testing.T) {
 	defer teardown()
 
 	if assert.NoError(t, err) {
-		mux.HandleFunc("/v1/metrics-management/rollup-rules/abc", func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc(metricsRollupRulesPath+"/abc", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodDelete, r.Method)
 			w.WriteHeader(http.StatusInternalServerError)
 			fmt.Fprint(w, fixture("api_error.txt"))

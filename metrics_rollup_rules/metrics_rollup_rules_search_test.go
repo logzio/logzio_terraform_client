@@ -14,7 +14,7 @@ func TestSearchRollupRulesSuccess(t *testing.T) {
 	defer teardown()
 
 	if assert.NoError(t, err) {
-		mux.HandleFunc("/v1/metrics-management/rollup-rules/search", func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc(metricsRollupRulesPath+"/search", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPost, r.Method)
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)
@@ -34,7 +34,7 @@ func TestSearchRollupRulesApiFailed(t *testing.T) {
 	defer teardown()
 
 	if assert.NoError(t, err) {
-		mux.HandleFunc("/v1/metrics-management/rollup-rules/search", func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc(metricsRollupRulesPath+"/search", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPost, r.Method)
 			w.WriteHeader(http.StatusInternalServerError)
 			fmt.Fprint(w, fixture("api_error.txt"))
