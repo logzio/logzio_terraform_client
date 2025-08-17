@@ -27,6 +27,6 @@ result, err := client.CreateRollupRule(metrics_rollup_rules.CreateUpdateRollupRu
 | get | `func (c *MetricsRollupRulesClient) GetRollupRule(rollupRuleId string) (*RollupRule, error)` |
 | update | `func (c *MetricsRollupRulesClient) UpdateRollupRule(rollupRuleId string, req CreateUpdateRollupRule) (*RollupRule, error)` |
 | delete | `func (c *MetricsRollupRulesClient) DeleteRollupRule(rollupRuleId string) error` |
-| bulk create | `func (c *MetricsRollupRulesClient) BulkCreateRollupRules(req []CreateRollupRule) ([]RollupRule, error)` |
+| bulk create | `func (c *MetricsRollupRulesClient) BulkCreateRollupRules(req []CreateUpdateRollupRule) ([]RollupRule, error)` |
 | bulk delete | `func (c *MetricsRollupRulesClient) BulkDeleteRollupRules(ruleIds []string) error` |
 | search | `func (c *MetricsRollupRulesClient) SearchRollupRules(req SearchRollupRulesRequest) ([]RollupRule, error)` |
