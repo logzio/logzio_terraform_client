@@ -2,7 +2,7 @@
 
 Compatible with Logz.io's metrics roll-up rules API.
 
-Manage metrics rollup rules for you Logz.io account.
+Manage metrics rollup rules for your Logz.io account.
 
 ## Usage
 
