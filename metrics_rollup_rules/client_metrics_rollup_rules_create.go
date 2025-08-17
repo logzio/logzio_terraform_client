@@ -17,7 +17,7 @@ const (
 
 // CreateRollupRule creates a rollup rule
 func (c *MetricsRollupRulesClient) CreateRollupRule(req CreateUpdateRollupRule) (*RollupRule, error) {
-	if err := validateCreateUpdateRollupRuleRollupRuleRequest(req); err != nil {
+	if err := validateCreateUpdateRollupRuleRequest(req); err != nil {
 		return nil, err
 	}
 

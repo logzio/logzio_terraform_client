@@ -158,8 +158,8 @@ func New(apiToken, baseUrl string) (*MetricsRollupRulesClient, error) {
 	}, nil
 }
 
-// validateCreateUpdateRollupRuleRollupRuleRequest validates the create rollup rule request
-func validateCreateUpdateRollupRuleRollupRuleRequest(req CreateUpdateRollupRule) error {
+// validateCreateUpdateRollupRuleRequest validates the create rollup rule request
+func validateCreateUpdateRollupRuleRequest(req CreateUpdateRollupRule) error {
 	if req.MetricType == "" {
 		return fmt.Errorf("metricType must be set")
 	}
@@ -189,7 +189,7 @@ func validateCreateUpdateRollupRuleRollupRuleRequest(req CreateUpdateRollupRule)
 	return nil
 }
 
-// validateSearchDropMetricsRequest validates the search request
+// validateSearchRollupRuleRequest validates the search request
 func validateSearchRollupRuleRequest(req SearchRollupRulesRequest) error {
 	if req.Pagination != nil {
 		if req.Pagination.PageNumber < 0 {

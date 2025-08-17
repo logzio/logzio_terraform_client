@@ -21,7 +21,7 @@ func (c *MetricsRollupRulesClient) UpdateRollupRule(rollupRuleId string, req Cre
 	if err != nil {
 		return nil, err
 	}
-	if err = validateCreateUpdateRollupRuleRollupRuleRequest(req); err != nil {
+	if err = validateCreateUpdateRollupRuleRequest(req); err != nil {
 		return nil, err
 	}
 

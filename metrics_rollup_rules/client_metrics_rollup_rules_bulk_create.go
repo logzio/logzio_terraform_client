@@ -21,7 +21,7 @@ func (c *MetricsRollupRulesClient) BulkCreateRollupRules(req []CreateUpdateRollu
 		return nil, fmt.Errorf("bulk create request should contain at least one rollup rule")
 	}
 	for i, r := range req {
-		if err := validateCreateUpdateRollupRuleRollupRuleRequest(r); err != nil {
+		if err := validateCreateUpdateRollupRuleRequest(r); err != nil {
 			return nil, fmt.Errorf("request[%d] validation failed: %w", i, err)
 		}
 	}
