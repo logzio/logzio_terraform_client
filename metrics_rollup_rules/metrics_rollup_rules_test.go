@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
-	"time"
 
 	"github.com/logzio/logzio_terraform_client/metrics_rollup_rules"
 	"github.com/logzio/logzio_terraform_client/test_utils"
@@ -54,11 +53,9 @@ func getCreateRollupRule() (metrics_rollup_rules.CreateUpdateRollupRule, error) 
 		return metrics_rollup_rules.CreateUpdateRollupRule{}, err
 	}
 
-	metricName := "integration_test_rollup_metric_" + time.Now().Format("20060102150405")
-
 	return metrics_rollup_rules.CreateUpdateRollupRule{
 		AccountId:               accountId,
-		MetricName:              metricName,
+		MetricName:              "integration_test_rollup_metric",
 		MetricType:              metrics_rollup_rules.MetricTypeGauge,
 		RollupFunction:          metrics_rollup_rules.AggLast,
 		LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
@@ -71,11 +68,10 @@ func getBulkCreateRollupRules() ([]metrics_rollup_rules.CreateUpdateRollupRule, 
 	if err != nil {
 		return nil, err
 	}
-	ts := time.Now().Format("20060102150405")
 	return []metrics_rollup_rules.CreateUpdateRollupRule{
 		{
 			AccountId:               accountId,
-			MetricName:              "integration_bulk_rollup_a_" + ts,
+			MetricName:              "integration_bulk_rollup_a",
 			MetricType:              metrics_rollup_rules.MetricTypeGauge,
 			RollupFunction:          metrics_rollup_rules.AggLast,
 			LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
@@ -83,7 +79,7 @@ func getBulkCreateRollupRules() ([]metrics_rollup_rules.CreateUpdateRollupRule, 
 		},
 		{
 			AccountId:               accountId,
-			MetricName:              "integration_bulk_rollup_b_" + ts,
+			MetricName:              "integration_bulk_rollup_b",
 			MetricType:              metrics_rollup_rules.MetricTypeGauge,
 			RollupFunction:          metrics_rollup_rules.AggCount,
 			LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
