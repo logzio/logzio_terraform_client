@@ -90,6 +90,7 @@ type ComplexFilter struct {
 
 type RollupRule struct {
 	Id                      string              `json:"id"`
+	Name                    string              `json:"name,omitempty"`
 	AccountId               int64               `json:"accountId"`
 	MetricName              string              `json:"metricName,omitempty"`
 	MetricType              MetricType          `json:"metricType"`
@@ -109,6 +110,7 @@ type RollupRule struct {
 // CreateUpdateRollupRule represents the request payload for creating a rollup rule
 type CreateUpdateRollupRule struct {
 	AccountId               int64               `json:"accountId"`
+	Name                    string              `json:"name,omitempty"`
 	MetricName              string              `json:"metricName,omitempty"`
 	MetricType              MetricType          `json:"metricType"`
 	RollupFunction          AggregationFunction `json:"rollupFunction"`
@@ -131,6 +133,7 @@ type Pagination struct {
 type SearchFilter struct {
 	AccountIds  []int64  `json:"accountIds,omitempty"`
 	MetricNames []string `json:"metricNames,omitempty"`
+	SearchTerm  string   `json:"searchTerm,omitempty"`
 }
 
 type SearchRollupRulesRequest struct {

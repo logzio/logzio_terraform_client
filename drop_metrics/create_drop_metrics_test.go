@@ -114,7 +114,7 @@ func TestDropMetrics_SearchWithSearchTerm(t *testing.T) {
 	searchReq := drop_metrics.SearchDropMetricsRequest{
 		Filter: &drop_metrics.SearchFilter{
 			AccountIds: []int64{1234},
-			SearchTerm: "cpu-filter", // Test the new searchTerm field
+			SearchTerm: "cpu-filter",
 		},
 		Pagination: &drop_metrics.Pagination{
 			PageNumber: 0,

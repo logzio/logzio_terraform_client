@@ -46,7 +46,9 @@ func TestBulkCreateRollupRulesSuccess(t *testing.T) {
 		assert.NotNil(t, res)
 		assert.Len(t, res, 2)
 		assert.Equal(t, "a", res[0].Id)
+		assert.Equal(t, "bulk-rollup-rule-1", res[0].Name)
 		assert.Equal(t, "b", res[1].Id)
+		assert.Equal(t, "bulk-rollup-rule-2", res[1].Name)
 	}
 }
 

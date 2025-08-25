@@ -33,6 +33,7 @@ func TestUpdateRollupRuleSuccess(t *testing.T) {
 		assert.NoError(t, err)
 		assert.NotNil(t, res)
 		assert.Equal(t, "abc", res.Id)
+		assert.Equal(t, "updated-rollup-rule", res.Name)
 		assert.Equal(t, "cpu2", res.MetricName)
 	}
 }
