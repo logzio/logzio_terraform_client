@@ -113,7 +113,6 @@ func TestCreateRollupRuleNameTooLong(t *testing.T) {
 	underTest, _, teardown := setupMetricsRollupRulesTest()
 	defer teardown()
 
-	// Create a name that exceeds 256 characters
 	longName := strings.Repeat("a", 257)
 
 	request := metrics_rollup_rules.CreateUpdateRollupRule{

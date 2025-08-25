@@ -10,7 +10,7 @@ client, _ := drop_metrics.New(apiToken, baseUrl)
 active := true
 result, err := client.CreateDropMetric(drop_metrics.CreateUpdateDropMetric{
     AccountId: 1234,
-    Name:      "my-cpu-filter", // Optional: human-readable name
+    Name:      "my-cpu-filter",
     Active:    &active,
     Filter: drop_metrics.FilterObject{
         Operator: drop_metrics.OperatorAnd,

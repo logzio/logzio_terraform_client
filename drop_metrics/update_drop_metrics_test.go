@@ -135,7 +135,6 @@ func TestDropMetrics_UpdateDropMetricNameTooLong(t *testing.T) {
 	defer teardown()
 
 	enabled := true
-	// Create a name that exceeds 256 characters
 	longName := strings.Repeat("a", 257)
 
 	updateReq := drop_metrics.CreateUpdateDropMetric{
