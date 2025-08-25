@@ -45,6 +45,7 @@ func TestDropMetrics_UpdateDropMetric(t *testing.T) {
 	assert.NotNil(t, result)
 	assert.Equal(t, int64(1), result.Id)
 	assert.Equal(t, int64(1234), result.AccountId)
+	assert.Equal(t, "updated-drop-filter", result.Name)
 	assert.False(t, result.Active)
 	assert.Equal(t, "AND", result.Filter.Operator)
 	assert.Len(t, result.Filter.Expression, 2)

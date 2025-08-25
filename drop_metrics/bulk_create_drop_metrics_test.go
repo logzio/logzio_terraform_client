@@ -56,7 +56,9 @@ func TestDropMetrics_BulkCreateDropMetrics(t *testing.T) {
 	assert.NotNil(t, results)
 	assert.Len(t, results, 2)
 	assert.Equal(t, int64(1), results[0].Id)
+	assert.Equal(t, "bulk-filter-1", results[0].Name)
 	assert.Equal(t, int64(2), results[1].Id)
+	assert.Equal(t, "bulk-filter-2", results[1].Name)
 }
 
 func TestDropMetrics_BulkCreateDropMetricsEmptyArray(t *testing.T) {

@@ -40,6 +40,7 @@ type DropMetricsClient struct {
 // CreateUpdateDropMetric represents the request payload for creating or updating a drop metric filter
 type CreateUpdateDropMetric struct {
 	AccountId int64        `json:"accountId"`
+	Name      string       `json:"name,omitempty"`
 	Active    *bool        `json:"active,omitempty"`
 	Filter    FilterObject `json:"filter"`
 }
@@ -66,6 +67,7 @@ type FilterExpression struct {
 type DropMetric struct {
 	Id         int64        `json:"id"`
 	AccountId  int64        `json:"accountId"`
+	Name       string       `json:"name,omitempty"`
 	Active     bool         `json:"active"`
 	Filter     FilterObject `json:"filter"`
 	CreatedAt  string       `json:"createdAt,omitempty"`
@@ -90,6 +92,7 @@ type SearchFilter struct {
 	AccountIds  []int64  `json:"accountIds,omitempty"`
 	MetricNames []string `json:"metricNames,omitempty"`
 	Active      *bool    `json:"active,omitempty"`
+	SearchTerm  string   `json:"searchTerm,omitempty"`
 }
 
 // Pagination represents pagination parameters
