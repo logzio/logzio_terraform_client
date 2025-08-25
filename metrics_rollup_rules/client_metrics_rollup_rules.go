@@ -163,6 +163,10 @@ func New(apiToken, baseUrl string) (*MetricsRollupRulesClient, error) {
 
 // validateCreateUpdateRollupRuleRequest validates the create rollup rule request
 func validateCreateUpdateRollupRuleRequest(req CreateUpdateRollupRule) error {
+	if len(req.Name) > 256 {
+		return fmt.Errorf("name must not exceed 256 characters")
+	}
+
 	if req.MetricType == "" {
 		return fmt.Errorf("metricType must be set")
 	}

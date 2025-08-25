@@ -121,6 +121,10 @@ func validateCreateUpdateDropMetricRequest(req CreateUpdateDropMetric) error {
 		return fmt.Errorf("accountId must be set and greater than 0")
 	}
 
+	if len(req.Name) > 256 {
+		return fmt.Errorf("name must not exceed 256 characters")
+	}
+
 	if err := validateFilterObject(req.Filter); err != nil {
 		return fmt.Errorf("filter validation failed: %w", err)
 	}
