@@ -10,11 +10,34 @@ Manage metrics rollup rules for your Logz.io account.
 client, _ := metrics_rollup_rules.New(apiToken, baseUrl)
 result, err := client.CreateRollupRule(metrics_rollup_rules.CreateUpdateRollupRule{
     AccountId:               1234,
+    Name:                    "my-cpu-rollup", // Optional: human-readable name
     MetricName:              "cpu_usage",
     MetricType:              metrics_rollup_rules.MetricTypeGauge,
     RollupFunction:          metrics_rollup_rules.AggLast,
     LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
     Labels:                  []string{"label1"},
+})
+
+// Update a rollup rule
+updateResult, err := client.UpdateRollupRule(ruleId, metrics_rollup_rules.CreateUpdateRollupRule{
+    Name:                    "updated-cpu-rollup", // Optional: update the name
+    MetricName:              "cpu_usage_updated",
+    MetricType:              metrics_rollup_rules.MetricTypeGauge,
+    RollupFunction:          metrics_rollup_rules.AggMax,
+    LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
+    Labels:                  []string{"label1", "label2"},
+})
+
+// Search for rollup rules by name
+searchResults, err := client.SearchRollupRules(metrics_rollup_rules.SearchRollupRulesRequest{
+    Filter: &metrics_rollup_rules.SearchFilter{
+        AccountIds: []int64{1234},
+        SearchTerm: "cpu", // Optional: search rules by name
+    },
+    Pagination: &metrics_rollup_rules.Pagination{
+        PageNumber: 0,
+        PageSize:   10,
+    },
 })
 ```
 

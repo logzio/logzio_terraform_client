@@ -1,6 +1,7 @@
 [
   {
     "id": "a",
+    "name": "bulk-rollup-rule-1",
     "accountId": 1,
     "metricType": "GAUGE",
     "rollupFunction": "LAST",
@@ -14,6 +15,7 @@
   },
   {
     "id": "b",
+    "name": "bulk-rollup-rule-2",
     "accountId": 1,
     "metricType": "GAUGE",
     "rollupFunction": "COUNT",

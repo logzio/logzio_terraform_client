@@ -10,6 +10,7 @@ client, _ := drop_metrics.New(apiToken, baseUrl)
 active := true
 result, err := client.CreateDropMetric(drop_metrics.CreateUpdateDropMetric{
     AccountId: 1234,
+    Name:      "my-cpu-filter",
     Active:    &active,
     Filter: drop_metrics.FilterObject{
         Operator: drop_metrics.OperatorAnd,
@@ -28,6 +29,7 @@ result, err := client.CreateDropMetric(drop_metrics.CreateUpdateDropMetric{
 active := true
 updateResult, err := client.UpdateDropMetric(filterId, drop_metrics.CreateUpdateDropMetric{
     AccountId: 1234,
+    Name:      "updated-cpu-filter", // Optional: update the name
     Active:    &active,
     Filter: drop_metrics.FilterObject{
         Operator: drop_metrics.OperatorAnd,
@@ -38,6 +40,18 @@ updateResult, err := client.UpdateDropMetric(filterId, drop_metrics.CreateUpdate
                 ComparisonFilter: drop_metrics.ComparisonEq,
             },
         },
+    },
+})
+
+// Search for filters by name
+searchResults, err := client.SearchDropMetrics(drop_metrics.SearchDropMetricsRequest{
+    Filter: &drop_metrics.SearchFilter{
+        AccountIds: []int64{1234},
+        SearchTerm: "cpu", // Optional: search filters by name
+    },
+    Pagination: &drop_metrics.Pagination{
+        PageNumber: 0,
+        PageSize:   10,
     },
 })
 ```

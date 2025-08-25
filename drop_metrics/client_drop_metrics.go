@@ -40,6 +40,7 @@ type DropMetricsClient struct {
 // CreateUpdateDropMetric represents the request payload for creating or updating a drop metric filter
 type CreateUpdateDropMetric struct {
 	AccountId int64        `json:"accountId"`
+	Name      string       `json:"name,omitempty"`
 	Active    *bool        `json:"active,omitempty"`
 	Filter    FilterObject `json:"filter"`
 }
@@ -66,6 +67,7 @@ type FilterExpression struct {
 type DropMetric struct {
 	Id         int64        `json:"id"`
 	AccountId  int64        `json:"accountId"`
+	Name       string       `json:"name,omitempty"`
 	Active     bool         `json:"active"`
 	Filter     FilterObject `json:"filter"`
 	CreatedAt  string       `json:"createdAt,omitempty"`
@@ -90,6 +92,7 @@ type SearchFilter struct {
 	AccountIds  []int64  `json:"accountIds,omitempty"`
 	MetricNames []string `json:"metricNames,omitempty"`
 	Active      *bool    `json:"active,omitempty"`
+	SearchTerm  string   `json:"searchTerm,omitempty"`
 }
 
 // Pagination represents pagination parameters
@@ -116,6 +119,10 @@ func New(apiToken, baseUrl string) (*DropMetricsClient, error) {
 func validateCreateUpdateDropMetricRequest(req CreateUpdateDropMetric) error {
 	if req.AccountId <= 0 {
 		return fmt.Errorf("accountId must be set and greater than 0")
+	}
+
+	if len(req.Name) > 256 {
+		return fmt.Errorf("name must not exceed 256 characters")
 	}
 
 	if err := validateFilterObject(req.Filter); err != nil {

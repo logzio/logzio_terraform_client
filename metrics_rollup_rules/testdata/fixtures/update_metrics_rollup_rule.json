@@ -1,5 +1,6 @@
 {
   "id": "abc",
+  "name": "updated-rollup-rule",
   "accountId": 1,
   "metricName": "cpu2",
   "metricType": "GAUGE",

@@ -2,6 +2,7 @@
   {
     "id": 1,
     "accountId": 1234,
+    "name": "bulk-filter-1",
     "active": true,
     "filter": {
       "operator": "AND",
@@ -21,6 +22,7 @@
   {
     "id": 2,
     "accountId": 1235,
+    "name": "bulk-filter-2",
     "active": true,
     "filter": {
       "operator": "AND",
