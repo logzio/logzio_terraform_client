@@ -94,7 +94,7 @@ func TestCreateRollupRuleWithName(t *testing.T) {
 
 		request := metrics_rollup_rules.CreateUpdateRollupRule{
 			AccountId:               1,
-			Name:                    "test-rollup-rule", // Test the new Name field
+			Name:                    "test-rollup-rule",
 			MetricName:              "cpu",
 			MetricType:              metrics_rollup_rules.MetricTypeGauge,
 			RollupFunction:          metrics_rollup_rules.AggLast,
@@ -105,7 +105,7 @@ func TestCreateRollupRuleWithName(t *testing.T) {
 		res, err := underTest.CreateRollupRule(request)
 		assert.NoError(t, err)
 		assert.NotNil(t, res)
-		assert.Equal(t, "my-rollup-rule", res.Name) // Verify response includes name
+		assert.Equal(t, "my-rollup-rule", res.Name)
 	}
 }
 

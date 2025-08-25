@@ -143,7 +143,7 @@ func TestDropMetrics_CreateDropMetricWithName(t *testing.T) {
 	active := true
 	createReq := drop_metrics.CreateUpdateDropMetric{
 		AccountId: 1234,
-		Name:      "test-drop-filter", // Test the new Name field
+		Name:      "test-drop-filter",
 		Active:    &active,
 		Filter: drop_metrics.FilterObject{
 			Operator: drop_metrics.OperatorAnd,
@@ -160,7 +160,7 @@ func TestDropMetrics_CreateDropMetricWithName(t *testing.T) {
 	result, err := underTest.CreateDropMetric(createReq)
 	assert.NoError(t, err)
 	assert.NotNil(t, result)
-	assert.Equal(t, "my-drop-filter", result.Name) // Verify response includes name
+	assert.Equal(t, "my-drop-filter", result.Name)
 }
 
 func TestDropMetrics_CreateDropMetricNameTooLong(t *testing.T) {
