@@ -5,7 +5,7 @@ go 1.24
 require (
 	github.com/avast/retry-go v3.0.0+incompatible
 	github.com/hashicorp/go-hclog v1.6.3
-	github.com/stretchr/testify v1.10.0
+	github.com/stretchr/testify v1.11.0
 )
 
 require (
