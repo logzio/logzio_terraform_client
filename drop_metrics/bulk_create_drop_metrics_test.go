@@ -3,6 +3,7 @@ package drop_metrics_test
 import (
 	"fmt"
 	"net/http"
+	"strings"
 	"testing"
 
 	"github.com/logzio/logzio_terraform_client/drop_metrics"
@@ -102,4 +103,36 @@ func TestDropMetrics_BulkCreateDropMetricsAPIFailed(t *testing.T) {
 	results, err := underTest.BulkCreateDropMetrics(requests)
 	assert.Error(t, err)
 	assert.Nil(t, results)
+}
+
+func TestDropMetrics_BulkCreateDropMetricsNameTooLong(t *testing.T) {
+	underTest, _, teardown := setupDropMetricsTest()
+	defer teardown()
+
+	active := true
+	// Create a name that exceeds 256 characters
+	longName := strings.Repeat("a", 257)
+
+	requests := []drop_metrics.CreateUpdateDropMetric{
+		{
+			AccountId: 1234,
+			Name:      longName,
+			Active:    &active,
+			Filter: drop_metrics.FilterObject{
+				Operator: drop_metrics.OperatorAnd,
+				Expression: []drop_metrics.FilterExpression{
+					{
+						Name:             "__name__",
+						Value:            "CpuUsage",
+						ComparisonFilter: drop_metrics.ComparisonEq,
+					},
+				},
+			},
+		},
+	}
+
+	results, err := underTest.BulkCreateDropMetrics(requests)
+	assert.Error(t, err)
+	assert.Nil(t, results)
+	assert.Contains(t, err.Error(), "name must not exceed 256 characters")
 }
