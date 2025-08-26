@@ -24,6 +24,7 @@ func TestGetRollupRuleSuccess(t *testing.T) {
 		assert.NoError(t, err)
 		assert.NotNil(t, res)
 		assert.Equal(t, "abc", res.Id)
+		assert.Equal(t, "get-rollup-rule", res.Name)
 	}
 }
 

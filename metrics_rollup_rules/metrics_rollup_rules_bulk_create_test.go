@@ -3,6 +3,7 @@ package metrics_rollup_rules_test
 import (
 	"fmt"
 	"net/http"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -46,7 +47,9 @@ func TestBulkCreateRollupRulesSuccess(t *testing.T) {
 		assert.NotNil(t, res)
 		assert.Len(t, res, 2)
 		assert.Equal(t, "a", res[0].Id)
+		assert.Equal(t, "bulk-rollup-rule-1", res[0].Name)
 		assert.Equal(t, "b", res[1].Id)
+		assert.Equal(t, "bulk-rollup-rule-2", res[1].Name)
 	}
 }
 
@@ -61,19 +64,45 @@ func TestBulkCreateRollupRulesApiFailed(t *testing.T) {
 			fmt.Fprint(w, fixture("api_error.txt"))
 		})
 
-		requests := []metrics_rollup_rules.CreateUpdateRollupRule{{
-			AccountId:               1,
-			MetricName:              "cpu",
-			MetricType:              metrics_rollup_rules.MetricTypeGauge,
-			RollupFunction:          metrics_rollup_rules.AggLast,
-			LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
-			Labels:                  []string{"x"},
-		}}
+		requests := []metrics_rollup_rules.CreateUpdateRollupRule{
+			{
+				AccountId:               1,
+				MetricName:              "cpu",
+				MetricType:              metrics_rollup_rules.MetricTypeGauge,
+				RollupFunction:          metrics_rollup_rules.AggLast,
+				LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
+				Labels:                  []string{"x"},
+			},
+		}
 
 		res, err := underTest.BulkCreateRollupRules(requests)
 		assert.Error(t, err)
 		assert.Nil(t, res)
 	}
+}
+
+func TestBulkCreateRollupRulesNameTooLong(t *testing.T) {
+	underTest, _, teardown := setupMetricsRollupRulesTest()
+	defer teardown()
+
+	longName := strings.Repeat("a", 257)
+
+	requests := []metrics_rollup_rules.CreateUpdateRollupRule{
+		{
+			AccountId:               1,
+			Name:                    longName,
+			MetricName:              "cpu",
+			MetricType:              metrics_rollup_rules.MetricTypeGauge,
+			RollupFunction:          metrics_rollup_rules.AggLast,
+			LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
+			Labels:                  []string{"x"},
+		},
+	}
+
+	res, err := underTest.BulkCreateRollupRules(requests)
+	assert.Error(t, err)
+	assert.Nil(t, res)
+	assert.Contains(t, err.Error(), "name must not exceed 256 characters")
 }
 
 func TestBulkCreateRollupRulesNotFound(t *testing.T) {

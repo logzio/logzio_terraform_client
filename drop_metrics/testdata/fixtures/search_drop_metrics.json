@@ -2,6 +2,7 @@
   {
     "id": 1,
     "accountId": 1234,
+    "name": "searchable-drop-filter",
     "active": true,
     "filter": {
       "operator": "AND",

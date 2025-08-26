@@ -22,7 +22,7 @@ func TestIntegrationMetricsRollupRules_UpdateRollupRule(t *testing.T) {
 			time.Sleep(2 * time.Second)
 
 			req.MetricType = metrics_rollup_rules.MetricTypeCounter
-			
+
 			updated, err := underTest.UpdateRollupRule(created.Id, req)
 			if assert.NoError(t, err) && assert.NotNil(t, updated) {
 				assert.Equal(t, req.MetricType, updated.MetricType)

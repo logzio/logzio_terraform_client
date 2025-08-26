@@ -3,6 +3,7 @@ package drop_metrics_test
 import (
 	"fmt"
 	"net/http"
+	"strings"
 	"testing"
 
 	"github.com/logzio/logzio_terraform_client/drop_metrics"
@@ -56,7 +57,9 @@ func TestDropMetrics_BulkCreateDropMetrics(t *testing.T) {
 	assert.NotNil(t, results)
 	assert.Len(t, results, 2)
 	assert.Equal(t, int64(1), results[0].Id)
+	assert.Equal(t, "bulk-filter-1", results[0].Name)
 	assert.Equal(t, int64(2), results[1].Id)
+	assert.Equal(t, "bulk-filter-2", results[1].Name)
 }
 
 func TestDropMetrics_BulkCreateDropMetricsEmptyArray(t *testing.T) {
@@ -100,4 +103,35 @@ func TestDropMetrics_BulkCreateDropMetricsAPIFailed(t *testing.T) {
 	results, err := underTest.BulkCreateDropMetrics(requests)
 	assert.Error(t, err)
 	assert.Nil(t, results)
+}
+
+func TestDropMetrics_BulkCreateDropMetricsNameTooLong(t *testing.T) {
+	underTest, _, teardown := setupDropMetricsTest()
+	defer teardown()
+
+	active := true
+	longName := strings.Repeat("a", 257)
+
+	requests := []drop_metrics.CreateUpdateDropMetric{
+		{
+			AccountId: 1234,
+			Name:      longName,
+			Active:    &active,
+			Filter: drop_metrics.FilterObject{
+				Operator: drop_metrics.OperatorAnd,
+				Expression: []drop_metrics.FilterExpression{
+					{
+						Name:             "__name__",
+						Value:            "CpuUsage",
+						ComparisonFilter: drop_metrics.ComparisonEq,
+					},
+				},
+			},
+		},
+	}
+
+	results, err := underTest.BulkCreateDropMetrics(requests)
+	assert.Error(t, err)
+	assert.Nil(t, results)
+	assert.Contains(t, err.Error(), "name must not exceed 256 characters")
 }

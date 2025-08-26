@@ -3,6 +3,7 @@ package metrics_rollup_rules_test
 import (
 	"fmt"
 	"net/http"
+	"strings"
 	"testing"
 
 	"github.com/logzio/logzio_terraform_client/metrics_rollup_rules"
@@ -33,6 +34,7 @@ func TestUpdateRollupRuleSuccess(t *testing.T) {
 		assert.NoError(t, err)
 		assert.NotNil(t, res)
 		assert.Equal(t, "abc", res.Id)
+		assert.Equal(t, "updated-rollup-rule", res.Name)
 		assert.Equal(t, "cpu2", res.MetricName)
 	}
 }
@@ -46,6 +48,27 @@ func TestUpdateRollupRuleValidation(t *testing.T) {
 
 	_, err = underTest.UpdateRollupRule("abc", metrics_rollup_rules.CreateUpdateRollupRule{})
 	assert.Error(t, err)
+}
+
+func TestUpdateRollupRuleNameTooLong(t *testing.T) {
+	underTest, _, teardown := setupMetricsRollupRulesTest()
+	defer teardown()
+
+	longName := strings.Repeat("a", 257)
+
+	request := metrics_rollup_rules.CreateUpdateRollupRule{
+		Name:                    longName,
+		MetricName:              "cpu2",
+		MetricType:              metrics_rollup_rules.MetricTypeCounter,
+		RollupFunction:          metrics_rollup_rules.AggMax,
+		LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
+		Labels:                  []string{"host", "region"},
+	}
+
+	res, err := underTest.UpdateRollupRule("abc", request)
+	assert.Error(t, err)
+	assert.Nil(t, res)
+	assert.Contains(t, err.Error(), "name must not exceed 256 characters")
 }
 
 func TestUpdateRollupRuleApiFailed(t *testing.T) {

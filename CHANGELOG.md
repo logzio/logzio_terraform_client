@@ -1,6 +1,9 @@
 # Changes by Version
 
 <!-- next version -->
+## v1.27.0
+- Add optional `name` field to Metrics drop filters and Metrics rollup rules APIs
+
 ## v1.26.0
 - Add [Metrics rollup rules API](./metrics_rollup_rules/README.md)
 
