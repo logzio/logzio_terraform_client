@@ -43,8 +43,10 @@ searchResults, err := client.SearchRollupRules(metrics_rollup_rules.SearchRollup
 
 > [!NOTE]
 > Supported metric types include: GAUGE, COUNTER, DELTA_COUNTER, CUMULATIVE_COUNTER, and MEASUREMENT.
+
 > [!NOTE]
 > The `update` method does not support updating the `AccountId` and `metricName` fields. If you need to change either, you must delete the existing rule and create a new one.
+
 > [!NOTE]
 > For MEASUREMENT metric type, only the following aggregation functions are supported: SUM, MIN, MAX, COUNT, SUMSQ, MEAN, and LAST.
 
