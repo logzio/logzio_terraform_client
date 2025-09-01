@@ -130,3 +130,31 @@ func TestCreateRollupRuleNameTooLong(t *testing.T) {
 	assert.Nil(t, res)
 	assert.Contains(t, err.Error(), "name must not exceed 256 characters")
 }
+
+func TestCreateRollupRuleWithMeasurementType(t *testing.T) {
+	underTest, err, teardown := setupMetricsRollupRulesTest()
+	defer teardown()
+
+	if assert.NoError(t, err) {
+		mux.HandleFunc(metricsRollupRulesPath, func(w http.ResponseWriter, r *http.Request) {
+			assert.Equal(t, http.MethodPost, r.Method)
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusOK)
+			fmt.Fprint(w, fixture("create_metrics_rollup_rule.json"))
+		})
+
+		request := metrics_rollup_rules.CreateUpdateRollupRule{
+			AccountId:               1,
+			Name:                    "measurement-rollup-rule",
+			MetricName:              "temperature_measurement",
+			MetricType:              metrics_rollup_rules.MetricTypeMeasurement,
+			RollupFunction:          metrics_rollup_rules.AggMean,
+			LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
+			Labels:                  []string{"sensor_id"},
+		}
+
+		res, err := underTest.CreateRollupRule(request)
+		assert.NoError(t, err)
+		assert.NotNil(t, res)
+	}
+}
