@@ -42,9 +42,8 @@ searchResults, err := client.SearchRollupRules(metrics_rollup_rules.SearchRollup
 ```
 
 > [!NOTE]
-> The delete operation returns HTTP 204 No Content on success. The client supports both 200 and 204 for backward compatibility.
-> 
 > Supported metric types include: GAUGE, COUNTER, DELTA_COUNTER, CUMULATIVE_COUNTER, and MEASUREMENT.
+> The `update` method does not support updating the `AccountId` and `metricName` fields. If you need to change either, you must delete the existing rule and create a new one.
 
 | Function | Signature |
 |----|-----|
