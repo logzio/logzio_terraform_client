@@ -31,6 +31,7 @@ const (
 	MetricTypeCounter           MetricType = "COUNTER"
 	MetricTypeDeltaCounter      MetricType = "DELTA_COUNTER"
 	MetricTypeCumulativeCounter MetricType = "CUMULATIVE_COUNTER"
+	MetricTypeMeasurement       MetricType = "MEASUREMENT"
 )
 
 type AggregationFunction string
@@ -234,6 +235,7 @@ func GetValidMetricType() []MetricType {
 		MetricTypeCounter,
 		MetricTypeDeltaCounter,
 		MetricTypeCumulativeCounter,
+		MetricTypeMeasurement,
 	}
 }
 
