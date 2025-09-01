@@ -1,6 +1,9 @@
 # Changes by Version
 
 <!-- next version -->
+## v1.27.1
+- Add support for `MEASUREMENT` metric type in metrics rollup rules
+
 ## v1.27.0
 - Add optional `name` field to Metrics drop filters and Metrics rollup rules APIs
 

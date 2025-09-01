@@ -88,3 +88,21 @@ func TestUpdateRollupRuleApiFailed(t *testing.T) {
 		assert.Nil(t, res)
 	}
 }
+
+func TestUpdateRollupRuleWithMeasurementTypeInvalidAggregation(t *testing.T) {
+	underTest, _, teardown := setupMetricsRollupRulesTest()
+	defer teardown()
+
+	request := metrics_rollup_rules.CreateUpdateRollupRule{
+		MetricName:              "temperature_measurement",
+		MetricType:              metrics_rollup_rules.MetricTypeMeasurement,
+		RollupFunction:          metrics_rollup_rules.AggMedian, // Invalid for MEASUREMENT
+		LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
+		Labels:                  []string{"sensor_id"},
+	}
+
+	res, err := underTest.UpdateRollupRule("abc", request)
+	assert.Error(t, err)
+	assert.Nil(t, res)
+	assert.Contains(t, err.Error(), "invalid aggregation function for MEASUREMENT metric type")
+}

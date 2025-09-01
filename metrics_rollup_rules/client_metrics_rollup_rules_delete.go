@@ -11,6 +11,7 @@ const (
 	deleteMetricsRollupRulesServiceUrl = metricsRollupRulesServiceEndpoint + "/%s"
 	deleteRollupRuleMethod             = http.MethodDelete
 	deleteRollupRuleSuccess            = http.StatusOK
+	deleteRollupRuleNoContent          = http.StatusNoContent
 	deleteRollupRuleNotFound           = http.StatusNotFound
 )
 
@@ -26,7 +27,7 @@ func (c *MetricsRollupRulesClient) DeleteRollupRule(rollupRuleId string) error {
 		HttpMethod:   deleteRollupRuleMethod,
 		Url:          url,
 		Body:         nil,
-		SuccessCodes: []int{deleteRollupRuleSuccess},
+		SuccessCodes: []int{deleteRollupRuleSuccess, deleteRollupRuleNoContent},
 		NotFoundCode: deleteRollupRuleNotFound,
 		ResourceId:   rollupRuleId,
 		ApiAction:    operationDeleteMetricsRollupRule,

@@ -31,6 +31,7 @@ const (
 	MetricTypeCounter           MetricType = "COUNTER"
 	MetricTypeDeltaCounter      MetricType = "DELTA_COUNTER"
 	MetricTypeCumulativeCounter MetricType = "CUMULATIVE_COUNTER"
+	MetricTypeMeasurement       MetricType = "MEASUREMENT"
 )
 
 type AggregationFunction string
@@ -193,6 +194,11 @@ func validateCreateUpdateRollupRuleRequest(req CreateUpdateRollupRule) error {
 		return err
 	}
 
+	err = validateMeasurementTypeAggregation(req.MetricType, req.RollupFunction)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -234,6 +240,7 @@ func GetValidMetricType() []MetricType {
 		MetricTypeCounter,
 		MetricTypeDeltaCounter,
 		MetricTypeCumulativeCounter,
+		MetricTypeMeasurement,
 	}
 }
 
@@ -309,6 +316,31 @@ func isValidLabelsRemovalMethod(method LabelsRemovalMethod) error {
 		}
 	}
 	return fmt.Errorf("invalid labels elimination method. method must be one of: %s", validMethods)
+}
+
+// validateMeasurementTypeAggregation validates that MEASUREMENT metric type uses only allowed aggregation functions
+func validateMeasurementTypeAggregation(metricType MetricType, rollupFunction AggregationFunction) error {
+	if metricType != MetricTypeMeasurement {
+		return nil // No additional validation needed for non-MEASUREMENT types
+	}
+
+	validAggregationsForMeasurement := []AggregationFunction{
+		AggSum,
+		AggMin,
+		AggMax,
+		AggCount,
+		AggSumSq,
+		AggMean,
+		AggLast,
+	}
+
+	for _, validAgg := range validAggregationsForMeasurement {
+		if rollupFunction == validAgg {
+			return nil
+		}
+	}
+
+	return fmt.Errorf("invalid aggregation function for MEASUREMENT metric type. For MEASUREMENT metrics, rollup_function must be one of: %s", validAggregationsForMeasurement)
 }
 
 // validateRollupRuleId checks if the provided rollup rule ID is valid

@@ -15,7 +15,7 @@ func TestDeleteRollupRuleSuccess(t *testing.T) {
 	if assert.NoError(t, err) {
 		mux.HandleFunc(metricsRollupRulesPath+"/abc", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodDelete, r.Method)
-			w.WriteHeader(http.StatusOK)
+			w.WriteHeader(http.StatusNoContent)
 		})
 
 		err := underTest.DeleteRollupRule("abc")
