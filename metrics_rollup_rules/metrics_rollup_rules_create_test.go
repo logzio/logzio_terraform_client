@@ -131,7 +131,27 @@ func TestCreateRollupRuleNameTooLong(t *testing.T) {
 	assert.Contains(t, err.Error(), "name must not exceed 256 characters")
 }
 
-func TestCreateRollupRuleWithMeasurementType(t *testing.T) {
+func TestCreateRollupRuleWithMeasurementTypeInvalidAggregation(t *testing.T) {
+	underTest, _, teardown := setupMetricsRollupRulesTest()
+	defer teardown()
+
+	request := metrics_rollup_rules.CreateUpdateRollupRule{
+		AccountId:               1,
+		Name:                    "measurement-rollup-rule",
+		MetricName:              "temperature_measurement",
+		MetricType:              metrics_rollup_rules.MetricTypeMeasurement,
+		RollupFunction:          metrics_rollup_rules.AggMedian, // Invalid for MEASUREMENT
+		LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
+		Labels:                  []string{"sensor_id"},
+	}
+
+	res, err := underTest.CreateRollupRule(request)
+	assert.Error(t, err)
+	assert.Nil(t, res)
+	assert.Contains(t, err.Error(), "invalid aggregation function for MEASUREMENT metric type")
+}
+
+func TestCreateRollupRuleWithMeasurementTypeValidAggregations(t *testing.T) {
 	underTest, err, teardown := setupMetricsRollupRulesTest()
 	defer teardown()
 
@@ -145,10 +165,10 @@ func TestCreateRollupRuleWithMeasurementType(t *testing.T) {
 
 		request := metrics_rollup_rules.CreateUpdateRollupRule{
 			AccountId:               1,
-			Name:                    "measurement-rollup-rule",
+			Name:                    "measurement-rollup-rule-sum",
 			MetricName:              "temperature_measurement",
 			MetricType:              metrics_rollup_rules.MetricTypeMeasurement,
-			RollupFunction:          metrics_rollup_rules.AggMean,
+			RollupFunction:          metrics_rollup_rules.AggSum,
 			LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
 			Labels:                  []string{"sensor_id"},
 		}
@@ -158,4 +178,3 @@ func TestCreateRollupRuleWithMeasurementType(t *testing.T) {
 		assert.NotNil(t, res)
 	}
 }
-
