@@ -5,7 +5,6 @@
 - Drop Metrics:
   - Metrics rollup rules `rollupFunction` field is now only supported for `GAUGE` and `MEASUREMENT` metric types. For other metric types (`COUNTER`, `DELTA_COUNTER`, `CUMULATIVE_COUNTER`), the field is omitted from API requests.
   - Remove name length validation for metrics rollup rules - the `name` field no longer has a 256-character limit.
-
 ## v1.27.1
 - Add support for `MEASUREMENT` metric type in metrics rollup rules
 

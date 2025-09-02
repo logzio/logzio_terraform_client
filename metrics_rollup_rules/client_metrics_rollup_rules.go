@@ -221,6 +221,11 @@ func validateCreateUpdateRollupRuleRequest(req CreateUpdateRollupRule) error {
 		}
 	}
 
+	err = validateMeasurementTypeAggregation(req.MetricType, req.RollupFunction)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
