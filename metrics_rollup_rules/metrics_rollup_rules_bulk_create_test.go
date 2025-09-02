@@ -3,7 +3,6 @@ package metrics_rollup_rules_test
 import (
 	"fmt"
 	"net/http"
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -81,19 +80,16 @@ func TestBulkCreateRollupRulesApiFailed(t *testing.T) {
 	}
 }
 
-func TestBulkCreateRollupRulesNameTooLong(t *testing.T) {
+func TestBulkCreateRollupRulesCounterWithRollupFunction(t *testing.T) {
 	underTest, _, teardown := setupMetricsRollupRulesTest()
 	defer teardown()
-
-	longName := strings.Repeat("a", 257)
 
 	requests := []metrics_rollup_rules.CreateUpdateRollupRule{
 		{
 			AccountId:               1,
-			Name:                    longName,
-			MetricName:              "cpu",
-			MetricType:              metrics_rollup_rules.MetricTypeGauge,
-			RollupFunction:          metrics_rollup_rules.AggLast,
+			MetricName:              "counter_metric",
+			MetricType:              metrics_rollup_rules.MetricTypeCounter,
+			RollupFunction:          metrics_rollup_rules.AggSum, // Should fail for COUNTER
 			LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
 			Labels:                  []string{"x"},
 		},
@@ -102,7 +98,7 @@ func TestBulkCreateRollupRulesNameTooLong(t *testing.T) {
 	res, err := underTest.BulkCreateRollupRules(requests)
 	assert.Error(t, err)
 	assert.Nil(t, res)
-	assert.Contains(t, err.Error(), "name must not exceed 256 characters")
+	assert.Contains(t, err.Error(), "rollupFunction is supported only for GAUGE and MEASUREMENT metrics")
 }
 
 func TestBulkCreateRollupRulesNotFound(t *testing.T) {
