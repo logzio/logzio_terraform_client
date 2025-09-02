@@ -25,6 +25,7 @@ counterResult, err := client.CreateRollupRule(metrics_rollup_rules.CreateUpdateR
     Name:                    "my-counter-rollup",
     MetricName:              "request_count",
     MetricType:              metrics_rollup_rules.MetricTypeCounter,
+    RollupFunction:          metrics_rollup_rules.AggSum,
     LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
     Labels:                  []string{"endpoint"},
 })
@@ -56,7 +57,7 @@ searchResults, err := client.SearchRollupRules(metrics_rollup_rules.SearchRollup
 > Supported metric types include: GAUGE, COUNTER, DELTA_COUNTER, CUMULATIVE_COUNTER, and MEASUREMENT.
 
 > [!NOTE]
-> The `rollupFunction` field is only supported for GAUGE and MEASUREMENT metric types. For other metric types (COUNTER, DELTA_COUNTER, CUMULATIVE_COUNTER), the rollupFunction should be omitted.
+> The `rollupFunction` field is required for all metric types: GAUGE (any aggregation function), MEASUREMENT (subset of functions), and COUNTER/DELTA_COUNTER/CUMULATIVE_COUNTER (only SUM supported).
 
 > [!NOTE]
 > For MEASUREMENT metric type, only the following aggregation functions are supported: SUM, MIN, MAX, COUNT, SUMSQ, MEAN, and LAST.
