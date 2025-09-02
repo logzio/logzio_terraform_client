@@ -12,7 +12,7 @@ client, _ := metrics_rollup_rules.New(apiToken, baseUrl)
 // Create a GAUGE rollup rule (requires rollupFunction)
 result, err := client.CreateRollupRule(metrics_rollup_rules.CreateUpdateRollupRule{
     AccountId:               1234,
-    Name:                    "my-cpu-rollup",  (no length limit)
+    Name:                    "my-cpu-rollup",
     MetricName:              "cpu_usage",
     MetricType:              metrics_rollup_rules.MetricTypeGauge,
     RollupFunction:          metrics_rollup_rules.AggLast, 
