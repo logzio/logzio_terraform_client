@@ -80,7 +80,36 @@ func TestBulkCreateRollupRulesApiFailed(t *testing.T) {
 	}
 }
 
-func TestBulkCreateRollupRulesCounterWithRollupFunction(t *testing.T) {
+func TestBulkCreateRollupRulesCounterWithSum(t *testing.T) {
+	underTest, err, teardown := setupMetricsRollupRulesTest()
+	defer teardown()
+
+	if assert.NoError(t, err) {
+		mux.HandleFunc(metricsRollupRulesPath+"/bulk/create", func(w http.ResponseWriter, r *http.Request) {
+			assert.Equal(t, http.MethodPost, r.Method)
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusOK)
+			fmt.Fprint(w, fixture("bulk_create_metrics_rollup_rules.json"))
+		})
+
+		requests := []metrics_rollup_rules.CreateUpdateRollupRule{
+			{
+				AccountId:               1,
+				MetricName:              "counter_metric",
+				MetricType:              metrics_rollup_rules.MetricTypeCounter,
+				RollupFunction:          metrics_rollup_rules.AggSum,
+				LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
+				Labels:                  []string{"x"},
+			},
+		}
+
+		res, err := underTest.BulkCreateRollupRules(requests)
+		assert.NoError(t, err)
+		assert.NotNil(t, res)
+	}
+}
+
+func TestBulkCreateRollupRulesCounterWithNonSum(t *testing.T) {
 	underTest, _, teardown := setupMetricsRollupRulesTest()
 	defer teardown()
 
@@ -89,7 +118,7 @@ func TestBulkCreateRollupRulesCounterWithRollupFunction(t *testing.T) {
 			AccountId:               1,
 			MetricName:              "counter_metric",
 			MetricType:              metrics_rollup_rules.MetricTypeCounter,
-			RollupFunction:          metrics_rollup_rules.AggSum, // Should fail for COUNTER
+			RollupFunction:          metrics_rollup_rules.AggMax,
 			LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
 			Labels:                  []string{"x"},
 		},
@@ -98,7 +127,7 @@ func TestBulkCreateRollupRulesCounterWithRollupFunction(t *testing.T) {
 	res, err := underTest.BulkCreateRollupRules(requests)
 	assert.Error(t, err)
 	assert.Nil(t, res)
-	assert.Contains(t, err.Error(), "rollupFunction is supported only for GAUGE and MEASUREMENT metrics")
+	assert.Contains(t, err.Error(), "for COUNTER metrics, rollupFunction must be SUM")
 }
 
 func TestBulkCreateRollupRulesNotFound(t *testing.T) {

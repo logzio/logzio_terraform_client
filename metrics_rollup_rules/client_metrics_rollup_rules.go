@@ -202,6 +202,7 @@ func validateRollupFunctionRequirements(metricType MetricType, rollupFunction Ag
 			return err
 		}
 	}
+
 	switch metricType {
 	case MetricTypeMeasurement:
 		if rollupFunction == "" {
@@ -211,12 +212,15 @@ func validateRollupFunctionRequirements(metricType MetricType, rollupFunction Ag
 		if rollupFunction == "" {
 			return fmt.Errorf("rollupFunction must be set for GAUGE metrics")
 		}
-	default:
-		// For non-supported types, rollupFunction must not be provided
-		if rollupFunction != "" {
-			return fmt.Errorf("rollupFunction is supported only for GAUGE and MEASUREMENT metrics")
+	case MetricTypeCounter, MetricTypeDeltaCounter, MetricTypeCumulativeCounter:
+		if rollupFunction == "" {
+			return fmt.Errorf("rollupFunction must be set for %s metrics", metricType)
+		}
+		if rollupFunction != AggSum {
+			return fmt.Errorf("for %s metrics, rollupFunction must be SUM", metricType)
 		}
 	}
+	// MEASUREMENT-specific subset validation
 	err := validateMeasurementTypeAggregation(metricType, rollupFunction)
 	if err != nil {
 		return err

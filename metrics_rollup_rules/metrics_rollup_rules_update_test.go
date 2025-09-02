@@ -24,6 +24,7 @@ func TestUpdateRollupRuleSuccess(t *testing.T) {
 		request := metrics_rollup_rules.CreateUpdateRollupRule{
 			MetricName:              "cpu2",
 			MetricType:              metrics_rollup_rules.MetricTypeCounter,
+			RollupFunction:          metrics_rollup_rules.AggSum,
 			LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
 			Labels:                  []string{"host", "region"},
 		}
@@ -48,7 +49,33 @@ func TestUpdateRollupRuleValidation(t *testing.T) {
 	assert.Error(t, err)
 }
 
-func TestUpdateRollupRuleCounterWithRollupFunction(t *testing.T) {
+func TestUpdateRollupRuleCounterWithSum(t *testing.T) {
+	underTest, err, teardown := setupMetricsRollupRulesTest()
+	defer teardown()
+
+	if assert.NoError(t, err) {
+		mux.HandleFunc(metricsRollupRulesPath+"/abc", func(w http.ResponseWriter, r *http.Request) {
+			assert.Equal(t, http.MethodPut, r.Method)
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusOK)
+			fmt.Fprint(w, fixture("update_metrics_rollup_rule.json"))
+		})
+
+		request := metrics_rollup_rules.CreateUpdateRollupRule{
+			MetricName:              "counter_metric",
+			MetricType:              metrics_rollup_rules.MetricTypeCounter,
+			RollupFunction:          metrics_rollup_rules.AggSum,
+			LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
+			Labels:                  []string{"host", "region"},
+		}
+
+		res, err := underTest.UpdateRollupRule("abc", request)
+		assert.NoError(t, err)
+		assert.NotNil(t, res)
+	}
+}
+
+func TestUpdateRollupRuleCounterWithNonSum(t *testing.T) {
 	underTest, _, teardown := setupMetricsRollupRulesTest()
 	defer teardown()
 
@@ -63,7 +90,24 @@ func TestUpdateRollupRuleCounterWithRollupFunction(t *testing.T) {
 	res, err := underTest.UpdateRollupRule("abc", request)
 	assert.Error(t, err)
 	assert.Nil(t, res)
-	assert.Contains(t, err.Error(), "rollupFunction is supported only for GAUGE and MEASUREMENT metrics")
+	assert.Contains(t, err.Error(), "for COUNTER metrics, rollupFunction must be SUM")
+}
+
+func TestUpdateRollupRuleCounterWithoutRollupFunction(t *testing.T) {
+	underTest, _, teardown := setupMetricsRollupRulesTest()
+	defer teardown()
+
+	request := metrics_rollup_rules.CreateUpdateRollupRule{
+		MetricName:              "counter_metric",
+		MetricType:              metrics_rollup_rules.MetricTypeCounter,
+		LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
+		Labels:                  []string{"host", "region"},
+	}
+
+	res, err := underTest.UpdateRollupRule("abc", request)
+	assert.Error(t, err)
+	assert.Nil(t, res)
+	assert.Contains(t, err.Error(), "rollupFunction must be set for COUNTER metrics")
 }
 
 func TestUpdateRollupRuleApiFailed(t *testing.T) {

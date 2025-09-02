@@ -110,25 +110,6 @@ func TestCreateRollupRuleWithName(t *testing.T) {
 }
 
 func TestCreateRollupRuleCounterWithRollupFunction(t *testing.T) {
-	underTest, _, teardown := setupMetricsRollupRulesTest()
-	defer teardown()
-
-	request := metrics_rollup_rules.CreateUpdateRollupRule{
-		AccountId:               1,
-		MetricName:              "counter_metric",
-		MetricType:              metrics_rollup_rules.MetricTypeCounter,
-		RollupFunction:          metrics_rollup_rules.AggSum, // Should fail for COUNTER
-		LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
-		Labels:                  []string{"x"},
-	}
-
-	res, err := underTest.CreateRollupRule(request)
-	assert.Error(t, err)
-	assert.Nil(t, res)
-	assert.Contains(t, err.Error(), "rollupFunction is supported only for GAUGE and MEASUREMENT metrics")
-}
-
-func TestCreateRollupRuleCounterWithoutRollupFunction(t *testing.T) {
 	underTest, err, teardown := setupMetricsRollupRulesTest()
 	defer teardown()
 
@@ -144,6 +125,7 @@ func TestCreateRollupRuleCounterWithoutRollupFunction(t *testing.T) {
 			AccountId:               1,
 			MetricName:              "counter_metric",
 			MetricType:              metrics_rollup_rules.MetricTypeCounter,
+			RollupFunction:          metrics_rollup_rules.AggSum, // Should succeed for COUNTER with SUM
 			LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
 			Labels:                  []string{"x"},
 		}
@@ -152,6 +134,117 @@ func TestCreateRollupRuleCounterWithoutRollupFunction(t *testing.T) {
 		assert.NoError(t, err)
 		assert.NotNil(t, res)
 	}
+}
+
+func TestCreateRollupRuleCounterWithoutRollupFunction(t *testing.T) {
+	underTest, _, teardown := setupMetricsRollupRulesTest()
+	defer teardown()
+
+	request := metrics_rollup_rules.CreateUpdateRollupRule{
+		AccountId:  1,
+		MetricName: "counter_metric",
+		MetricType: metrics_rollup_rules.MetricTypeCounter,
+		// No RollupFunction - should fail for COUNTER (now required)
+		LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
+		Labels:                  []string{"x"},
+	}
+
+	res, err := underTest.CreateRollupRule(request)
+	assert.Error(t, err)
+	assert.Nil(t, res)
+	assert.Contains(t, err.Error(), "rollupFunction must be set for COUNTER metrics")
+}
+
+func TestCreateRollupRuleCounterWithSum(t *testing.T) {
+	underTest, err, teardown := setupMetricsRollupRulesTest()
+	defer teardown()
+
+	if assert.NoError(t, err) {
+		mux.HandleFunc(metricsRollupRulesPath, func(w http.ResponseWriter, r *http.Request) {
+			assert.Equal(t, http.MethodPost, r.Method)
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusOK)
+			fmt.Fprint(w, fixture("create_metrics_rollup_rule.json"))
+		})
+
+		request := metrics_rollup_rules.CreateUpdateRollupRule{
+			AccountId:               1,
+			MetricName:              "counter_metric",
+			MetricType:              metrics_rollup_rules.MetricTypeCounter,
+			RollupFunction:          metrics_rollup_rules.AggSum, // SUM is required and supported for COUNTER
+			LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
+			Labels:                  []string{"x"},
+		}
+
+		res, err := underTest.CreateRollupRule(request)
+		assert.NoError(t, err)
+		assert.NotNil(t, res)
+	}
+}
+
+func TestCreateRollupRuleCounterWithNonSum(t *testing.T) {
+	underTest, _, teardown := setupMetricsRollupRulesTest()
+	defer teardown()
+
+	request := metrics_rollup_rules.CreateUpdateRollupRule{
+		AccountId:               1,
+		MetricName:              "counter_metric",
+		MetricType:              metrics_rollup_rules.MetricTypeCounter,
+		RollupFunction:          metrics_rollup_rules.AggMax, // Should fail - only SUM allowed for COUNTER
+		LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
+		Labels:                  []string{"x"},
+	}
+
+	res, err := underTest.CreateRollupRule(request)
+	assert.Error(t, err)
+	assert.Nil(t, res)
+	assert.Contains(t, err.Error(), "for COUNTER metrics, rollupFunction must be SUM")
+}
+
+func TestCreateRollupRuleDeltaCounterWithSum(t *testing.T) {
+	underTest, err, teardown := setupMetricsRollupRulesTest()
+	defer teardown()
+
+	if assert.NoError(t, err) {
+		mux.HandleFunc(metricsRollupRulesPath, func(w http.ResponseWriter, r *http.Request) {
+			assert.Equal(t, http.MethodPost, r.Method)
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusOK)
+			fmt.Fprint(w, fixture("create_metrics_rollup_rule.json"))
+		})
+
+		request := metrics_rollup_rules.CreateUpdateRollupRule{
+			AccountId:               1,
+			MetricName:              "delta_counter_metric",
+			MetricType:              metrics_rollup_rules.MetricTypeDeltaCounter,
+			RollupFunction:          metrics_rollup_rules.AggSum, // SUM is required and supported for DELTA_COUNTER
+			LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
+			Labels:                  []string{"x"},
+		}
+
+		res, err := underTest.CreateRollupRule(request)
+		assert.NoError(t, err)
+		assert.NotNil(t, res)
+	}
+}
+
+func TestCreateRollupRuleCumulativeCounterWithNonSum(t *testing.T) {
+	underTest, _, teardown := setupMetricsRollupRulesTest()
+	defer teardown()
+
+	request := metrics_rollup_rules.CreateUpdateRollupRule{
+		AccountId:               1,
+		MetricName:              "cumulative_counter_metric",
+		MetricType:              metrics_rollup_rules.MetricTypeCumulativeCounter,
+		RollupFunction:          metrics_rollup_rules.AggLast, // Should fail - only SUM allowed for CUMULATIVE_COUNTER
+		LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
+		Labels:                  []string{"x"},
+	}
+
+	res, err := underTest.CreateRollupRule(request)
+	assert.Error(t, err)
+	assert.Nil(t, res)
+	assert.Contains(t, err.Error(), "for CUMULATIVE_COUNTER metrics, rollupFunction must be SUM")
 }
 
 func TestCreateRollupRuleGaugeWithoutRollupFunction(t *testing.T) {
@@ -191,7 +284,7 @@ func TestCreateRollupRuleMeasurementWithoutRollupFunction(t *testing.T) {
 	assert.Contains(t, err.Error(), "rollupFunction must be set for MEASUREMENT metrics")
 }
 
-func TestCreateRollupRuleCounterJsonOmitsRollupFunction(t *testing.T) {
+func TestCreateRollupRuleCounterJsonContainsSum(t *testing.T) {
 	underTest, err, teardown := setupMetricsRollupRulesTest()
 	defer teardown()
 
@@ -204,8 +297,9 @@ func TestCreateRollupRuleCounterJsonOmitsRollupFunction(t *testing.T) {
 			assert.NoError(t, err)
 			bodyStr := string(body)
 
-			// Should not contain rollupFunction in JSON when metric type is COUNTER
-			assert.NotContains(t, bodyStr, "rollupFunction")
+			// Should contain rollupFunction with SUM value for COUNTER
+			assert.Contains(t, bodyStr, "rollupFunction")
+			assert.Contains(t, bodyStr, "SUM")
 
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)
@@ -213,10 +307,10 @@ func TestCreateRollupRuleCounterJsonOmitsRollupFunction(t *testing.T) {
 		})
 
 		request := metrics_rollup_rules.CreateUpdateRollupRule{
-			AccountId:  1,
-			MetricName: "counter_metric",
-			MetricType: metrics_rollup_rules.MetricTypeCounter,
-			// No RollupFunction - should be omitted from JSON for COUNTER
+			AccountId:               1,
+			MetricName:              "counter_metric",
+			MetricType:              metrics_rollup_rules.MetricTypeCounter,
+			RollupFunction:          metrics_rollup_rules.AggSum, // SUM required for COUNTER
 			LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
 			Labels:                  []string{"x"},
 		}
