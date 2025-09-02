@@ -168,23 +168,6 @@ func validateCreateUpdateRollupRuleRequest(req CreateUpdateRollupRule) error {
 		return fmt.Errorf("metricType must be set")
 	}
 
-	// rollupFunction requirement based on metric type
-	switch req.MetricType {
-	case MetricTypeMeasurement:
-		if req.RollupFunction == "" {
-			return fmt.Errorf("rollupFunction must be set for MEASUREMENT metrics")
-		}
-	case MetricTypeGauge:
-		if req.RollupFunction == "" {
-			return fmt.Errorf("rollupFunction must be set for GAUGE metrics")
-		}
-	default:
-		// For non-supported types, rollupFunction must not be provided
-		if req.RollupFunction != "" {
-			return fmt.Errorf("rollupFunction is supported only for GAUGE and MEASUREMENT metrics")
-		}
-	}
-
 	if req.LabelsEliminationMethod == "" {
 		return fmt.Errorf("labelsEliminationMethod must be set")
 	}
@@ -198,34 +181,46 @@ func validateCreateUpdateRollupRuleRequest(req CreateUpdateRollupRule) error {
 		return fmt.Errorf("either 'metricName' or 'filter' must be provided")
 	}
 
-	// Only validate rollupFunction enum if it's provided
-	if req.RollupFunction != "" {
-		err := validateEnums(req.MetricType, req.RollupFunction, req.LabelsEliminationMethod)
-		if err != nil {
-			return err
-		}
-
-		err = validateMeasurementTypeAggregation(req.MetricType, req.RollupFunction)
-		if err != nil {
-			return err
-		}
-	} else {
-		// Still validate metric type and labels elimination method even if rollupFunction is empty
-		err := isValidMetricType(req.MetricType)
-		if err != nil {
-			return err
-		}
-		err = isValidLabelsRemovalMethod(req.LabelsEliminationMethod)
-		if err != nil {
-			return err
-		}
-	}
-
-	err := validateMeasurementTypeAggregation(req.MetricType, req.RollupFunction)
+	err := validateRollupFunctionRequirements(req.MetricType, req.RollupFunction)
 	if err != nil {
 		return err
 	}
 
+	err = validateEnums(req.MetricType, req.LabelsEliminationMethod)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// validateRollupFunctionRequirements validates rollupFunction requirements based on metric type
+func validateRollupFunctionRequirements(metricType MetricType, rollupFunction AggregationFunction) error {
+	if rollupFunction != "" {
+		err := isValidAggregationFunction(rollupFunction)
+		if err != nil {
+			return err
+		}
+	}
+	switch metricType {
+	case MetricTypeMeasurement:
+		if rollupFunction == "" {
+			return fmt.Errorf("rollupFunction must be set for MEASUREMENT metrics")
+		}
+	case MetricTypeGauge:
+		if rollupFunction == "" {
+			return fmt.Errorf("rollupFunction must be set for GAUGE metrics")
+		}
+	default:
+		// For non-supported types, rollupFunction must not be provided
+		if rollupFunction != "" {
+			return fmt.Errorf("rollupFunction is supported only for GAUGE and MEASUREMENT metrics")
+		}
+	}
+	err := validateMeasurementTypeAggregation(metricType, rollupFunction)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -244,12 +239,8 @@ func validateSearchRollupRuleRequest(req SearchRollupRulesRequest) error {
 }
 
 // validateEnums validates the metric rollup's enums
-func validateEnums(metricType MetricType, agg AggregationFunction, method LabelsRemovalMethod) error {
+func validateEnums(metricType MetricType, method LabelsRemovalMethod) error {
 	err := isValidMetricType(metricType)
-	if err != nil {
-		return err
-	}
-	err = isValidAggregationFunction(agg)
 	if err != nil {
 		return err
 	}
