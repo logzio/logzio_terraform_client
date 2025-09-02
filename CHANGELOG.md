@@ -1,6 +1,12 @@
 # Changes by Version
 
 <!-- next version -->
+## v1.27.2
+- Metrics rollup rules `rollupFunction` field validation for all metric types:
+  - `GAUGE`: Any aggregation function supported
+  - `MEASUREMENT`: Subset of functions (SUM, MIN, MAX, COUNT, SUMSQ, MEAN, LAST)
+  - `COUNTER`, `DELTA_COUNTER`, `CUMULATIVE_COUNTER`: Only SUM supported
+- Remove name length validation for metrics rollup rules - the `name` field no longer has a 256-character limit.
 ## v1.27.1
 - Add support for `MEASUREMENT` metric type in metrics rollup rules
 
