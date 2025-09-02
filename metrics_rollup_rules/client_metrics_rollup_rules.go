@@ -114,7 +114,7 @@ type CreateUpdateRollupRule struct {
 	Name                    string              `json:"name,omitempty"`
 	MetricName              string              `json:"metricName,omitempty"`
 	MetricType              MetricType          `json:"metricType"`
-	RollupFunction          AggregationFunction `json:"rollupFunction"`
+	RollupFunction          AggregationFunction `json:"rollupFunction,omitempty"`
 	LabelsEliminationMethod LabelsRemovalMethod `json:"labelsEliminationMethod"`
 	Labels                  []string            `json:"labels"`
 	Filter                  *ComplexFilter      `json:"filter,omitempty"`
@@ -164,16 +164,25 @@ func New(apiToken, baseUrl string) (*MetricsRollupRulesClient, error) {
 
 // validateCreateUpdateRollupRuleRequest validates the create rollup rule request
 func validateCreateUpdateRollupRuleRequest(req CreateUpdateRollupRule) error {
-	if len(req.Name) > 256 {
-		return fmt.Errorf("name must not exceed 256 characters")
-	}
-
 	if req.MetricType == "" {
 		return fmt.Errorf("metricType must be set")
 	}
 
-	if req.RollupFunction == "" {
-		return fmt.Errorf("rollupFunction must be set")
+	// rollupFunction requirement based on metric type
+	switch req.MetricType {
+	case MetricTypeMeasurement:
+		if req.RollupFunction == "" {
+			return fmt.Errorf("rollupFunction must be set for MEASUREMENT metrics")
+		}
+	case MetricTypeGauge:
+		if req.RollupFunction == "" {
+			return fmt.Errorf("rollupFunction must be set for GAUGE metrics")
+		}
+	default:
+		// For non-supported types, rollupFunction must not be provided
+		if req.RollupFunction != "" {
+			return fmt.Errorf("rollupFunction is supported only for GAUGE and MEASUREMENT metrics")
+		}
 	}
 
 	if req.LabelsEliminationMethod == "" {
@@ -189,14 +198,27 @@ func validateCreateUpdateRollupRuleRequest(req CreateUpdateRollupRule) error {
 		return fmt.Errorf("either 'metricName' or 'filter' must be provided")
 	}
 
-	err := validateEnums(req.MetricType, req.RollupFunction, req.LabelsEliminationMethod)
-	if err != nil {
-		return err
-	}
+	// Only validate rollupFunction enum if it's provided
+	if req.RollupFunction != "" {
+		err := validateEnums(req.MetricType, req.RollupFunction, req.LabelsEliminationMethod)
+		if err != nil {
+			return err
+		}
 
-	err = validateMeasurementTypeAggregation(req.MetricType, req.RollupFunction)
-	if err != nil {
-		return err
+		err = validateMeasurementTypeAggregation(req.MetricType, req.RollupFunction)
+		if err != nil {
+			return err
+		}
+	} else {
+		// Still validate metric type and labels elimination method even if rollupFunction is empty
+		err := isValidMetricType(req.MetricType)
+		if err != nil {
+			return err
+		}
+		err = isValidLabelsRemovalMethod(req.LabelsEliminationMethod)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
