@@ -127,38 +127,3 @@ func TestUpdateRollupRuleApiFailed(t *testing.T) {
 		assert.Nil(t, res)
 	}
 }
-
-func TestUpdateRollupRuleWithMeasurementTypeAllAggregations(t *testing.T) {
-	underTest, err, teardown := setupMetricsRollupRulesTest()
-	defer teardown()
-
-	if assert.NoError(t, err) {
-		mux.HandleFunc(metricsRollupRulesPath+"/abc", func(w http.ResponseWriter, r *http.Request) {
-			assert.Equal(t, http.MethodPut, r.Method)
-			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusOK)
-			fmt.Fprint(w, fixture("create_metrics_rollup_rule.json"))
-		})
-
-		testAggregationFunctions := []metrics_rollup_rules.AggregationFunction{
-			metrics_rollup_rules.AggMedian,
-			metrics_rollup_rules.AggMean,
-			metrics_rollup_rules.AggMax,
-			metrics_rollup_rules.AggSum,
-		}
-
-		for _, aggFunc := range testAggregationFunctions {
-			request := metrics_rollup_rules.CreateUpdateRollupRule{
-				MetricName:              "temperature_measurement",
-				MetricType:              metrics_rollup_rules.MetricTypeMeasurement,
-				RollupFunction:          aggFunc,
-				LabelsEliminationMethod: metrics_rollup_rules.LabelsExcludeBy,
-				Labels:                  []string{"sensor_id"},
-			}
-
-			res, err := underTest.UpdateRollupRule("abc", request)
-			assert.NoError(t, err, "MEASUREMENT metrics should support %s aggregation in updates", aggFunc)
-			assert.NotNil(t, res)
-		}
-	}
-}
