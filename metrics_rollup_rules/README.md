@@ -57,10 +57,7 @@ searchResults, err := client.SearchRollupRules(metrics_rollup_rules.SearchRollup
 > Supported metric types include: GAUGE, COUNTER, DELTA_COUNTER, CUMULATIVE_COUNTER, and MEASUREMENT.
 
 > [!NOTE]
-> The `rollupFunction` field is required for all metric types: GAUGE (any aggregation function), MEASUREMENT (subset of functions), and COUNTER/DELTA_COUNTER/CUMULATIVE_COUNTER (only SUM supported).
-
-> [!NOTE]
-> For MEASUREMENT metric type, only the following aggregation functions are supported: SUM, MIN, MAX, COUNT, SUMSQ, MEAN, and LAST.
+> The `rollupFunction` field is required for all metric types: GAUGE, MEASUREMENT (any aggregation function), and COUNTER/DELTA_COUNTER/CUMULATIVE_COUNTER (only SUM supported).
 
 > [!NOTE]
 > The `update` method does not support updating the `AccountId` and `metricName` fields. If you need to change either, you must delete the existing rule and create a new one.
