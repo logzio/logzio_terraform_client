@@ -1,7 +1,7 @@
 # Changes by Version
 
 <!-- next version -->
-## v1.27.2
+## v1.27.3
 - Metrics rollup rules:
   - Support all aggregation types for `MEASUREMENT`
 ## v1.27.2
