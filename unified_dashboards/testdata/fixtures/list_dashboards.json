@@ -1,0 +1,38 @@
+[
+  {
+    "uid": "dashboard-1",
+    "doc": {
+      "title": "System Overview",
+      "description": "System monitoring dashboard",
+      "panels": [
+        {
+          "id": 1,
+          "title": "CPU Usage",
+          "type": "graph"
+        }
+      ],
+      "refresh": "1m"
+    },
+    "version": 1,
+    "createdAt": "2024-03-20T10:00:00Z",
+    "createdBy": "user1"
+  },
+  {
+    "uid": "dashboard-2",
+    "doc": {
+      "title": "Memory Usage",
+      "description": "Memory monitoring dashboard",
+      "panels": [
+        {
+          "id": 1,
+          "title": "Memory Utilization",
+          "type": "graph"
+        }
+      ],
+      "refresh": "5m"
+    },
+    "version": 2,
+    "createdAt": "2024-03-21T11:00:00Z",
+    "updatedAt": "2024-03-21T12:00:00Z"
+  }
+] 

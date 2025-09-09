@@ -1,0 +1,29 @@
+{
+  "uid": "dashboard-1",
+  "doc": {
+    "title": "System Overview",
+    "description": "System monitoring dashboard",
+    "panels": [
+      {
+        "id": 1,
+        "title": "CPU Usage",
+        "type": "graph",
+        "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+        "targets": [
+          {
+            "query": "rate(node_cpu_seconds_total{mode='idle'}[5m])",
+            "refId": "A"
+          }
+        ]
+      }
+    ],
+    "refresh": "1m",
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    }
+  },
+  "version": 1,
+  "createdAt": "2024-03-20T10:00:00Z",
+  "createdBy": "user1"
+} 
