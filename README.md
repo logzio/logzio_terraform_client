@@ -27,6 +27,8 @@ The library currently supports the following API endpoints:
 * [Metrics drop filters](./drop_metrics/README.md) <!--- This should be replaced with the proper docs link once released. -->
 * [Metrics roll-up rules](./metrics_rollup_rules/README.md) <!--- This should be replaced with the proper docs link once released. -->
 * [Unified Alerts](./unified_alerts/README.md)
+* [Unified Projects](./unified_projects/README.md)
+* [Unified Dashboards](./unified_dashboards/README.md)
 
 #### Contributing
 
