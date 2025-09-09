@@ -1,0 +1,16 @@
+{
+  "items": [
+    {
+      "project": {
+        "id": "project-1",
+        "name": "system-metrics",
+        "displayName": "System Metrics",
+        "description": "System monitoring dashboards",
+        "createdAt": "2024-03-20T10:00:00Z"
+      }
+    }
+  ],
+  "total": 1,
+  "page": 1,
+  "limit": 10
+} 
