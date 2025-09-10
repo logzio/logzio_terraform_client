@@ -4,6 +4,7 @@
     "accountId": 1234,
     "name": "searchable-drop-filter",
     "active": true,
+    "dropPolicy": "DROP_BEFORE_PROCESSING",
     "filter": {
       "operator": "AND",
       "expression": [

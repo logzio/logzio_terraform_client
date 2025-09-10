@@ -1,6 +1,10 @@
 # Changes by Version
 
 <!-- next version -->
+## v1.27.4
+- Drop metrics:
+  - Add optional `dropPolicy` field with values `DROP_BEFORE_PROCESSING` (default) and `DROP_BEFORE_STORING`
+  - Remove name length validation - the `name` field no longer has a 256-character limit
 ## v1.27.3
 - Metrics rollup rules:
   - Support all aggregation types for `MEASUREMENT`

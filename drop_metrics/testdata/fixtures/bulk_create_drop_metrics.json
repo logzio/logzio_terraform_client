@@ -4,6 +4,7 @@
     "accountId": 1234,
     "name": "bulk-filter-1",
     "active": true,
+    "dropPolicy": "DROP_BEFORE_PROCESSING",
     "filter": {
       "operator": "AND",
       "expression": [
@@ -24,6 +25,7 @@
     "accountId": 1235,
     "name": "bulk-filter-2",
     "active": true,
+    "dropPolicy": "DROP_BEFORE_STORING",
     "filter": {
       "operator": "AND",
       "expression": [

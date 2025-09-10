@@ -3,7 +3,6 @@ package drop_metrics_test
 import (
 	"fmt"
 	"net/http"
-	"strings"
 	"testing"
 
 	"github.com/logzio/logzio_terraform_client/drop_metrics"
@@ -58,8 +57,10 @@ func TestDropMetrics_BulkCreateDropMetrics(t *testing.T) {
 	assert.Len(t, results, 2)
 	assert.Equal(t, int64(1), results[0].Id)
 	assert.Equal(t, "bulk-filter-1", results[0].Name)
+	assert.Equal(t, "DROP_BEFORE_PROCESSING", results[0].DropPolicy)
 	assert.Equal(t, int64(2), results[1].Id)
 	assert.Equal(t, "bulk-filter-2", results[1].Name)
+	assert.Equal(t, "DROP_BEFORE_STORING", results[1].DropPolicy)
 }
 
 func TestDropMetrics_BulkCreateDropMetricsEmptyArray(t *testing.T) {
@@ -105,18 +106,17 @@ func TestDropMetrics_BulkCreateDropMetricsAPIFailed(t *testing.T) {
 	assert.Nil(t, results)
 }
 
-func TestDropMetrics_BulkCreateDropMetricsNameTooLong(t *testing.T) {
+func TestDropMetrics_BulkCreateDropMetricsInvalidDropPolicy(t *testing.T) {
 	underTest, _, teardown := setupDropMetricsTest()
 	defer teardown()
 
 	active := true
-	longName := strings.Repeat("a", 257)
-
 	requests := []drop_metrics.CreateUpdateDropMetric{
 		{
-			AccountId: 1234,
-			Name:      longName,
-			Active:    &active,
+			AccountId:  1234,
+			Name:       "test-filter",
+			Active:     &active,
+			DropPolicy: "INVALID_POLICY",
 			Filter: drop_metrics.FilterObject{
 				Operator: drop_metrics.OperatorAnd,
 				Expression: []drop_metrics.FilterExpression{
@@ -133,5 +133,5 @@ func TestDropMetrics_BulkCreateDropMetricsNameTooLong(t *testing.T) {
 	results, err := underTest.BulkCreateDropMetrics(requests)
 	assert.Error(t, err)
 	assert.Nil(t, results)
-	assert.Contains(t, err.Error(), "name must not exceed 256 characters")
+	assert.Contains(t, err.Error(), "dropPolicy must be one of")
 }
