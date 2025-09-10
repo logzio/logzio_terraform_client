@@ -72,6 +72,8 @@ Drop policies determine when metrics are dropped:
 - `DROP_BEFORE_PROCESSING` (default) - drops metrics before processing
 - `DROP_BEFORE_STORING` - drops metrics after processing, before storing in Thanos
 
+## API Functions
+
 | Function | Signature |
 |----------|-----------|
 | create drop metric | `func (c *DropMetricsClient) CreateDropMetric(req CreateDropMetric) (*DropMetric, error)` |
