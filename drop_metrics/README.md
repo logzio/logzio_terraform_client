@@ -12,6 +12,7 @@ result, err := client.CreateDropMetric(drop_metrics.CreateUpdateDropMetric{
     AccountId: 1234,
     Name:      "my-cpu-filter",
     Active:    &active,
+    DropPolicy: drop_metrics.DropPolicyBeforeProcessing, // optional, defaults to DROP_BEFORE_PROCESSING
     Filter: drop_metrics.FilterObject{
         Operator: drop_metrics.OperatorAnd,
         Expression: []drop_metrics.FilterExpression{
@@ -31,6 +32,7 @@ updateResult, err := client.UpdateDropMetric(filterId, drop_metrics.CreateUpdate
     AccountId: 1234,
     Name:      "updated-cpu-filter", // Optional: update the name
     Active:    &active,
+    DropPolicy: drop_metrics.DropPolicyBeforeStoring,
     Filter: drop_metrics.FilterObject{
         Operator: drop_metrics.OperatorAnd,
         Expression: []drop_metrics.FilterExpression{
@@ -63,6 +65,12 @@ Currently supported comparison operators:
 - `NOT_EQ` - Not equal comparison
 - `REGEX_MATCH` - Regular expression match
 - `REGEX_NO_MATCH` - Regular expression no match
+
+## Drop Policies
+
+Drop policies determine when metrics are dropped:
+- `DROP_BEFORE_PROCESSING` (default) - drops metrics before processing
+- `DROP_BEFORE_STORING` - drops metrics after processing, before storing in Thanos
 
 | Function | Signature |
 |----------|-----------|

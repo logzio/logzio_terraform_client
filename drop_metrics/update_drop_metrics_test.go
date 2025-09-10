@@ -3,7 +3,6 @@ package drop_metrics_test
 import (
 	"fmt"
 	"net/http"
-	"strings"
 	"testing"
 
 	"github.com/logzio/logzio_terraform_client/drop_metrics"
@@ -48,6 +47,7 @@ func TestDropMetrics_UpdateDropMetric(t *testing.T) {
 	assert.Equal(t, int64(1234), result.AccountId)
 	assert.Equal(t, "updated-drop-filter", result.Name)
 	assert.False(t, result.Active)
+	assert.Equal(t, "DROP_BEFORE_STORING", result.DropPolicy)
 	assert.Equal(t, "AND", result.Filter.Operator)
 	assert.Len(t, result.Filter.Expression, 2)
 	assert.Equal(t, "EQ", result.Filter.Expression[0].ComparisonFilter)
@@ -130,17 +130,22 @@ func TestDropMetrics_UpdateDropMetricValidationError(t *testing.T) {
 	assert.Contains(t, err.Error(), "accountId must be set and greater than 0")
 }
 
-func TestDropMetrics_UpdateDropMetricNameTooLong(t *testing.T) {
-	underTest, _, teardown := setupDropMetricsTest()
+func TestDropMetrics_UpdateDropMetricWithDropPolicy(t *testing.T) {
+	underTest, mux, teardown := setupDropMetricsTest()
 	defer teardown()
 
-	enabled := true
-	longName := strings.Repeat("a", 257)
+	mux.HandleFunc("/v1/metrics-management/drop-filters/1", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPut, r.Method)
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprint(w, fixture("create_drop_metric.json")) // Uses DROP_BEFORE_PROCESSING
+	})
 
+	enabled := true
 	updateReq := drop_metrics.CreateUpdateDropMetric{
-		AccountId: 1234,
-		Name:      longName,
-		Active:    &enabled,
+		AccountId:  1234,
+		Name:       "updated-filter",
+		Active:     &enabled,
+		DropPolicy: drop_metrics.DropPolicyBeforeProcessing,
 		Filter: drop_metrics.FilterObject{
 			Operator: drop_metrics.OperatorAnd,
 			Expression: []drop_metrics.FilterExpression{
@@ -154,7 +159,7 @@ func TestDropMetrics_UpdateDropMetricNameTooLong(t *testing.T) {
 	}
 
 	result, err := underTest.UpdateDropMetric(1, updateReq)
-	assert.Error(t, err)
-	assert.Nil(t, result)
-	assert.Contains(t, err.Error(), "name must not exceed 256 characters")
+	assert.NoError(t, err)
+	assert.NotNil(t, result)
+	assert.Equal(t, "DROP_BEFORE_PROCESSING", result.DropPolicy)
 }

@@ -3,6 +3,7 @@
   "accountId": 1234,
   "name": "updated-drop-filter",
   "active": false,
+  "dropPolicy": "DROP_BEFORE_STORING",
   "filter": {
     "operator": "AND",
     "expression": [

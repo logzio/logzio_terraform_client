@@ -19,6 +19,10 @@ const (
 	// Logical operations
 	OperatorAnd = "AND"
 
+	// Drop policies
+	DropPolicyBeforeProcessing = "DROP_BEFORE_PROCESSING"
+	DropPolicyBeforeStoring    = "DROP_BEFORE_STORING"
+
 	// Operation names for logging
 	createDropMetricOperation     = "CreateDropMetric"
 	bulkCreateDropMetricOperation = "BulkCreateDropMetric"
@@ -39,10 +43,11 @@ type DropMetricsClient struct {
 
 // CreateUpdateDropMetric represents the request payload for creating or updating a drop metric filter
 type CreateUpdateDropMetric struct {
-	AccountId int64        `json:"accountId"`
-	Name      string       `json:"name,omitempty"`
-	Active    *bool        `json:"active,omitempty"`
-	Filter    FilterObject `json:"filter"`
+	AccountId  int64        `json:"accountId"`
+	Name       string       `json:"name,omitempty"`
+	Active     *bool        `json:"active,omitempty"`
+	DropPolicy string       `json:"dropPolicy,omitempty"`
+	Filter     FilterObject `json:"filter"`
 }
 
 // FilterObject represents a filter that can be either simple or complex
@@ -69,6 +74,7 @@ type DropMetric struct {
 	AccountId  int64        `json:"accountId"`
 	Name       string       `json:"name,omitempty"`
 	Active     bool         `json:"active"`
+	DropPolicy string       `json:"dropPolicy,omitempty"`
 	Filter     FilterObject `json:"filter"`
 	CreatedAt  string       `json:"createdAt,omitempty"`
 	CreatedBy  string       `json:"createdBy,omitempty"`
@@ -121,12 +127,15 @@ func validateCreateUpdateDropMetricRequest(req CreateUpdateDropMetric) error {
 		return fmt.Errorf("accountId must be set and greater than 0")
 	}
 
-	if len(req.Name) > 256 {
-		return fmt.Errorf("name must not exceed 256 characters")
-	}
-
 	if err := validateFilterObject(req.Filter); err != nil {
 		return fmt.Errorf("filter validation failed: %w", err)
+	}
+
+	if len(req.DropPolicy) > 0 {
+		validPolicies := []string{DropPolicyBeforeProcessing, DropPolicyBeforeStoring}
+		if !logzio_client.Contains(validPolicies, req.DropPolicy) {
+			return fmt.Errorf("dropPolicy must be one of %v", validPolicies)
+		}
 	}
 
 	return nil
