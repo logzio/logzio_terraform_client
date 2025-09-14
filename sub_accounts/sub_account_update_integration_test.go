@@ -44,10 +44,12 @@ func TestIntegrationSubAccount_UpdateSubAccountIdNotExists(t *testing.T) {
 }
 
 func TestIntegrationSubAccount_UpdateSubAccountWarmRetention(t *testing.T) {
-	underTest, email, err := setupSubAccountsIntegrationTest()
+	underTest, email, err := setupSubAccountsWarmIntegrationTest()
 
 	if assert.NoError(t, err) {
 		createSubAccount := getCreateOrUpdateSubAccount(email)
+		createSubAccount.ReservedDailyGB = new(float32)
+		createSubAccount.Flexible = "true"
 
 		subAccount, err := underTest.CreateSubAccount(createSubAccount)
 		if assert.NoError(t, err) && assert.NotNil(t, subAccount) {
