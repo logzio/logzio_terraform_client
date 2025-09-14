@@ -27,6 +27,7 @@ jobs:
       GRAFANA_FOLDER_UID: ${{ secrets.GRAFANA_FOLDER_UID }}
       METRICS_ACCOUNT_NAME : ${{ secrets.METRICS_ACCOUNT_NAME }}
       LOGZIO_METRICS_ACCOUNT_ID: ${{ secrets.LOGZIO_METRICS_ACCOUNT_ID }}
+      LOGZIO_CONSUMPTION_API_TOKEN: ${{ secrets.LOGZIO_CONSUMPTION_API_TOKEN }}
       GO111MODULE: on
     name: Test
     runs-on: ubuntu-24.04
