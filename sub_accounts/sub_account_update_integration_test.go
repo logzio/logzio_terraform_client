@@ -74,7 +74,7 @@ func TestIntegrationSubAccount_UpdateSubAccountWarmRetention(t *testing.T) {
 	}
 }
 
-func TestIntegrationSubAccount_UpdateSubAccountSoftGBLimit(t *testing.T) {
+func TestIntegrationSubAccount_UpdateSubAccountWithSoftLimitGB(t *testing.T) {
 	underTest, email, err := setupSubAccountConsumptionIntegrationTest()
 
 	if assert.NoError(t, err) {
@@ -88,8 +88,8 @@ func TestIntegrationSubAccount_UpdateSubAccountSoftGBLimit(t *testing.T) {
 			assert.NoError(t, err)
 			assert.Equal(t, "tf_client_test", getSubAccount.AccountName)
 			createSubAccount.AccountName = "test_after_update"
-			softGBLimit := float32(1)
-			createSubAccount.SoftLimitGB = &softGBLimit
+			softLimitGB := float32(1)
+			createSubAccount.SoftLimitGB = &softLimitGB
 			time.Sleep(time.Second * 2)
 			err = underTest.UpdateSubAccount(int64(subAccount.AccountId), createSubAccount)
 			assert.NoError(t, err)
@@ -98,7 +98,7 @@ func TestIntegrationSubAccount_UpdateSubAccountSoftGBLimit(t *testing.T) {
 			getSubAccount, err = underTest.GetSubAccount(int64(subAccount.AccountId))
 			assert.NoError(t, err)
 			assert.Equal(t, "test_after_update", getSubAccount.AccountName)
-			assert.Equal(t, softGBLimit, getSubAccount.SoftLimitGB)
+			assert.Equal(t, softLimitGB, getSubAccount.SoftLimitGB)
 		}
 	}
 }

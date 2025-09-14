@@ -85,7 +85,7 @@ func TestSubAccount_UpdateSubAccountWithWarmTier(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestSubAccount_UpdateSubAccountWithSoftGBLimit(t *testing.T) {
+func TestSubAccount_UpdateSubAccountWithSoftLimitGB(t *testing.T) {
 	underTest, err, teardown := setupSubAccountsTest()
 	assert.NoError(t, err)
 	defer teardown()
@@ -104,8 +104,8 @@ func TestSubAccount_UpdateSubAccountWithSoftGBLimit(t *testing.T) {
 	})
 
 	updateSubAccount := getCreateOrUpdateSubAccount("test@user.test")
-	softGBLimit := float32(1)
-	updateSubAccount.SoftLimitGB = &softGBLimit
+	softLimitGB := float32(1)
+	updateSubAccount.SoftLimitGB = &softLimitGB
 
 	err = underTest.UpdateSubAccount(subAccountId, updateSubAccount)
 	assert.NoError(t, err)

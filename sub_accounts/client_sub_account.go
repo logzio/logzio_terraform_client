@@ -86,7 +86,7 @@ type DetailedSubAccount struct {
 	DocSizeSetting          bool                       `json:"docSizeSetting"`
 	SnapSearchRetentionDays int32                      `json:"snapSearchRetentionDays"`
 	IsCapped                bool                       `json:"isCapped"`
-	SoftGBLimit             float32                    `json:"softLimit"`
+	SoftLimitGB             float32                    `json:"softLimitGB"`
 }
 
 type SubAccountRelationObject struct {

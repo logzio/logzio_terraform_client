@@ -106,7 +106,7 @@ func validateCreateSubAccount(createSubAccount CreateOrUpdateSubAccount) error {
 	}
 
 	if createSubAccount.SoftLimitGB != nil && *createSubAccount.SoftLimitGB <= 0 {
-		return fmt.Errorf("softLimitGB should be > 0 when set")
+		return fmt.Errorf("SoftLimitGB should be > 0 when set")
 	}
 
 	return nil
