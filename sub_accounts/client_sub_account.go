@@ -2,6 +2,7 @@ package sub_accounts
 
 import (
 	"fmt"
+
 	"github.com/hashicorp/go-hclog"
 	"github.com/logzio/logzio_terraform_client/client"
 )
@@ -37,6 +38,7 @@ type CreateOrUpdateSubAccount struct {
 	DocSizeSetting          string                                   `json:"docSizeSetting"` // boolean
 	UtilizationSettings     AccountUtilizationSettingsCreateOrUpdate `json:"utilizationSettings"`
 	SnapSearchRetentionDays *int32                                   `json:"snapSearchRetentionDays,omitempty"`
+	SoftLimitGB             *float32                                 `json:"softLimitGB,omitempty"`
 }
 
 type AccountUtilizationSettingsCreateOrUpdate struct {
@@ -67,6 +69,7 @@ type SubAccount struct {
 	SharedGB                float32                    `json:"sharedGB"`
 	TotalTimeBasedDailyGB   float32                    `json:"totalTimeBasedDailyGB"`
 	IsOwner                 bool                       `json:"isOwner"`
+	SoftLimitGB             float32                    `json:"softLimitGB"`
 }
 
 type SharingAccount struct {
@@ -83,6 +86,7 @@ type DetailedSubAccount struct {
 	DocSizeSetting          bool                       `json:"docSizeSetting"`
 	SnapSearchRetentionDays int32                      `json:"snapSearchRetentionDays"`
 	IsCapped                bool                       `json:"isCapped"`
+	SoftGBLimit             float32                    `json:"softLimit"`
 }
 
 type SubAccountRelationObject struct {
@@ -106,6 +110,7 @@ type AccountView struct {
 	ReservedDailyGB float32 `json:"reservedDailyGB"`
 	MaxDailyGB      float32 `json:"maxDailyGB"`
 	RetentionDays   int32   `json:"retentionDays"`
+	SoftLimitGB     float32 `json:"softLimitGB"`
 }
 
 type DailyUsagesListObject struct {

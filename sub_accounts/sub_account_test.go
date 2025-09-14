@@ -1,12 +1,13 @@
 package sub_accounts_test
 
 import (
-	"github.com/logzio/logzio_terraform_client/sub_accounts"
-	"github.com/logzio/logzio_terraform_client/test_utils"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"strconv"
+
+	"github.com/logzio/logzio_terraform_client/sub_accounts"
+	"github.com/logzio/logzio_terraform_client/test_utils"
 )
 
 var (
@@ -55,6 +56,15 @@ func setupSubAccountsIntegrationTest() (*sub_accounts.SubAccountClient, string, 
 
 func setupSubAccountsWarmIntegrationTest() (*sub_accounts.SubAccountClient, string, error) {
 	apiToken, err := test_utils.GetWarmApiToken()
+	if err != nil {
+		return nil, "", err
+	}
+
+	return setupSubAccountsIntegrationTestHandler(apiToken)
+}
+
+func setupSubAccountConsumptionIntegrationTest() (*sub_accounts.SubAccountClient, string, error) {
+	apiToken, err := test_utils.GetConsumptionApiToken()
 	if err != nil {
 		return nil, "", err
 	}

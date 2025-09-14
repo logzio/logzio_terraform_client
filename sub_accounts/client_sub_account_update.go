@@ -61,5 +61,9 @@ func validateUpdateSubAccount(updateSubAccount CreateOrUpdateSubAccount) error {
 		return fmt.Errorf("snapSearchRetentionDays should be >= 1")
 	}
 
+	if updateSubAccount.SoftLimitGB != nil && *updateSubAccount.SoftLimitGB <= 0 {
+		return fmt.Errorf("softLimitGB should be > 0 when set")
+	}
+
 	return nil
 }

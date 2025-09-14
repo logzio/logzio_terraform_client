@@ -104,6 +104,10 @@ func validateCreateSubAccount(createSubAccount CreateOrUpdateSubAccount) error {
 			return fmt.Errorf("SnapSearchRetentionDays cannot be set if retentionDays is less than 4")
 		}
 	}
-	
+
+	if createSubAccount.SoftLimitGB != nil && *createSubAccount.SoftLimitGB <= 0 {
+		return fmt.Errorf("softLimitGB should be > 0 when set")
+	}
+
 	return nil
 }

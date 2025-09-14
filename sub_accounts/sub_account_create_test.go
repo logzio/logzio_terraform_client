@@ -3,11 +3,12 @@ package sub_accounts_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/logzio/logzio_terraform_client/sub_accounts"
-	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
 	"testing"
+
+	"github.com/logzio/logzio_terraform_client/sub_accounts"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestSubAccount_CreateValidSubAccount(t *testing.T) {

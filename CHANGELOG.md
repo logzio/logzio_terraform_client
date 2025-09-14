@@ -1,6 +1,10 @@
 # Changes by Version
 
 <!-- next version -->
+## v1.28.0
+- Support Consumption plan in `sub_accounts`.
+    - Add `SoftGBLimit` (only supported in update requests)
+
 ## v1.27.4
 - Drop metrics:
   - Add optional `dropPolicy` field with values `DROP_BEFORE_PROCESSING` (default) and `DROP_BEFORE_STORING`
