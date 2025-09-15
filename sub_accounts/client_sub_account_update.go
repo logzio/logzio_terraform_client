@@ -3,9 +3,10 @@ package sub_accounts
 import (
 	"encoding/json"
 	"fmt"
-	logzio_client "github.com/logzio/logzio_terraform_client"
 	"net/http"
 	"strconv"
+
+	logzio_client "github.com/logzio/logzio_terraform_client"
 )
 
 const (
@@ -51,18 +52,20 @@ func validateUpdateSubAccount(updateSubAccount CreateOrUpdateSubAccount) error {
 		if err != nil {
 			return fmt.Errorf("flexible field is not set to boolean value")
 		}
+		if updateSubAccount.SoftLimitGB != nil {
+			return fmt.Errorf("when isFlexible=true SoftLimitGB should be empty or omitted")
+		}
 	} else {
 		if updateSubAccount.ReservedDailyGB != nil {
 			return fmt.Errorf("when isFlexible=false reservedDailyGB should be 0, empty, or emitted")
+		}
+		if updateSubAccount.SoftLimitGB != nil && *updateSubAccount.SoftLimitGB <= 0 {
+			return fmt.Errorf("SoftLimitGB should be > 0 when set")
 		}
 	}
 
 	if updateSubAccount.SnapSearchRetentionDays != nil && *updateSubAccount.SnapSearchRetentionDays < 1 {
 		return fmt.Errorf("snapSearchRetentionDays should be >= 1")
-	}
-
-	if updateSubAccount.SoftLimitGB != nil && *updateSubAccount.SoftLimitGB <= 0 {
-		return fmt.Errorf("SoftLimitGB should be > 0 when set")
 	}
 
 	return nil
