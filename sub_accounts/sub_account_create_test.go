@@ -201,7 +201,6 @@ func TestSubAccount_CreateSubAccountSoftLimitInvalidValue(t *testing.T) {
 		createSubAccount := getCreateOrUpdateSubAccount("test.user@test.user")
 		soft := float32(0)
 		createSubAccount.SoftLimitGB = &soft
-		//createSubAccount.Flexible = strconv.FormatBool(false)
 
 		subAccount, err := underTest.CreateSubAccount(createSubAccount)
 		assert.Error(t, err)
