@@ -79,11 +79,8 @@ func validateCreateSubAccount(createSubAccount CreateOrUpdateSubAccount) error {
 		return fmt.Errorf("retention days should be >= 1")
 	}
 
-	if len(createSubAccount.Flexible) > 0 {
-		_, err := strconv.ParseBool(createSubAccount.Flexible)
-		if err != nil {
-			return fmt.Errorf("flexible field is not set to boolean value")
-		}
+	isFlexible := mapStringToBool(createSubAccount.Flexible)
+	if isFlexible {
 		if createSubAccount.SoftLimitGB != nil {
 			return fmt.Errorf("when isFlexible=true SoftLimitGB should be empty or omitted")
 		}

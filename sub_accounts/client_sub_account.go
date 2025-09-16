@@ -2,6 +2,7 @@ package sub_accounts
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/hashicorp/go-hclog"
 	"github.com/logzio/logzio_terraform_client/client"
@@ -145,4 +146,16 @@ func New(apiToken string, baseUrl string) (*SubAccountClient, error) {
 		}),
 	}
 	return c, nil
+}
+
+func mapStringToBool(str string) bool {
+	result, err := strconv.ParseBool(str)
+	if err != nil {
+		if len(str) == 0 {
+			result = false
+		} else {
+			result = true
+		}
+	}
+	return result
 }

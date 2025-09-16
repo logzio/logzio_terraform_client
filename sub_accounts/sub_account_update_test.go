@@ -161,6 +161,7 @@ func TestSubAccount_UpdateSubAccountWithSoftLimitGBInvalidValue(t *testing.T) {
 	updateSubAccount := getCreateOrUpdateSubAccount("test@user.test")
 	softLimitGB := float32(0)
 	updateSubAccount.SoftLimitGB = &softLimitGB
+	updateSubAccount.Flexible = "false"
 
 	err = underTest.UpdateSubAccount(subAccountId, updateSubAccount)
 	assert.Error(t, err)

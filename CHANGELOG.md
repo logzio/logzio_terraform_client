@@ -1,6 +1,9 @@
 # Changes by Version
 
 <!-- next version -->
+## v1.28.1
+- Bug fix - **sub_accounts**: ensure `CreateOrUpdateSubAccount.Flexible` is interpreted as a boolean value in verification logic.
+
 ## v1.28.0
 - Support Consumption plan in `sub_accounts`.
     - Add `SoftLimitGB`

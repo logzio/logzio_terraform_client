@@ -47,7 +47,8 @@ func validateUpdateSubAccount(updateSubAccount CreateOrUpdateSubAccount) error {
 		return fmt.Errorf("account name must be set")
 	}
 
-	if len(updateSubAccount.Flexible) > 0 {
+	isFlexible := mapStringToBool(updateSubAccount.Flexible)
+	if isFlexible {
 		_, err := strconv.ParseBool(updateSubAccount.Flexible)
 		if err != nil {
 			return fmt.Errorf("flexible field is not set to boolean value")
