@@ -32,16 +32,16 @@ updatedProject, err := client.UpdateProject("system-metrics", unified_projects.P
     Spec: unified_projects.ProjectSpec{
         Display: unified_projects.ProjectDisplay{
             Name:        "System Metrics Updated",
-            Description: stringPtr("Updated description"),
+            Description: "Updated description",
         },
     },
 })
 
 // Search projects
 searchResults, err := client.SearchProjects(unified_projects.SearchProjectsRequest{
-    Query: stringPtr("system"),
-    Limit: intPtr(10),
-    Page:  intPtr(1),
+    Query: "system",
+    Limit: 10,
+    Page:  1,
 })
 
 // Delete a project

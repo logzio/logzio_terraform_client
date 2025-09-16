@@ -43,9 +43,9 @@ updatedDashboard, err := client.UpdateDashboard("project-1", "dashboard-1", unif
 
 // Search dashboards
 searchResults, err := client.SearchDashboards(unified_dashboards.SearchDashboardsRequest{
-    Query: stringPtr("CPU"),
-    Limit: intPtr(10),
-    Page:  intPtr(1),
+    Query: "CPU",
+    Limit: 10,
+    Page:  1,
 })
 
 // Delete a dashboard
