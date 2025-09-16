@@ -26,7 +26,7 @@ func TestIntegrationUnifiedProjects_CreateProject(t *testing.T) {
 
 			assert.Equal(t, projectName, project.Name)
 			assert.NotEmpty(t, project.Id)
-			assert.NotNil(t, project.CreatedAt)
+			assert.NotEmpty(t, project.CreatedAt)
 		}
 	}
 }

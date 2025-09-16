@@ -20,11 +20,12 @@ func TestUnifiedProjects_CreateProject(t *testing.T) {
 			assert.Equal(t, http.MethodPost, r.Method)
 
 			jsonBytes, _ := io.ReadAll(r.Body)
-			var target unified_projects.CreateProjectRequest
+			var target unified_projects.Project
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)
-			assert.NotEmpty(t, target.Name)
-			assert.Equal(t, "new-project", target.Name)
+			assert.Equal(t, "Project", target.Kind)
+			assert.Equal(t, "new-project", target.Metadata.Name)
+			assert.Equal(t, "new-project", target.Spec.Display.Name)
 
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusCreated)
@@ -40,7 +41,7 @@ func TestUnifiedProjects_CreateProject(t *testing.T) {
 		assert.Equal(t, "project-new", project.Id)
 		assert.Equal(t, "new-project", project.Name)
 		assert.Equal(t, "new-project", project.DisplayName)
-		assert.NotNil(t, project.CreatedAt)
+		assert.NotEmpty(t, project.CreatedAt)
 	}
 }
 

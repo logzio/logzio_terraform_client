@@ -30,9 +30,9 @@ func TestIntegrationUnifiedProjects_SearchProjects(t *testing.T) {
 
 			// Search for projects using part of the unique name
 			searchReq := unified_projects.SearchProjectsRequest{
-				Query: &uniqueId,
-				Limit: intPtr(10),
-				Page:  intPtr(1),
+				Query: uniqueId,
+				Limit: 10,
+				Page:  1,
 			}
 
 			results, err := underTest.SearchProjects(searchReq)
@@ -53,9 +53,4 @@ func TestIntegrationUnifiedProjects_SearchProjects(t *testing.T) {
 			}
 		}
 	}
-}
-
-// Helper function for creating int pointers
-func intPtr(i int) *int {
-	return &i
 }
