@@ -27,8 +27,8 @@ func TestUnifiedDashboards_ListDashboards(t *testing.T) {
 		assert.Equal(t, "dashboard-1", dashboards[0].Uid)
 		assert.Equal(t, "System Overview", dashboards[0].Doc["title"])
 		assert.Equal(t, "System monitoring dashboard", dashboards[0].Doc["description"])
-		assert.Equal(t, 1, *dashboards[0].Version)
-		assert.Equal(t, "user1", *dashboards[0].CreatedBy)
+		assert.Equal(t, 1, dashboards[0].Version)
+		assert.Equal(t, "user1", dashboards[0].CreatedBy)
 	}
 }
 

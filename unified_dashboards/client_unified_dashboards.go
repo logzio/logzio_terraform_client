@@ -36,24 +36,24 @@ type UpdateDashboardRequest struct {
 }
 
 type SearchDashboardsRequest struct {
-	Query   *string  `json:"query,omitempty"`
+	Query   string   `json:"query,omitempty"`
 	Tag     []string `json:"tag,omitempty"`
 	Starred *bool    `json:"starred,omitempty"`
-	Limit   *int     `json:"limit,omitempty"`
-	Page    *int     `json:"page,omitempty"`
-	Sort    *string  `json:"sort,omitempty"`
-	Order   *string  `json:"order,omitempty"`
+	Limit   int      `json:"limit,omitempty"`
+	Page    int      `json:"page,omitempty"`
+	Sort    string   `json:"sort,omitempty"`
+	Order   string   `json:"order,omitempty"`
 }
 
 // Response types
 type Dashboard struct {
 	Uid       string                 `json:"uid"`
 	Doc       map[string]interface{} `json:"doc"`
-	Version   *int                   `json:"version,omitempty"`
-	CreatedAt *string                `json:"createdAt,omitempty"`
-	UpdatedAt *string                `json:"updatedAt,omitempty"`
-	CreatedBy *string                `json:"createdBy,omitempty"`
-	UpdatedBy *string                `json:"updatedBy,omitempty"`
+	Version   int                    `json:"version,omitempty"`
+	CreatedAt string                 `json:"createdAt,omitempty"`
+	UpdatedAt string                 `json:"updatedAt,omitempty"`
+	CreatedBy string                 `json:"createdBy,omitempty"`
+	UpdatedBy string                 `json:"updatedBy,omitempty"`
 }
 
 func New(apiToken, baseUrl string) (*DashboardsClient, error) {
@@ -113,11 +113,5 @@ func validateDeleteDashboardRequest(folderId, uid string) error {
 }
 
 func validateSearchDashboardsRequest(req SearchDashboardsRequest) error {
-	if req.Limit != nil && *req.Limit <= 0 {
-		return fmt.Errorf("limit must be positive")
-	}
-	if req.Page != nil && *req.Page <= 0 {
-		return fmt.Errorf("page must be positive")
-	}
 	return nil
 }

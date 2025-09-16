@@ -42,9 +42,9 @@ func TestIntegrationUnifiedDashboards_SearchDashboards(t *testing.T) {
 
 			// Search for dashboards using the unique ID
 			searchReq := unified_dashboards.SearchDashboardsRequest{
-				Query: stringPtr(uniqueId),
-				Limit: intPtr(10),
-				Page:  intPtr(1),
+				Query: uniqueId,
+				Limit: 10,
+				Page:  1,
 			}
 
 			results, err := dashClient.SearchDashboards(searchReq)
@@ -61,13 +61,4 @@ func TestIntegrationUnifiedDashboards_SearchDashboards(t *testing.T) {
 			}
 		}
 	}
-}
-
-// Helper functions for creating pointers
-func stringPtr(s string) *string {
-	return &s
-}
-
-func intPtr(i int) *int {
-	return &i
 }
