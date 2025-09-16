@@ -57,7 +57,7 @@ func TestIntegrationUnifiedDashboards_UpdateDashboard(t *testing.T) {
 				assert.Equal(t, "IT Updated Dashboard "+uniqueId, updated.Doc["title"])
 				assert.Equal(t, "Updated description for integration test", updated.Doc["description"])
 				assert.Equal(t, "30s", updated.Doc["refresh"])
-				assert.NotNil(t, updated.UpdatedAt)
+				assert.NotEmpty(t, updated.UpdatedAt)
 			}
 		}
 	}

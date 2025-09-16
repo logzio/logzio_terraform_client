@@ -44,7 +44,7 @@ func TestIntegrationUnifiedDashboards_CreateDashboard(t *testing.T) {
 			assert.NotNil(t, created.Doc)
 			assert.Equal(t, "IT Dashboard "+uniqueId, created.Doc["title"])
 			assert.Equal(t, "Integration test dashboard", created.Doc["description"])
-			assert.NotNil(t, created.CreatedAt)
+			assert.NotEmpty(t, created.CreatedAt)
 		}
 	}
 }
