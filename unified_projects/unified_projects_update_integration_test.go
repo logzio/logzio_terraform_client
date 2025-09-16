@@ -28,7 +28,6 @@ func TestIntegrationUnifiedProjects_UpdateProject(t *testing.T) {
 			time.Sleep(2 * time.Second) // Allow for eventual consistency
 
 			// Update the project
-			updatedDescription := "Updated integration test description"
 			updateReq := unified_projects.Project{
 				Kind: "Project",
 				Metadata: unified_projects.ProjectMetadata{
@@ -37,7 +36,7 @@ func TestIntegrationUnifiedProjects_UpdateProject(t *testing.T) {
 				Spec: unified_projects.ProjectSpec{
 					Display: unified_projects.ProjectDisplay{
 						Name:        "Updated " + projectName,
-						Description: &updatedDescription,
+						Description: "Updated integration test description",
 					},
 				},
 			}
@@ -46,9 +45,8 @@ func TestIntegrationUnifiedProjects_UpdateProject(t *testing.T) {
 			if assert.NoError(t, err) && assert.NotNil(t, updated) {
 				assert.Equal(t, projectName, updated.Metadata.Name)
 				assert.Equal(t, "Updated "+projectName, updated.Spec.Display.Name)
-				assert.NotNil(t, updated.Spec.Display.Description)
-				assert.Equal(t, updatedDescription, *updated.Spec.Display.Description)
-				assert.NotNil(t, updated.Metadata.UpdatedAt)
+				assert.Equal(t, "Updated integration test description", updated.Spec.Display.Description)
+				assert.NotEmpty(t, updated.Metadata.UpdatedAt)
 			}
 		}
 	}

@@ -28,7 +28,7 @@ func TestUnifiedProjects_ListProjects(t *testing.T) {
 		assert.Equal(t, "project-1", projects[0].Project.Id)
 		assert.Equal(t, "system-metrics", projects[0].Project.Name)
 		assert.Equal(t, "System Metrics", projects[0].Project.DisplayName)
-		assert.Equal(t, "System monitoring dashboards", *projects[0].Project.Description)
+		assert.Equal(t, "System monitoring dashboards", projects[0].Project.Description)
 		assert.Len(t, projects[0].Project.Dashboards, 2)
 		assert.Equal(t, "dashboard-1", projects[0].Project.Dashboards[0].Uid)
 		assert.Equal(t, "CPU Usage", projects[0].Project.Dashboards[0].Title)

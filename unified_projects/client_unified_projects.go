@@ -38,10 +38,10 @@ type Project struct {
 }
 
 type ProjectMetadata struct {
-	Name      string  `json:"name"`
-	CreatedAt *string `json:"created_at,omitempty"`
-	UpdatedAt *string `json:"updated_at,omitempty"`
-	Version   *int    `json:"version,omitempty"`
+	Name      string `json:"name"`
+	CreatedAt string `json:"created_at,omitempty"`
+	UpdatedAt string `json:"updated_at,omitempty"`
+	Version   int    `json:"version,omitempty"`
 }
 
 type ProjectSpec struct {
@@ -49,16 +49,16 @@ type ProjectSpec struct {
 }
 
 type ProjectDisplay struct {
-	Name        string  `json:"name"`
-	Description *string `json:"description,omitempty"`
+	Name        string `json:"name"`
+	Description string `json:"description,omitempty"`
 }
 
 type SearchProjectsRequest struct {
-	Query *string `json:"query,omitempty"`
-	Limit *int    `json:"limit,omitempty"`
-	Page  *int    `json:"page,omitempty"`
-	Sort  *string `json:"sort,omitempty"`
-	Order *string `json:"order,omitempty"`
+	Query string `json:"query,omitempty"`
+	Limit int    `json:"limit,omitempty"`
+	Page  int    `json:"page,omitempty"`
+	Sort  string `json:"sort,omitempty"`
+	Order string `json:"order,omitempty"`
 }
 
 // Response types
@@ -66,10 +66,10 @@ type ProjectSummary struct {
 	Id          string              `json:"id"`
 	Name        string              `json:"name"`
 	DisplayName string              `json:"displayName"`
-	Description *string             `json:"description,omitempty"`
+	Description string              `json:"description,omitempty"`
 	Dashboards  []DashboardListItem `json:"dashboards,omitempty"`
-	CreatedAt   *string             `json:"createdAt,omitempty"`
-	UpdatedAt   *string             `json:"updatedAt,omitempty"`
+	CreatedAt   string              `json:"createdAt,omitempty"`
+	UpdatedAt   string              `json:"updatedAt,omitempty"`
 }
 
 type DashboardListItem struct {
@@ -122,12 +122,6 @@ func validateUpdateProjectRequest(project Project) error {
 }
 
 func validateSearchProjectsRequest(req SearchProjectsRequest) error {
-	if req.Limit != nil && *req.Limit <= 0 {
-		return fmt.Errorf("limit must be positive")
-	}
-	if req.Page != nil && *req.Page <= 0 {
-		return fmt.Errorf("page must be positive")
-	}
 	return nil
 }
 

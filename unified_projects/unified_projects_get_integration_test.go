@@ -33,7 +33,7 @@ func TestIntegrationUnifiedProjects_GetProject(t *testing.T) {
 				assert.Equal(t, projectName, project.Name)
 				assert.Equal(t, created.Id, project.Id)
 				assert.NotEmpty(t, project.DisplayName)
-				assert.NotNil(t, project.CreatedAt)
+				assert.NotEmpty(t, project.CreatedAt)
 			}
 		}
 	}

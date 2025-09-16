@@ -19,7 +19,20 @@ func (c *ProjectsClient) CreateProject(req CreateProjectRequest) (*ProjectSummar
 		return nil, err
 	}
 
-	body, err := json.Marshal(req)
+	// Build the full Project payload expected by the API
+	project := Project{
+		Kind: "Project",
+		Metadata: ProjectMetadata{
+			Name: req.Name,
+		},
+		Spec: ProjectSpec{
+			Display: ProjectDisplay{
+				Name: req.Name,
+			},
+		},
+	}
+
+	body, err := json.Marshal(project)
 	if err != nil {
 		return nil, err
 	}
