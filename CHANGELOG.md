@@ -3,7 +3,7 @@
 <!-- next version -->
 ## v1.28.0
 - Support Consumption plan in `sub_accounts`.
-    - Add `SoftLimitGB` (only supported in update requests)
+    - Add `SoftLimitGB`
 
 ## v1.27.4
 - Drop metrics:
