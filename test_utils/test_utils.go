@@ -8,23 +8,24 @@ import (
 )
 
 const (
-	EnvLogzioBaseUrl             = "LOGZIO_BASE_URL"
-	EnvLogzioApiToken     string = "LOGZIO_API_TOKEN"
-	EnvLogzioWarmApiToken string = "LOGZIO_WARM_API_TOKEN"
-	EnvLogzioAccountId    string = "LOGZIO_ACCOUNT_ID"
-	EnvMetricsAccountId   string = "LOGZIO_METRICS_ACCOUNT_ID"
-	LogzioBaseUrl         string = "https://api.logz.io"
-	EnvLogzioEmail        string = "LOGZIO_EMAIL"
-	EnvS3Path             string = "S3_PATH"
-	EnvAwsAccessKey       string = "AWS_ACCESS_KEY"
-	EnvAwsSecretKey       string = "AWS_SECRET_KEY"
-	EnvAwsArn             string = "AWS_ARN"
-	EnvAzureTenantId      string = "AZURE_TENANT_ID"
-	EnvAzureClientId      string = "AZURE_CLIENT_ID"
-	EnvAzureClientSecret  string = "AZURE_CLIENT_SECRET"
-	EnvAzureAccountName   string = "AZURE_ACCOUNT_NAME"
-	EnvAzureContainerName string = "AZURE_CONTAINER_NAME"
-	EnvMetricsFolderId    string = "METRICS_FOLDER_ID"
+	EnvLogzioBaseUrl                    = "LOGZIO_BASE_URL"
+	EnvLogzioApiToken            string = "LOGZIO_API_TOKEN"
+	EnvLogzioWarmApiToken        string = "LOGZIO_WARM_API_TOKEN"
+	EnvLogzioConsumptionApiToken string = "LOGZIO_CONSUMPTION_API_TOKEN"
+	EnvLogzioAccountId           string = "LOGZIO_ACCOUNT_ID"
+	EnvMetricsAccountId          string = "LOGZIO_METRICS_ACCOUNT_ID"
+	LogzioBaseUrl                string = "https://api.logz.io"
+	EnvLogzioEmail               string = "LOGZIO_EMAIL"
+	EnvS3Path                    string = "S3_PATH"
+	EnvAwsAccessKey              string = "AWS_ACCESS_KEY"
+	EnvAwsSecretKey              string = "AWS_SECRET_KEY"
+	EnvAwsArn                    string = "AWS_ARN"
+	EnvAzureTenantId             string = "AZURE_TENANT_ID"
+	EnvAzureClientId             string = "AZURE_CLIENT_ID"
+	EnvAzureClientSecret         string = "AZURE_CLIENT_SECRET"
+	EnvAzureAccountName          string = "AZURE_ACCOUNT_NAME"
+	EnvAzureContainerName        string = "AZURE_CONTAINER_NAME"
+	EnvMetricsFolderId           string = "METRICS_FOLDER_ID"
 
 	TestTimeSeparator = time.Millisecond * 500
 )
@@ -43,6 +44,14 @@ func GetWarmApiToken() (string, error) {
 		return apiToken, nil
 	}
 	return "", fmt.Errorf("%s env var not specified", EnvLogzioWarmApiToken)
+}
+
+func GetConsumptionApiToken() (string, error) {
+	apiToken := os.Getenv(EnvLogzioConsumptionApiToken)
+	if len(apiToken) > 0 {
+		return apiToken, nil
+	}
+	return "", fmt.Errorf("%s env var not specified", EnvLogzioConsumptionApiToken)
 }
 
 func GetAccountId() (int64, error) {

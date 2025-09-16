@@ -13,5 +13,6 @@
   "utilizationSettings": {
     "frequencyMinutes": 5,
     "utilizationEnabled": true
-  }
+  },
+  "softLimitGB": null
 }

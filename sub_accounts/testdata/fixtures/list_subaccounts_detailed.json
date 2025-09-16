@@ -19,7 +19,8 @@
       "reservedDailyGB": null,
       "isFlexible": false,
       "retentionDays": 5,
-      "accountToken": "testToken"
+      "accountToken": "testToken",
+      "softLimitGB": null
     },
     "sharingObjectsAccounts": [],
     "utilizationSettings": {

@@ -3,11 +3,12 @@ package sub_accounts_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/logzio/logzio_terraform_client/sub_accounts"
-	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
 	"testing"
+
+	"github.com/logzio/logzio_terraform_client/sub_accounts"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestSubAccount_CreateValidSubAccount(t *testing.T) {
@@ -158,4 +159,53 @@ func TestSubAccount_CreateSubAccountWarmTierNotAllowedSnapSearchRetention(t *tes
 	subAccount, err := underTest.CreateSubAccount(createSubAccount)
 	assert.Error(t, err)
 	assert.Nil(t, subAccount)
+}
+
+func TestSubAccount_CreateSubAccountSoftLimitDisallowedForFlexible(t *testing.T) {
+	underTest, err, teardown := setupSubAccountsTest()
+	defer teardown()
+
+	if assert.NoError(t, err) {
+		called := false
+		mux.HandleFunc("/v1/account-management/time-based-accounts", func(w http.ResponseWriter, r *http.Request) {
+			called = true
+			w.WriteHeader(http.StatusOK)
+			fmt.Fprint(w, fixture("create_subaccount.json"))
+		})
+
+		createSubAccount := getCreateOrUpdateSubAccount("test.user@test.user")
+		soft := float32(1)
+		createSubAccount.SoftLimitGB = &soft
+		createSubAccount.Flexible = "true"
+
+		subAccount, err := underTest.CreateSubAccount(createSubAccount)
+		assert.Error(t, err)
+		assert.Nil(t, subAccount)
+		assert.Contains(t, err.Error(), "when isFlexible=true SoftLimitGB should be empty or omitted")
+		assert.False(t, called)
+	}
+}
+
+func TestSubAccount_CreateSubAccountSoftLimitInvalidValue(t *testing.T) {
+	underTest, err, teardown := setupSubAccountsTest()
+	defer teardown()
+
+	if assert.NoError(t, err) {
+		called := false
+		mux.HandleFunc("/v1/account-management/time-based-accounts", func(w http.ResponseWriter, r *http.Request) {
+			called = true
+			w.WriteHeader(http.StatusOK)
+			fmt.Fprint(w, fixture("create_subaccount.json"))
+		})
+
+		createSubAccount := getCreateOrUpdateSubAccount("test.user@test.user")
+		soft := float32(0)
+		createSubAccount.SoftLimitGB = &soft
+
+		subAccount, err := underTest.CreateSubAccount(createSubAccount)
+		assert.Error(t, err)
+		assert.Nil(t, subAccount)
+		assert.Contains(t, err.Error(), "SoftLimitGB should be > 0 when set")
+		assert.False(t, called)
+	}
 }

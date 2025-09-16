@@ -3,12 +3,13 @@ package sub_accounts_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/logzio/logzio_terraform_client/sub_accounts"
-	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
 	"strconv"
 	"testing"
+
+	"github.com/logzio/logzio_terraform_client/sub_accounts"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestSubAccount_UpdateValidSubAccount(t *testing.T) {
@@ -82,4 +83,87 @@ func TestSubAccount_UpdateSubAccountWithWarmTier(t *testing.T) {
 	updateSubAccount.SnapSearchRetentionDays = &warmRetention
 	err = underTest.UpdateSubAccount(subAccountId, updateSubAccount)
 	assert.NoError(t, err)
+}
+
+func TestSubAccount_UpdateSubAccountWithSoftLimitGB(t *testing.T) {
+	underTest, err, teardown := setupSubAccountsTest()
+	assert.NoError(t, err)
+	defer teardown()
+
+	subAccountId := int64(1234567)
+
+	mux.HandleFunc("/v1/account-management/time-based-accounts/", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPut, r.Method)
+		assert.Contains(t, r.URL.String(), strconv.FormatInt(int64(subAccountId), 10))
+		jsonBytes, _ := io.ReadAll(r.Body)
+		var target sub_accounts.CreateOrUpdateSubAccount
+		err = json.Unmarshal(jsonBytes, &target)
+		assert.NoError(t, err)
+		assert.NotNil(t, target)
+		w.WriteHeader(http.StatusNoContent)
+	})
+
+	updateSubAccount := getCreateOrUpdateSubAccount("test@user.test")
+	softLimitGB := float32(1)
+	updateSubAccount.SoftLimitGB = &softLimitGB
+
+	err = underTest.UpdateSubAccount(subAccountId, updateSubAccount)
+	assert.NoError(t, err)
+}
+
+func TestSubAccount_UpdateSubAccountWithSoftLimitGBDisallowedForFlexible(t *testing.T) {
+	underTest, err, teardown := setupSubAccountsTest()
+	assert.NoError(t, err)
+	defer teardown()
+
+	subAccountId := int64(1234567)
+
+	mux.HandleFunc("/v1/account-management/time-based-accounts/", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPut, r.Method)
+		assert.Contains(t, r.URL.String(), strconv.FormatInt(int64(subAccountId), 10))
+		jsonBytes, _ := io.ReadAll(r.Body)
+		var target sub_accounts.CreateOrUpdateSubAccount
+		err = json.Unmarshal(jsonBytes, &target)
+		assert.NoError(t, err)
+		assert.NotNil(t, target)
+		w.WriteHeader(http.StatusNoContent)
+	})
+
+	updateSubAccount := getCreateOrUpdateSubAccount("test@user.test")
+	softLimitGB := float32(1)
+	updateSubAccount.SoftLimitGB = &softLimitGB
+	updateSubAccount.Flexible = "true"
+
+	err = underTest.UpdateSubAccount(subAccountId, updateSubAccount)
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "when isFlexible=true SoftLimitGB should be empty or omitted")
+
+}
+
+func TestSubAccount_UpdateSubAccountWithSoftLimitGBInvalidValue(t *testing.T) {
+	underTest, err, teardown := setupSubAccountsTest()
+	assert.NoError(t, err)
+	defer teardown()
+
+	subAccountId := int64(1234567)
+
+	mux.HandleFunc("/v1/account-management/time-based-accounts/", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPut, r.Method)
+		assert.Contains(t, r.URL.String(), strconv.FormatInt(int64(subAccountId), 10))
+		jsonBytes, _ := io.ReadAll(r.Body)
+		var target sub_accounts.CreateOrUpdateSubAccount
+		err = json.Unmarshal(jsonBytes, &target)
+		assert.NoError(t, err)
+		assert.NotNil(t, target)
+		w.WriteHeader(http.StatusNoContent)
+	})
+
+	updateSubAccount := getCreateOrUpdateSubAccount("test@user.test")
+	softLimitGB := float32(0)
+	updateSubAccount.SoftLimitGB = &softLimitGB
+
+	err = underTest.UpdateSubAccount(subAccountId, updateSubAccount)
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "SoftLimitGB should be > 0 when set")
+
 }
