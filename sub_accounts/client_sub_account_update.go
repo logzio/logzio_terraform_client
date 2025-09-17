@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strconv"
 
 	logzio_client "github.com/logzio/logzio_terraform_client"
 )
@@ -47,11 +46,8 @@ func validateUpdateSubAccount(updateSubAccount CreateOrUpdateSubAccount) error {
 		return fmt.Errorf("account name must be set")
 	}
 
-	if len(updateSubAccount.Flexible) > 0 {
-		_, err := strconv.ParseBool(updateSubAccount.Flexible)
-		if err != nil {
-			return fmt.Errorf("flexible field is not set to boolean value")
-		}
+	isFlexible := mapStringToBool(updateSubAccount.Flexible)
+	if isFlexible {
 		if updateSubAccount.SoftLimitGB != nil {
 			return fmt.Errorf("when isFlexible=true SoftLimitGB should be empty or omitted")
 		}
