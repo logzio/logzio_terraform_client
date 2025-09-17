@@ -29,7 +29,7 @@ func (c *DashboardsClient) CreateDashboard(folderId string, req CreateDashboardR
 		HttpMethod:   createDashboardMethod,
 		Url:          fmt.Sprintf(dashboardsCreateEndpoint, c.BaseUrl, folderId),
 		Body:         body,
-		SuccessCodes: []int{createDashboardSuccess},
+		SuccessCodes: []int{createDashboardSuccess, http.StatusOK},
 		NotFoundCode: createDashboardNotFound,
 		ResourceId:   nil,
 		ApiAction:    createDashboardOperation,

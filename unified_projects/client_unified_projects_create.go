@@ -42,7 +42,7 @@ func (c *ProjectsClient) CreateProject(req CreateProjectRequest) (*ProjectSummar
 		HttpMethod:   createProjectMethod,
 		Url:          fmt.Sprintf(projectsServiceEndpoint, c.BaseUrl),
 		Body:         body,
-		SuccessCodes: []int{createProjectSuccess},
+		SuccessCodes: []int{createProjectSuccess, http.StatusOK},
 		NotFoundCode: createProjectNotFound,
 		ResourceId:   nil,
 		ApiAction:    createProjectOperation,
