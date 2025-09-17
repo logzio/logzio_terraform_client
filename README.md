@@ -26,6 +26,8 @@ The library currently supports the following API endpoints:
 * [Metrics Accounts](https://api-docs.logz.io/docs/logz/create-a-new-metrics-account)
 * [Metrics drop filters](./drop_metrics/README.md) <!--- This should be replaced with the proper docs link once released. -->
 * [Metrics roll-up rules](./metrics_rollup_rules/README.md) <!--- This should be replaced with the proper docs link once released. -->
+* [Unified Projects](https://github.com/logzio/logzio_terraform_client/tree/master/unified_projects).
+* [Unified Dashboards](https://github.com/logzio/logzio_terraform_client/tree/master/unified_dashboards).
 
 #### Contributing
 
