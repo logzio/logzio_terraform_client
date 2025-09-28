@@ -36,7 +36,7 @@ func (c *ProjectsClient) ListProjects(withDashboards bool) ([]ProjectModel, erro
 		Body:         nil,
 		SuccessCodes: []int{listProjectsSuccess},
 		NotFoundCode: listProjectsNotFound,
-		ResourceId:   nil,
+		ResourceId:   "list",
 		ApiAction:    listProjectsOperation,
 		ResourceName: projectResourceName,
 	})

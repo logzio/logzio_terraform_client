@@ -31,7 +31,7 @@ func (c *DashboardsClient) CreateDashboard(folderId string, req CreateDashboardR
 		Body:         body,
 		SuccessCodes: []int{createDashboardSuccess, http.StatusOK},
 		NotFoundCode: createDashboardNotFound,
-		ResourceId:   nil,
+		ResourceId:   folderId,
 		ApiAction:    createDashboardOperation,
 		ResourceName: dashboardResourceName,
 	})

@@ -31,7 +31,7 @@ func (c *DashboardsClient) SearchDashboards(req SearchDashboardsRequest) ([]Dash
 		Body:         body,
 		SuccessCodes: []int{searchDashboardsSuccess},
 		NotFoundCode: searchDashboardsNotFound,
-		ResourceId:   nil,
+		ResourceId:   "search",
 		ApiAction:    searchDashboardsOperation,
 		ResourceName: dashboardResourceName,
 	})

@@ -31,7 +31,7 @@ func (c *ProjectsClient) SearchProjects(req SearchProjectsRequest) (*SearchProje
 		Body:         body,
 		SuccessCodes: []int{searchProjectsSuccess},
 		NotFoundCode: searchProjectsNotFound,
-		ResourceId:   nil,
+		ResourceId:   "search",
 		ApiAction:    searchProjectsOperation,
 		ResourceName: projectResourceName,
 	})
