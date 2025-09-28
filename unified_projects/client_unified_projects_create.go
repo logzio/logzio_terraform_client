@@ -44,7 +44,7 @@ func (c *ProjectsClient) CreateProject(req CreateProjectRequest) (*ProjectSummar
 		Body:         body,
 		SuccessCodes: []int{createProjectSuccess, http.StatusOK},
 		NotFoundCode: createProjectNotFound,
-		ResourceId:   nil,
+		ResourceId:   req.Name,
 		ApiAction:    createProjectOperation,
 		ResourceName: projectResourceName,
 	})

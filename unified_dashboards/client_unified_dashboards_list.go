@@ -22,7 +22,7 @@ func (c *DashboardsClient) ListDashboards() ([]Dashboard, error) {
 		Body:         nil,
 		SuccessCodes: []int{listDashboardsSuccess},
 		NotFoundCode: listDashboardsNotFound,
-		ResourceId:   nil,
+		ResourceId:   "list",
 		ApiAction:    listDashboardsOperation,
 		ResourceName: dashboardResourceName,
 	})
