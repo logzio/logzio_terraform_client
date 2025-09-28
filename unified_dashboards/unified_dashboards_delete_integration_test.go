@@ -11,9 +11,13 @@ import (
 
 func TestIntegrationUnifiedDashboards_DeleteDashboard(t *testing.T) {
 	projClient, err := setupUnifiedProjectsIntegrationTest()
-	assert.NoError(t, err)
+	if !assert.NoError(t, err) || projClient == nil {
+		return
+	}
 	dashClient, err := setupUnifiedDashboardsIntegrationTest()
-	assert.NoError(t, err)
+	if !assert.NoError(t, err) || dashClient == nil {
+		return
+	}
 
 	uniqueId := time.Now().Format("20060102150405")
 	projName := "tf-client-it-del-dash-" + uniqueId
@@ -23,7 +27,7 @@ func TestIntegrationUnifiedDashboards_DeleteDashboard(t *testing.T) {
 	if assert.NoError(t, err) && assert.NotNil(t, proj) {
 		defer projClient.DeleteProject(proj.Id)
 
-		time.Sleep(2 * time.Second) // Allow for eventual consistency
+		time.Sleep(10 * time.Second) // Allow for eventual consistency
 
 		// Create a dashboard
 		createReq := unified_dashboards.CreateDashboardRequest{
