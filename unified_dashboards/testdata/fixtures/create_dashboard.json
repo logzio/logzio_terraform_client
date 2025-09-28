@@ -1,0 +1,23 @@
+{
+  "uid": "dashboard-new",
+  "doc": {
+    "title": "CPU Usage Dashboard",
+    "panels": [
+      {
+        "id": 1,
+        "title": "CPU Usage",
+        "type": "graph",
+        "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+        "targets": [
+          {
+            "query": "rate(node_cpu_seconds_total{mode='idle'}[5m])",
+            "refId": "A"
+          }
+        ]
+      }
+    ]
+  },
+  "version": 1,
+  "createdAt": "2024-03-22T14:30:00Z",
+  "createdBy": "user1"
+} 
