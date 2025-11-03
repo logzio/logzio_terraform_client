@@ -1,0 +1,48 @@
+{
+  "title": "Test Log Alert",
+  "type": "LOG_ALERT",
+  "description": "Test log alert description",
+  "tags": ["test", "log"],
+  "folderId": "folder-123",
+  "logAlert": {
+    "output": {
+      "recipients": {
+        "emails": ["test@example.com"],
+        "notificationEndpointIds": [1, 2]
+      },
+      "suppressNotificationsMinutes": 5,
+      "type": "JSON"
+    },
+    "searchTimeFrameMinutes": 15,
+    "subComponents": [
+      {
+        "queryDefinition": {
+          "query": "loglevel:ERROR",
+          "aggregation": {
+            "aggregationType": "COUNT"
+          },
+          "shouldQueryOnAllAccounts": true
+        },
+        "trigger": {
+          "operator": "GREATER_THAN",
+          "severityThresholdTiers": {
+            "HIGH": 10.0,
+            "INFO": 5.0
+          }
+        },
+        "output": {
+          "shouldUseAllFields": true
+        }
+      }
+    ],
+    "schedule": {
+      "cronExpression": "0 */5 * * *",
+      "timezone": "UTC"
+    }
+  },
+  "id": "test-log-alert-123",
+  "updatedAt": 1699000000,
+  "createdAt": 1699000000,
+  "enabled": true
+}
+
