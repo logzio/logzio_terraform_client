@@ -45,11 +45,14 @@ const (
 	SeveritySevere string = "SEVERE"
 
 	// Trigger types
-	TriggerTypeThreshold string = "THRESHOLD"
+	TriggerTypeThreshold      string = "THRESHOLD"
+	TriggerTypeMathExpression string = "MATH_EXPRESSION"
 
 	// Metric operators
-	MetricOperatorAbove string = "ABOVE"
-	MetricOperatorBelow string = "BELOW"
+	MetricOperatorAbove        string = "ABOVE"
+	MetricOperatorBelow        string = "BELOW"
+	MetricOperatorWithinRange  string = "WITHIN_RANGE"
+	MetricOperatorOutsideRange string = "OUTSIDE_RANGE"
 
 	// Sort directions
 	SortDesc string = "DESC"
@@ -202,11 +205,10 @@ type Schedule struct {
 
 // MetricAlertConfig represents the metric alert configuration
 type MetricAlertConfig struct {
-	Severity       string        `json:"severity,omitempty"`
-	Trigger        MetricTrigger `json:"trigger,omitempty"`
-	ConditionRefId string        `json:"conditionRefId,omitempty"`
-	Queries        []MetricQuery `json:"queries,omitempty"`
-	Recipients     Recipients    `json:"recipients,omitempty"`
+	Severity   string        `json:"severity,omitempty"`
+	Trigger    MetricTrigger `json:"trigger,omitempty"`
+	Queries    []MetricQuery `json:"queries,omitempty"`
+	Recipients Recipients    `json:"recipients,omitempty"`
 }
 
 // MetricTrigger represents the trigger configuration for metric alerts
@@ -310,6 +312,13 @@ func validateLogAlert(logAlert *LogAlertConfig) error {
 			return fmt.Errorf("logAlert.subComponents[%d].queryDefinition.query must be set", i)
 		}
 
+		// Validate shouldQueryOnAllAccounts and accountIdsToQueryOn relationship
+		if !subComponent.QueryDefinition.ShouldQueryOnAllAccounts {
+			if subComponent.QueryDefinition.AccountIdsToQueryOn == nil || len(subComponent.QueryDefinition.AccountIdsToQueryOn) == 0 {
+				return fmt.Errorf("logAlert.subComponents[%d].queryDefinition.accountIdsToQueryOn must be set when shouldQueryOnAllAccounts is false", i)
+			}
+		}
+
 		if len(subComponent.QueryDefinition.Aggregation.AggregationType) > 0 {
 			if !logzio_client.Contains(validAggregationTypes, subComponent.QueryDefinition.Aggregation.AggregationType) {
 				return fmt.Errorf("logAlert.subComponents[%d].queryDefinition.aggregation.aggregationType must be one of %v", i, validAggregationTypes)
@@ -345,8 +354,8 @@ func validateLogAlert(logAlert *LogAlertConfig) error {
 // validateMetricAlert validates metric alert configuration
 func validateMetricAlert(metricAlert *MetricAlertConfig) error {
 	validSeverities := []string{SeverityInfo, SeverityLow, SeverityMedium, SeverityHigh, SeveritySevere}
-	validTriggerTypes := []string{TriggerTypeThreshold}
-	validMetricOperators := []string{MetricOperatorAbove, MetricOperatorBelow}
+	validTriggerTypes := []string{TriggerTypeThreshold, TriggerTypeMathExpression}
+	validMetricOperators := []string{MetricOperatorAbove, MetricOperatorBelow, MetricOperatorWithinRange, MetricOperatorOutsideRange}
 
 	if len(metricAlert.Severity) > 0 {
 		if !logzio_client.Contains(validSeverities, metricAlert.Severity) {

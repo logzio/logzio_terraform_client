@@ -23,7 +23,7 @@ func TestIntegrationUnifiedAlerts_GetAlert(t *testing.T) {
 
 	// First create an alert
 	createLogAlert := getCreateLogAlertType()
-	createdAlert, err := underTest.CreateUnifiedAlert(createLogAlert)
+	createdAlert, err := underTest.CreateUnifiedAlert(unified_alerts.UrlTypeLogs, createLogAlert)
 	assert.NoError(t, err)
 	assert.NotNil(t, createdAlert)
 

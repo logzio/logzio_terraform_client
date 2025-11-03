@@ -15,8 +15,10 @@ func TestUnifiedAlerts_CreateLogAlert(t *testing.T) {
 	underTest, err, teardown := setupUnifiedAlertsTest()
 	defer teardown()
 
+	alertType := unified_alerts.UrlTypeLogs
+
 	if assert.NoError(t, err) {
-		mux.HandleFunc("/poc/unified-alerts", func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc(fmt.Sprintf("/poc/unified-alerts/%s", alertType), func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPost, r.Method)
 
 			jsonBytes, _ := io.ReadAll(r.Body)
@@ -35,7 +37,7 @@ func TestUnifiedAlerts_CreateLogAlert(t *testing.T) {
 
 		testAlert := getCreateLogAlertType()
 
-		alert, err := underTest.CreateUnifiedAlert(testAlert)
+		alert, err := underTest.CreateUnifiedAlert(alertType, testAlert)
 		assert.NoError(t, err)
 		assert.NotNil(t, alert)
 		assert.Equal(t, "test-log-alert-123", alert.Id)
@@ -48,8 +50,10 @@ func TestUnifiedAlerts_CreateMetricAlert(t *testing.T) {
 	underTest, err, teardown := setupUnifiedAlertsTest()
 	defer teardown()
 
+	alertType := unified_alerts.UrlTypeMetrics
+
 	if assert.NoError(t, err) {
-		mux.HandleFunc("/poc/unified-alerts", func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc(fmt.Sprintf("/poc/unified-alerts/%s", alertType), func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodPost, r.Method)
 
 			jsonBytes, _ := io.ReadAll(r.Body)
@@ -67,7 +71,7 @@ func TestUnifiedAlerts_CreateMetricAlert(t *testing.T) {
 
 		testAlert := getCreateMetricAlertType()
 
-		alert, err := underTest.CreateUnifiedAlert(testAlert)
+		alert, err := underTest.CreateUnifiedAlert(alertType, testAlert)
 		assert.NoError(t, err)
 		assert.NotNil(t, alert)
 		assert.Equal(t, "test-metric-alert-456", alert.Id)
@@ -79,15 +83,17 @@ func TestUnifiedAlerts_CreateAlertAPIFail(t *testing.T) {
 	underTest, err, teardown := setupUnifiedAlertsTest()
 	defer teardown()
 
+	alertType := unified_alerts.UrlTypeLogs
+
 	if assert.NoError(t, err) {
-		mux.HandleFunc("/poc/unified-alerts", func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc(fmt.Sprintf("/poc/unified-alerts/%s", alertType), func(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Header().Set("Content-Type", "application/json")
 			fmt.Fprint(w, fixture("api_error.txt"))
 		})
 	}
 
-	_, err = underTest.CreateUnifiedAlert(getCreateLogAlertType())
+	_, err = underTest.CreateUnifiedAlert(alertType, getCreateLogAlertType())
 	assert.Error(t, err)
 }
 
@@ -97,7 +103,7 @@ func TestUnifiedAlerts_CreateAlertNoTitle(t *testing.T) {
 
 	createAlertType := getCreateLogAlertType()
 	createAlertType.Title = ""
-	_, err = underTest.CreateUnifiedAlert(createAlertType)
+	_, err = underTest.CreateUnifiedAlert(unified_alerts.UrlTypeLogs, createAlertType)
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "title must be set")
 }
@@ -108,7 +114,7 @@ func TestUnifiedAlerts_CreateAlertNoType(t *testing.T) {
 
 	createAlertType := getCreateLogAlertType()
 	createAlertType.Type = ""
-	_, err = underTest.CreateUnifiedAlert(createAlertType)
+	_, err = underTest.CreateUnifiedAlert(unified_alerts.UrlTypeLogs, createAlertType)
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "type must be set")
 }
@@ -119,8 +125,18 @@ func TestUnifiedAlerts_CreateAlertInvalidType(t *testing.T) {
 
 	createAlertType := getCreateLogAlertType()
 	createAlertType.Type = "INVALID_TYPE"
-	_, err = underTest.CreateUnifiedAlert(createAlertType)
+	_, err = underTest.CreateUnifiedAlert(unified_alerts.UrlTypeLogs, createAlertType)
 	assert.Error(t, err)
+}
+
+func TestUnifiedAlerts_CreateAlertInvalidUrlType(t *testing.T) {
+	underTest, err, teardown := setupUnifiedAlertsTest()
+	defer teardown()
+
+	createAlertType := getCreateLogAlertType()
+	_, err = underTest.CreateUnifiedAlert("invalid-url-type", createAlertType)
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "alertType must be one of")
 }
 
 func TestUnifiedAlerts_CreateLogAlertMissingLogAlert(t *testing.T) {
@@ -129,7 +145,7 @@ func TestUnifiedAlerts_CreateLogAlertMissingLogAlert(t *testing.T) {
 
 	createAlertType := getCreateLogAlertType()
 	createAlertType.LogAlert = nil
-	_, err = underTest.CreateUnifiedAlert(createAlertType)
+	_, err = underTest.CreateUnifiedAlert(unified_alerts.UrlTypeLogs, createAlertType)
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "logAlert must be set")
 }
@@ -140,7 +156,7 @@ func TestUnifiedAlerts_CreateMetricAlertMissingMetricAlert(t *testing.T) {
 
 	createAlertType := getCreateMetricAlertType()
 	createAlertType.MetricAlert = nil
-	_, err = underTest.CreateUnifiedAlert(createAlertType)
+	_, err = underTest.CreateUnifiedAlert(unified_alerts.UrlTypeMetrics, createAlertType)
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "metricAlert must be set")
 }
@@ -151,7 +167,7 @@ func TestUnifiedAlerts_CreateLogAlertNoSubComponents(t *testing.T) {
 
 	createAlertType := getCreateLogAlertType()
 	createAlertType.LogAlert.SubComponents = nil
-	_, err = underTest.CreateUnifiedAlert(createAlertType)
+	_, err = underTest.CreateUnifiedAlert(unified_alerts.UrlTypeLogs, createAlertType)
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "subComponents")
 }
@@ -162,7 +178,7 @@ func TestUnifiedAlerts_CreateLogAlertEmptyQuery(t *testing.T) {
 
 	createAlertType := getCreateLogAlertType()
 	createAlertType.LogAlert.SubComponents[0].QueryDefinition.Query = ""
-	_, err = underTest.CreateUnifiedAlert(createAlertType)
+	_, err = underTest.CreateUnifiedAlert(unified_alerts.UrlTypeLogs, createAlertType)
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "query must be set")
 }

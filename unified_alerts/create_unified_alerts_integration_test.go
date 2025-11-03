@@ -23,7 +23,7 @@ func TestIntegrationUnifiedAlerts_CreateLogAlert(t *testing.T) {
 
 	createLogAlert := getCreateLogAlertType()
 
-	alert, err := underTest.CreateUnifiedAlert(createLogAlert)
+	alert, err := underTest.CreateUnifiedAlert(unified_alerts.UrlTypeLogs, createLogAlert)
 	assert.NoError(t, err)
 	assert.NotNil(t, alert)
 	assert.NotEmpty(t, alert.Id)
@@ -50,7 +50,7 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert(t *testing.T) {
 
 	createMetricAlert := getCreateMetricAlertType()
 
-	alert, err := underTest.CreateUnifiedAlert(createMetricAlert)
+	alert, err := underTest.CreateUnifiedAlert(unified_alerts.UrlTypeMetrics, createMetricAlert)
 	assert.NoError(t, err)
 	assert.NotNil(t, alert)
 	assert.NotEmpty(t, alert.Id)

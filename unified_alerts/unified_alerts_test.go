@@ -104,7 +104,6 @@ func getCreateMetricAlertType() unified_alerts.CreateUnifiedAlert {
 				MinThreshold:           80.0,
 				SearchTimeFrameMinutes: 5,
 			},
-			ConditionRefId: "A",
 			Queries: []unified_alerts.MetricQuery{
 				{
 					RefId: "A",

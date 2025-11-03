@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	createUnifiedAlertServiceUrl     = unifiedAlertsServiceEndpoint
+	createUnifiedAlertServiceUrl     = unifiedAlertsServiceEndpoint + "/%s"
 	createUnifiedAlertServiceMethod  = http.MethodPost
 	createUnifiedAlertServiceSuccess = http.StatusOK
 	createUnifiedAlertServiceCreated = http.StatusCreated
@@ -17,8 +17,13 @@ const (
 )
 
 // CreateUnifiedAlert creates a unified alert, returns the created alert if successful, an error otherwise
-func (c *UnifiedAlertsClient) CreateUnifiedAlert(req CreateUnifiedAlert) (*UnifiedAlert, error) {
-	err := validateCreateUnifiedAlertRequest(req)
+func (c *UnifiedAlertsClient) CreateUnifiedAlert(alertType string, req CreateUnifiedAlert) (*UnifiedAlert, error) {
+	err := validateUrlType(alertType)
+	if err != nil {
+		return nil, err
+	}
+
+	err = validateCreateUnifiedAlertRequest(req)
 	if err != nil {
 		return nil, err
 	}
@@ -31,7 +36,7 @@ func (c *UnifiedAlertsClient) CreateUnifiedAlert(req CreateUnifiedAlert) (*Unifi
 	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
 		ApiToken:     c.ApiToken,
 		HttpMethod:   createUnifiedAlertServiceMethod,
-		Url:          fmt.Sprintf(createUnifiedAlertServiceUrl, c.BaseUrl),
+		Url:          fmt.Sprintf(createUnifiedAlertServiceUrl, c.BaseUrl, alertType),
 		Body:         createUnifiedAlertJson,
 		SuccessCodes: []int{createUnifiedAlertServiceSuccess, createUnifiedAlertServiceCreated},
 		NotFoundCode: createUnifiedAlertNotFound,

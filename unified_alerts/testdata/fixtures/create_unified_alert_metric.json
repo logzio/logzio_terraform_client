@@ -12,7 +12,6 @@
       "minThreshold": 80.0,
       "searchTimeFrameMinutes": 5
     },
-    "conditionRefId": "A",
     "queries": [
       {
         "refId": "A",
