@@ -1,10 +1,12 @@
 package unified_alerts_test
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/logzio/logzio_terraform_client/test_utils"
 	"github.com/logzio/logzio_terraform_client/unified_alerts"
@@ -46,7 +48,7 @@ func setupUnifiedAlertsIntegrationTest() (*unified_alerts.UnifiedAlertsClient, e
 
 func getCreateLogAlertType() unified_alerts.CreateUnifiedAlert {
 	return unified_alerts.CreateUnifiedAlert{
-		Title:       "Test Log Alert",
+		Title:       "TF client Log Alert",
 		Type:        unified_alerts.TypeLogAlert,
 		Description: "Test log alert description",
 		Tags:        []string{"test", "log"},
@@ -91,8 +93,9 @@ func getCreateLogAlertType() unified_alerts.CreateUnifiedAlert {
 
 func getCreateMetricAlertType() unified_alerts.CreateUnifiedAlert {
 	datasourceUid := os.Getenv("GRAFANA_DATASOURCE_UID")
+	uniqueId := fmt.Sprintf("%d", time.Now().UnixNano())
 	return unified_alerts.CreateUnifiedAlert{
-		Title:       "Test Metric Alert",
+		Title:       "TF client Metric Alert" + uniqueId,
 		Type:        unified_alerts.TypeMetricAlert,
 		Description: "Test metric alert description",
 		Tags:        []string{"test", "metric"},

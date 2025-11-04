@@ -43,3 +43,4 @@ jobs:
         run: go test $(go list ./... | grep -v kibana_objects | grep -v grafana_folders)
       - name: Test grafana folders
         run: go test -parallel 1 ./grafana_folders
+        

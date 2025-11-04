@@ -22,7 +22,6 @@ func TestIntegrationUnifiedAlerts_UpdateAlert(t *testing.T) {
 		t.Fatalf("setupUnifiedAlertsIntegrationTest failed: %s", err)
 	}
 
-	// First create an alert
 	createLogAlert := getCreateLogAlertType()
 	createdAlert, err := underTest.CreateUnifiedAlert(unified_alerts.UrlTypeLogs, createLogAlert)
 	require.NoError(t, err, "Failed to create log alert for update test")
@@ -47,6 +46,41 @@ func TestIntegrationUnifiedAlerts_UpdateAlert(t *testing.T) {
 	assert.Equal(t, createdAlert.Id, updatedAlert.Id)
 	assert.Equal(t, "Updated Integration Test Alert", updatedAlert.Title)
 	assert.Equal(t, "Updated description", updatedAlert.Description)
+}
+
+func TestIntegrationUnifiedAlerts_UpdateMetricAlert(t *testing.T) {
+	if os.Getenv("LOGZIO_API_TOKEN") == "" {
+		t.Skip("LOGZIO_API_TOKEN not set")
+	}
+
+	underTest, err := setupUnifiedAlertsIntegrationTest()
+	if err != nil {
+		t.Fatalf("setupUnifiedAlertsIntegrationTest failed: %s", err)
+	}
+
+	createMetricAlert := getCreateMetricAlertType()
+	createdAlert, err := underTest.CreateUnifiedAlert(unified_alerts.UrlTypeMetrics, createMetricAlert)
+	require.NoError(t, err, "Failed to create metric alert for update test")
+	require.NotNil(t, createdAlert, "Created metric alert should not be nil")
+	// TODO: return cleanup
+	// // Cleanup
+	// defer func() {
+	// 	_, deleteErr := underTest.DeleteUnifiedAlert(unified_alerts.UrlTypeMetrics, createdAlert.Id)
+	// 	if deleteErr != nil {
+	// 		t.Logf("Failed to cleanup metric alert: %s", deleteErr)
+	// 	}
+	// }()
+
+	updateAlert := getCreateMetricAlertType()
+	updateAlert.Title = "Updated Integration Test Metric Alert"
+	updateAlert.Description = "Updated metric alert description"
+
+	updatedAlert, err := underTest.UpdateUnifiedAlert(unified_alerts.UrlTypeMetrics, createdAlert.Id, updateAlert)
+	require.NoError(t, err, "Failed to update metric alert")
+	require.NotNil(t, updatedAlert, "Updated metric alert should not be nil")
+	assert.Equal(t, createdAlert.Id, updatedAlert.Id)
+	assert.Equal(t, "Updated Integration Test Metric Alert", updatedAlert.Title)
+	assert.Equal(t, "Updated metric alert description", updatedAlert.Description)
 }
 
 func TestIntegrationUnifiedAlerts_UpdateAlertNotFound(t *testing.T) {
