@@ -1,6 +1,11 @@
 # Changes by Version
 
 <!-- next version -->
+## v1.29.0
+- Add Unified Alerts API (POC endpoint).
+  - Support for both log-based and metric-based alerts through a unified interface
+  - CRUD operations: Create, Get, Update, Delete
+
 ## v1.28.1
 - Bug fix - **sub_accounts**: ensure `CreateOrUpdateSubAccount.Flexible` is interpreted as a boolean value in verification logic.
 
