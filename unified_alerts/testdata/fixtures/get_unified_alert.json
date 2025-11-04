@@ -1,0 +1,40 @@
+{
+  "title": "Retrieved Alert",
+  "type": "LOG_ALERT",
+  "description": "Retrieved alert description",
+  "tags": ["retrieved"],
+  "folderId": "folder-789",
+  "logAlert": {
+    "output": {
+      "recipients": {
+        "emails": ["get@example.com"]
+      },
+      "type": "JSON"
+    },
+    "searchTimeFrameMinutes": 10,
+    "subComponents": [
+      {
+        "queryDefinition": {
+          "query": "status:500",
+          "aggregation": {
+            "aggregationType": "COUNT"
+          }
+        },
+        "trigger": {
+          "operator": "GREATER_THAN",
+          "severityThresholdTiers": {
+            "SEVERE": 100.0
+          }
+        },
+        "output": {
+          "shouldUseAllFields": true
+        }
+      }
+    ]
+  },
+  "id": "get-alert-789",
+  "updatedAt": 1699000000.123456,
+  "createdAt": 1699000000.123456,
+  "enabled": true
+}
+
