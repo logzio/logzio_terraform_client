@@ -85,6 +85,7 @@ type CreateUnifiedAlert struct {
 	DashboardId                         string             `json:"dashboardId,omitempty"`
 	PanelId                             string             `json:"panelId,omitempty"`
 	Runbook                             string             `json:"runbook,omitempty"`
+	Enabled                             *bool              `json:"enabled,omitempty"`
 	Rca                                 bool               `json:"rca,omitempty"`
 	RcaNotificationEndpointIds          []int              `json:"rcaNotificationEndpointIds,omitempty"`
 	UseAlertNotificationEndpointsForRca bool               `json:"useAlertNotificationEndpointsForRca,omitempty"`

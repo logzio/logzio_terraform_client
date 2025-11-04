@@ -6,6 +6,7 @@ package unified_alerts_test
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"testing"
 	"time"
 
@@ -16,12 +17,24 @@ import (
 
 // Test configuration constants
 var (
-	testFolderId             = os.Getenv("LOGZIO_UNIFIED_FOLDER_ID")
-	testDashboardId          = os.Getenv("LOGZIO_UNIFIED_DASHBOARD_ID")
-	testPanelId              = os.Getenv("LOGZIO_UNIFIED_PANEL_ID")
-	testNotificationEndpoint = os.Getenv("LOGZIO_UNIFIED_NOTIFICATION_ENDPOINT_ID")
-	testDatasourceUid        = os.Getenv("GRAFANA_DATASOURCE_UID")
+	testFolderId      = os.Getenv("LOGZIO_UNIFIED_FOLDER_ID")
+	testDashboardId   = os.Getenv("LOGZIO_UNIFIED_DASHBOARD_ID")
+	testPanelId       = os.Getenv("LOGZIO_UNIFIED_PANEL_ID")
+	testDatasourceUid = os.Getenv("GRAFANA_DATASOURCE_UID")
 )
+
+// getTestNotificationEndpoint returns the notification endpoint ID as an integer
+func getTestNotificationEndpoint() int {
+	endpointStr := os.Getenv("LOGZIO_UNIFIED_NOTIFICATION_ENDPOINT_ID")
+	if endpointStr == "" {
+		return 0
+	}
+	endpoint, err := strconv.Atoi(endpointStr)
+	if err != nil {
+		return 0
+	}
+	return endpoint
+}
 
 // generateUniqueTitle generates a unique title with timestamp
 func generateUniqueTitle(base string) string {
@@ -121,7 +134,7 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert_OneQueryNoAI(t *testing.T) {
 			},
 			Recipients: unified_alerts.Recipients{
 				Emails:                  []string{"alerts@example.com"},
-				NotificationEndpointIds: []int{testNotificationEndpoint},
+				NotificationEndpointIds: []int{getTestNotificationEndpoint()},
 			},
 		},
 	}
@@ -180,7 +193,7 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert_TwoQueriesNoAI(t *testing.T)
 			},
 			Recipients: unified_alerts.Recipients{
 				Emails:                  []string{"team@example.com"},
-				NotificationEndpointIds: []int{testNotificationEndpoint},
+				NotificationEndpointIds: []int{getTestNotificationEndpoint()},
 			},
 		},
 	}
@@ -235,7 +248,7 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert_OneQueryWithAI(t *testing.T)
 			},
 			Recipients: unified_alerts.Recipients{
 				Emails:                  []string{"oncall@example.com"},
-				NotificationEndpointIds: []int{testNotificationEndpoint},
+				NotificationEndpointIds: []int{getTestNotificationEndpoint()},
 			},
 		},
 	}
@@ -298,7 +311,7 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert_TwoQueriesWithAI(t *testing.
 			},
 			Recipients: unified_alerts.Recipients{
 				Emails:                  []string{"storage-team@example.com"},
-				NotificationEndpointIds: []int{testNotificationEndpoint},
+				NotificationEndpointIds: []int{getTestNotificationEndpoint()},
 			},
 		},
 	}
@@ -335,7 +348,7 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert_OneQueryWithAI_DifferentEndp
 		DashboardId:                testDashboardId,
 		PanelId:                    testPanelId,
 		Rca:                        true,
-		RcaNotificationEndpointIds: []int{testNotificationEndpoint}, // Different AI notification endpoint
+		RcaNotificationEndpointIds: []int{getTestNotificationEndpoint()}, // Different AI notification endpoint
 		MetricAlert: &unified_alerts.MetricAlertConfig{
 			Severity: unified_alerts.SeverityHigh,
 			Trigger: unified_alerts.MetricTrigger{
@@ -355,7 +368,7 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert_OneQueryWithAI_DifferentEndp
 			},
 			Recipients: unified_alerts.Recipients{
 				Emails:                  []string{"network-team@example.com"},
-				NotificationEndpointIds: []int{testNotificationEndpoint}, // Alert notification endpoint
+				NotificationEndpointIds: []int{getTestNotificationEndpoint()}, // Alert notification endpoint
 			},
 		},
 	}
@@ -393,7 +406,7 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert_TwoQueriesWithAI_DifferentEn
 		DashboardId:                testDashboardId,
 		PanelId:                    testPanelId,
 		Rca:                        true,
-		RcaNotificationEndpointIds: []int{testNotificationEndpoint}, // Different AI notification endpoint
+		RcaNotificationEndpointIds: []int{getTestNotificationEndpoint()}, // Different AI notification endpoint
 		MetricAlert: &unified_alerts.MetricAlertConfig{
 			Severity: unified_alerts.SeverityMedium,
 			Trigger: unified_alerts.MetricTrigger{
@@ -419,7 +432,7 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert_TwoQueriesWithAI_DifferentEn
 			},
 			Recipients: unified_alerts.Recipients{
 				Emails:                  []string{"performance-team@example.com"},
-				NotificationEndpointIds: []int{testNotificationEndpoint}, // Alert notification endpoint
+				NotificationEndpointIds: []int{getTestNotificationEndpoint()}, // Alert notification endpoint
 			},
 		},
 	}

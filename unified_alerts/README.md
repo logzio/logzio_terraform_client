@@ -22,12 +22,14 @@ func main() {
         panic(err)
     }
 
+    enabled := true
     logAlert := unified_alerts.CreateUnifiedAlert{
         Title:       "High Error Rate",
         Type:        unified_alerts.TypeLogAlert,
         Description: "Alert when error rate is too high",
         Tags:        []string{"production", "errors"},
         FolderId:    "folder-123",
+        Enabled:     &enabled,  // Optional: explicitly enable the alert
         LogAlert: &unified_alerts.LogAlertConfig{
             Output: unified_alerts.LogAlertOutput{
                 Recipients: unified_alerts.Recipients{
