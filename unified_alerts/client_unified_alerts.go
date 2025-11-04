@@ -46,7 +46,7 @@ const (
 
 	// Trigger types
 	TriggerTypeThreshold      string = "THRESHOLD"
-	TriggerTypeMathExpression string = "MATH_EXPRESSION"
+	TriggerTypeMathExpression string = "MATH"
 
 	// Metric operators
 	MetricOperatorAbove        string = "ABOVE"

@@ -158,7 +158,7 @@ deletedAlert, err := client.DeleteUnifiedAlert(unified_alerts.UrlTypeLogs, "aler
 - All operations include comprehensive validation of required fields and enum values
 - The `logAlert` fields follow the same structure as the existing alerts v2 API
 - Valid values for `logAlert.output.type`: "JSON", "TABLE"
-- Valid values for `metricAlert.trigger.triggerType`: "THRESHOLD", "MATH_EXPRESSION"
+- Valid values for `metricAlert.trigger.triggerType`: "THRESHOLD", "MATH"
 - Valid values for `metricAlert.trigger.metricOperator`: "ABOVE", "BELOW", "WITHIN_RANGE", "OUTSIDE_RANGE"
 
 ## Important Validation Rules
