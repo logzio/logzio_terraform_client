@@ -33,8 +33,8 @@
     ]
   },
   "id": "get-alert-789",
-  "updatedAt": 1699000000,
-  "createdAt": 1699000000,
+  "updatedAt": 1699000000.123456,
+  "createdAt": 1699000000.123456,
   "enabled": true
 }
 

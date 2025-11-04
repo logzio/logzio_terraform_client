@@ -1,12 +1,13 @@
 package unified_alerts_test
 
 import (
-	"github.com/logzio/logzio_terraform_client/test_utils"
-	"github.com/logzio/logzio_terraform_client/unified_alerts"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"testing"
+
+	"github.com/logzio/logzio_terraform_client/test_utils"
+	"github.com/logzio/logzio_terraform_client/unified_alerts"
 )
 
 var (
@@ -49,12 +50,11 @@ func getCreateLogAlertType() unified_alerts.CreateUnifiedAlert {
 		Type:        unified_alerts.TypeLogAlert,
 		Description: "Test log alert description",
 		Tags:        []string{"test", "log"},
-		FolderId:    "folder-123",
 		LogAlert: &unified_alerts.LogAlertConfig{
 			Output: unified_alerts.LogAlertOutput{
 				Recipients: unified_alerts.Recipients{
 					Emails:                  []string{"test@example.com"},
-					NotificationEndpointIds: []int{1, 2},
+					NotificationEndpointIds: []int{},
 				},
 				SuppressNotificationsMinutes: 5,
 				Type:                         unified_alerts.OutputTypeJson,
@@ -82,7 +82,7 @@ func getCreateLogAlertType() unified_alerts.CreateUnifiedAlert {
 				},
 			},
 			Schedule: unified_alerts.Schedule{
-				CronExpression: "0 */5 * * *",
+				CronExpression: "0 0 0 * * ?",
 				Timezone:       "UTC",
 			},
 		},
@@ -90,12 +90,12 @@ func getCreateLogAlertType() unified_alerts.CreateUnifiedAlert {
 }
 
 func getCreateMetricAlertType() unified_alerts.CreateUnifiedAlert {
+	datasourceUid := os.Getenv("GRAFANA_DATASOURCE_UID")
 	return unified_alerts.CreateUnifiedAlert{
 		Title:       "Test Metric Alert",
 		Type:        unified_alerts.TypeMetricAlert,
 		Description: "Test metric alert description",
 		Tags:        []string{"test", "metric"},
-		FolderId:    "folder-456",
 		MetricAlert: &unified_alerts.MetricAlertConfig{
 			Severity: unified_alerts.SeverityHigh,
 			Trigger: unified_alerts.MetricTrigger{
@@ -108,14 +108,14 @@ func getCreateMetricAlertType() unified_alerts.CreateUnifiedAlert {
 				{
 					RefId: "A",
 					QueryDefinition: unified_alerts.MetricQueryDefinition{
-						DatasourceUid: "prometheus-uid",
+						DatasourceUid: datasourceUid,
 						PromqlQuery:   "up{job=\"api-server\"}",
 					},
 				},
 			},
 			Recipients: unified_alerts.Recipients{
 				Emails:                  []string{"alerts@example.com"},
-				NotificationEndpointIds: []int{3, 4},
+				NotificationEndpointIds: []int{},
 			},
 		},
 	}

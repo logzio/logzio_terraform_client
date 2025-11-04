@@ -9,6 +9,7 @@ import (
 
 	"github.com/logzio/logzio_terraform_client/unified_alerts"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestIntegrationUnifiedAlerts_GetAlert(t *testing.T) {
@@ -24,8 +25,8 @@ func TestIntegrationUnifiedAlerts_GetAlert(t *testing.T) {
 	// First create an alert
 	createLogAlert := getCreateLogAlertType()
 	createdAlert, err := underTest.CreateUnifiedAlert(unified_alerts.UrlTypeLogs, createLogAlert)
-	assert.NoError(t, err)
-	assert.NotNil(t, createdAlert)
+	require.NoError(t, err, "Failed to create log alert for get test")
+	require.NotNil(t, createdAlert, "Created alert should not be nil")
 
 	// Cleanup
 	defer func() {
@@ -37,8 +38,8 @@ func TestIntegrationUnifiedAlerts_GetAlert(t *testing.T) {
 
 	// Now get the alert
 	alert, err := underTest.GetUnifiedAlert(unified_alerts.UrlTypeLogs, createdAlert.Id)
-	assert.NoError(t, err)
-	assert.NotNil(t, alert)
+	require.NoError(t, err, "Failed to get alert")
+	require.NotNil(t, alert, "Retrieved alert should not be nil")
 	assert.Equal(t, createdAlert.Id, alert.Id)
 	assert.Equal(t, createdAlert.Title, alert.Title)
 }

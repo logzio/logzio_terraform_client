@@ -108,8 +108,8 @@ type UnifiedAlert struct {
 	LogAlert                            *LogAlertConfig    `json:"logAlert,omitempty"`
 	MetricAlert                         *MetricAlertConfig `json:"metricAlert,omitempty"`
 	Id                                  string             `json:"id,omitempty"`
-	UpdatedAt                           int64              `json:"updatedAt,omitempty"`
-	CreatedAt                           int64              `json:"createdAt,omitempty"`
+	UpdatedAt                           float64            `json:"updatedAt,omitempty"`
+	CreatedAt                           float64            `json:"createdAt,omitempty"`
 	Enabled                             bool               `json:"enabled,omitempty"`
 }
 

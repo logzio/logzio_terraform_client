@@ -9,6 +9,7 @@ import (
 
 	"github.com/logzio/logzio_terraform_client/unified_alerts"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestIntegrationUnifiedAlerts_CreateLogAlert(t *testing.T) {
@@ -24,8 +25,8 @@ func TestIntegrationUnifiedAlerts_CreateLogAlert(t *testing.T) {
 	createLogAlert := getCreateLogAlertType()
 
 	alert, err := underTest.CreateUnifiedAlert(unified_alerts.UrlTypeLogs, createLogAlert)
-	assert.NoError(t, err)
-	assert.NotNil(t, alert)
+	require.NoError(t, err, "Failed to create log alert")
+	require.NotNil(t, alert, "Alert should not be nil")
 	assert.NotEmpty(t, alert.Id)
 	assert.Equal(t, unified_alerts.TypeLogAlert, alert.Type)
 
@@ -51,16 +52,16 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert(t *testing.T) {
 	createMetricAlert := getCreateMetricAlertType()
 
 	alert, err := underTest.CreateUnifiedAlert(unified_alerts.UrlTypeMetrics, createMetricAlert)
-	assert.NoError(t, err)
-	assert.NotNil(t, alert)
+	require.NoError(t, err, "Failed to create metric alert")
+	require.NotNil(t, alert, "Alert should not be nil")
 	assert.NotEmpty(t, alert.Id)
 	assert.Equal(t, unified_alerts.TypeMetricAlert, alert.Type)
 
-	// Cleanup
-	defer func() {
-		_, deleteErr := underTest.DeleteUnifiedAlert(unified_alerts.UrlTypeMetrics, alert.Id)
-		if deleteErr != nil {
-			t.Logf("Failed to cleanup alert: %s", deleteErr)
-		}
-	}()
+	// // Cleanup
+	// defer func() {
+	// 	_, deleteErr := underTest.DeleteUnifiedAlert(unified_alerts.UrlTypeMetrics, alert.Id)
+	// 	if deleteErr != nil {
+	// 		t.Logf("Failed to cleanup alert: %s", deleteErr)
+	// 	}
+	// }()
 }
