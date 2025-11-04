@@ -62,14 +62,6 @@ func TestIntegrationUnifiedAlerts_UpdateMetricAlert(t *testing.T) {
 	createdAlert, err := underTest.CreateUnifiedAlert(unified_alerts.UrlTypeMetrics, createMetricAlert)
 	require.NoError(t, err, "Failed to create metric alert for update test")
 	require.NotNil(t, createdAlert, "Created metric alert should not be nil")
-	// TODO: return cleanup
-	// // Cleanup
-	// defer func() {
-	// 	_, deleteErr := underTest.DeleteUnifiedAlert(unified_alerts.UrlTypeMetrics, createdAlert.Id)
-	// 	if deleteErr != nil {
-	// 		t.Logf("Failed to cleanup metric alert: %s", deleteErr)
-	// 	}
-	// }()
 
 	updateAlert := getCreateMetricAlertType()
 	updateAlert.Title = "Updated Integration Test Metric Alert"

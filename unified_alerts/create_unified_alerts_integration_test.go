@@ -85,14 +85,6 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert(t *testing.T) {
 	require.NotNil(t, alert, "Alert should not be nil")
 	assert.NotEmpty(t, alert.Id)
 	assert.Equal(t, unified_alerts.TypeMetricAlert, alert.Type)
-	// TODO: return cleanup
-	// // Cleanup
-	// defer func() {
-	// 	_, deleteErr := underTest.DeleteUnifiedAlert(unified_alerts.UrlTypeMetrics, alert.Id)
-	// 	if deleteErr != nil {
-	// 		t.Logf("Failed to cleanup alert: %s", deleteErr)
-	// 	}
-	// }()
 }
 
 // TestIntegrationUnifiedAlerts_CreateMetricAlert_OneQueryNoAI tests creating a metric alert with one query and no AI
