@@ -47,6 +47,9 @@ func TestIntegrationUnifiedAlerts_UpdateMetricAlert(t *testing.T) {
 	if os.Getenv("LOGZIO_API_TOKEN") == "" {
 		t.Skip("LOGZIO_API_TOKEN not set")
 	}
+	if os.Getenv("LOGZIO_UNIFIED_ACCOUNT_ID") == "" {
+		t.Skip("LOGZIO_UNIFIED_ACCOUNT_ID not set")
+	}
 
 	underTest, err := setupUnifiedAlertsIntegrationTest()
 	if err != nil {

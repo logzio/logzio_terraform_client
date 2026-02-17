@@ -114,7 +114,7 @@ func getCreateMetricAlertType() unified_alerts.CreateUnifiedAlert {
 				{
 					RefId: "A",
 					QueryDefinition: unified_alerts.MetricQueryDefinition{
-						AccountId:   12345,
+						AccountId:   testAccountId,
 						PromqlQuery: "up{job=\"api-server\"}",
 					},
 				},

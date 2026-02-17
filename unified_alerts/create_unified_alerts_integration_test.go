@@ -12,7 +12,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// Test configuration constants
 var (
 	testFolderId    = os.Getenv("LOGZIO_UNIFIED_FOLDER_ID")
 	testDashboardId = os.Getenv("LOGZIO_UNIFIED_DASHBOARD_ID")
@@ -82,6 +81,9 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert(t *testing.T) {
 	if os.Getenv("LOGZIO_API_TOKEN") == "" {
 		t.Skip("LOGZIO_API_TOKEN not set")
 	}
+	if os.Getenv("LOGZIO_UNIFIED_ACCOUNT_ID") == "" {
+		t.Skip("LOGZIO_UNIFIED_ACCOUNT_ID not set")
+	}
 
 	underTest, err := setupUnifiedAlertsIntegrationTest()
 	if err != nil {
@@ -101,6 +103,9 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert(t *testing.T) {
 func TestIntegrationUnifiedAlerts_CreateMetricAlert_OneQueryNoAI(t *testing.T) {
 	if os.Getenv("LOGZIO_API_TOKEN") == "" {
 		t.Skip("LOGZIO_API_TOKEN not set")
+	}
+	if os.Getenv("LOGZIO_UNIFIED_ACCOUNT_ID") == "" {
+		t.Skip("LOGZIO_UNIFIED_ACCOUNT_ID not set")
 	}
 
 	underTest, err := setupUnifiedAlertsIntegrationTest()
@@ -157,6 +162,9 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert_OneQueryNoAI(t *testing.T) {
 func TestIntegrationUnifiedAlerts_CreateMetricAlert_TwoQueriesNoAI(t *testing.T) {
 	if os.Getenv("LOGZIO_API_TOKEN") == "" {
 		t.Skip("LOGZIO_API_TOKEN not set")
+	}
+	if os.Getenv("LOGZIO_UNIFIED_ACCOUNT_ID") == "" {
+		t.Skip("LOGZIO_UNIFIED_ACCOUNT_ID not set")
 	}
 
 	underTest, err := setupUnifiedAlertsIntegrationTest()
@@ -217,6 +225,9 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert_OneQueryWithAI(t *testing.T)
 	if os.Getenv("LOGZIO_API_TOKEN") == "" {
 		t.Skip("LOGZIO_API_TOKEN not set")
 	}
+	if os.Getenv("LOGZIO_UNIFIED_ACCOUNT_ID") == "" {
+		t.Skip("LOGZIO_UNIFIED_ACCOUNT_ID not set")
+	}
 
 	underTest, err := setupUnifiedAlertsIntegrationTest()
 	if err != nil {
@@ -276,6 +287,9 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert_OneQueryWithAI(t *testing.T)
 func TestIntegrationUnifiedAlerts_CreateMetricAlert_TwoQueriesWithAI(t *testing.T) {
 	if os.Getenv("LOGZIO_API_TOKEN") == "" {
 		t.Skip("LOGZIO_API_TOKEN not set")
+	}
+	if os.Getenv("LOGZIO_UNIFIED_ACCOUNT_ID") == "" {
+		t.Skip("LOGZIO_UNIFIED_ACCOUNT_ID not set")
 	}
 
 	underTest, err := setupUnifiedAlertsIntegrationTest()
@@ -341,6 +355,9 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert_OneQueryWithAI_DifferentEndp
 	if os.Getenv("LOGZIO_API_TOKEN") == "" {
 		t.Skip("LOGZIO_API_TOKEN not set")
 	}
+	if os.Getenv("LOGZIO_UNIFIED_ACCOUNT_ID") == "" {
+		t.Skip("LOGZIO_UNIFIED_ACCOUNT_ID not set")
+	}
 
 	underTest, err := setupUnifiedAlertsIntegrationTest()
 	if err != nil {
@@ -402,6 +419,9 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert_OneQueryWithAI_DifferentEndp
 func TestIntegrationUnifiedAlerts_CreateMetricAlert_TwoQueriesWithAI_DifferentEndpoints(t *testing.T) {
 	if os.Getenv("LOGZIO_API_TOKEN") == "" {
 		t.Skip("LOGZIO_API_TOKEN not set")
+	}
+	if os.Getenv("LOGZIO_UNIFIED_ACCOUNT_ID") == "" {
+		t.Skip("LOGZIO_UNIFIED_ACCOUNT_ID not set")
 	}
 
 	underTest, err := setupUnifiedAlertsIntegrationTest()
