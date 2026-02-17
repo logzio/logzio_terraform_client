@@ -8,19 +8,16 @@ import (
 )
 
 const (
-	unifiedAlertsServiceEndpoint = "%s/poc/unified-alerts"
+	unifiedAlertsServiceEndpoint = "%s/v2/unified-alerts"
 )
 
 const (
-	// Alert types
 	TypeLogAlert    string = "LOG_ALERT"
 	TypeMetricAlert string = "METRIC_ALERT"
 
-	// URL type parameters
 	UrlTypeLogs    string = "logs"
 	UrlTypeMetrics string = "metrics"
 
-	// Aggregation types
 	AggregationTypeSum         string = "SUM"
 	AggregationTypeMin         string = "MIN"
 	AggregationTypeMax         string = "MAX"
@@ -28,8 +25,9 @@ const (
 	AggregationTypeCount       string = "COUNT"
 	AggregationTypeUniqueCount string = "UNIQUE_COUNT"
 	AggregationTypeNone        string = "NONE"
+	AggregationTypePercentage  string = "PERCENTAGE"
+	AggregationTypePercentile  string = "PERCENTILE"
 
-	// Operators
 	OperatorLessThan            string = "LESS_THAN"
 	OperatorGreaterThan         string = "GREATER_THAN"
 	OperatorLessThanOrEquals    string = "LESS_THAN_OR_EQUALS"
@@ -37,32 +35,26 @@ const (
 	OperatorEquals              string = "EQUALS"
 	OperatorNotEquals           string = "NOT_EQUALS"
 
-	// Severity levels
 	SeverityInfo   string = "INFO"
 	SeverityLow    string = "LOW"
 	SeverityMedium string = "MEDIUM"
 	SeverityHigh   string = "HIGH"
 	SeveritySevere string = "SEVERE"
 
-	// Trigger types
-	TriggerTypeThreshold      string = "THRESHOLD"
-	TriggerTypeMathExpression string = "MATH"
+	TriggerTypeThreshold string = "threshold"
+	TriggerTypeMath      string = "math"
 
-	// Metric operators
-	MetricOperatorAbove        string = "ABOVE"
-	MetricOperatorBelow        string = "BELOW"
-	MetricOperatorWithinRange  string = "WITHIN_RANGE"
-	MetricOperatorOutsideRange string = "OUTSIDE_RANGE"
+	OperatorTypeAbove        string = "above"
+	OperatorTypeBelow        string = "below"
+	OperatorTypeWithinRange  string = "within_range"
+	OperatorTypeOutsideRange string = "outside_range"
 
-	// Sort directions
 	SortDesc string = "DESC"
 	SortAsc  string = "ASC"
 
-	// Output types
-	OutputTypeJson  string = "JSON"
-	OutputTypeTable string = "TABLE"
+	OutputTypeJson string = "JSON"
+	OutputTypeText string = "TEXT"
 
-	// Operation names for logging
 	createUnifiedAlertOperation = "CreateUnifiedAlert"
 	getUnifiedAlertOperation    = "GetUnifiedAlert"
 	updateUnifiedAlertOperation = "UpdateUnifiedAlert"
@@ -75,75 +67,84 @@ type UnifiedAlertsClient struct {
 	*client.Client
 }
 
-// CreateUnifiedAlert represents the request payload for creating a unified alert
+type LinkedPanel struct {
+	FolderId    string `json:"folderId,omitempty"`
+	DashboardId string `json:"dashboardId,omitempty"`
+	PanelId     string `json:"panelId,omitempty"`
+}
+
+type AlertConfiguration struct {
+	Type string `json:"type,omitempty"`
+	// Log alert fields
+	SuppressNotificationsMinutes int            `json:"suppressNotificationsMinutes,omitempty"`
+	AlertOutputTemplateType      string         `json:"alertOutputTemplateType,omitempty"`
+	SearchTimeFrameMinutes       int            `json:"searchTimeFrameMinutes,omitempty"`
+	SubComponents                []SubComponent `json:"subComponents,omitempty"`
+	Correlations                 *Correlations  `json:"correlations,omitempty"`
+	Schedule                     *Schedule      `json:"schedule,omitempty"`
+	// Metric alert fields
+	Severity string              `json:"severity,omitempty"`
+	Trigger  *MetricAlertTrigger `json:"trigger,omitempty"`
+	Queries  []MetricQuery       `json:"queries,omitempty"`
+}
+
+type MetricAlertTrigger struct {
+	Type       string            `json:"type,omitempty"`
+	Condition  *TriggerCondition `json:"condition,omitempty"`
+	Expression string            `json:"expression,omitempty"`
+}
+
+type TriggerCondition struct {
+	OperatorType string   `json:"operatorType,omitempty"`
+	Threshold    *float64 `json:"threshold,omitempty"`
+	From         *float64 `json:"from,omitempty"`
+	To           *float64 `json:"to,omitempty"`
+}
+
 type CreateUnifiedAlert struct {
-	Title                               string             `json:"title,omitempty"`
-	Type                                string             `json:"type,omitempty"`
-	Description                         string             `json:"description,omitempty"`
-	Tags                                []string           `json:"tags,omitempty"`
-	FolderId                            string             `json:"folderId,omitempty"`
-	DashboardId                         string             `json:"dashboardId,omitempty"`
-	PanelId                             string             `json:"panelId,omitempty"`
-	Runbook                             string             `json:"runbook,omitempty"`
-	Enabled                             *bool              `json:"enabled,omitempty"`
-	Rca                                 bool               `json:"rca,omitempty"`
-	RcaNotificationEndpointIds          []int              `json:"rcaNotificationEndpointIds,omitempty"`
-	UseAlertNotificationEndpointsForRca bool               `json:"useAlertNotificationEndpointsForRca,omitempty"`
-	LogAlert                            *LogAlertConfig    `json:"logAlert,omitempty"`
-	MetricAlert                         *MetricAlertConfig `json:"metricAlert,omitempty"`
+	Title                               string              `json:"title,omitempty"`
+	Description                         string              `json:"description,omitempty"`
+	Tags                                []string            `json:"tags,omitempty"`
+	LinkedPanel                         *LinkedPanel        `json:"linkedPanel,omitempty"`
+	Runbook                             string              `json:"runbook,omitempty"`
+	Enabled                             *bool               `json:"enabled,omitempty"`
+	Rca                                 bool                `json:"rca,omitempty"`
+	RcaNotificationEndpointIds          []int               `json:"rcaNotificationEndpointIds,omitempty"`
+	UseAlertNotificationEndpointsForRca bool                `json:"useAlertNotificationEndpointsForRca,omitempty"`
+	Recipients                          *Recipients         `json:"recipients,omitempty"`
+	AlertConfiguration                  *AlertConfiguration `json:"alertConfiguration,omitempty"`
 }
 
-// UnifiedAlert represents the response from unified alert operations
 type UnifiedAlert struct {
-	Title                               string             `json:"title,omitempty"`
-	Type                                string             `json:"type,omitempty"`
-	Description                         string             `json:"description,omitempty"`
-	Tags                                []string           `json:"tags,omitempty"`
-	FolderId                            string             `json:"folderId,omitempty"`
-	DashboardId                         string             `json:"dashboardId,omitempty"`
-	PanelId                             string             `json:"panelId,omitempty"`
-	Runbook                             string             `json:"runbook,omitempty"`
-	Rca                                 bool               `json:"rca,omitempty"`
-	RcaNotificationEndpointIds          []int              `json:"rcaNotificationEndpointIds,omitempty"`
-	UseAlertNotificationEndpointsForRca bool               `json:"useAlertNotificationEndpointsForRca,omitempty"`
-	LogAlert                            *LogAlertConfig    `json:"logAlert,omitempty"`
-	MetricAlert                         *MetricAlertConfig `json:"metricAlert,omitempty"`
-	Id                                  string             `json:"id,omitempty"`
-	UpdatedAt                           float64            `json:"updatedAt,omitempty"`
-	CreatedAt                           float64            `json:"createdAt,omitempty"`
-	Enabled                             bool               `json:"enabled,omitempty"`
+	Title                               string              `json:"title,omitempty"`
+	Description                         string              `json:"description,omitempty"`
+	Tags                                []string            `json:"tags,omitempty"`
+	LinkedPanel                         *LinkedPanel        `json:"linkedPanel,omitempty"`
+	Runbook                             string              `json:"runbook,omitempty"`
+	Rca                                 bool                `json:"rca,omitempty"`
+	RcaNotificationEndpointIds          []int               `json:"rcaNotificationEndpointIds,omitempty"`
+	UseAlertNotificationEndpointsForRca bool                `json:"useAlertNotificationEndpointsForRca,omitempty"`
+	Recipients                          *Recipients         `json:"recipients,omitempty"`
+	AlertConfiguration                  *AlertConfiguration `json:"alertConfiguration,omitempty"`
+	Id                                  string              `json:"id,omitempty"`
+	UpdatedAt                           int64               `json:"updatedAt,omitempty"`
+	CreatedAt                           int64               `json:"createdAt,omitempty"`
+	CreatedBy                           string              `json:"createdBy,omitempty"`
+	UpdatedBy                           string              `json:"updatedBy,omitempty"`
+	Enabled                             bool                `json:"enabled,omitempty"`
 }
 
-// LogAlertConfig represents the log alert configuration
-type LogAlertConfig struct {
-	Output                 LogAlertOutput `json:"output,omitempty"`
-	SearchTimeFrameMinutes int            `json:"searchTimeFrameMinutes,omitempty"`
-	SubComponents          []SubComponent `json:"subComponents,omitempty"`
-	Correlations           Correlations   `json:"correlations,omitempty"`
-	Schedule               Schedule       `json:"schedule,omitempty"`
-}
-
-// LogAlertOutput represents the output configuration for log alerts
-type LogAlertOutput struct {
-	Recipients                   Recipients `json:"recipients,omitempty"`
-	SuppressNotificationsMinutes int        `json:"suppressNotificationsMinutes,omitempty"`
-	Type                         string     `json:"type,omitempty"`
-}
-
-// Recipients represents notification recipients
 type Recipients struct {
 	Emails                  []string `json:"emails,omitempty"`
 	NotificationEndpointIds []int    `json:"notificationEndpointIds,omitempty"`
 }
 
-// SubComponent represents a sub-component of a log alert
 type SubComponent struct {
 	QueryDefinition QueryDefinition     `json:"queryDefinition,omitempty"`
 	Trigger         SubComponentTrigger `json:"trigger,omitempty"`
 	Output          SubComponentOutput  `json:"output,omitempty"`
 }
 
-// QueryDefinition represents the query definition for a sub-component
 type QueryDefinition struct {
 	Query                    string      `json:"query,omitempty"`
 	Filters                  BoolFilter  `json:"filters,omitempty"`
@@ -153,12 +154,10 @@ type QueryDefinition struct {
 	AccountIdsToQueryOn      []int       `json:"accountIdsToQueryOn,omitempty"`
 }
 
-// BoolFilter represents boolean filters
 type BoolFilter struct {
 	Bool FilterLists `json:"bool,omitempty"`
 }
 
-// FilterLists represents the filter lists in a boolean filter
 type FilterLists struct {
 	Must    []map[string]interface{} `json:"must,omitempty"`
 	Should  []map[string]interface{} `json:"should,omitempty"`
@@ -166,75 +165,48 @@ type FilterLists struct {
 	MustNot []map[string]interface{} `json:"must_not,omitempty"`
 }
 
-// Aggregation represents aggregation configuration
 type Aggregation struct {
 	AggregationType    string `json:"aggregationType,omitempty"`
 	FieldToAggregateOn string `json:"fieldToAggregateOn,omitempty"`
 	ValueToAggregateOn string `json:"valueToAggregateOn,omitempty"`
 }
 
-// SubComponentTrigger represents the trigger configuration for a sub-component
 type SubComponentTrigger struct {
 	Operator               string             `json:"operator,omitempty"`
 	SeverityThresholdTiers map[string]float32 `json:"severityThresholdTiers,omitempty"`
 }
 
-// SubComponentOutput represents the output configuration for a sub-component
 type SubComponentOutput struct {
 	Columns            []ColumnConfig `json:"columns,omitempty"`
 	ShouldUseAllFields bool           `json:"shouldUseAllFields,omitempty"`
 }
 
-// ColumnConfig represents column configuration
 type ColumnConfig struct {
 	FieldName string `json:"fieldName,omitempty"`
 	Regex     string `json:"regex,omitempty"`
 	Sort      string `json:"sort,omitempty"`
 }
 
-// Correlations represents correlation configuration
 type Correlations struct {
 	CorrelationOperators []string            `json:"correlationOperators,omitempty"`
 	Joins                []map[string]string `json:"joins,omitempty"`
 }
 
-// Schedule represents schedule configuration
 type Schedule struct {
 	CronExpression string `json:"cronExpression,omitempty"`
 	Timezone       string `json:"timezone,omitempty"`
 }
 
-// MetricAlertConfig represents the metric alert configuration
-type MetricAlertConfig struct {
-	Severity   string        `json:"severity,omitempty"`
-	Trigger    MetricTrigger `json:"trigger,omitempty"`
-	Queries    []MetricQuery `json:"queries,omitempty"`
-	Recipients Recipients    `json:"recipients,omitempty"`
-}
-
-// MetricTrigger represents the trigger configuration for metric alerts
-type MetricTrigger struct {
-	TriggerType            string  `json:"triggerType,omitempty"`
-	MetricOperator         string  `json:"metricOperator,omitempty"`
-	MinThreshold           float64 `json:"minThreshold,omitempty"`
-	MaxThreshold           float64 `json:"maxThreshold,omitempty"`
-	MathExpression         string  `json:"mathExpression,omitempty"`
-	SearchTimeFrameMinutes int     `json:"searchTimeFrameMinutes,omitempty"`
-}
-
-// MetricQuery represents a metric query
 type MetricQuery struct {
 	RefId           string                `json:"refId,omitempty"`
 	QueryDefinition MetricQueryDefinition `json:"queryDefinition,omitempty"`
 }
 
-// MetricQueryDefinition represents the query definition for a metric query
 type MetricQueryDefinition struct {
-	DatasourceUid string `json:"datasourceUid,omitempty"`
-	PromqlQuery   string `json:"promqlQuery,omitempty"`
+	AccountId   int32  `json:"accountId,omitempty"`
+	PromqlQuery string `json:"promqlQuery,omitempty"`
 }
 
-// New creates a new UnifiedAlertsClient
 func New(apiToken, baseUrl string) (*UnifiedAlertsClient, error) {
 	if len(apiToken) == 0 {
 		return nil, fmt.Errorf("API token not defined")
@@ -247,40 +219,32 @@ func New(apiToken, baseUrl string) (*UnifiedAlertsClient, error) {
 	}, nil
 }
 
-// validateCreateUnifiedAlertRequest validates the create unified alert request
 func validateCreateUnifiedAlertRequest(req CreateUnifiedAlert) error {
 	if len(req.Title) == 0 {
 		return fmt.Errorf("title must be set")
 	}
 
-	if len(req.Type) == 0 {
-		return fmt.Errorf("type must be set")
+	if req.AlertConfiguration == nil {
+		return fmt.Errorf("alertConfiguration must be set")
+	}
+
+	if len(req.AlertConfiguration.Type) == 0 {
+		return fmt.Errorf("alertConfiguration.type must be set")
 	}
 
 	validAlertTypes := []string{TypeLogAlert, TypeMetricAlert}
-	if !logzio_client.Contains(validAlertTypes, req.Type) {
-		return fmt.Errorf("type must be one of %v", validAlertTypes)
+	if !logzio_client.Contains(validAlertTypes, req.AlertConfiguration.Type) {
+		return fmt.Errorf("alertConfiguration.type must be one of %v", validAlertTypes)
 	}
 
-	// Validate that the appropriate alert config is set based on type
-	if req.Type == TypeLogAlert && req.LogAlert == nil {
-		return fmt.Errorf("logAlert must be set when type is LOG_ALERT")
-	}
-
-	if req.Type == TypeMetricAlert && req.MetricAlert == nil {
-		return fmt.Errorf("metricAlert must be set when type is METRIC_ALERT")
-	}
-
-	// Validate log alert if present
-	if req.LogAlert != nil {
-		if err := validateLogAlert(req.LogAlert); err != nil {
+	if req.AlertConfiguration.Type == TypeLogAlert {
+		if err := validateLogAlertConfiguration(req.AlertConfiguration); err != nil {
 			return err
 		}
 	}
 
-	// Validate metric alert if present
-	if req.MetricAlert != nil {
-		if err := validateMetricAlert(req.MetricAlert); err != nil {
+	if req.AlertConfiguration.Type == TypeMetricAlert {
+		if err := validateMetricAlertConfiguration(req.AlertConfiguration); err != nil {
 			return err
 		}
 	}
@@ -288,53 +252,49 @@ func validateCreateUnifiedAlertRequest(req CreateUnifiedAlert) error {
 	return nil
 }
 
-// validateLogAlert validates log alert configuration
-func validateLogAlert(logAlert *LogAlertConfig) error {
-	if logAlert.SubComponents == nil || len(logAlert.SubComponents) == 0 {
-		return fmt.Errorf("logAlert.subComponents must not be empty")
+func validateLogAlertConfiguration(config *AlertConfiguration) error {
+	if config.SubComponents == nil || len(config.SubComponents) == 0 {
+		return fmt.Errorf("alertConfiguration.subComponents must not be empty")
 	}
 
-	validAggregationTypes := []string{AggregationTypeSum, AggregationTypeMin, AggregationTypeMax, AggregationTypeAvg, AggregationTypeCount, AggregationTypeUniqueCount, AggregationTypeNone}
+	validAggregationTypes := []string{AggregationTypeSum, AggregationTypeMin, AggregationTypeMax, AggregationTypeAvg, AggregationTypeCount, AggregationTypeUniqueCount, AggregationTypeNone, AggregationTypePercentage, AggregationTypePercentile}
 	validOperators := []string{OperatorGreaterThanOrEquals, OperatorLessThanOrEquals, OperatorGreaterThan, OperatorLessThan, OperatorNotEquals, OperatorEquals}
 	validSeverities := []string{SeverityInfo, SeverityLow, SeverityMedium, SeverityHigh, SeveritySevere}
 	validSorts := []string{SortDesc, SortAsc}
-	validOutputTypes := []string{OutputTypeJson, OutputTypeTable}
+	validOutputTypes := []string{OutputTypeJson, OutputTypeText}
 
-	// Validate output type if present
-	if len(logAlert.Output.Type) > 0 {
-		if !logzio_client.Contains(validOutputTypes, logAlert.Output.Type) {
-			return fmt.Errorf("logAlert.output.type must be one of %v", validOutputTypes)
+	if len(config.AlertOutputTemplateType) > 0 {
+		if !logzio_client.Contains(validOutputTypes, config.AlertOutputTemplateType) {
+			return fmt.Errorf("alertConfiguration.alertOutputTemplateType must be one of %v", validOutputTypes)
 		}
 	}
 
-	// Validate each sub-component
-	for i, subComponent := range logAlert.SubComponents {
+	for i, subComponent := range config.SubComponents {
 		if len(subComponent.QueryDefinition.Query) == 0 {
-			return fmt.Errorf("logAlert.subComponents[%d].queryDefinition.query must be set", i)
+			return fmt.Errorf("alertConfiguration.subComponents[%d].queryDefinition.query must be set", i)
 		}
 
-		// Validate shouldQueryOnAllAccounts and accountIdsToQueryOn relationship
 		if !subComponent.QueryDefinition.ShouldQueryOnAllAccounts {
 			if subComponent.QueryDefinition.AccountIdsToQueryOn == nil || len(subComponent.QueryDefinition.AccountIdsToQueryOn) == 0 {
-				return fmt.Errorf("logAlert.subComponents[%d].queryDefinition.accountIdsToQueryOn must be set when shouldQueryOnAllAccounts is false", i)
+				return fmt.Errorf("alertConfiguration.subComponents[%d].queryDefinition.accountIdsToQueryOn must be set when shouldQueryOnAllAccounts is false", i)
 			}
 		}
 
 		if len(subComponent.QueryDefinition.Aggregation.AggregationType) > 0 {
 			if !logzio_client.Contains(validAggregationTypes, subComponent.QueryDefinition.Aggregation.AggregationType) {
-				return fmt.Errorf("logAlert.subComponents[%d].queryDefinition.aggregation.aggregationType must be one of %v", i, validAggregationTypes)
+				return fmt.Errorf("alertConfiguration.subComponents[%d].queryDefinition.aggregation.aggregationType must be one of %v", i, validAggregationTypes)
 			}
 		}
 
 		if len(subComponent.Trigger.Operator) > 0 {
 			if !logzio_client.Contains(validOperators, subComponent.Trigger.Operator) {
-				return fmt.Errorf("logAlert.subComponents[%d].trigger.operator must be one of %v", i, validOperators)
+				return fmt.Errorf("alertConfiguration.subComponents[%d].trigger.operator must be one of %v", i, validOperators)
 			}
 		}
 
 		for severity := range subComponent.Trigger.SeverityThresholdTiers {
 			if !logzio_client.Contains(validSeverities, severity) {
-				return fmt.Errorf("logAlert.subComponents[%d].trigger.severityThresholdTiers contains invalid severity: %s, must be one of %v", i, severity, validSeverities)
+				return fmt.Errorf("alertConfiguration.subComponents[%d].trigger.severityThresholdTiers contains invalid severity: %s, must be one of %v", i, severity, validSeverities)
 			}
 		}
 
@@ -342,7 +302,7 @@ func validateLogAlert(logAlert *LogAlertConfig) error {
 			for j, column := range subComponent.Output.Columns {
 				if len(column.Sort) > 0 {
 					if !logzio_client.Contains(validSorts, column.Sort) {
-						return fmt.Errorf("logAlert.subComponents[%d].output.columns[%d].sort must be one of %v", i, j, validSorts)
+						return fmt.Errorf("alertConfiguration.subComponents[%d].output.columns[%d].sort must be one of %v", i, j, validSorts)
 					}
 				}
 			}
@@ -352,34 +312,51 @@ func validateLogAlert(logAlert *LogAlertConfig) error {
 	return nil
 }
 
-// validateMetricAlert validates metric alert configuration
-func validateMetricAlert(metricAlert *MetricAlertConfig) error {
+func validateMetricAlertConfiguration(config *AlertConfiguration) error {
 	validSeverities := []string{SeverityInfo, SeverityLow, SeverityMedium, SeverityHigh, SeveritySevere}
-	validTriggerTypes := []string{TriggerTypeThreshold, TriggerTypeMathExpression}
-	validMetricOperators := []string{MetricOperatorAbove, MetricOperatorBelow, MetricOperatorWithinRange, MetricOperatorOutsideRange}
+	validTriggerTypes := []string{TriggerTypeThreshold, TriggerTypeMath}
+	validOperatorTypes := []string{OperatorTypeAbove, OperatorTypeBelow, OperatorTypeWithinRange, OperatorTypeOutsideRange}
 
-	if len(metricAlert.Severity) > 0 {
-		if !logzio_client.Contains(validSeverities, metricAlert.Severity) {
-			return fmt.Errorf("metricAlert.severity must be one of %v", validSeverities)
+	if len(config.Severity) > 0 {
+		if !logzio_client.Contains(validSeverities, config.Severity) {
+			return fmt.Errorf("alertConfiguration.severity must be one of %v", validSeverities)
 		}
 	}
 
-	if len(metricAlert.Trigger.TriggerType) > 0 {
-		if !logzio_client.Contains(validTriggerTypes, metricAlert.Trigger.TriggerType) {
-			return fmt.Errorf("metricAlert.trigger.triggerType must be one of %v", validTriggerTypes)
+	if config.Trigger == nil {
+		return fmt.Errorf("alertConfiguration.trigger must be set for metric alerts")
+	}
+
+	if len(config.Trigger.Type) > 0 {
+		if !logzio_client.Contains(validTriggerTypes, config.Trigger.Type) {
+			return fmt.Errorf("alertConfiguration.trigger.type must be one of %v", validTriggerTypes)
 		}
 	}
 
-	if len(metricAlert.Trigger.MetricOperator) > 0 {
-		if !logzio_client.Contains(validMetricOperators, metricAlert.Trigger.MetricOperator) {
-			return fmt.Errorf("metricAlert.trigger.metricOperator must be one of %v", validMetricOperators)
+	if config.Trigger.Type == TriggerTypeThreshold {
+		if config.Trigger.Condition == nil {
+			return fmt.Errorf("alertConfiguration.trigger.condition must be set for threshold triggers")
 		}
+		if len(config.Trigger.Condition.OperatorType) > 0 {
+			if !logzio_client.Contains(validOperatorTypes, config.Trigger.Condition.OperatorType) {
+				return fmt.Errorf("alertConfiguration.trigger.condition.operatorType must be one of %v", validOperatorTypes)
+			}
+		}
+	}
+
+	if config.Trigger.Type == TriggerTypeMath {
+		if len(config.Trigger.Expression) == 0 {
+			return fmt.Errorf("alertConfiguration.trigger.expression must be set for math triggers")
+		}
+	}
+
+	if config.Queries == nil || len(config.Queries) == 0 {
+		return fmt.Errorf("alertConfiguration.queries must not be empty for metric alerts")
 	}
 
 	return nil
 }
 
-// validateUrlType validates the URL type parameter
 func validateUrlType(urlType string) error {
 	validUrlTypes := []string{UrlTypeLogs, UrlTypeMetrics}
 	if !logzio_client.Contains(validUrlTypes, urlType) {
