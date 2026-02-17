@@ -1,6 +1,8 @@
 # Changes by Version
 
 <!-- next version -->
+## v1.30.0
+- Updated Unified Alerts API (v2 endpoint).
 ## v1.29.0
 - Add Unified Alerts API (POC endpoint).
   - Support for both log-based and metric-based alerts through a unified interface
