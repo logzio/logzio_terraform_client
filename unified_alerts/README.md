@@ -1,6 +1,6 @@
 # Unified Alerts
 
-Compatible with Logz.io's unified alerts API (POC).
+Compatible with Logz.io's unified alerts v2 API (`/v2/unified-alerts`).
 
 This package provides a unified interface for managing both log-based and metric-based alerts through a single API.
 
@@ -25,21 +25,21 @@ func main() {
     enabled := true
     logAlert := unified_alerts.CreateUnifiedAlert{
         Title:       "High Error Rate",
-        Type:        unified_alerts.TypeLogAlert,
         Description: "Alert when error rate is too high",
         Tags:        []string{"production", "errors"},
-        FolderId:    "folder-123",
-        Enabled:     &enabled,  // Optional: explicitly enable the alert
-        LogAlert: &unified_alerts.LogAlertConfig{
-            Output: unified_alerts.LogAlertOutput{
-                Recipients: unified_alerts.Recipients{
-                    Emails:                  []string{"alerts@example.com"},
-                    NotificationEndpointIds: []int{1, 2},
-                },
-                SuppressNotificationsMinutes: 5,
-                Type:                         unified_alerts.OutputTypeJson,
-            },
-            SearchTimeFrameMinutes: 15,
+        LinkedPanel: &unified_alerts.LinkedPanel{
+            FolderId: "folder-123",
+        },
+        Enabled: &enabled,
+        Recipients: &unified_alerts.Recipients{
+            Emails:                  []string{"alerts@example.com"},
+            NotificationEndpointIds: []int{1, 2},
+        },
+        AlertConfiguration: &unified_alerts.AlertConfiguration{
+            Type:                         unified_alerts.TypeLogAlert,
+            SuppressNotificationsMinutes: 5,
+            AlertOutputTemplateType:      unified_alerts.OutputTypeJson,
+            SearchTimeFrameMinutes:       15,
             SubComponents: []unified_alerts.SubComponent{
                 {
                     QueryDefinition: unified_alerts.QueryDefinition{
@@ -61,7 +61,7 @@ func main() {
                     },
                 },
             },
-            Schedule: unified_alerts.Schedule{
+            Schedule: &unified_alerts.Schedule{
                 CronExpression: "* ",
                 Timezone:       "UTC",
             },
@@ -72,7 +72,7 @@ func main() {
     if err != nil {
         panic(err)
     }
-    
+
     fmt.Printf("Created log alert with ID: %s\n", result.Id)
 }
 ```
@@ -80,32 +80,38 @@ func main() {
 ### Create a Metric Alert
 
 ```go
+threshold := 80.0
 metricAlert := unified_alerts.CreateUnifiedAlert{
     Title:       "High CPU Usage",
-    Type:        unified_alerts.TypeMetricAlert,
     Description: "Alert when CPU usage exceeds threshold",
     Tags:        []string{"infrastructure", "cpu"},
-    FolderId:    "folder-456",
-    MetricAlert: &unified_alerts.MetricAlertConfig{
+    LinkedPanel: &unified_alerts.LinkedPanel{
+        FolderId:    "folder-456",
+        DashboardId: "dashboard-789",
+        PanelId:     "panel-012",
+    },
+    Recipients: &unified_alerts.Recipients{
+        Emails:                  []string{"ops@example.com"},
+        NotificationEndpointIds: []int{3, 4},
+    },
+    AlertConfiguration: &unified_alerts.AlertConfiguration{
+        Type:     unified_alerts.TypeMetricAlert,
         Severity: unified_alerts.SeverityHigh,
-        Trigger: unified_alerts.MetricTrigger{
-            TriggerType:            unified_alerts.TriggerTypeThreshold,
-            MetricOperator:         unified_alerts.MetricOperatorAbove,
-            MinThreshold:           80.0,
-            SearchTimeFrameMinutes: 5,
+        Trigger: &unified_alerts.MetricAlertTrigger{
+            Type: unified_alerts.TriggerTypeThreshold,
+            Condition: &unified_alerts.TriggerCondition{
+                OperatorType: unified_alerts.OperatorTypeAbove,
+                Threshold:    &threshold,
+            },
         },
         Queries: []unified_alerts.MetricQuery{
             {
                 RefId: "A",
                 QueryDefinition: unified_alerts.MetricQueryDefinition{
-                    DatasourceUid: "prometheus-uid",
-                    PromqlQuery:   "avg(cpu_usage_percent)",
+                    AccountId:   12345,
+                    PromqlQuery: "avg(cpu_usage_percent)",
                 },
             },
-        },
-        Recipients: unified_alerts.Recipients{
-            Emails:                  []string{"ops@example.com"},
-            NotificationEndpointIds: []int{3, 4},
         },
     },
 }
@@ -128,7 +134,6 @@ alert, err := client.GetUnifiedAlert(unified_alerts.UrlTypeMetrics, "alert-id-45
 ```go
 updatedAlert := unified_alerts.CreateUnifiedAlert{
     Title:       "Updated Alert Title",
-    Type:        unified_alerts.TypeLogAlert,
     // ... rest of alert configuration
 }
 
@@ -155,13 +160,15 @@ deletedAlert, err := client.DeleteUnifiedAlert(unified_alerts.UrlTypeLogs, "aler
 
 - The `alertType` parameter in all operations should be either "logs" or "metrics"
 - Alert IDs are strings
-- Timestamps (`updatedAt`, `createdAt`) are returned as `float64` (Unix timestamp with milliseconds as decimal)
-- The API endpoint is `/poc/unified-alerts` (POC endpoint)
+- Timestamps (`updatedAt`, `createdAt`) are returned as `int64` (seconds since epoch)
+- The API endpoint is `/v2/unified-alerts`
 - All operations include comprehensive validation of required fields and enum values
-- The `logAlert` fields follow the same structure as the existing alerts v2 API
-- Valid values for `logAlert.output.type`: "JSON", "TABLE"
-- Valid values for `metricAlert.trigger.triggerType`: "THRESHOLD", "MATH"
-- Valid values for `metricAlert.trigger.metricOperator`: "ABOVE", "BELOW", "WITHIN_RANGE", "OUTSIDE_RANGE"
+- Alert configuration is unified under `alertConfiguration` with a `type` field (`LOG_ALERT` or `METRIC_ALERT`)
+- Recipients are at the top level, not nested inside alert-type-specific config
+- Panel references use the `linkedPanel` object instead of flat fields
+- Valid values for `alertConfiguration.alertOutputTemplateType`: "JSON", "TEXT"
+- Valid values for `alertConfiguration.trigger.type`: "threshold", "math"
+- Valid values for `alertConfiguration.trigger.condition.operatorType`: "above", "below", "within_range", "outside_range"
 
 ## Important Validation Rules
 
@@ -169,4 +176,7 @@ deletedAlert, err := client.DeleteUnifiedAlert(unified_alerts.UrlTypeLogs, "aler
 - If `shouldQueryOnAllAccounts` is `false`, then `accountIdsToQueryOn` must be a non-empty list
 - If `shouldQueryOnAllAccounts` is `true`, then `accountIdsToQueryOn` can be empty or omitted
 
-
+### Metric Alert Trigger
+- For `threshold` triggers: `condition` must be set with a valid `operatorType`
+- For `math` triggers: `expression` must be non-empty
+- `queries` must not be empty for metric alerts
