@@ -1,6 +1,3 @@
-//go:build integration
-// +build integration
-
 package unified_alerts_test
 
 import (

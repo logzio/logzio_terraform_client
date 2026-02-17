@@ -1,6 +1,3 @@
-//go:build integration
-// +build integration
-
 package unified_alerts_test
 
 import (
@@ -101,7 +98,6 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert(t *testing.T) {
 	assert.Equal(t, unified_alerts.TypeMetricAlert, alert.AlertConfiguration.Type)
 }
 
-// TestIntegrationUnifiedAlerts_CreateMetricAlert_OneQueryNoAI tests creating a metric alert with one query and no AI
 func TestIntegrationUnifiedAlerts_CreateMetricAlert_OneQueryNoAI(t *testing.T) {
 	if os.Getenv("LOGZIO_API_TOKEN") == "" {
 		t.Skip("LOGZIO_API_TOKEN not set")
@@ -113,7 +109,6 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert_OneQueryNoAI(t *testing.T) {
 	}
 
 	threshold := 80.0
-	// One query with simple promql, trigger if bigger than X
 	createMetricAlert := unified_alerts.CreateUnifiedAlert{
 		Title:       generateUniqueTitle("Metric Alert - One Query No AI"),
 		Description: "Alert when CPU usage exceeds threshold",
@@ -159,7 +154,6 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert_OneQueryNoAI(t *testing.T) {
 	t.Logf("Created metric alert (one query, no AI) with ID: %s, Title: %s", alert.Id, alert.Title)
 }
 
-// TestIntegrationUnifiedAlerts_CreateMetricAlert_TwoQueriesNoAI tests creating a metric alert with two queries and no AI
 func TestIntegrationUnifiedAlerts_CreateMetricAlert_TwoQueriesNoAI(t *testing.T) {
 	if os.Getenv("LOGZIO_API_TOKEN") == "" {
 		t.Skip("LOGZIO_API_TOKEN not set")
@@ -170,7 +164,6 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert_TwoQueriesNoAI(t *testing.T)
 		t.Fatalf("setupUnifiedAlertsIntegrationTest failed: %s", err)
 	}
 
-	// Two queries with math expression $A > $B
 	createMetricAlert := unified_alerts.CreateUnifiedAlert{
 		Title:       generateUniqueTitle("Metric Alert - Two Queries No AI"),
 		Description: "Alert when request rate exceeds error rate threshold",
@@ -220,7 +213,6 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert_TwoQueriesNoAI(t *testing.T)
 	t.Logf("Created metric alert (two queries, no AI) with ID: %s, Title: %s", alert.Id, alert.Title)
 }
 
-// TestIntegrationUnifiedAlerts_CreateMetricAlert_OneQueryWithAI tests creating a metric alert with one query and AI enabled
 func TestIntegrationUnifiedAlerts_CreateMetricAlert_OneQueryWithAI(t *testing.T) {
 	if os.Getenv("LOGZIO_API_TOKEN") == "" {
 		t.Skip("LOGZIO_API_TOKEN not set")
@@ -232,7 +224,6 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert_OneQueryWithAI(t *testing.T)
 	}
 
 	threshold := 90.0
-	// One query with AI enabled, same notification endpoints for alert and AI
 	createMetricAlert := unified_alerts.CreateUnifiedAlert{
 		Title:       generateUniqueTitle("Metric Alert - One Query With AI"),
 		Description: "Alert with AI analysis when memory usage is high",
@@ -282,7 +273,6 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert_OneQueryWithAI(t *testing.T)
 	t.Logf("Created metric alert (one query, with AI) with ID: %s, Title: %s", alert.Id, alert.Title)
 }
 
-// TestIntegrationUnifiedAlerts_CreateMetricAlert_TwoQueriesWithAI tests creating a metric alert with two queries and AI enabled
 func TestIntegrationUnifiedAlerts_CreateMetricAlert_TwoQueriesWithAI(t *testing.T) {
 	if os.Getenv("LOGZIO_API_TOKEN") == "" {
 		t.Skip("LOGZIO_API_TOKEN not set")
@@ -347,7 +337,6 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert_TwoQueriesWithAI(t *testing.
 	t.Logf("Created metric alert (two queries, with AI) with ID: %s, Title: %s", alert.Id, alert.Title)
 }
 
-// TestIntegrationUnifiedAlerts_CreateMetricAlert_OneQueryWithAI_DifferentEndpoints tests creating a metric alert with one query and AI with different notification endpoints
 func TestIntegrationUnifiedAlerts_CreateMetricAlert_OneQueryWithAI_DifferentEndpoints(t *testing.T) {
 	if os.Getenv("LOGZIO_API_TOKEN") == "" {
 		t.Skip("LOGZIO_API_TOKEN not set")
@@ -410,7 +399,6 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert_OneQueryWithAI_DifferentEndp
 	t.Logf("Created metric alert (one query, with AI, different endpoints) with ID: %s, Title: %s", alert.Id, alert.Title)
 }
 
-// TestIntegrationUnifiedAlerts_CreateMetricAlert_TwoQueriesWithAI_DifferentEndpoints tests creating a metric alert with two queries and AI with different notification endpoints
 func TestIntegrationUnifiedAlerts_CreateMetricAlert_TwoQueriesWithAI_DifferentEndpoints(t *testing.T) {
 	if os.Getenv("LOGZIO_API_TOKEN") == "" {
 		t.Skip("LOGZIO_API_TOKEN not set")
