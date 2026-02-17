@@ -1,18 +1,18 @@
 {
   "title": "Test Log Alert",
-  "type": "LOG_ALERT",
   "description": "Test log alert description",
   "tags": ["test", "log"],
-  "folderId": "folder-123",
-  "logAlert": {
-    "output": {
-      "recipients": {
-        "emails": ["test@example.com"],
-        "notificationEndpointIds": [1, 2]
-      },
-      "suppressNotificationsMinutes": 5,
-      "type": "JSON"
-    },
+  "linkedPanel": {
+    "folderId": "folder-123"
+  },
+  "recipients": {
+    "emails": ["test@example.com"],
+    "notificationEndpointIds": [1, 2]
+  },
+  "alertConfiguration": {
+    "type": "LOG_ALERT",
+    "suppressNotificationsMinutes": 5,
+    "alertOutputTemplateType": "JSON",
     "searchTimeFrameMinutes": 15,
     "subComponents": [
       {
@@ -41,8 +41,9 @@
     }
   },
   "id": "test-log-alert-123",
-  "updatedAt": 1699000000.123456,
-  "createdAt": 1699000000.123456,
+  "updatedAt": 1699000000,
+  "createdAt": 1699000000,
+  "createdBy": "user@example.com",
+  "updatedBy": "user@example.com",
   "enabled": true
 }
-
