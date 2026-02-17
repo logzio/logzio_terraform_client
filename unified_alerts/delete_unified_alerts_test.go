@@ -17,7 +17,7 @@ func TestUnifiedAlerts_DeleteAlert(t *testing.T) {
 	alertType := unified_alerts.UrlTypeMetrics
 
 	if assert.NoError(t, err) {
-		mux.HandleFunc(fmt.Sprintf("/poc/unified-alerts/%s/%s", alertType, alertId), func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc(fmt.Sprintf("/v2/unified-alerts/%s/%s", alertType, alertId), func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodDelete, r.Method)
 			assert.Contains(t, r.URL.String(), alertId)
 
@@ -41,7 +41,7 @@ func TestUnifiedAlerts_DeleteAlertNotFound(t *testing.T) {
 	alertType := unified_alerts.UrlTypeLogs
 
 	if assert.NoError(t, err) {
-		mux.HandleFunc(fmt.Sprintf("/poc/unified-alerts/%s/%s", alertType, alertId), func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc(fmt.Sprintf("/v2/unified-alerts/%s/%s", alertType, alertId), func(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusNotFound)
 			w.Header().Set("Content-Type", "application/json")
 			fmt.Fprint(w, fixture("not_found.txt"))
@@ -60,7 +60,7 @@ func TestUnifiedAlerts_DeleteAlertAPIFail(t *testing.T) {
 	alertType := unified_alerts.UrlTypeLogs
 
 	if assert.NoError(t, err) {
-		mux.HandleFunc(fmt.Sprintf("/poc/unified-alerts/%s/%s", alertType, alertId), func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc(fmt.Sprintf("/v2/unified-alerts/%s/%s", alertType, alertId), func(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Header().Set("Content-Type", "application/json")
 			fmt.Fprint(w, fixture("api_error.txt"))

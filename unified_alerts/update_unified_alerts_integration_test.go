@@ -27,7 +27,6 @@ func TestIntegrationUnifiedAlerts_UpdateAlert(t *testing.T) {
 	require.NoError(t, err, "Failed to create log alert for update test")
 	require.NotNil(t, createdAlert, "Created alert should not be nil")
 
-	// Cleanup
 	defer func() {
 		_, deleteErr := underTest.DeleteUnifiedAlert(unified_alerts.UrlTypeLogs, createdAlert.Id)
 		if deleteErr != nil {
@@ -35,7 +34,6 @@ func TestIntegrationUnifiedAlerts_UpdateAlert(t *testing.T) {
 		}
 	}()
 
-	// Update the alert
 	updateAlert := getCreateLogAlertType()
 	updateAlert.Title = "Updated Integration Test Alert"
 	updateAlert.Description = "Updated description"

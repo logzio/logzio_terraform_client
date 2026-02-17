@@ -1,31 +1,34 @@
 {
   "title": "Deleted Alert",
-  "type": "METRIC_ALERT",
   "description": "Deleted alert description",
   "tags": ["deleted"],
-  "metricAlert": {
+  "recipients": {
+    "emails": ["delete@example.com"]
+  },
+  "alertConfiguration": {
+    "type": "METRIC_ALERT",
     "severity": "INFO",
     "trigger": {
-      "triggerType": "THRESHOLD",
-      "metricOperator": "BELOW",
-      "maxThreshold": 10.0
+      "type": "threshold",
+      "condition": {
+        "operatorType": "below",
+        "threshold": 10.0
+      }
     },
     "queries": [
       {
         "refId": "B",
         "queryDefinition": {
-          "datasourceUid": "prom-uid",
+          "accountId": 12345,
           "promqlQuery": "rate(requests[5m])"
         }
       }
-    ],
-    "recipients": {
-      "emails": ["delete@example.com"]
-    }
+    ]
   },
   "id": "delete-alert-111",
-  "updatedAt": 1699000000.123456,
-  "createdAt": 1699000000.123456,
+  "updatedAt": 1699000000,
+  "createdAt": 1699000000,
+  "createdBy": "user@example.com",
+  "updatedBy": "user@example.com",
   "enabled": false
 }
-

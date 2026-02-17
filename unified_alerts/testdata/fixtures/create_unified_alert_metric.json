@@ -1,34 +1,38 @@
 {
   "title": "Test Metric Alert",
-  "type": "METRIC_ALERT",
   "description": "Test metric alert description",
   "tags": ["test", "metric"],
-  "folderId": "folder-456",
-  "metricAlert": {
+  "linkedPanel": {
+    "folderId": "folder-456"
+  },
+  "recipients": {
+    "emails": ["alerts@example.com"],
+    "notificationEndpointIds": [3, 4]
+  },
+  "alertConfiguration": {
+    "type": "METRIC_ALERT",
     "severity": "HIGH",
     "trigger": {
-      "triggerType": "THRESHOLD",
-      "metricOperator": "ABOVE",
-      "minThreshold": 80.0,
-      "searchTimeFrameMinutes": 5
+      "type": "threshold",
+      "condition": {
+        "operatorType": "above",
+        "threshold": 80.0
+      }
     },
     "queries": [
       {
         "refId": "A",
         "queryDefinition": {
-          "datasourceUid": "prometheus-uid",
+          "accountId": 12345,
           "promqlQuery": "up{job=\"api-server\"}"
         }
       }
-    ],
-    "recipients": {
-      "emails": ["alerts@example.com"],
-      "notificationEndpointIds": [3, 4]
-    }
+    ]
   },
   "id": "test-metric-alert-456",
-  "updatedAt": 1699000000.123456,
-  "createdAt": 1699000000.123456,
+  "updatedAt": 1699000000,
+  "createdAt": 1699000000,
+  "createdBy": "user@example.com",
+  "updatedBy": "user@example.com",
   "enabled": true
 }
-

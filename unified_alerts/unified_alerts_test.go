@@ -49,19 +49,17 @@ func setupUnifiedAlertsIntegrationTest() (*unified_alerts.UnifiedAlertsClient, e
 func getCreateLogAlertType() unified_alerts.CreateUnifiedAlert {
 	return unified_alerts.CreateUnifiedAlert{
 		Title:       "TF client Log Alert",
-		Type:        unified_alerts.TypeLogAlert,
 		Description: "Test log alert description",
 		Tags:        []string{"test", "log"},
-		LogAlert: &unified_alerts.LogAlertConfig{
-			Output: unified_alerts.LogAlertOutput{
-				Recipients: unified_alerts.Recipients{
-					Emails:                  []string{"test@example.com"},
-					NotificationEndpointIds: []int{},
-				},
-				SuppressNotificationsMinutes: 5,
-				Type:                         unified_alerts.OutputTypeJson,
-			},
-			SearchTimeFrameMinutes: 15,
+		Recipients: &unified_alerts.Recipients{
+			Emails:                  []string{"test@example.com"},
+			NotificationEndpointIds: []int{},
+		},
+		AlertConfiguration: &unified_alerts.AlertConfiguration{
+			Type:                         unified_alerts.TypeLogAlert,
+			SuppressNotificationsMinutes: 5,
+			AlertOutputTemplateType:      unified_alerts.OutputTypeJson,
+			SearchTimeFrameMinutes:       15,
 			SubComponents: []unified_alerts.SubComponent{
 				{
 					QueryDefinition: unified_alerts.QueryDefinition{
@@ -83,7 +81,7 @@ func getCreateLogAlertType() unified_alerts.CreateUnifiedAlert {
 					},
 				},
 			},
-			Schedule: unified_alerts.Schedule{
+			Schedule: &unified_alerts.Schedule{
 				CronExpression: "0 0 0 * * ?",
 				Timezone:       "UTC",
 			},
@@ -92,33 +90,34 @@ func getCreateLogAlertType() unified_alerts.CreateUnifiedAlert {
 }
 
 func getCreateMetricAlertType() unified_alerts.CreateUnifiedAlert {
-	datasourceUid := os.Getenv("GRAFANA_DATASOURCE_UID")
 	uniqueId := fmt.Sprintf("%d", time.Now().UnixNano())
+	threshold := 80.0
 	return unified_alerts.CreateUnifiedAlert{
 		Title:       "TF client Metric Alert" + uniqueId,
-		Type:        unified_alerts.TypeMetricAlert,
 		Description: "Test metric alert description",
 		Tags:        []string{"test", "metric"},
-		MetricAlert: &unified_alerts.MetricAlertConfig{
+		Recipients: &unified_alerts.Recipients{
+			Emails:                  []string{"alerts@example.com"},
+			NotificationEndpointIds: []int{},
+		},
+		AlertConfiguration: &unified_alerts.AlertConfiguration{
+			Type:     unified_alerts.TypeMetricAlert,
 			Severity: unified_alerts.SeverityHigh,
-			Trigger: unified_alerts.MetricTrigger{
-				TriggerType:            unified_alerts.TriggerTypeThreshold,
-				MetricOperator:         unified_alerts.MetricOperatorAbove,
-				MinThreshold:           80.0,
-				SearchTimeFrameMinutes: 5,
+			Trigger: &unified_alerts.MetricAlertTrigger{
+				Type: unified_alerts.TriggerTypeThreshold,
+				Condition: &unified_alerts.TriggerCondition{
+					OperatorType: unified_alerts.OperatorTypeAbove,
+					Threshold:    &threshold,
+				},
 			},
 			Queries: []unified_alerts.MetricQuery{
 				{
 					RefId: "A",
 					QueryDefinition: unified_alerts.MetricQueryDefinition{
-						DatasourceUid: datasourceUid,
-						PromqlQuery:   "up{job=\"api-server\"}",
+						AccountId:   12345,
+						PromqlQuery: "up{job=\"api-server\"}",
 					},
 				},
-			},
-			Recipients: unified_alerts.Recipients{
-				Emails:                  []string{"alerts@example.com"},
-				NotificationEndpointIds: []int{},
 			},
 		},
 	}
