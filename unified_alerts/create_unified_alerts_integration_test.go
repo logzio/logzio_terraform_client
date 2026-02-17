@@ -98,6 +98,13 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert(t *testing.T) {
 	assert.NotEmpty(t, alert.Id)
 	assert.NotNil(t, alert.AlertConfiguration)
 	assert.Equal(t, unified_alerts.TypeMetricAlert, alert.AlertConfiguration.Type)
+
+	defer func() {
+		_, deleteErr := underTest.DeleteUnifiedAlert(unified_alerts.UrlTypeMetrics, alert.Id)
+		if deleteErr != nil {
+			t.Logf("Failed to cleanup metric alert: %s", deleteErr)
+		}
+	}()
 }
 
 func TestIntegrationUnifiedAlerts_CreateMetricAlert_OneQueryNoAI(t *testing.T) {
@@ -157,6 +164,13 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert_OneQueryNoAI(t *testing.T) {
 	assert.Equal(t, unified_alerts.TypeMetricAlert, alert.AlertConfiguration.Type)
 	assert.Contains(t, alert.Title, "Metric Alert - One Query No AI")
 	t.Logf("Created metric alert (one query, no AI) with ID: %s, Title: %s", alert.Id, alert.Title)
+
+	defer func() {
+		_, deleteErr := underTest.DeleteUnifiedAlert(unified_alerts.UrlTypeMetrics, alert.Id)
+		if deleteErr != nil {
+			t.Logf("Failed to cleanup metric alert: %s", deleteErr)
+		}
+	}()
 }
 
 func TestIntegrationUnifiedAlerts_CreateMetricAlert_TwoQueriesNoAI(t *testing.T) {
@@ -219,6 +233,13 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert_TwoQueriesNoAI(t *testing.T)
 	assert.Equal(t, unified_alerts.TypeMetricAlert, alert.AlertConfiguration.Type)
 	assert.Contains(t, alert.Title, "Metric Alert - Two Queries No AI")
 	t.Logf("Created metric alert (two queries, no AI) with ID: %s, Title: %s", alert.Id, alert.Title)
+
+	defer func() {
+		_, deleteErr := underTest.DeleteUnifiedAlert(unified_alerts.UrlTypeMetrics, alert.Id)
+		if deleteErr != nil {
+			t.Logf("Failed to cleanup metric alert: %s", deleteErr)
+		}
+	}()
 }
 
 func TestIntegrationUnifiedAlerts_CreateMetricAlert_OneQueryWithAI(t *testing.T) {
@@ -282,6 +303,13 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert_OneQueryWithAI(t *testing.T)
 	assert.True(t, alert.Rca)
 	assert.True(t, alert.UseAlertNotificationEndpointsForRca)
 	t.Logf("Created metric alert (one query, with AI) with ID: %s, Title: %s", alert.Id, alert.Title)
+
+	defer func() {
+		_, deleteErr := underTest.DeleteUnifiedAlert(unified_alerts.UrlTypeMetrics, alert.Id)
+		if deleteErr != nil {
+			t.Logf("Failed to cleanup metric alert: %s", deleteErr)
+		}
+	}()
 }
 
 func TestIntegrationUnifiedAlerts_CreateMetricAlert_TwoQueriesWithAI(t *testing.T) {
@@ -349,6 +377,13 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert_TwoQueriesWithAI(t *testing.
 	assert.True(t, alert.Rca)
 	assert.True(t, alert.UseAlertNotificationEndpointsForRca)
 	t.Logf("Created metric alert (two queries, with AI) with ID: %s, Title: %s", alert.Id, alert.Title)
+
+	defer func() {
+		_, deleteErr := underTest.DeleteUnifiedAlert(unified_alerts.UrlTypeMetrics, alert.Id)
+		if deleteErr != nil {
+			t.Logf("Failed to cleanup metric alert: %s", deleteErr)
+		}
+	}()
 }
 
 func TestIntegrationUnifiedAlerts_CreateMetricAlert_OneQueryWithAI_DifferentEndpoints(t *testing.T) {
@@ -414,6 +449,13 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert_OneQueryWithAI_DifferentEndp
 	assert.False(t, alert.UseAlertNotificationEndpointsForRca)
 	assert.NotEmpty(t, alert.RcaNotificationEndpointIds)
 	t.Logf("Created metric alert (one query, with AI, different endpoints) with ID: %s, Title: %s", alert.Id, alert.Title)
+
+	defer func() {
+		_, deleteErr := underTest.DeleteUnifiedAlert(unified_alerts.UrlTypeMetrics, alert.Id)
+		if deleteErr != nil {
+			t.Logf("Failed to cleanup metric alert: %s", deleteErr)
+		}
+	}()
 }
 
 func TestIntegrationUnifiedAlerts_CreateMetricAlert_TwoQueriesWithAI_DifferentEndpoints(t *testing.T) {
@@ -482,4 +524,11 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert_TwoQueriesWithAI_DifferentEn
 	assert.False(t, alert.UseAlertNotificationEndpointsForRca)
 	assert.NotEmpty(t, alert.RcaNotificationEndpointIds)
 	t.Logf("Created metric alert (two queries, with AI, different endpoints) with ID: %s, Title: %s", alert.Id, alert.Title)
+
+	defer func() {
+		_, deleteErr := underTest.DeleteUnifiedAlert(unified_alerts.UrlTypeMetrics, alert.Id)
+		if deleteErr != nil {
+			t.Logf("Failed to cleanup metric alert: %s", deleteErr)
+		}
+	}()
 }
