@@ -127,8 +127,8 @@ type UnifiedAlert struct {
 	Recipients                          *Recipients         `json:"recipients,omitempty"`
 	AlertConfiguration                  *AlertConfiguration `json:"alertConfiguration,omitempty"`
 	Id                                  string              `json:"id,omitempty"`
-	UpdatedAt                           int64               `json:"updatedAt,omitempty"`
-	CreatedAt                           int64               `json:"createdAt,omitempty"`
+	UpdatedAt                           float64             `json:"updatedAt,omitempty"`
+	CreatedAt                           float64             `json:"createdAt,omitempty"`
 	CreatedBy                           string              `json:"createdBy,omitempty"`
 	UpdatedBy                           string              `json:"updatedBy,omitempty"`
 	Enabled                             bool                `json:"enabled,omitempty"`
