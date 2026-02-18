@@ -17,7 +17,7 @@ func TestUnifiedAlerts_GetAlert(t *testing.T) {
 	alertType := unified_alerts.UrlTypeLogs
 
 	if assert.NoError(t, err) {
-		mux.HandleFunc(fmt.Sprintf("/poc/unified-alerts/%s/%s", alertType, alertId), func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc(fmt.Sprintf("/v2/unified-alerts/%s/%s", alertType, alertId), func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodGet, r.Method)
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)
@@ -28,7 +28,8 @@ func TestUnifiedAlerts_GetAlert(t *testing.T) {
 		assert.NoError(t, err)
 		assert.NotNil(t, alert)
 		assert.Equal(t, alertId, alert.Id)
-		assert.Equal(t, unified_alerts.TypeLogAlert, alert.Type)
+		assert.NotNil(t, alert.AlertConfiguration)
+		assert.Equal(t, unified_alerts.TypeLogAlert, alert.AlertConfiguration.Type)
 	}
 }
 
@@ -40,7 +41,7 @@ func TestUnifiedAlerts_GetAlertNotFound(t *testing.T) {
 	alertType := unified_alerts.UrlTypeLogs
 
 	if assert.NoError(t, err) {
-		mux.HandleFunc(fmt.Sprintf("/poc/unified-alerts/%s/%s", alertType, alertId), func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc(fmt.Sprintf("/v2/unified-alerts/%s/%s", alertType, alertId), func(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusNotFound)
 			w.Header().Set("Content-Type", "application/json")
 			fmt.Fprint(w, fixture("not_found.txt"))
@@ -59,7 +60,7 @@ func TestUnifiedAlerts_GetAlertAPIFail(t *testing.T) {
 	alertType := unified_alerts.UrlTypeLogs
 
 	if assert.NoError(t, err) {
-		mux.HandleFunc(fmt.Sprintf("/poc/unified-alerts/%s/%s", alertType, alertId), func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc(fmt.Sprintf("/v2/unified-alerts/%s/%s", alertType, alertId), func(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Header().Set("Content-Type", "application/json")
 			fmt.Fprint(w, fixture("api_error.txt"))

@@ -1,16 +1,16 @@
 {
   "title": "Updated Alert",
-  "type": "LOG_ALERT",
   "description": "Updated alert description",
   "tags": ["updated"],
-  "folderId": "folder-update",
-  "logAlert": {
-    "output": {
-      "recipients": {
-        "emails": ["updated@example.com"]
-      },
-      "type": "JSON"
-    },
+  "linkedPanel": {
+    "folderId": "folder-update"
+  },
+  "recipients": {
+    "emails": ["updated@example.com"]
+  },
+  "alertConfiguration": {
+    "type": "LOG_ALERT",
+    "alertOutputTemplateType": "JSON",
     "searchTimeFrameMinutes": 20,
     "subComponents": [
       {
@@ -33,8 +33,9 @@
     ]
   },
   "id": "update-alert-999",
-  "updatedAt": 1699100000.123456,
-  "createdAt": 1699000000.123456,
+  "updatedAt": 1699100000,
+  "createdAt": 1699000000,
+  "createdBy": "user@example.com",
+  "updatedBy": "user@example.com",
   "enabled": true
 }
-

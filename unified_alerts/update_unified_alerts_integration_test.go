@@ -1,6 +1,3 @@
-//go:build integration
-// +build integration
-
 package unified_alerts_test
 
 import (
@@ -27,7 +24,6 @@ func TestIntegrationUnifiedAlerts_UpdateAlert(t *testing.T) {
 	require.NoError(t, err, "Failed to create log alert for update test")
 	require.NotNil(t, createdAlert, "Created alert should not be nil")
 
-	// Cleanup
 	defer func() {
 		_, deleteErr := underTest.DeleteUnifiedAlert(unified_alerts.UrlTypeLogs, createdAlert.Id)
 		if deleteErr != nil {
@@ -35,22 +31,25 @@ func TestIntegrationUnifiedAlerts_UpdateAlert(t *testing.T) {
 		}
 	}()
 
-	// Update the alert
+	updatedLogTitle := generateUniqueTitle("Updated Log Alert")
 	updateAlert := getCreateLogAlertType()
-	updateAlert.Title = "Updated Integration Test Alert"
+	updateAlert.Title = updatedLogTitle
 	updateAlert.Description = "Updated description"
 
 	updatedAlert, err := underTest.UpdateUnifiedAlert(unified_alerts.UrlTypeLogs, createdAlert.Id, updateAlert)
 	require.NoError(t, err, "Failed to update alert")
 	require.NotNil(t, updatedAlert, "Updated alert should not be nil")
 	assert.Equal(t, createdAlert.Id, updatedAlert.Id)
-	assert.Equal(t, "Updated Integration Test Alert", updatedAlert.Title)
+	assert.Equal(t, updatedLogTitle, updatedAlert.Title)
 	assert.Equal(t, "Updated description", updatedAlert.Description)
 }
 
 func TestIntegrationUnifiedAlerts_UpdateMetricAlert(t *testing.T) {
 	if os.Getenv("LOGZIO_API_TOKEN") == "" {
 		t.Skip("LOGZIO_API_TOKEN not set")
+	}
+	if os.Getenv("LOGZIO_UNIFIED_ACCOUNT_ID") == "" {
+		t.Skip("LOGZIO_UNIFIED_ACCOUNT_ID not set")
 	}
 
 	underTest, err := setupUnifiedAlertsIntegrationTest()
@@ -63,15 +62,23 @@ func TestIntegrationUnifiedAlerts_UpdateMetricAlert(t *testing.T) {
 	require.NoError(t, err, "Failed to create metric alert for update test")
 	require.NotNil(t, createdAlert, "Created metric alert should not be nil")
 
+	defer func() {
+		_, deleteErr := underTest.DeleteUnifiedAlert(unified_alerts.UrlTypeMetrics, createdAlert.Id)
+		if deleteErr != nil {
+			t.Logf("Failed to cleanup metric alert: %s", deleteErr)
+		}
+	}()
+
+	updatedTitle := generateUniqueTitle("Updated Metric Alert")
 	updateAlert := getCreateMetricAlertType()
-	updateAlert.Title = "Updated Integration Test Metric Alert"
+	updateAlert.Title = updatedTitle
 	updateAlert.Description = "Updated metric alert description"
 
 	updatedAlert, err := underTest.UpdateUnifiedAlert(unified_alerts.UrlTypeMetrics, createdAlert.Id, updateAlert)
 	require.NoError(t, err, "Failed to update metric alert")
 	require.NotNil(t, updatedAlert, "Updated metric alert should not be nil")
 	assert.Equal(t, createdAlert.Id, updatedAlert.Id)
-	assert.Equal(t, "Updated Integration Test Metric Alert", updatedAlert.Title)
+	assert.Equal(t, updatedTitle, updatedAlert.Title)
 	assert.Equal(t, "Updated metric alert description", updatedAlert.Description)
 }
 
