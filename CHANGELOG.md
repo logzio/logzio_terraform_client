@@ -3,6 +3,7 @@
 <!-- next version -->
 ## v1.30.1
 - Unified Alerts API (v2 endpoint) Fix table output bug 
+
 ## v1.30.0
 - Updated Unified Alerts API (v2 endpoint).
 ## v1.29.0
