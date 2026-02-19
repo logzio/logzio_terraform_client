@@ -166,7 +166,7 @@ deletedAlert, err := client.DeleteUnifiedAlert(unified_alerts.UrlTypeLogs, "aler
 - Alert configuration is unified under `alertConfiguration` with a `type` field (`LOG_ALERT` or `METRIC_ALERT`)
 - Recipients are at the top level, not nested inside alert-type-specific config
 - Panel references use the `linkedPanel` object instead of flat fields
-- Valid values for `alertConfiguration.alertOutputTemplateType`: "JSON", "TEXT"
+- Valid values for `alertConfiguration.alertOutputTemplateType`: "JSON", "TABLE"
 - Valid values for `alertConfiguration.trigger.type`: "threshold", "math"
 - Valid values for `alertConfiguration.trigger.condition.operatorType`: "above", "below", "within_range", "outside_range"
 

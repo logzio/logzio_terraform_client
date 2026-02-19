@@ -532,3 +532,81 @@ func TestIntegrationUnifiedAlerts_CreateMetricAlert_TwoQueriesWithAI_DifferentEn
 		}
 	}()
 }
+
+func TestIntegrationUnifiedAlerts_CreateLogAlert_OutputTypeTableSortDesc(t *testing.T) {
+	if os.Getenv("LOGZIO_API_TOKEN") == "" {
+		t.Skip("LOGZIO_API_TOKEN not set")
+	}
+
+	underTest, err := setupUnifiedAlertsIntegrationTest()
+	if err != nil {
+		t.Fatalf("setupUnifiedAlertsIntegrationTest failed: %s", err)
+	}
+
+	createLogAlert := getCreateLogAlertType()
+	createLogAlert.Title = generateUniqueTitle("Log Alert - Table Sort Desc")
+	createLogAlert.AlertConfiguration.AlertOutputTemplateType = unified_alerts.OutputTypeTable
+	createLogAlert.AlertConfiguration.SubComponents[0].Output = unified_alerts.SubComponentOutput{
+		Columns: []unified_alerts.ColumnConfig{
+			{
+				FieldName: "some_field",
+				Regex:     "[\\d]",
+				Sort:      unified_alerts.SortDesc,
+			},
+		},
+	}
+
+	alert, err := underTest.CreateUnifiedAlert(unified_alerts.UrlTypeLogs, createLogAlert)
+	require.NoError(t, err, "Failed to create log alert with TABLE output sort DESC")
+	require.NotNil(t, alert, "Alert should not be nil")
+	assert.NotEmpty(t, alert.Id)
+	assert.Equal(t, unified_alerts.TypeLogAlert, alert.AlertConfiguration.Type)
+	assert.Contains(t, alert.Title, "Log Alert - Table Sort Desc")
+	t.Logf("Created log alert (TABLE, DESC) with ID: %s", alert.Id)
+
+	defer func() {
+		_, deleteErr := underTest.DeleteUnifiedAlert(unified_alerts.UrlTypeLogs, alert.Id)
+		if deleteErr != nil {
+			t.Logf("Failed to cleanup alert: %s", deleteErr)
+		}
+	}()
+}
+
+func TestIntegrationUnifiedAlerts_CreateLogAlert_OutputTypeTableSortAsc(t *testing.T) {
+	if os.Getenv("LOGZIO_API_TOKEN") == "" {
+		t.Skip("LOGZIO_API_TOKEN not set")
+	}
+
+	underTest, err := setupUnifiedAlertsIntegrationTest()
+	if err != nil {
+		t.Fatalf("setupUnifiedAlertsIntegrationTest failed: %s", err)
+	}
+
+	createLogAlert := getCreateLogAlertType()
+	createLogAlert.Title = generateUniqueTitle("Log Alert - Table Sort Asc")
+	createLogAlert.AlertConfiguration.AlertOutputTemplateType = unified_alerts.OutputTypeTable
+	createLogAlert.AlertConfiguration.SubComponents[0].Output = unified_alerts.SubComponentOutput{
+		Columns: []unified_alerts.ColumnConfig{
+			{
+				FieldName: "some_field",
+				Regex:     "[\\d]",
+				Sort:      unified_alerts.SortAsc,
+			},
+		},
+	}
+
+	alert, err := underTest.CreateUnifiedAlert(unified_alerts.UrlTypeLogs, createLogAlert)
+	require.NoError(t, err, "Failed to create log alert with TABLE output sort ASC")
+	require.NotNil(t, alert, "Alert should not be nil")
+	assert.NotEmpty(t, alert.Id)
+	assert.Equal(t, unified_alerts.TypeLogAlert, alert.AlertConfiguration.Type)
+	assert.Contains(t, alert.Title, "Log Alert - Table Sort Asc")
+	t.Logf("Created log alert (TABLE, ASC) with ID: %s", alert.Id)
+
+	defer func() {
+		_, deleteErr := underTest.DeleteUnifiedAlert(unified_alerts.UrlTypeLogs, alert.Id)
+		if deleteErr != nil {
+			t.Logf("Failed to cleanup alert: %s", deleteErr)
+		}
+	}()
+}

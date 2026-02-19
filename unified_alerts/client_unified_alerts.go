@@ -52,8 +52,8 @@ const (
 	SortDesc string = "DESC"
 	SortAsc  string = "ASC"
 
-	OutputTypeJson string = "JSON"
-	OutputTypeText string = "TEXT"
+	OutputTypeJson  string = "JSON"
+	OutputTypeTable string = "TABLE"
 
 	createUnifiedAlertOperation = "CreateUnifiedAlert"
 	getUnifiedAlertOperation    = "GetUnifiedAlert"
@@ -261,7 +261,7 @@ func validateLogAlertConfiguration(config *AlertConfiguration) error {
 	validOperators := []string{OperatorGreaterThanOrEquals, OperatorLessThanOrEquals, OperatorGreaterThan, OperatorLessThan, OperatorNotEquals, OperatorEquals}
 	validSeverities := []string{SeverityInfo, SeverityLow, SeverityMedium, SeverityHigh, SeveritySevere}
 	validSorts := []string{SortDesc, SortAsc}
-	validOutputTypes := []string{OutputTypeJson, OutputTypeText}
+	validOutputTypes := []string{OutputTypeJson, OutputTypeTable}
 
 	if len(config.AlertOutputTemplateType) > 0 {
 		if !logzio_client.Contains(validOutputTypes, config.AlertOutputTemplateType) {
@@ -270,6 +270,12 @@ func validateLogAlertConfiguration(config *AlertConfiguration) error {
 	}
 
 	for i, subComponent := range config.SubComponents {
+		if config.AlertOutputTemplateType == OutputTypeTable {
+			if subComponent.Output.Columns == nil || len(subComponent.Output.Columns) == 0 {
+				return fmt.Errorf("alertConfiguration.subComponents[%d].output.columns must be defined when alertOutputTemplateType is TABLE", i)
+			}
+		}
+
 		if len(subComponent.QueryDefinition.Query) == 0 {
 			return fmt.Errorf("alertConfiguration.subComponents[%d].queryDefinition.query must be set", i)
 		}
