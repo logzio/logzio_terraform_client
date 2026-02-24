@@ -52,6 +52,7 @@ func getCreateDropFilter() drop_filters.CreateDropFilter {
 
 	return drop_filters.CreateDropFilter{
 		LogType:         "some_type",
+		Description:     "some_description",
 		FieldConditions: []drop_filters.FieldConditionObject{fieldCondition},
 	}
 }

@@ -145,6 +145,7 @@ func TestDropFilters_CreateDropFilterWithZeroThreshold(t *testing.T) {
 				"id": "some-drop-filter-id",
 				"active": true,
 				"logType": "some_type",
+				"description": "some_description",
 				"fieldConditions": [
 					{
 						"fieldName": "some_field",

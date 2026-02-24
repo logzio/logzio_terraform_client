@@ -18,6 +18,7 @@ func TestIntegrationDropFilter_CreateDropFilter(t *testing.T) {
 			defer underTest.DeleteDropFilter(dropFilter.Id)
 			assert.NotEmpty(t, dropFilter.Id)
 			assert.NotEmpty(t, dropFilter.LogType)
+			assert.NotEmpty(t, dropFilter.Description)
 			assert.NotEmpty(t, dropFilter.FieldCondition)
 		}
 	}
@@ -46,6 +47,21 @@ func TestIntegrationDropFilters_CreateDropFilterNoLogType(t *testing.T) {
 	if assert.NoError(t, err) {
 		createDropFilter := getCreateDropFilter()
 		createDropFilter.LogType = ""
+		dropFilter, err := underTest.CreateDropFilter(createDropFilter)
+
+		time.Sleep(2 * time.Second)
+		if assert.NoError(t, err) && assert.NotNil(t, dropFilter) {
+			defer underTest.DeleteDropFilter(dropFilter.Id)
+		}
+	}
+}
+
+func TestIntegrationDropFilter_CreateDropFilterNoDescription(t *testing.T) {
+	underTest, err := setupDropFiltersIntegrationTest()
+
+	if assert.NoError(t, err) {
+		createDropFilter := getCreateDropFilter()
+		createDropFilter.Description = ""
 		dropFilter, err := underTest.CreateDropFilter(createDropFilter)
 
 		time.Sleep(2 * time.Second)

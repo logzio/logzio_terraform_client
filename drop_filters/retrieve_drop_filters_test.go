@@ -28,11 +28,13 @@ func TestDropFilters_RetrieveDropFilters(t *testing.T) {
 		// Test first drop filter
 		assert.Equal(t, "some-drop-filter-id", dropFilters[0].Id)
 		assert.True(t, dropFilters[0].Active)
+		assert.Equal(t, "some_description", dropFilters[0].Description)
 		assert.Equal(t, 10.5, dropFilters[0].ThresholdInGB)
 
 		// Test second drop filter
 		assert.Equal(t, "another-drop-filter-id", dropFilters[1].Id)
 		assert.True(t, dropFilters[1].Active)
+		assert.Equal(t, "other_description", dropFilters[1].Description)
 		assert.Equal(t, 5.0, dropFilters[1].ThresholdInGB)
 	}
 }
