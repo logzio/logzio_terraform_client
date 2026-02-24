@@ -64,8 +64,7 @@ func TestIntegrationDropFilter_CreateDropFilterNoDescription(t *testing.T) {
 		createDropFilter.Description = ""
 		dropFilter, err := underTest.CreateDropFilter(createDropFilter)
 
-		time.Sleep(2 * time.Second)
-		if assert.NoError(t, err) && assert.NotNil(t, dropFilter) {
+	if assert.NoError(t, err) && assert.NotNil(t, dropFilter) {
 			defer underTest.DeleteDropFilter(dropFilter.Id)
 		}
 	}
