@@ -23,6 +23,7 @@ type DropFiltersClient struct {
 
 type CreateDropFilter struct {
 	LogType         string                 `json:"logType,omitempty"`
+	Description     string                 `json:"description,omitempty"`
 	FieldConditions []FieldConditionObject `json:"fieldConditions"`
 	ThresholdInGB   float64                `json:"thresholdInGB,omitempty"`
 }
@@ -36,6 +37,7 @@ type DropFilter struct {
 	Id             string                 `json:"id"`
 	Active         bool                   `json:"active"`
 	LogType        string                 `json:"logType"`
+	Description    string                 `json:"description"`
 	FieldCondition []FieldConditionObject `json:"fieldConditions"`
 	ThresholdInGB  float64                `json:"thresholdInGB,omitempty"`
 }

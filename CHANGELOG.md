@@ -1,6 +1,8 @@
 # Changes by Version
 
 <!-- next version -->
+## v1.30.2
+- Add the optional, description field to `drop_filters`. contributed by: @kevin-kortum-trustedshops
 ## v1.30.1
 - Unified Alerts API (v2 endpoint) Fix table output bug 
 

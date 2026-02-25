@@ -3,6 +3,7 @@
     "id": "some-drop-filter-id",
     "active": true,
     "logType": "some_type",
+    "description": "some_description",
     "fieldConditions": [
       {
         "fieldName": "some_field",
@@ -15,6 +16,7 @@
     "id": "another-drop-filter-id",
     "active": true,
     "logType": "other_type",
+    "description": "other_description",
     "fieldConditions": [
       {
         "fieldName": "field",
