@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/logzio/logzio_terraform_client/test_utils"
@@ -15,8 +16,10 @@ var (
 	server *httptest.Server
 )
 
-func fixture(path string) string {
-	b, err := os.ReadFile("testdata/fixtures/" + path)
+func fixture(name string) string {
+	// filepath.Base pins the lookup inside the fixtures directory (and keeps
+	// path-traversal SAST scanners happy); callers pass bare file names.
+	b, err := os.ReadFile(filepath.Join("testdata", "fixtures", filepath.Base(name)))
 	if err != nil {
 		panic(err)
 	}
