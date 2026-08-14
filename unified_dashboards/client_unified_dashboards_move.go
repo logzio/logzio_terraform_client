@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	moveDashboardMethod   = http.MethodPost
+	moveDashboardMethod   = http.MethodPut
 	moveDashboardSuccess  = http.StatusOK
 	moveDashboardNotFound = http.StatusNotFound
 )
@@ -32,7 +32,7 @@ func (c *DashboardsClient) MoveDashboard(req MoveDashboardRequest) (*MoveDashboa
 		Body:         body,
 		SuccessCodes: []int{moveDashboardSuccess},
 		NotFoundCode: moveDashboardNotFound,
-		ResourceId:   req.Uid,
+		ResourceId:   req.DashboardId,
 		ApiAction:    moveDashboardOperation,
 		ResourceName: dashboardResourceName,
 	})
@@ -44,8 +44,8 @@ func (c *DashboardsClient) MoveDashboard(req MoveDashboardRequest) (*MoveDashboa
 	if err := json.Unmarshal(res, &result); err != nil {
 		return nil, fmt.Errorf("%s: failed to unmarshal response: %w (body: %.200s)", moveDashboardOperation, err, res)
 	}
-	if len(result.Uid) == 0 {
-		return nil, fmt.Errorf("%s succeeded but the response contained no dashboard uid (body: %.200s)", moveDashboardOperation, res)
+	if len(result.Id) == 0 {
+		return nil, fmt.Errorf("%s succeeded but the response contained no dashboard id (body: %.200s)", moveDashboardOperation, res)
 	}
 
 	return &result, nil

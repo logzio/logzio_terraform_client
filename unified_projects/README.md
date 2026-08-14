@@ -36,11 +36,12 @@ updated, err := client.UpdateProject(created.Id, unified_projects.UpdateProjectR
     Description: "updated description",
 })
 
-// Search projects (paginated; returns each project with its dashboards)
+// Search: a dashboard search grouped by folder — SearchTerm matches
+// dashboards, every folder is returned with its matching dashboards nested,
+// and Total counts the matching dashboards.
 resp, err := client.SearchProjects(unified_projects.SearchProjectsRequest{
-    Query: "my-project",
-    Limit: 100,
-    Page:  1,
+    Filter:     &unified_projects.SearchProjectsFilter{SearchTerm: "cpu"},
+    Pagination: &unified_projects.SearchProjectsPagination{PageNumber: 1, PageSize: 100},
 })
 
 // Rename a project
@@ -68,7 +69,7 @@ err = client.DeleteProject(created.Id)
 
 - `CreateProjectRequest` — `Name` (required), `DisplayName`, `Description`; the client wraps them in the Perses Project envelope the API requires.
 - `UpdateProjectRequest` — `Name` (required, the Perses `metadata.name`), `DisplayName` (required), `Description`; the PUT replaces the whole document.
-- `SearchProjectsRequest` — `Query`, `Limit`, `Page` (POST body).
+- `SearchProjectsRequest` — `Filter{SearchTerm, CreatedBy}` + `Pagination{PageNumber, PageSize}` (POST body; the wire field for rename is `newProjectName` — both verified live, the published docs disagree).
 
 ### Response Types
 
@@ -78,5 +79,4 @@ err = client.DeleteProject(created.Id)
 
 ## Notes
 
-- **Rename caveat:** as of 2026-08-14 the live rename endpoint returns 200 but does not actually change the project's name (verified against api.logz.io — the response and a subsequent get both show the old name). `RenameProject` is wired per the documented contract and will start working when the server-side behavior is fixed; prefer `UpdateProject` (display name) in the meantime.
 - Responses carry additional server-side fields (`entityId`, numeric `createdBy`/`updatedBy`, `isDeleted` as either a boolean or 0/1) that this client deliberately does not map.

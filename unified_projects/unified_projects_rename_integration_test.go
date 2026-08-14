@@ -31,14 +31,14 @@ func TestIntegrationUnifiedProjects_RenameProject(t *testing.T) {
 			renamed, err := underTest.RenameProject(created.Id, projectName+"-renamed")
 			if assert.NoError(t, err) && assert.NotNil(t, renamed) {
 				assert.Equal(t, created.Id, renamed.Id)
-				t.Logf("rename response name: %q (requested %q)", renamed.Name, projectName+"-renamed")
+				assert.Equal(t, projectName+"-renamed", renamed.Name)
 			}
 
 			time.Sleep(2 * time.Second) // Allow for eventual consistency
 
 			retrieved, err := underTest.GetProject(created.Id)
 			if assert.NoError(t, err) && assert.NotNil(t, retrieved) {
-				t.Logf("post-rename project name: %q", retrieved.Name)
+				assert.Equal(t, projectName+"-renamed", retrieved.Name)
 			}
 		}
 	}

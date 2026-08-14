@@ -23,9 +23,16 @@ func TestUnifiedProjects_SearchProjects(t *testing.T) {
 			var target map[string]interface{}
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)
-			assert.Equal(t, "system", target["query"])
-			assert.Equal(t, float64(10), target["limit"])
-			assert.Equal(t, float64(1), target["page"])
+			// Pin the server's real search schema literally.
+			filter, ok := target["filter"].(map[string]interface{})
+			if assert.True(t, ok, `body must carry a "filter" object`) {
+				assert.Equal(t, "system", filter["searchTerm"])
+			}
+			pagination, ok := target["pagination"].(map[string]interface{})
+			if assert.True(t, ok, `body must carry a "pagination" object`) {
+				assert.Equal(t, float64(1), pagination["pageNumber"])
+				assert.Equal(t, float64(10), pagination["pageSize"])
+			}
 
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)
@@ -33,9 +40,8 @@ func TestUnifiedProjects_SearchProjects(t *testing.T) {
 		})
 
 		resp, err := underTest.SearchProjects(unified_projects.SearchProjectsRequest{
-			Query: "system",
-			Limit: 10,
-			Page:  1,
+			Filter:     &unified_projects.SearchProjectsFilter{SearchTerm: "system"},
+			Pagination: &unified_projects.SearchProjectsPagination{PageNumber: 1, PageSize: 10},
 		})
 		assert.NoError(t, err)
 		if assert.NotNil(t, resp) {
@@ -58,17 +64,17 @@ func TestUnifiedProjects_SearchProjectsOmitsUnsetFields(t *testing.T) {
 			var target map[string]interface{}
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)
-			_, hasLimit := target["limit"]
-			_, hasPage := target["page"]
-			assert.False(t, hasLimit, "unset limit must be omitted")
-			assert.False(t, hasPage, "unset page must be omitted")
+			_, hasFilter := target["filter"]
+			_, hasPagination := target["pagination"]
+			assert.False(t, hasFilter, "unset filter must be omitted")
+			assert.False(t, hasPagination, "unset pagination must be omitted")
 
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)
 			fmt.Fprint(w, fixture("search_projects.json"))
 		})
 
-		_, err = underTest.SearchProjects(unified_projects.SearchProjectsRequest{Query: "system"})
+		_, err = underTest.SearchProjects(unified_projects.SearchProjectsRequest{})
 		assert.NoError(t, err)
 	}
 }
@@ -83,7 +89,7 @@ func TestUnifiedProjects_SearchProjectsAPIFail(t *testing.T) {
 			fmt.Fprint(w, fixture("api_error.txt"))
 		})
 
-		_, err = underTest.SearchProjects(unified_projects.SearchProjectsRequest{Query: "x"})
+		_, err = underTest.SearchProjects(unified_projects.SearchProjectsRequest{})
 		assert.Error(t, err)
 		assert.Contains(t, err.Error(), "status code 500")
 	}
@@ -99,7 +105,7 @@ func TestUnifiedProjects_SearchProjectsNotFound(t *testing.T) {
 			fmt.Fprint(w, fixture("not_found.txt"))
 		})
 
-		_, err = underTest.SearchProjects(unified_projects.SearchProjectsRequest{Query: "x"})
+		_, err = underTest.SearchProjects(unified_projects.SearchProjectsRequest{})
 		assert.Error(t, err)
 		assert.Contains(t, err.Error(), "failed with missing unified project")
 	}

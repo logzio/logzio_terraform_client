@@ -46,8 +46,9 @@ updated, err := client.UpdateDashboard(folderId, created.Uid, unified_dashboards
 
 // Move a dashboard to a different folder
 moved, err := client.MoveDashboard(unified_dashboards.MoveDashboardRequest{
-    Uid:            created.Uid,
-    TargetFolderId: otherFolderId,
+    DashboardId:  created.Uid,
+    OldProjectId: folderId,
+    NewProjectId: otherFolderId,
 })
 
 // Delete a dashboard
@@ -70,15 +71,14 @@ err = client.DeleteDashboard(folderId, created.Uid)
 ### Request Types
 
 - `CreateDashboardRequest` / `UpdateDashboardRequest` — `Doc` (the Perses Dashboard document, required)
-- `MoveDashboardRequest` — `Uid`, `TargetFolderId` (both required)
+- `MoveDashboardRequest` — `DashboardId`, `OldProjectId`, `NewProjectId` (all required; PUT — the published docs describe a different, non-working shape)
 
 ### Response Types
 
 - `Dashboard` — `Id`, `Uid` (the stable identifier), `Name`, `ProjectId`, `Doc`, `Version`, `CreatedAt`, `UpdatedAt`, `IsPrivate`
-- `MoveDashboardResponse` — `Uid`
+- `MoveDashboardResponse` — `Id` (the moved dashboard's uid)
 
 ## Notes
 
 - `Uid` is the stable dashboard identifier; `Id` is a version-row id that changes on update.
-- The move endpoint (`POST /dashboards/move`) is documented but was not yet deployed on the public gateway as of 2026-08-14; `MoveDashboard` returns a 404 error until it ships.
 - Responses carry additional server-side fields (numeric `createdBy`/`updatedBy`, `isDeleted`) that this client deliberately does not map.

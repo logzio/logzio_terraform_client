@@ -29,21 +29,13 @@ func TestIntegrationUnifiedProjects_SearchProjects(t *testing.T) {
 
 			time.Sleep(2 * time.Second) // Allow for eventual consistency
 
-			// The search endpoint behaves as a paginated listing; page through
-			// until the created project shows up (bounded to keep CI predictable).
-			found := false
-			for page := 1; page <= 20 && !found; page++ {
-				resp, err := underTest.SearchProjects(unified_projects.SearchProjectsRequest{
-					Query: projectName,
-					Limit: 100,
-					Page:  page,
-				})
-				if !assert.NoError(t, err) || !assert.NotNil(t, resp) {
-					return
-				}
-				if len(resp.Results) == 0 {
-					break
-				}
+			// The search endpoint returns every folder (SearchTerm filters the
+			// dashboards nested under them), so the created project must appear.
+			resp, err := underTest.SearchProjects(unified_projects.SearchProjectsRequest{
+				Pagination: &unified_projects.SearchProjectsPagination{PageNumber: 1, PageSize: 100},
+			})
+			if assert.NoError(t, err) && assert.NotNil(t, resp) {
+				found := false
 				for _, item := range resp.Results {
 					if item.Project.Id == created.Id {
 						found = true
@@ -51,8 +43,8 @@ func TestIntegrationUnifiedProjects_SearchProjects(t *testing.T) {
 						break
 					}
 				}
+				assert.True(t, found, "Created project should appear in search results")
 			}
-			assert.True(t, found, "Created project should appear in search results")
 		}
 	}
 }

@@ -15,13 +15,6 @@ func TestIntegrationUnifiedDashboards_MoveDashboard(t *testing.T) {
 		t.Skip("LOGZIO_API_TOKEN not set")
 	}
 
-	// POST /perses-public/api/v1/dashboards/move is documented at
-	// api-docs.logz.io but was not deployed on the api.logz.io gateway as of
-	// 2026-08-14 (the route 404s). Delete the skip below once the endpoint is
-	// live; the scenario is kept ready. MoveDashboard's client-side behavior
-	// is covered by unit tests.
-	t.Skip("dashboards/move endpoint not deployed on the public gateway (verified 2026-08-14)")
-
 	projClient, err := setupUnifiedProjectsIntegrationTest()
 	if !assert.NoError(t, err) || projClient == nil {
 		return
@@ -74,11 +67,12 @@ func TestIntegrationUnifiedDashboards_MoveDashboard(t *testing.T) {
 	time.Sleep(2 * time.Second) // Allow for eventual consistency
 
 	moved, err := dashClient.MoveDashboard(unified_dashboards.MoveDashboardRequest{
-		Uid:            created.Uid,
-		TargetFolderId: dst.Id,
+		DashboardId:  created.Uid,
+		OldProjectId: src.Id,
+		NewProjectId: dst.Id,
 	})
 	if assert.NoError(t, err) && assert.NotNil(t, moved) {
-		assert.Equal(t, created.Uid, moved.Uid)
+		assert.Equal(t, created.Uid, moved.Id)
 
 		time.Sleep(2 * time.Second) // Allow for eventual consistency
 

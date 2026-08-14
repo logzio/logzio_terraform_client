@@ -46,10 +46,22 @@ type UpdateProjectRequest struct {
 }
 
 // SearchProjectsRequest is the POST body for the projects search endpoint.
+// The endpoint is a dashboard search grouped by folder: SearchTerm matches
+// dashboards, the response carries every folder with its matching dashboards
+// nested, and Total counts the matching dashboards.
 type SearchProjectsRequest struct {
-	Query string `json:"query,omitempty"`
-	Limit int    `json:"limit,omitempty"`
-	Page  int    `json:"page,omitempty"`
+	Filter     *SearchProjectsFilter     `json:"filter,omitempty"`
+	Pagination *SearchProjectsPagination `json:"pagination,omitempty"`
+}
+
+type SearchProjectsFilter struct {
+	SearchTerm string  `json:"searchTerm,omitempty"`
+	CreatedBy  []int64 `json:"createdBy,omitempty"`
+}
+
+type SearchProjectsPagination struct {
+	PageNumber int `json:"pageNumber,omitempty"`
+	PageSize   int `json:"pageSize,omitempty"`
 }
 
 // projectEnvelope is the Perses-style document the API expects as the create/update body.
@@ -119,9 +131,9 @@ type ProjectListItem struct {
 }
 
 type SearchProjectsResponse struct {
-	Results    []ProjectListItem      `json:"results"`
-	Total      int                    `json:"total,omitempty"`
-	Pagination map[string]interface{} `json:"pagination,omitempty"`
+	Results    []ProjectListItem         `json:"results"`
+	Total      int                       `json:"total,omitempty"` // number of dashboards matching the search term
+	Pagination *SearchProjectsPagination `json:"pagination,omitempty"`
 }
 
 func New(apiToken, baseUrl string) (*ProjectsClient, error) {

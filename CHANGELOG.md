@@ -2,7 +2,7 @@
 
 <!-- next version -->
 ## v1.31.0
-- Add [Unified Dashboards API](./unified_dashboards/README.md) (Perses) — CRUD + list + move (move pending gateway rollout; see the package README).
+- Add [Unified Dashboards API](./unified_dashboards/README.md) (Perses) — CRUD + list + move.
 - Add [Unified Projects (dashboard folders) API](./unified_projects/README.md) — CRUD + list + search + rename.
 
 ## v1.30.2

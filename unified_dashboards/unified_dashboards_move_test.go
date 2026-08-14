@@ -17,14 +17,15 @@ func TestUnifiedDashboards_MoveDashboard(t *testing.T) {
 
 	if assert.NoError(t, err) {
 		mux.HandleFunc("/perses-public/api/v1/dashboards/move", func(w http.ResponseWriter, r *http.Request) {
-			assert.Equal(t, http.MethodPost, r.Method)
+			assert.Equal(t, http.MethodPut, r.Method)
 
 			jsonBytes, _ := io.ReadAll(r.Body)
 			var target map[string]interface{}
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)
-			assert.Equal(t, "dashboard-1", target["uid"])
-			assert.Equal(t, "project-2", target["targetFolderId"])
+			assert.Equal(t, "dashboard-1", target["dashboardId"])
+			assert.Equal(t, "project-1", target["oldProjectId"])
+			assert.Equal(t, "project-2", target["newProjectId"])
 
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)
@@ -32,12 +33,14 @@ func TestUnifiedDashboards_MoveDashboard(t *testing.T) {
 		})
 
 		moved, err := underTest.MoveDashboard(unified_dashboards.MoveDashboardRequest{
-			Uid:            "dashboard-1",
-			TargetFolderId: "project-2",
+			DashboardId:  "dashboard-1",
+			OldProjectId: "project-1",
+			NewProjectId: "project-2",
 		})
 		assert.NoError(t, err)
-		assert.NotNil(t, moved)
-		assert.Equal(t, "dashboard-1", moved.Uid)
+		if assert.NotNil(t, moved) {
+			assert.Equal(t, "dashboard-1", moved.Id)
+		}
 	}
 }
 
@@ -51,7 +54,9 @@ func TestUnifiedDashboards_MoveDashboardAPIFail(t *testing.T) {
 			fmt.Fprint(w, fixture("api_error.txt"))
 		})
 
-		_, err = underTest.MoveDashboard(unified_dashboards.MoveDashboardRequest{Uid: "dashboard-1", TargetFolderId: "project-2"})
+		_, err = underTest.MoveDashboard(unified_dashboards.MoveDashboardRequest{
+			DashboardId: "dashboard-1", OldProjectId: "project-1", NewProjectId: "project-2",
+		})
 		assert.Error(t, err)
 		assert.Contains(t, err.Error(), "status code 500")
 	}
@@ -67,24 +72,11 @@ func TestUnifiedDashboards_MoveDashboardNotFound(t *testing.T) {
 			fmt.Fprint(w, fixture("not_found.txt"))
 		})
 
-		_, err = underTest.MoveDashboard(unified_dashboards.MoveDashboardRequest{Uid: "missing", TargetFolderId: "project-2"})
+		_, err = underTest.MoveDashboard(unified_dashboards.MoveDashboardRequest{
+			DashboardId: "missing", OldProjectId: "project-1", NewProjectId: "project-2",
+		})
 		assert.Error(t, err)
 		assert.Contains(t, err.Error(), "failed with missing unified dashboard")
-	}
-}
-
-func TestUnifiedDashboards_MoveDashboardValidation(t *testing.T) {
-	underTest, err, teardown := setupUnifiedDashboardsTest()
-	defer teardown()
-
-	if assert.NoError(t, err) {
-		_, err = underTest.MoveDashboard(unified_dashboards.MoveDashboardRequest{TargetFolderId: "project-2"})
-		assert.Error(t, err)
-		assert.Contains(t, err.Error(), "uid must be set")
-
-		_, err = underTest.MoveDashboard(unified_dashboards.MoveDashboardRequest{Uid: "dashboard-1"})
-		assert.Error(t, err)
-		assert.Contains(t, err.Error(), "targetFolderId must be set")
 	}
 }
 
@@ -99,8 +91,29 @@ func TestUnifiedDashboards_MoveDashboardEmptyResponse(t *testing.T) {
 			fmt.Fprint(w, "{}")
 		})
 
-		_, err = underTest.MoveDashboard(unified_dashboards.MoveDashboardRequest{Uid: "dashboard-1", TargetFolderId: "project-2"})
+		_, err = underTest.MoveDashboard(unified_dashboards.MoveDashboardRequest{
+			DashboardId: "dashboard-1", OldProjectId: "project-1", NewProjectId: "project-2",
+		})
 		assert.Error(t, err)
-		assert.Contains(t, err.Error(), "contained no dashboard uid")
+		assert.Contains(t, err.Error(), "contained no dashboard id")
+	}
+}
+
+func TestUnifiedDashboards_MoveDashboardValidation(t *testing.T) {
+	underTest, err, teardown := setupUnifiedDashboardsTest()
+	defer teardown()
+
+	if assert.NoError(t, err) {
+		_, err = underTest.MoveDashboard(unified_dashboards.MoveDashboardRequest{OldProjectId: "p1", NewProjectId: "p2"})
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "dashboardId must be set")
+
+		_, err = underTest.MoveDashboard(unified_dashboards.MoveDashboardRequest{DashboardId: "d1", NewProjectId: "p2"})
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "oldProjectId must be set")
+
+		_, err = underTest.MoveDashboard(unified_dashboards.MoveDashboardRequest{DashboardId: "d1", OldProjectId: "p1"})
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "newProjectId must be set")
 	}
 }

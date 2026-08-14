@@ -22,7 +22,7 @@ func TestUnifiedProjects_RenameProject(t *testing.T) {
 			var target map[string]string
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)
-			assert.Equal(t, "renamed-project", target["newName"])
+			assert.Equal(t, "renamed-project", target["newProjectName"])
 
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)

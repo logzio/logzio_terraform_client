@@ -15,7 +15,7 @@ const (
 )
 
 type renameProjectRequest struct {
-	NewName string `json:"newName"`
+	NewProjectName string `json:"newProjectName"`
 }
 
 // RenameProject renames a project (dashboard folder), addressed by its id.
@@ -24,7 +24,7 @@ func (c *ProjectsClient) RenameProject(id string, newName string) (*ProjectSumma
 		return nil, err
 	}
 
-	body, err := json.Marshal(renameProjectRequest{NewName: newName})
+	body, err := json.Marshal(renameProjectRequest{NewProjectName: newName})
 	if err != nil {
 		return nil, err
 	}

@@ -43,9 +43,13 @@ type UpdateDashboardRequest struct {
 	Doc map[string]interface{} `json:"doc"`
 }
 
+// MoveDashboardRequest relocates a dashboard between folders. All three
+// fields are required by the API (note: the published docs describe a
+// different shape; this one is verified against the live gateway).
 type MoveDashboardRequest struct {
-	Uid            string `json:"uid"`
-	TargetFolderId string `json:"targetFolderId"`
+	DashboardId  string `json:"dashboardId"`  // the dashboard's uid
+	OldProjectId string `json:"oldProjectId"` // current folder id
+	NewProjectId string `json:"newProjectId"` // destination folder id
 }
 
 // Response types
@@ -62,7 +66,7 @@ type Dashboard struct {
 }
 
 type MoveDashboardResponse struct {
-	Uid string `json:"uid"`
+	Id string `json:"id"` // the moved dashboard's uid
 }
 
 func New(apiToken, baseUrl string) (*DashboardsClient, error) {
@@ -137,11 +141,14 @@ func validateDeleteDashboardRequest(folderId, uid string) error {
 }
 
 func validateMoveDashboardRequest(req MoveDashboardRequest) error {
-	if len(req.Uid) == 0 {
-		return fmt.Errorf("uid must be set")
+	if len(req.DashboardId) == 0 {
+		return fmt.Errorf("dashboardId must be set")
 	}
-	if len(req.TargetFolderId) == 0 {
-		return fmt.Errorf("targetFolderId must be set")
+	if len(req.OldProjectId) == 0 {
+		return fmt.Errorf("oldProjectId must be set")
+	}
+	if len(req.NewProjectId) == 0 {
+		return fmt.Errorf("newProjectId must be set")
 	}
 	return nil
 }
