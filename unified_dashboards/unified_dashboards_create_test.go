@@ -14,9 +14,14 @@ import (
 func getCreateDashboardRequest() unified_dashboards.CreateDashboardRequest {
 	return unified_dashboards.CreateDashboardRequest{
 		Doc: map[string]interface{}{
-			"title":   "CPU Usage Dashboard",
-			"panels":  []interface{}{map[string]interface{}{"id": 1, "title": "CPU Usage", "type": "graph"}},
-			"refresh": "1m",
+			"kind":     "Dashboard",
+			"metadata": map[string]interface{}{"name": "cpu-usage-dashboard"},
+			"spec": map[string]interface{}{
+				"display":  map[string]interface{}{"name": "CPU Usage Dashboard"},
+				"duration": "1h",
+				"panels":   map[string]interface{}{},
+				"layouts":  []interface{}{},
+			},
 		},
 	}
 }
@@ -33,18 +38,21 @@ func TestUnifiedDashboards_CreateDashboard(t *testing.T) {
 			var target unified_dashboards.CreateDashboardRequest
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)
-			assert.Equal(t, "CPU Usage Dashboard", target.Doc["title"])
+			assert.Equal(t, "Dashboard", target.Doc["kind"])
 
 			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusCreated)
+			w.WriteHeader(http.StatusOK)
 			fmt.Fprint(w, fixture("create_dashboard.json"))
 		})
 
 		created, err := underTest.CreateDashboard("project-1", getCreateDashboardRequest())
 		assert.NoError(t, err)
-		assert.NotNil(t, created)
-		assert.Equal(t, "dashboard-new", created.Uid)
-		assert.Equal(t, "CPU Usage Dashboard", created.Doc["title"])
+		if assert.NotNil(t, created) {
+			assert.Equal(t, "dashboard-new", created.Uid)
+			assert.Equal(t, "project-1", created.ProjectId)
+			assert.Equal(t, "Dashboard", created.Doc["kind"])
+			assert.Equal(t, 1, created.Version)
+		}
 	}
 }
 
@@ -60,6 +68,7 @@ func TestUnifiedDashboards_CreateDashboardAPIFail(t *testing.T) {
 
 		_, err = underTest.CreateDashboard("project-1", getCreateDashboardRequest())
 		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "status code 500")
 	}
 }
 
@@ -75,6 +84,7 @@ func TestUnifiedDashboards_CreateDashboardNotFound(t *testing.T) {
 
 		_, err = underTest.CreateDashboard("missing", getCreateDashboardRequest())
 		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "failed with missing unified dashboard")
 	}
 }
 

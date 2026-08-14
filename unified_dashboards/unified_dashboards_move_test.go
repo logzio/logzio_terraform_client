@@ -53,6 +53,7 @@ func TestUnifiedDashboards_MoveDashboardAPIFail(t *testing.T) {
 
 		_, err = underTest.MoveDashboard(unified_dashboards.MoveDashboardRequest{Uid: "dashboard-1", TargetFolderId: "project-2"})
 		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "status code 500")
 	}
 }
 
@@ -68,6 +69,7 @@ func TestUnifiedDashboards_MoveDashboardNotFound(t *testing.T) {
 
 		_, err = underTest.MoveDashboard(unified_dashboards.MoveDashboardRequest{Uid: "missing", TargetFolderId: "project-2"})
 		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "failed with missing unified dashboard")
 	}
 }
 

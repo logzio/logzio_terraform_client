@@ -35,6 +35,7 @@ func TestUnifiedDashboards_DeleteDashboardAPIFail(t *testing.T) {
 
 		err = underTest.DeleteDashboard("project-1", "dashboard-1")
 		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "status code 500")
 	}
 }
 
@@ -50,6 +51,7 @@ func TestUnifiedDashboards_DeleteDashboardNotFound(t *testing.T) {
 
 		err = underTest.DeleteDashboard("project-1", "missing")
 		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "failed with missing unified dashboard")
 	}
 }
 

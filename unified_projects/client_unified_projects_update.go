@@ -14,14 +14,15 @@ const (
 	updateProjectNotFound = http.StatusNotFound
 )
 
-// UpdateProject updates a project's (dashboard folder's) display name and/or description.
-// The project is addressed by its name.
-func (c *ProjectsClient) UpdateProject(name string, req UpdateProjectRequest) (*ProjectSummary, error) {
-	if err := validateUpdateProjectRequest(name, req); err != nil {
+// UpdateProject updates a project (dashboard folder), addressed by its id.
+// The API expects the full Perses Project document and replaces it, so the
+// request must carry the complete desired state (see UpdateProjectRequest).
+func (c *ProjectsClient) UpdateProject(id string, req UpdateProjectRequest) (*ProjectSummary, error) {
+	if err := validateUpdateProjectRequest(id, req); err != nil {
 		return nil, err
 	}
 
-	body, err := json.Marshal(req)
+	body, err := json.Marshal(newProjectEnvelope(req.Name, req.DisplayName, req.Description))
 	if err != nil {
 		return nil, err
 	}
@@ -29,11 +30,11 @@ func (c *ProjectsClient) UpdateProject(name string, req UpdateProjectRequest) (*
 	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
 		ApiToken:     c.ApiToken,
 		HttpMethod:   updateProjectMethod,
-		Url:          fmt.Sprintf(projectsByNameEndpoint, c.BaseUrl, name),
+		Url:          fmt.Sprintf(projectsByIdEndpoint, c.BaseUrl, id),
 		Body:         body,
 		SuccessCodes: []int{updateProjectSuccess},
 		NotFoundCode: updateProjectNotFound,
-		ResourceId:   name,
+		ResourceId:   id,
 		ApiAction:    updateProjectOperation,
 		ResourceName: projectResourceName,
 	})
@@ -41,10 +42,5 @@ func (c *ProjectsClient) UpdateProject(name string, req UpdateProjectRequest) (*
 		return nil, err
 	}
 
-	var result ProjectSummary
-	if err := json.Unmarshal(res, &result); err != nil {
-		return nil, err
-	}
-
-	return &result, nil
+	return unmarshalProject(updateProjectOperation, res)
 }

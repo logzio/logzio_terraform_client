@@ -16,42 +16,44 @@ func TestIntegrationUnifiedDashboards_GetDashboard(t *testing.T) {
 	}
 
 	projClient, err := setupUnifiedProjectsIntegrationTest()
-	assert.NoError(t, err)
+	if !assert.NoError(t, err) || projClient == nil {
+		return
+	}
 	dashClient, err := setupUnifiedDashboardsIntegrationTest()
-	assert.NoError(t, err)
+	if !assert.NoError(t, err) || dashClient == nil {
+		return
+	}
 
 	uniqueId := time.Now().Format("20060102150405")
 	projName := "tf-client-it-get-dash-" + uniqueId
 
-	// First create a project
 	proj, err := projClient.CreateProject(unified_projects.CreateProjectRequest{Name: projName})
 	if assert.NoError(t, err) && assert.NotNil(t, proj) {
-		defer projClient.DeleteProject(proj.Id)
+		defer func() {
+			if err := projClient.DeleteProject(proj.Id); err != nil {
+				t.Logf("cleanup: failed to delete project %s: %v", proj.Id, err)
+			}
+		}()
 
 		time.Sleep(2 * time.Second) // Allow for eventual consistency
 
-		// Create a dashboard
-		createReq := unified_dashboards.CreateDashboardRequest{
-			Doc: map[string]interface{}{
-				"title":       "IT Get Dashboard " + uniqueId,
-				"description": "Integration test get dashboard",
-				"panels":      []interface{}{},
-			},
-		}
-
-		created, err := dashClient.CreateDashboard(proj.Id, createReq)
+		created, err := dashClient.CreateDashboard(proj.Id, unified_dashboards.CreateDashboardRequest{
+			Doc: itDashboardDoc("it-get-dashboard-"+uniqueId, "IT Get Dashboard "+uniqueId),
+		})
 		if assert.NoError(t, err) && assert.NotNil(t, created) {
-			defer dashClient.DeleteDashboard(proj.Id, created.Uid)
+			defer func() {
+				if err := dashClient.DeleteDashboard(proj.Id, created.Uid); err != nil {
+					t.Logf("cleanup: failed to delete dashboard %s: %v", created.Uid, err)
+				}
+			}()
 
 			time.Sleep(2 * time.Second) // Allow for eventual consistency
 
-			// Get the dashboard
 			retrieved, err := dashClient.GetDashboard(proj.Id, created.Uid)
 			if assert.NoError(t, err) && assert.NotNil(t, retrieved) {
 				assert.Equal(t, created.Uid, retrieved.Uid)
-				assert.NotNil(t, retrieved.Doc)
-				assert.Equal(t, "IT Get Dashboard "+uniqueId, retrieved.Doc["title"])
-				assert.Equal(t, "Integration test get dashboard", retrieved.Doc["description"])
+				assert.Equal(t, proj.Id, retrieved.ProjectId)
+				assert.Equal(t, "Dashboard", retrieved.Doc["kind"])
 			}
 		}
 	}

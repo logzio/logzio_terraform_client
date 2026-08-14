@@ -18,19 +18,17 @@ func TestIntegrationUnifiedProjects_CreateProject(t *testing.T) {
 	if assert.NoError(t, err) {
 		projectName := "tf-client-it-" + time.Now().Format("20060102150405")
 
-		req := unified_projects.CreateProjectRequest{
-			Name: projectName,
-		}
-
-		project, err := underTest.CreateProject(req)
+		project, err := underTest.CreateProject(unified_projects.CreateProjectRequest{Name: projectName})
 		if assert.NoError(t, err) && assert.NotNil(t, project) {
 			defer func() {
-				// Clean up created project
-				underTest.DeleteProject(project.Id)
+				if err := underTest.DeleteProject(project.Id); err != nil {
+					t.Logf("cleanup: failed to delete project %s: %v", project.Id, err)
+				}
 			}()
 
-			assert.Equal(t, projectName, project.Name)
 			assert.NotEmpty(t, project.Id)
+			assert.Equal(t, projectName, project.Name)
+			assert.Equal(t, "Project", project.Doc["kind"])
 			assert.NotEmpty(t, project.CreatedAt)
 		}
 	}

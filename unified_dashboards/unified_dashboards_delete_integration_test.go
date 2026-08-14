@@ -27,35 +27,33 @@ func TestIntegrationUnifiedDashboards_DeleteDashboard(t *testing.T) {
 	uniqueId := time.Now().Format("20060102150405")
 	projName := "tf-client-it-del-dash-" + uniqueId
 
-	// First create a project
 	proj, err := projClient.CreateProject(unified_projects.CreateProjectRequest{Name: projName})
 	if assert.NoError(t, err) && assert.NotNil(t, proj) {
-		defer projClient.DeleteProject(proj.Id)
+		defer func() {
+			if err := projClient.DeleteProject(proj.Id); err != nil {
+				t.Logf("cleanup: failed to delete project %s: %v", proj.Id, err)
+			}
+		}()
 
 		time.Sleep(2 * time.Second) // Allow for eventual consistency
 
-		// Create a dashboard
-		createReq := unified_dashboards.CreateDashboardRequest{
-			Doc: map[string]interface{}{
-				"title":       "IT Delete Dashboard " + uniqueId,
-				"description": "Dashboard to be deleted",
-				"panels":      []interface{}{},
-			},
-		}
-
-		created, err := dashClient.CreateDashboard(proj.Id, createReq)
+		created, err := dashClient.CreateDashboard(proj.Id, unified_dashboards.CreateDashboardRequest{
+			Doc: itDashboardDoc("it-del-dashboard-"+uniqueId, "IT Delete Dashboard "+uniqueId),
+		})
 		if assert.NoError(t, err) && assert.NotNil(t, created) {
 			time.Sleep(2 * time.Second) // Allow for eventual consistency
 
-			// Delete the dashboard
 			err = dashClient.DeleteDashboard(proj.Id, created.Uid)
 			assert.NoError(t, err)
 
 			time.Sleep(2 * time.Second) // Allow for eventual consistency
 
-			// Verify the dashboard no longer exists by trying to get it
+			// Verify the dashboard no longer exists; the error must be the
+			// not-found classification, not some other failure.
 			_, err = dashClient.GetDashboard(proj.Id, created.Uid)
-			assert.Error(t, err, "Getting deleted dashboard should return an error")
+			if assert.Error(t, err, "Getting deleted dashboard should return an error") {
+				assert.Contains(t, err.Error(), "failed with missing unified dashboard")
+			}
 		}
 	}
 }

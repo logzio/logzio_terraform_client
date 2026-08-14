@@ -1,23 +1,18 @@
 {
+  "id": "row-2bd08bef",
   "uid": "dashboard-new",
+  "name": "dashboard-new",
+  "projectId": "project-1",
   "doc": {
-    "title": "CPU Usage Dashboard",
-    "panels": [
-      {
-        "id": 1,
-        "title": "CPU Usage",
-        "type": "graph",
-        "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
-        "targets": [
-          {
-            "query": "rate(node_cpu_seconds_total{mode='idle'}[5m])",
-            "refId": "A"
-          }
-        ]
-      }
-    ]
+    "kind": "Dashboard",
+    "metadata": { "name": "cpu-usage-dashboard", "project": "project-1" },
+    "spec": { "display": { "name": "CPU Usage Dashboard" }, "duration": "1h", "panels": {}, "layouts": [] }
   },
   "version": 1,
+  "createdBy": 2045352,
+  "updatedBy": 2045352,
   "createdAt": "2024-03-22T14:30:00Z",
-  "createdBy": "user1"
-} 
+  "updatedAt": "2024-03-22T14:30:00Z",
+  "isDeleted": false,
+  "isPrivate": false
+}

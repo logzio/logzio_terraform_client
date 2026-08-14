@@ -14,6 +14,7 @@ const (
 	deleteProjectNotFound = http.StatusNotFound
 )
 
+// DeleteProject deletes a project (dashboard folder), addressed by its id.
 func (c *ProjectsClient) DeleteProject(folderId string) error {
 	if err := validateDeleteProjectRequest(folderId); err != nil {
 		return err
@@ -22,7 +23,7 @@ func (c *ProjectsClient) DeleteProject(folderId string) error {
 	_, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
 		ApiToken:     c.ApiToken,
 		HttpMethod:   deleteProjectMethod,
-		Url:          fmt.Sprintf(projectsByNameEndpoint, c.BaseUrl, folderId),
+		Url:          fmt.Sprintf(projectsByIdEndpoint, c.BaseUrl, folderId),
 		Body:         nil,
 		SuccessCodes: []int{deleteProjectSuccess, deleteProjectOk},
 		NotFoundCode: deleteProjectNotFound,

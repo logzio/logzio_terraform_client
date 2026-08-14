@@ -1,73 +1,82 @@
-# Unified Projects
+# Unified Projects (Dashboard Folders)
 
-Compatible with Logz.io's [unified projects API](https://api-docs.logz.io/docs/logz/get-dashboard-folder-by-name).
+Compatible with Logz.io's unified dashboards folders API (`/perses-public/api/v1/projects`).
 
-Provides endpoints for managing projects (folders) in the unified dashboard system, including CRUD operations, search, and project management features.
+Provides endpoints for managing projects (dashboard folders) in the unified (Perses-based) dashboard system: CRUD operations, search, and rename.
+
+The wire contract below was verified against the live api.logz.io gateway on 2026-08-14; where the published API docs disagree (create/update body shape, addressing, search method), the live behavior documented here wins.
+
+## Addressing
+
+All single-project operations address the project by its **`id`** (the `id` field returned from `CreateProject`, `ListProjects`, `SearchProjects`, or `GetProject`). The project's `metadata.name` is a separate identity used inside the Perses document; passing it as the path parameter yields a 404.
 
 ## Usage
 
 ```go
 client, _ := unified_projects.New(apiToken, baseUrl)
 
-// List all projects
-projects, err := client.ListProjects(false)
-
-// List projects with dashboard information
-projects, err := client.ListProjects(true)
-
-// Get a specific project by name
-project, err := client.GetProject("system-metrics")
-
-// Create a new project
-result, err := client.CreateProject(unified_projects.CreateProjectRequest{
-    Name: "new-project",
+// Create a project (folder). The client builds the Perses Project document for you.
+created, err := client.CreateProject(unified_projects.CreateProjectRequest{
+    Name:        "my-project",          // identity (metadata.name)
+    DisplayName: "My Project",          // optional; defaults to Name
+    Description: "team dashboards",     // optional
 })
 
-// Update a project
-updatedProject, err := client.UpdateProject("system-metrics", unified_projects.UpdateProjectRequest{
-    DisplayName: "System Metrics Updated",
-    Description: "Updated description",
+// Get a project by id
+project, err := client.GetProject(created.Id)
+
+// List all projects (optionally with each project's dashboards)
+items, err := client.ListProjects(true)
+
+// Update a project — the PUT replaces the Perses document, so send the full
+// desired state; an empty Description clears any existing description.
+updated, err := client.UpdateProject(created.Id, unified_projects.UpdateProjectRequest{
+    Name:        "my-project",
+    DisplayName: "My Project (renamed)",
+    Description: "updated description",
 })
 
-// Search projects
-searchResults, err := client.SearchProjects(unified_projects.SearchProjectsRequest{
-    Query: "system",
-    Limit: 10,
+// Search projects (paginated; returns each project with its dashboards)
+resp, err := client.SearchProjects(unified_projects.SearchProjectsRequest{
+    Query: "my-project",
+    Limit: 100,
     Page:  1,
 })
 
-// Delete a project
-err = client.DeleteProject("project-id")
+// Rename a project
+renamed, err := client.RenameProject(created.Id, "my-project-renamed")
+
+// Delete a project by id
+err = client.DeleteProject(created.Id)
 ```
-
-## Addressing by Name vs. ID
-
-**Important:** `GetProject` and `UpdateProject` address a project by its **name**, while `DeleteProject` and `RenameProject` address it by its **id** (the `id` field returned from `CreateProject` or `ListProjects`). Callers who swap these parameters will receive a 404 error.
 
 ## Functions
 
 | Function | Signature |
 |----------|-----------|
-| list | `func (c *ProjectsClient) ListProjects(withDashboards bool) ([]ProjectModel, error)` |
-| get | `func (c *ProjectsClient) GetProject(name string) (*ProjectSummary, error)` |
 | create | `func (c *ProjectsClient) CreateProject(req CreateProjectRequest) (*ProjectSummary, error)` |
-| update | `func (c *ProjectsClient) UpdateProject(name string, req UpdateProjectRequest) (*ProjectSummary, error)` |
-| search | `func (c *ProjectsClient) SearchProjects(req SearchProjectsRequest) ([]ProjectSummary, error)` |
-| delete | `func (c *ProjectsClient) DeleteProject(folderId string) error` |
+| get | `func (c *ProjectsClient) GetProject(id string) (*ProjectSummary, error)` |
+| list | `func (c *ProjectsClient) ListProjects(withDashboards bool) ([]ProjectListItem, error)` |
+| update | `func (c *ProjectsClient) UpdateProject(id string, req UpdateProjectRequest) (*ProjectSummary, error)` |
+| search | `func (c *ProjectsClient) SearchProjects(req SearchProjectsRequest) (*SearchProjectsResponse, error)` |
 | rename | `func (c *ProjectsClient) RenameProject(folderId string, newName string) (*ProjectSummary, error)` |
+| delete | `func (c *ProjectsClient) DeleteProject(folderId string) error` |
 
 ## Data Types
 
 ### Request Types
 
-- `CreateProjectRequest` - Request payload for creating a project
-- `UpdateProjectRequest` - Display name and/or description to update on a project
-- `SearchProjectsRequest` - Search parameters for project queries (encoded as query parameters; the search endpoint is a GET)
+- `CreateProjectRequest` — `Name` (required), `DisplayName`, `Description`; the client wraps them in the Perses Project envelope the API requires.
+- `UpdateProjectRequest` — `Name` (required, the Perses `metadata.name`), `DisplayName` (required), `Description`; the PUT replaces the whole document.
+- `SearchProjectsRequest` — `Query`, `Limit`, `Page` (POST body).
 
 ### Response Types
 
-- `ProjectModel` - Wrapper containing project information
-- `ProjectSummary` - Basic project information
-- `DashboardListItem` - Dashboard reference in project listings
+- `ProjectSummary` — `Id`, `Name` (display name), `Doc` (the raw Perses Project document), `CreatedAt`, `UpdatedAt`.
+- `ProjectListItem` — one list/search entry: `Project` plus its `Dashboards`.
+- `SearchProjectsResponse` — `Results`, `Total`, `Pagination`.
 
-`CreateProjectRequest`, `UpdateProjectRequest`, and the response types include proper JSON tags with `omitempty` for optional fields. `SearchProjectsRequest` has no JSON tags since it is encoded as query parameters rather than a request body.
+## Notes
+
+- **Rename caveat:** as of 2026-08-14 the live rename endpoint returns 200 but does not actually change the project's name (verified against api.logz.io — the response and a subsequent get both show the old name). `RenameProject` is wired per the documented contract and will start working when the server-side behavior is fixed; prefer `UpdateProject` (display name) in the meantime.
+- Responses carry additional server-side fields (`entityId`, numeric `createdBy`/`updatedBy`, `isDeleted` as either a boolean or 0/1) that this client deliberately does not map.

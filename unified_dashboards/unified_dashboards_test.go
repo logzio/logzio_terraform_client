@@ -29,9 +29,9 @@ func setupUnifiedDashboardsTest() (*unified_dashboards.DashboardsClient, error, 
 
 	mux = http.NewServeMux()
 	server = httptest.NewServer(mux)
-	underTest, _ := unified_dashboards.New(apiToken, server.URL)
+	underTest, err := unified_dashboards.New(apiToken, server.URL)
 
-	return underTest, nil, func() {
+	return underTest, err, func() {
 		server.Close()
 	}
 }

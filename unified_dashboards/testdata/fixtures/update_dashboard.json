@@ -1,26 +1,18 @@
 {
+  "id": "row-2bd08bef",
   "uid": "dashboard-1",
+  "name": "dashboard-1",
+  "projectId": "project-1",
   "doc": {
-    "title": "Updated System Overview",
-    "description": "Updated system monitoring dashboard",
-    "panels": [
-      {
-        "id": 1,
-        "title": "CPU Usage Updated",
-        "type": "graph",
-        "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
-        "targets": [
-          {
-            "query": "rate(node_cpu_seconds_total{mode='idle'}[5m])",
-            "refId": "A"
-          }
-        ]
-      }
-    ],
-    "refresh": "30s"
+    "kind": "Dashboard",
+    "metadata": { "name": "system-overview", "project": "project-1" },
+    "spec": { "display": { "name": "Updated System Overview" }, "duration": "1h", "panels": {}, "layouts": [] }
   },
   "version": 2,
+  "createdBy": 2045352,
+  "updatedBy": 2045352,
   "createdAt": "2024-03-20T10:00:00Z",
   "updatedAt": "2024-03-22T15:00:00Z",
-  "updatedBy": "user2"
-} 
+  "isDeleted": false,
+  "isPrivate": false
+}

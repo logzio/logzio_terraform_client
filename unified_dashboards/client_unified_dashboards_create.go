@@ -39,10 +39,5 @@ func (c *DashboardsClient) CreateDashboard(folderId string, req CreateDashboardR
 		return nil, err
 	}
 
-	var result Dashboard
-	if err := json.Unmarshal(res, &result); err != nil {
-		return nil, err
-	}
-
-	return &result, nil
+	return unmarshalDashboard(createDashboardOperation, res)
 }

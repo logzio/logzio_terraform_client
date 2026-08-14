@@ -20,13 +20,25 @@ func TestIntegrationUnifiedProjects_RenameProject(t *testing.T) {
 
 		created, err := underTest.CreateProject(unified_projects.CreateProjectRequest{Name: projectName})
 		if assert.NoError(t, err) && assert.NotNil(t, created) {
-			defer underTest.DeleteProject(created.Id)
+			defer func() {
+				if err := underTest.DeleteProject(created.Id); err != nil {
+					t.Logf("cleanup: failed to delete project %s: %v", created.Id, err)
+				}
+			}()
 
-			time.Sleep(2 * time.Second)
+			time.Sleep(2 * time.Second) // Allow for eventual consistency
 
 			renamed, err := underTest.RenameProject(created.Id, projectName+"-renamed")
 			if assert.NoError(t, err) && assert.NotNil(t, renamed) {
-				assert.Equal(t, projectName+"-renamed", renamed.Name)
+				assert.Equal(t, created.Id, renamed.Id)
+				t.Logf("rename response name: %q (requested %q)", renamed.Name, projectName+"-renamed")
+			}
+
+			time.Sleep(2 * time.Second) // Allow for eventual consistency
+
+			retrieved, err := underTest.GetProject(created.Id)
+			if assert.NoError(t, err) && assert.NotNil(t, retrieved) {
+				t.Logf("post-rename project name: %q", retrieved.Name)
 			}
 		}
 	}

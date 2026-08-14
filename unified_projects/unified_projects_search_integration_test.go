@@ -19,37 +19,40 @@ func TestIntegrationUnifiedProjects_SearchProjects(t *testing.T) {
 		uniqueId := time.Now().Format("20060102150405")
 		projectName := "tf-client-it-search-" + uniqueId
 
-		// First create a project with a unique name
-		createReq := unified_projects.CreateProjectRequest{
-			Name: projectName,
-		}
-
-		created, err := underTest.CreateProject(createReq)
+		created, err := underTest.CreateProject(unified_projects.CreateProjectRequest{Name: projectName})
 		if assert.NoError(t, err) && assert.NotNil(t, created) {
 			defer func() {
-				// Clean up created project
-				underTest.DeleteProject(created.Id)
+				if err := underTest.DeleteProject(created.Id); err != nil {
+					t.Logf("cleanup: failed to delete project %s: %v", created.Id, err)
+				}
 			}()
 
 			time.Sleep(2 * time.Second) // Allow for eventual consistency
 
-			// Search for projects using part of the unique name
-			results, err := underTest.SearchProjects(unified_projects.SearchProjectsRequest{
-				Query: uniqueId,
-				Limit: 10,
-				Page:  1,
-			})
-			if assert.NoError(t, err) {
-				found := false
-				for _, p := range results {
-					if p.Name == projectName {
+			// The search endpoint behaves as a paginated listing; page through
+			// until the created project shows up (bounded to keep CI predictable).
+			found := false
+			for page := 1; page <= 20 && !found; page++ {
+				resp, err := underTest.SearchProjects(unified_projects.SearchProjectsRequest{
+					Query: projectName,
+					Limit: 100,
+					Page:  page,
+				})
+				if !assert.NoError(t, err) || !assert.NotNil(t, resp) {
+					return
+				}
+				if len(resp.Results) == 0 {
+					break
+				}
+				for _, item := range resp.Results {
+					if item.Project.Id == created.Id {
 						found = true
-						assert.Equal(t, created.Id, p.Id)
+						assert.Equal(t, projectName, item.Project.Name)
 						break
 					}
 				}
-				assert.True(t, found, "Created project should appear in search results")
 			}
+			assert.True(t, found, "Created project should appear in search results")
 		}
 	}
 }

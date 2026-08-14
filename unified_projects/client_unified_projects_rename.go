@@ -44,10 +44,5 @@ func (c *ProjectsClient) RenameProject(folderId string, newName string) (*Projec
 		return nil, err
 	}
 
-	var result ProjectSummary
-	if err := json.Unmarshal(res, &result); err != nil {
-		return nil, err
-	}
-
-	return &result, nil
+	return unmarshalProject(renameProjectOperation, res)
 }

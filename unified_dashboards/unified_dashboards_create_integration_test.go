@@ -10,6 +10,21 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// itDashboardDoc builds a minimal valid Perses Dashboard document — the API
+// requires the full envelope (kind/metadata/spec).
+func itDashboardDoc(name, displayName string) map[string]interface{} {
+	return map[string]interface{}{
+		"kind":     "Dashboard",
+		"metadata": map[string]interface{}{"name": name},
+		"spec": map[string]interface{}{
+			"display":  map[string]interface{}{"name": displayName},
+			"duration": "1h",
+			"panels":   map[string]interface{}{},
+			"layouts":  []interface{}{},
+		},
+	}
+}
+
 func TestIntegrationUnifiedDashboards_CreateDashboard(t *testing.T) {
 	if os.Getenv("LOGZIO_API_TOKEN") == "" {
 		t.Skip("LOGZIO_API_TOKEN not set")
@@ -27,31 +42,29 @@ func TestIntegrationUnifiedDashboards_CreateDashboard(t *testing.T) {
 	uniqueId := time.Now().Format("20060102150405")
 	projName := "tf-client-it-dash-" + uniqueId
 
-	// First create a project
 	proj, err := projClient.CreateProject(unified_projects.CreateProjectRequest{Name: projName})
 	if assert.NoError(t, err) && assert.NotNil(t, proj) {
-		defer projClient.DeleteProject(proj.Id)
+		defer func() {
+			if err := projClient.DeleteProject(proj.Id); err != nil {
+				t.Logf("cleanup: failed to delete project %s: %v", proj.Id, err)
+			}
+		}()
 
 		time.Sleep(2 * time.Second) // Allow for eventual consistency
 
-		// Create a dashboard
-		createReq := unified_dashboards.CreateDashboardRequest{
-			Doc: map[string]interface{}{
-				"title":       "IT Dashboard " + uniqueId,
-				"description": "Integration test dashboard",
-				"panels":      []interface{}{},
-				"refresh":     "1m",
-			},
-		}
-
-		created, err := dashClient.CreateDashboard(proj.Id, createReq)
+		created, err := dashClient.CreateDashboard(proj.Id, unified_dashboards.CreateDashboardRequest{
+			Doc: itDashboardDoc("it-dashboard-"+uniqueId, "IT Dashboard "+uniqueId),
+		})
 		if assert.NoError(t, err) && assert.NotNil(t, created) {
-			defer dashClient.DeleteDashboard(proj.Id, created.Uid)
+			defer func() {
+				if err := dashClient.DeleteDashboard(proj.Id, created.Uid); err != nil {
+					t.Logf("cleanup: failed to delete dashboard %s: %v", created.Uid, err)
+				}
+			}()
 
 			assert.NotEmpty(t, created.Uid)
-			assert.NotNil(t, created.Doc)
-			assert.Equal(t, "IT Dashboard "+uniqueId, created.Doc["title"])
-			assert.Equal(t, "Integration test dashboard", created.Doc["description"])
+			assert.Equal(t, proj.Id, created.ProjectId)
+			assert.Equal(t, "Dashboard", created.Doc["kind"])
 			assert.NotEmpty(t, created.CreatedAt)
 		}
 	}

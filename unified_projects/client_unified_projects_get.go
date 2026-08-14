@@ -1,7 +1,6 @@
 package unified_projects
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -14,19 +13,20 @@ const (
 	getProjectNotFound = http.StatusNotFound
 )
 
-func (c *ProjectsClient) GetProject(name string) (*ProjectSummary, error) {
-	if len(name) == 0 {
-		return nil, fmt.Errorf("name must be set")
+// GetProject returns a project (dashboard folder) by its id.
+func (c *ProjectsClient) GetProject(id string) (*ProjectSummary, error) {
+	if err := validateGetProjectRequest(id); err != nil {
+		return nil, err
 	}
 
 	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
 		ApiToken:     c.ApiToken,
 		HttpMethod:   getProjectMethod,
-		Url:          fmt.Sprintf(projectsByNameEndpoint, c.BaseUrl, name),
+		Url:          fmt.Sprintf(projectsByIdEndpoint, c.BaseUrl, id),
 		Body:         nil,
 		SuccessCodes: []int{getProjectSuccess},
 		NotFoundCode: getProjectNotFound,
-		ResourceId:   name,
+		ResourceId:   id,
 		ApiAction:    getProjectOperation,
 		ResourceName: projectResourceName,
 	})
@@ -34,10 +34,5 @@ func (c *ProjectsClient) GetProject(name string) (*ProjectSummary, error) {
 		return nil, err
 	}
 
-	var result ProjectSummary
-	if err := json.Unmarshal(res, &result); err != nil {
-		return nil, err
-	}
-
-	return &result, nil
+	return unmarshalProject(getProjectOperation, res)
 }

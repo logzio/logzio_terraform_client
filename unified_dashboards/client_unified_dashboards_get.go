@@ -1,7 +1,6 @@
 package unified_dashboards
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -35,10 +34,5 @@ func (c *DashboardsClient) GetDashboard(folderId, uid string) (*Dashboard, error
 		return nil, err
 	}
 
-	var result Dashboard
-	if err := json.Unmarshal(res, &result); err != nil {
-		return nil, err
-	}
-
-	return &result, nil
+	return unmarshalDashboard(getDashboardOperation, res)
 }

@@ -16,43 +16,47 @@ func TestIntegrationUnifiedDashboards_ListDashboards(t *testing.T) {
 	}
 
 	projClient, err := setupUnifiedProjectsIntegrationTest()
-	assert.NoError(t, err)
+	if !assert.NoError(t, err) || projClient == nil {
+		return
+	}
 	dashClient, err := setupUnifiedDashboardsIntegrationTest()
-	assert.NoError(t, err)
+	if !assert.NoError(t, err) || dashClient == nil {
+		return
+	}
 
 	uniqueId := time.Now().Format("20060102150405")
 	projName := "tf-client-it-list-dash-" + uniqueId
 
-	// First create a project
 	proj, err := projClient.CreateProject(unified_projects.CreateProjectRequest{Name: projName})
 	if assert.NoError(t, err) && assert.NotNil(t, proj) {
-		defer projClient.DeleteProject(proj.Id)
+		defer func() {
+			if err := projClient.DeleteProject(proj.Id); err != nil {
+				t.Logf("cleanup: failed to delete project %s: %v", proj.Id, err)
+			}
+		}()
 
 		time.Sleep(2 * time.Second) // Allow for eventual consistency
 
-		// Create a dashboard
-		createReq := unified_dashboards.CreateDashboardRequest{
-			Doc: map[string]interface{}{
-				"title":       "IT List Dashboard " + uniqueId,
-				"description": "Dashboard for list test",
-				"panels":      []interface{}{},
-			},
-		}
-
-		created, err := dashClient.CreateDashboard(proj.Id, createReq)
+		created, err := dashClient.CreateDashboard(proj.Id, unified_dashboards.CreateDashboardRequest{
+			Doc: itDashboardDoc("it-list-dashboard-"+uniqueId, "IT List Dashboard "+uniqueId),
+		})
 		if assert.NoError(t, err) && assert.NotNil(t, created) {
-			defer dashClient.DeleteDashboard(proj.Id, created.Uid)
+			defer func() {
+				if err := dashClient.DeleteDashboard(proj.Id, created.Uid); err != nil {
+					t.Logf("cleanup: failed to delete dashboard %s: %v", created.Uid, err)
+				}
+			}()
 
 			time.Sleep(2 * time.Second) // Allow for eventual consistency
 
-			// List dashboards and verify our dashboard appears
 			dashboards, err := dashClient.ListDashboards()
 			if assert.NoError(t, err) {
 				found := false
 				for _, dashboard := range dashboards {
 					if dashboard.Uid == created.Uid {
 						found = true
-						assert.Equal(t, "IT List Dashboard "+uniqueId, dashboard.Doc["title"])
+						assert.Equal(t, proj.Id, dashboard.ProjectId)
+						assert.Equal(t, "Dashboard", dashboard.Doc["kind"])
 						break
 					}
 				}

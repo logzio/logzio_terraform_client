@@ -22,10 +22,12 @@ func TestUnifiedDashboards_GetDashboard(t *testing.T) {
 
 		dashboard, err := underTest.GetDashboard("project-1", "dashboard-1")
 		assert.NoError(t, err)
-		assert.NotNil(t, dashboard)
-		assert.Equal(t, "dashboard-1", dashboard.Uid)
-		assert.Equal(t, "System Overview", dashboard.Doc["title"])
-		assert.Equal(t, 1, dashboard.Version)
+		if assert.NotNil(t, dashboard) {
+			assert.Equal(t, "dashboard-1", dashboard.Uid)
+			assert.Equal(t, "project-1", dashboard.ProjectId)
+			assert.Equal(t, "Dashboard", dashboard.Doc["kind"])
+			assert.Equal(t, 1, dashboard.Version)
+		}
 	}
 }
 
@@ -41,6 +43,7 @@ func TestUnifiedDashboards_GetDashboardAPIFail(t *testing.T) {
 
 		_, err = underTest.GetDashboard("project-1", "dashboard-1")
 		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "status code 500")
 	}
 }
 
@@ -56,6 +59,7 @@ func TestUnifiedDashboards_GetDashboardNotFound(t *testing.T) {
 
 		_, err = underTest.GetDashboard("project-1", "missing")
 		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "failed with missing unified dashboard")
 	}
 }
 

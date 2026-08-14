@@ -35,6 +35,7 @@ func TestUnifiedProjects_DeleteProjectAPIFail(t *testing.T) {
 
 		err = underTest.DeleteProject("project-1")
 		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "status code 500")
 	}
 }
 
@@ -50,6 +51,7 @@ func TestUnifiedProjects_DeleteProjectNotFound(t *testing.T) {
 
 		err = underTest.DeleteProject("missing")
 		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "failed with missing unified project")
 	}
 }
 

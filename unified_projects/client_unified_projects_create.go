@@ -10,16 +10,24 @@ import (
 
 const (
 	createProjectMethod   = http.MethodPost
-	createProjectSuccess  = http.StatusCreated
+	createProjectSuccess  = http.StatusOK
+	createProjectCreated  = http.StatusCreated
 	createProjectNotFound = http.StatusNotFound
 )
 
+// CreateProject creates a project (dashboard folder). The API expects a
+// Perses Project document; it is built here from the request fields.
 func (c *ProjectsClient) CreateProject(req CreateProjectRequest) (*ProjectSummary, error) {
 	if err := validateCreateProjectRequest(req); err != nil {
 		return nil, err
 	}
 
-	body, err := json.Marshal(req)
+	displayName := req.DisplayName
+	if len(displayName) == 0 {
+		displayName = req.Name
+	}
+
+	body, err := json.Marshal(newProjectEnvelope(req.Name, displayName, req.Description))
 	if err != nil {
 		return nil, err
 	}
@@ -29,7 +37,7 @@ func (c *ProjectsClient) CreateProject(req CreateProjectRequest) (*ProjectSummar
 		HttpMethod:   createProjectMethod,
 		Url:          fmt.Sprintf(projectsServiceEndpoint, c.BaseUrl),
 		Body:         body,
-		SuccessCodes: []int{createProjectSuccess, http.StatusOK},
+		SuccessCodes: []int{createProjectSuccess, createProjectCreated},
 		NotFoundCode: createProjectNotFound,
 		ResourceId:   req.Name,
 		ApiAction:    createProjectOperation,
@@ -39,10 +47,5 @@ func (c *ProjectsClient) CreateProject(req CreateProjectRequest) (*ProjectSummar
 		return nil, err
 	}
 
-	var result ProjectSummary
-	if err := json.Unmarshal(res, &result); err != nil {
-		return nil, err
-	}
-
-	return &result, nil
+	return unmarshalProject(createProjectOperation, res)
 }

@@ -24,14 +24,17 @@ func TestUnifiedProjects_ListProjects(t *testing.T) {
 
 		projects, err := underTest.ListProjects(false)
 		assert.NoError(t, err)
-		assert.Len(t, projects, 2)
-		assert.Equal(t, "project-1", projects[0].Project.Id)
-		assert.Equal(t, "system-metrics", projects[0].Project.Name)
-		assert.Equal(t, "System Metrics", projects[0].Project.DisplayName)
-		assert.Equal(t, "System monitoring dashboards", projects[0].Project.Description)
-		assert.Len(t, projects[0].Project.Dashboards, 2)
-		assert.Equal(t, "dashboard-1", projects[0].Project.Dashboards[0].Uid)
-		assert.Equal(t, "CPU Usage", projects[0].Project.Dashboards[0].Title)
+		if assert.Len(t, projects, 2) {
+			assert.Equal(t, "project-1", projects[0].Project.Id)
+			assert.Equal(t, "System Metrics", projects[0].Project.Name)
+			assert.Equal(t, "Project", projects[0].Project.Doc["kind"])
+			// dashboards are a sibling of "project" in each list entry
+			if assert.Len(t, projects[0].Dashboards, 1) {
+				assert.Equal(t, "3da41d03-ca61-436d-be45-69047d4f84be", projects[0].Dashboards[0].Id)
+				assert.Equal(t, "project-1", projects[0].Dashboards[0].ProjectId)
+			}
+			assert.Empty(t, projects[1].Dashboards)
+		}
 	}
 }
 
@@ -62,12 +65,12 @@ func TestUnifiedProjects_ListProjectsAPIFail(t *testing.T) {
 	if assert.NoError(t, err) {
 		mux.HandleFunc("/perses-public/api/v1/projects", func(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Header().Set("Content-Type", "application/json")
 			fmt.Fprint(w, fixture("api_error.txt"))
 		})
 
 		_, err = underTest.ListProjects(false)
 		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "status code 500")
 	}
 }
 
@@ -78,11 +81,11 @@ func TestUnifiedProjects_ListProjectsNotFound(t *testing.T) {
 	if assert.NoError(t, err) {
 		mux.HandleFunc("/perses-public/api/v1/projects", func(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusNotFound)
-			w.Header().Set("Content-Type", "application/json")
 			fmt.Fprint(w, fixture("not_found.txt"))
 		})
 
 		_, err = underTest.ListProjects(false)
 		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "failed with missing unified project")
 	}
 }

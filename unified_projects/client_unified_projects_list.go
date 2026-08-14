@@ -15,7 +15,9 @@ const (
 	listProjectsNotFound = http.StatusNotFound
 )
 
-func (c *ProjectsClient) ListProjects(withDashboards bool) ([]ProjectModel, error) {
+// ListProjects returns all projects (dashboard folders), optionally including
+// each project's dashboards.
+func (c *ProjectsClient) ListProjects(withDashboards bool) ([]ProjectListItem, error) {
 	endpoint := fmt.Sprintf(projectsServiceEndpoint, c.BaseUrl)
 
 	if withDashboards {
@@ -36,7 +38,7 @@ func (c *ProjectsClient) ListProjects(withDashboards bool) ([]ProjectModel, erro
 		Body:         nil,
 		SuccessCodes: []int{listProjectsSuccess},
 		NotFoundCode: listProjectsNotFound,
-		ResourceId:   "list",
+		ResourceId:   nil,
 		ApiAction:    listProjectsOperation,
 		ResourceName: projectResourceName,
 	})
@@ -44,7 +46,7 @@ func (c *ProjectsClient) ListProjects(withDashboards bool) ([]ProjectModel, erro
 		return nil, err
 	}
 
-	var result []ProjectModel
+	var result []ProjectListItem
 	if err := json.Unmarshal(res, &result); err != nil {
 		return nil, err
 	}

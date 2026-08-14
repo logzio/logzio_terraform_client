@@ -23,7 +23,7 @@ func TestUnifiedDashboards_UpdateDashboard(t *testing.T) {
 			var target unified_dashboards.UpdateDashboardRequest
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)
-			assert.Equal(t, "Updated System Overview", target.Doc["title"])
+			assert.Equal(t, "Dashboard", target.Doc["kind"])
 
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)
@@ -31,12 +31,18 @@ func TestUnifiedDashboards_UpdateDashboard(t *testing.T) {
 		})
 
 		updated, err := underTest.UpdateDashboard("project-1", "dashboard-1", unified_dashboards.UpdateDashboardRequest{
-			Doc: map[string]interface{}{"title": "Updated System Overview"},
+			Doc: map[string]interface{}{
+				"kind":     "Dashboard",
+				"metadata": map[string]interface{}{"name": "system-overview"},
+				"spec":     map[string]interface{}{"display": map[string]interface{}{"name": "Updated System Overview"}},
+			},
 		})
 		assert.NoError(t, err)
-		assert.NotNil(t, updated)
-		assert.Equal(t, "dashboard-1", updated.Uid)
-		assert.Equal(t, 2, updated.Version)
+		if assert.NotNil(t, updated) {
+			assert.Equal(t, "dashboard-1", updated.Uid)
+			assert.Equal(t, "project-1", updated.ProjectId)
+			assert.Equal(t, 2, updated.Version)
+		}
 	}
 }
 
@@ -54,6 +60,7 @@ func TestUnifiedDashboards_UpdateDashboardAPIFail(t *testing.T) {
 			Doc: map[string]interface{}{"title": "x"},
 		})
 		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "status code 500")
 	}
 }
 
@@ -71,6 +78,7 @@ func TestUnifiedDashboards_UpdateDashboardNotFound(t *testing.T) {
 			Doc: map[string]interface{}{"title": "x"},
 		})
 		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "failed with missing unified dashboard")
 	}
 }
 
@@ -79,6 +87,14 @@ func TestUnifiedDashboards_UpdateDashboardValidation(t *testing.T) {
 	defer teardown()
 
 	if assert.NoError(t, err) {
+		_, err = underTest.UpdateDashboard("", "dashboard-1", unified_dashboards.UpdateDashboardRequest{Doc: map[string]interface{}{"x": 1}})
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "folderId must be set")
+
+		_, err = underTest.UpdateDashboard("project-1", "", unified_dashboards.UpdateDashboardRequest{Doc: map[string]interface{}{"x": 1}})
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "uid must be set")
+
 		_, err = underTest.UpdateDashboard("project-1", "dashboard-1", unified_dashboards.UpdateDashboardRequest{})
 		assert.Error(t, err)
 		assert.Contains(t, err.Error(), "doc must be set")

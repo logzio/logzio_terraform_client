@@ -28,9 +28,9 @@ func setupUnifiedProjectsTest() (*unified_projects.ProjectsClient, error, func()
 
 	mux = http.NewServeMux()
 	server = httptest.NewServer(mux)
-	underTest, _ := unified_projects.New(apiToken, server.URL)
+	underTest, err := unified_projects.New(apiToken, server.URL)
 
-	return underTest, nil, func() {
+	return underTest, err, func() {
 		server.Close()
 	}
 }

@@ -49,6 +49,7 @@ func TestUnifiedProjects_RenameProjectAPIFail(t *testing.T) {
 
 		_, err = underTest.RenameProject("project-1", "renamed-project")
 		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "status code 500")
 	}
 }
 
@@ -64,6 +65,7 @@ func TestUnifiedProjects_RenameProjectNotFound(t *testing.T) {
 
 		_, err = underTest.RenameProject("missing", "renamed-project")
 		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "failed with missing unified project")
 	}
 }
 

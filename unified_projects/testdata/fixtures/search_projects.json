@@ -1,9 +1,24 @@
-[
-  {
-    "id": "project-1",
-    "name": "system-metrics",
-    "displayName": "System Metrics",
-    "description": "System monitoring dashboards",
-    "createdAt": "2024-03-20T10:00:00Z"
-  }
-]
+{
+  "results": [
+    {
+      "project": {
+        "id": "project-1",
+        "name": "System Metrics",
+        "doc": {
+          "kind": "Project",
+          "metadata": { "name": "system-metrics" },
+          "spec": { "display": { "name": "System Metrics", "description": "System monitoring dashboards" } }
+        },
+        "entityId": 1,
+        "createdBy": 977560,
+        "updatedBy": 977560,
+        "createdAt": "2024-03-20T10:00:00Z",
+        "updatedAt": "2024-03-20T12:00:00Z",
+        "isDeleted": 0
+      },
+      "dashboards": []
+    }
+  ],
+  "total": 184,
+  "pagination": { "page": 1, "limit": 10 }
+}

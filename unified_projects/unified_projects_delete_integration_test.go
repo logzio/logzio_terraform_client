@@ -18,24 +18,27 @@ func TestIntegrationUnifiedProjects_DeleteProject(t *testing.T) {
 	if assert.NoError(t, err) {
 		projectName := "tf-client-it-delete-" + time.Now().Format("20060102150405")
 
-		// First create a project
-		createReq := unified_projects.CreateProjectRequest{
-			Name: projectName,
-		}
-
-		created, err := underTest.CreateProject(createReq)
+		created, err := underTest.CreateProject(unified_projects.CreateProjectRequest{Name: projectName})
 		if assert.NoError(t, err) && assert.NotNil(t, created) {
 			time.Sleep(2 * time.Second) // Allow for eventual consistency
 
-			// Delete the project
 			err = underTest.DeleteProject(created.Id)
-			assert.NoError(t, err)
+			if !assert.NoError(t, err) {
+				// Deletion failed — clean up on the way out so the account stays tidy.
+				if err := underTest.DeleteProject(created.Id); err != nil {
+					t.Logf("cleanup: failed to delete project %s: %v", created.Id, err)
+				}
+				return
+			}
 
 			time.Sleep(2 * time.Second) // Allow for eventual consistency
 
-			// Verify the project no longer exists by trying to get it
-			_, err = underTest.GetProject(projectName)
-			assert.Error(t, err, "Getting deleted project should return an error")
+			// Verify the project no longer exists; the error must be the
+			// not-found classification, not some other failure.
+			_, err = underTest.GetProject(created.Id)
+			if assert.Error(t, err, "Getting deleted project should return an error") {
+				assert.Contains(t, err.Error(), "failed with missing unified project")
+			}
 		}
 	}
 }
