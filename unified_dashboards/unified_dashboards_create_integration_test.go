@@ -90,7 +90,7 @@ func TestIntegrationUnifiedDashboards_CreateDashboard(t *testing.T) {
 
 		for attempt := 1; attempt <= maxRetries; attempt++ {
 			fmt.Printf("Attempt %d: Creating dashboard in project ID: %s\n", attempt, proj.Id)
-			fmt.Printf("  Using URL pattern: /perses/api/v1/projects/%s/dashboards\n", proj.Id)
+			fmt.Printf("  Using URL pattern: /perses-public/api/v1/projects/%s/dashboards\n", proj.Id)
 
 			created, dashErr = dashClient.CreateDashboard(proj.Id, createReq)
 

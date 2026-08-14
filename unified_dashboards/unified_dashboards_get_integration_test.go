@@ -41,19 +41,12 @@ func TestIntegrationUnifiedDashboards_GetDashboard(t *testing.T) {
 			time.Sleep(2 * time.Second) // Allow for eventual consistency
 
 			// Get the dashboard
-			retrieved, err := dashClient.GetDashboard(proj.Id, created.Uid, nil)
+			retrieved, err := dashClient.GetDashboard(proj.Id, created.Uid)
 			if assert.NoError(t, err) && assert.NotNil(t, retrieved) {
 				assert.Equal(t, created.Uid, retrieved.Uid)
 				assert.NotNil(t, retrieved.Doc)
 				assert.Equal(t, "IT Get Dashboard "+uniqueId, retrieved.Doc["title"])
 				assert.Equal(t, "Integration test get dashboard", retrieved.Doc["description"])
-			}
-
-			// Test with source parameter
-			source := "grafana"
-			retrievedWithSource, err := dashClient.GetDashboard(proj.Id, created.Uid, &source)
-			if assert.NoError(t, err) && assert.NotNil(t, retrievedWithSource) {
-				assert.Equal(t, created.Uid, retrievedWithSource.Uid)
 			}
 		}
 	}

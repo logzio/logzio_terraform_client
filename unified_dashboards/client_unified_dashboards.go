@@ -7,19 +7,19 @@ import (
 )
 
 const (
-	dashboardsListEndpoint   = "%s/perses/api/v1/dashboards"
-	dashboardByUidEndpoint   = "%s/perses/api/v1/projects/%s/dashboards/%s"
-	dashboardsCreateEndpoint = "%s/perses/api/v1/projects/%s/dashboards"
-	dashboardsSearchEndpoint = "%s/perses/api/v1/dashboards/search"
+	dashboardsListEndpoint   = "%s/perses-public/api/v1/dashboards"
+	dashboardByUidEndpoint   = "%s/perses-public/api/v1/projects/%s/dashboards/%s"
+	dashboardsCreateEndpoint = "%s/perses-public/api/v1/projects/%s/dashboards"
+	dashboardsMoveEndpoint   = "%s/perses-public/api/v1/dashboards/move"
 
 	dashboardResourceName = "unified dashboard"
 
-	createDashboardOperation  = "CreateUnifiedDashboard"
-	getDashboardOperation     = "GetUnifiedDashboard"
-	listDashboardsOperation   = "ListUnifiedDashboards"
-	updateDashboardOperation  = "UpdateUnifiedDashboard"
-	searchDashboardsOperation = "SearchUnifiedDashboards"
-	deleteDashboardOperation  = "DeleteUnifiedDashboard"
+	createDashboardOperation = "CreateUnifiedDashboard"
+	getDashboardOperation    = "GetUnifiedDashboard"
+	listDashboardsOperation  = "ListUnifiedDashboards"
+	updateDashboardOperation = "UpdateUnifiedDashboard"
+	moveDashboardOperation   = "MoveUnifiedDashboard"
+	deleteDashboardOperation = "DeleteUnifiedDashboard"
 )
 
 type DashboardsClient struct {
@@ -33,16 +33,6 @@ type CreateDashboardRequest struct {
 
 type UpdateDashboardRequest struct {
 	Doc map[string]interface{} `json:"doc"`
-}
-
-type SearchDashboardsRequest struct {
-	Query   string   `json:"query,omitempty"`
-	Tag     []string `json:"tag,omitempty"`
-	Starred *bool    `json:"starred,omitempty"`
-	Limit   int      `json:"limit,omitempty"`
-	Page    int      `json:"page,omitempty"`
-	Sort    string   `json:"sort,omitempty"`
-	Order   string   `json:"order,omitempty"`
 }
 
 // Response types
@@ -109,9 +99,5 @@ func validateDeleteDashboardRequest(folderId, uid string) error {
 	if len(uid) == 0 {
 		return fmt.Errorf("uid must be set")
 	}
-	return nil
-}
-
-func validateSearchDashboardsRequest(req SearchDashboardsRequest) error {
 	return nil
 }

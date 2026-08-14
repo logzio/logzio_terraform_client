@@ -49,7 +49,7 @@ func TestIntegrationUnifiedDashboards_DeleteDashboard(t *testing.T) {
 			time.Sleep(2 * time.Second) // Allow for eventual consistency
 
 			// Verify the dashboard no longer exists by trying to get it
-			_, err = dashClient.GetDashboard(proj.Id, created.Uid, nil)
+			_, err = dashClient.GetDashboard(proj.Id, created.Uid)
 			assert.Error(t, err, "Getting deleted dashboard should return an error")
 		}
 	}

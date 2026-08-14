@@ -13,7 +13,7 @@ func TestUnifiedDashboards_ListDashboards(t *testing.T) {
 	defer teardown()
 
 	if assert.NoError(t, err) {
-		mux.HandleFunc("/perses/api/v1/dashboards", func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc("/perses-public/api/v1/dashboards", func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, http.MethodGet, r.Method)
 
 			w.Header().Set("Content-Type", "application/json")
@@ -37,7 +37,7 @@ func TestUnifiedDashboards_ListDashboardsAPIFail(t *testing.T) {
 	defer teardown()
 
 	if assert.NoError(t, err) {
-		mux.HandleFunc("/perses/api/v1/dashboards", func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc("/perses-public/api/v1/dashboards", func(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Header().Set("Content-Type", "application/json")
 			fmt.Fprint(w, fixture("api_error.txt"))
@@ -53,7 +53,7 @@ func TestUnifiedDashboards_ListDashboardsNotFound(t *testing.T) {
 	defer teardown()
 
 	if assert.NoError(t, err) {
-		mux.HandleFunc("/perses/api/v1/dashboards", func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc("/perses-public/api/v1/dashboards", func(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusNotFound)
 			w.Header().Set("Content-Type", "application/json")
 			fmt.Fprint(w, fixture("not_found.txt"))
