@@ -8,6 +8,7 @@ import (
 
 	"github.com/logzio/logzio_terraform_client/test_utils"
 	"github.com/logzio/logzio_terraform_client/unified_dashboards"
+	"github.com/logzio/logzio_terraform_client/unified_projects"
 )
 
 var (
@@ -64,5 +65,14 @@ func setupUnifiedDashboardsIntegrationTest() (*unified_dashboards.DashboardsClie
 		return nil, err
 	}
 	underTest, err := unified_dashboards.New(apiToken, test_utils.GetLogzIoBaseUrl())
+	return underTest, err
+}
+
+func setupUnifiedProjectsIntegrationTest() (*unified_projects.ProjectsClient, error) {
+	apiToken, err := test_utils.GetApiToken()
+	if err != nil {
+		return nil, err
+	}
+	underTest, err := unified_projects.New(apiToken, test_utils.GetLogzIoBaseUrl())
 	return underTest, err
 }

@@ -32,7 +32,7 @@ func TestIntegrationUnifiedDashboards_DeleteDashboard(t *testing.T) {
 	if assert.NoError(t, err) && assert.NotNil(t, proj) {
 		defer projClient.DeleteProject(proj.Id)
 
-		time.Sleep(10 * time.Second) // Allow for eventual consistency
+		time.Sleep(2 * time.Second) // Allow for eventual consistency
 
 		// Create a dashboard
 		createReq := unified_dashboards.CreateDashboardRequest{

@@ -75,5 +75,4 @@ All request and response types include proper JSON tags with `omitempty` for opt
 
 ## Notes
 
-- Dashboard snapshots are not supported in this implementation
 - The `Doc` field in dashboard requests/responses uses `map[string]interface{}` to support flexible panel configurations 

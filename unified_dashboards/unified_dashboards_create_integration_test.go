@@ -5,7 +5,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/logzio/logzio_terraform_client/test_utils"
 	"github.com/logzio/logzio_terraform_client/unified_dashboards"
 	"github.com/logzio/logzio_terraform_client/unified_projects"
 	"github.com/stretchr/testify/assert"
@@ -56,14 +55,4 @@ func TestIntegrationUnifiedDashboards_CreateDashboard(t *testing.T) {
 			assert.NotEmpty(t, created.CreatedAt)
 		}
 	}
-}
-
-// Helper function to setup unified projects integration test
-func setupUnifiedProjectsIntegrationTest() (*unified_projects.ProjectsClient, error) {
-	apiToken, err := test_utils.GetApiToken()
-	if err != nil {
-		return nil, err
-	}
-	underTest, err := unified_projects.New(apiToken, test_utils.GetLogzIoBaseUrl())
-	return underTest, err
 }

@@ -40,6 +40,10 @@ searchResults, err := client.SearchProjects(unified_projects.SearchProjectsReque
 err = client.DeleteProject("project-id")
 ```
 
+## Addressing by Name vs. ID
+
+**Important:** `GetProject` and `UpdateProject` address a project by its **name**, while `DeleteProject` and `RenameProject` address it by its **id** (the `id` field returned from `CreateProject` or `ListProjects`). Callers who swap these parameters will receive a 404 error.
+
 ## Functions
 
 | Function | Signature |
