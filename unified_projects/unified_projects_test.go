@@ -1,10 +1,10 @@
 package unified_projects_test
 
 import (
+	"embed"
 	"net/http"
 	"net/http/httptest"
-	"os"
-	"path/filepath"
+	"path"
 	"testing"
 
 	"github.com/logzio/logzio_terraform_client/test_utils"
@@ -16,10 +16,13 @@ var (
 	server *httptest.Server
 )
 
+//go:embed testdata/fixtures
+var fixturesFS embed.FS
+
 func fixture(name string) string {
-	// filepath.Base pins the lookup inside the fixtures directory (and keeps
-	// path-traversal SAST scanners happy); callers pass bare file names.
-	b, err := os.ReadFile(filepath.Join("testdata", "fixtures", filepath.Base(name)))
+	// Fixtures are compiled into the test binary; embed.FS lookups cannot
+	// escape the embedded tree, and path.Base pins the name besides.
+	b, err := fixturesFS.ReadFile(path.Join("testdata", "fixtures", path.Base(name)))
 	if err != nil {
 		panic(err)
 	}
