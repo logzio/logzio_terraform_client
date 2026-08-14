@@ -1,6 +1,7 @@
 package unified_dashboards_test
 
 import (
+	"os"
 	"testing"
 	"time"
 
@@ -10,6 +11,10 @@ import (
 )
 
 func TestIntegrationUnifiedDashboards_DeleteDashboard(t *testing.T) {
+	if os.Getenv("LOGZIO_API_TOKEN") == "" {
+		t.Skip("LOGZIO_API_TOKEN not set")
+	}
+
 	projClient, err := setupUnifiedProjectsIntegrationTest()
 	if !assert.NoError(t, err) || projClient == nil {
 		return

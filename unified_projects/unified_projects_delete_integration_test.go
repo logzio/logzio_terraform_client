@@ -1,6 +1,7 @@
 package unified_projects_test
 
 import (
+	"os"
 	"testing"
 	"time"
 
@@ -9,6 +10,10 @@ import (
 )
 
 func TestIntegrationUnifiedProjects_DeleteProject(t *testing.T) {
+	if os.Getenv("LOGZIO_API_TOKEN") == "" {
+		t.Skip("LOGZIO_API_TOKEN not set")
+	}
+
 	underTest, err := setupUnifiedProjectsIntegrationTest()
 	if assert.NoError(t, err) {
 		projectName := "tf-client-it-delete-" + time.Now().Format("20060102150405")
