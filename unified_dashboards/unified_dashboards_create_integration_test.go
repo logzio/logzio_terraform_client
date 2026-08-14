@@ -72,14 +72,18 @@ func TestIntegrationUnifiedDashboards_CreateDashboard(t *testing.T) {
 			// Live-verify the embedded-dashboards mapping of the projects list.
 			items, err := projClient.ListProjects(true)
 			if assert.NoError(t, err) {
+				found := false
 				for _, item := range items {
 					if item.Project.Id == proj.Id {
+						found = true
 						if assert.Len(t, item.Dashboards, 1, "created dashboard should be embedded in its project's list entry") {
 							assert.Equal(t, proj.Id, item.Dashboards[0].ProjectId)
+							assert.Equal(t, created.Uid, item.Dashboards[0].Id, "embedded dashboard Id should be the addressable uid")
 						}
 						break
 					}
 				}
+				assert.True(t, found, "created project should appear in the withDashboards list")
 			}
 		}
 	}

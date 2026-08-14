@@ -105,6 +105,9 @@ type ProjectSummary struct {
 // which is distinct from the display name carried in the Name field. Use it
 // as UpdateProjectRequest.Name in read-modify-write flows; passing the
 // display name there would silently rewrite the project's identity.
+// It returns "" when the summary carries no Perses document (Doc nil or
+// malformed) — UpdateProject's validation rejects that with "name must be
+// set" rather than sending a bad identity.
 func (p *ProjectSummary) MetadataName() string {
 	metadata, ok := p.Doc["metadata"].(map[string]interface{})
 	if !ok {

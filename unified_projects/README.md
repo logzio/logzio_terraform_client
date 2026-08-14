@@ -69,7 +69,8 @@ err = client.DeleteProject(created.Id)
 
 - `CreateProjectRequest` — `Name` (required), `DisplayName`, `Description`; the client wraps them in the Perses Project envelope the API requires.
 - `UpdateProjectRequest` — `Name` (required, the Perses `metadata.name`), `DisplayName` (required), `Description`; the PUT replaces the whole document.
-- `SearchProjectsRequest` — `Filter{SearchTerm, CreatedBy}` + `Pagination{PageNumber, PageSize}` (POST body; the wire field for rename is `newProjectName` — both verified live, the published docs disagree).
+- `SearchProjectsRequest` — `Filter{SearchTerm, CreatedBy}` + `Pagination{PageNumber, PageSize}` (POST body; verified live — the published docs describe a different, non-working GET shape).
+- Rename sends `{"newProjectName": ...}` on the wire (the docs' `newName` is silently ignored by the server).
 
 ### Response Types
 

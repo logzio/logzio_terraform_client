@@ -35,6 +35,10 @@ func TestIntegrationUnifiedProjects_SearchProjects(t *testing.T) {
 				Pagination: &unified_projects.SearchProjectsPagination{PageNumber: 1, PageSize: 100},
 			})
 			if assert.NoError(t, err) && assert.NotNil(t, resp) {
+				if assert.NotNil(t, resp.Pagination, "server should echo the pagination block") {
+					assert.Equal(t, 1, resp.Pagination.PageNumber)
+					assert.Equal(t, 100, resp.Pagination.PageSize)
+				}
 				found := false
 				for _, item := range resp.Results {
 					if item.Project.Id == created.Id {

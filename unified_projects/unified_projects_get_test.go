@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/logzio/logzio_terraform_client/unified_projects"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -26,6 +27,8 @@ func TestUnifiedProjects_GetProject(t *testing.T) {
 			assert.Equal(t, "project-1", project.Id)
 			assert.Equal(t, "System Metrics", project.Name)
 			assert.Equal(t, "Project", project.Doc["kind"])
+			assert.Equal(t, "system-metrics", project.MetadataName())
+			assert.Empty(t, (&unified_projects.ProjectSummary{}).MetadataName(), "MetadataName must be nil-safe")
 		}
 	}
 }

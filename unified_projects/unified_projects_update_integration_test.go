@@ -58,10 +58,14 @@ func TestIntegrationUnifiedProjects_UpdateProject(t *testing.T) {
 					after, err := underTest.GetProject(created.Id)
 					if assert.NoError(t, err) && assert.NotNil(t, after) {
 						assert.Equal(t, "Cleared "+projectName, after.Name)
-						spec, _ := after.Doc["spec"].(map[string]interface{})
-						display, _ := spec["display"].(map[string]interface{})
-						_, hasDescription := display["description"]
-						assert.False(t, hasDescription, "omitting Description on update should clear it")
+						spec, ok := after.Doc["spec"].(map[string]interface{})
+						if assert.True(t, ok, "project doc should carry a spec object") {
+							display, ok := spec["display"].(map[string]interface{})
+							if assert.True(t, ok, "project spec should carry a display object") {
+								_, hasDescription := display["description"]
+								assert.False(t, hasDescription, "omitting Description on update should clear it")
+							}
+						}
 					}
 				}
 			}

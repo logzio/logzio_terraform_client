@@ -27,6 +27,7 @@ func TestUnifiedProjects_SearchProjects(t *testing.T) {
 			filter, ok := target["filter"].(map[string]interface{})
 			if assert.True(t, ok, `body must carry a "filter" object`) {
 				assert.Equal(t, "system", filter["searchTerm"])
+				assert.Equal(t, []interface{}{float64(123)}, filter["createdBy"])
 			}
 			pagination, ok := target["pagination"].(map[string]interface{})
 			if assert.True(t, ok, `body must carry a "pagination" object`) {
@@ -40,15 +41,20 @@ func TestUnifiedProjects_SearchProjects(t *testing.T) {
 		})
 
 		resp, err := underTest.SearchProjects(unified_projects.SearchProjectsRequest{
-			Filter:     &unified_projects.SearchProjectsFilter{SearchTerm: "system"},
+			Filter:     &unified_projects.SearchProjectsFilter{SearchTerm: "system", CreatedBy: []int64{123}},
 			Pagination: &unified_projects.SearchProjectsPagination{PageNumber: 1, PageSize: 10},
 		})
 		assert.NoError(t, err)
 		if assert.NotNil(t, resp) {
-			assert.Equal(t, 184, resp.Total)
+			assert.Equal(t, 1, resp.Total)
+			assert.Equal(t, &unified_projects.SearchProjectsPagination{PageNumber: 1, PageSize: 10}, resp.Pagination)
 			if assert.Len(t, resp.Results, 1) {
 				assert.Equal(t, "project-1", resp.Results[0].Project.Id)
 				assert.Equal(t, "System Metrics", resp.Results[0].Project.Name)
+				if assert.Len(t, resp.Results[0].Dashboards, 1) {
+					assert.Equal(t, "3da41d03-ca61-436d-be45-69047d4f84be", resp.Results[0].Dashboards[0].Id)
+					assert.Equal(t, "project-1", resp.Results[0].Dashboards[0].ProjectId)
+				}
 			}
 		}
 	}

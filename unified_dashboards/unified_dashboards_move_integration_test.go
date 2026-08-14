@@ -57,9 +57,10 @@ func TestIntegrationUnifiedDashboards_MoveDashboard(t *testing.T) {
 	defer func() {
 		// Best-effort cleanup from both folders — the dashboard's location
 		// depends on whether the move succeeded.
-		if err := dashClient.DeleteDashboard(dst.Id, created.Uid); err != nil {
-			if err := dashClient.DeleteDashboard(src.Id, created.Uid); err != nil {
-				t.Logf("cleanup: failed to delete dashboard %s from either folder: %v", created.Uid, err)
+		errDst := dashClient.DeleteDashboard(dst.Id, created.Uid)
+		if errDst != nil {
+			if errSrc := dashClient.DeleteDashboard(src.Id, created.Uid); errSrc != nil {
+				t.Logf("cleanup: failed to delete dashboard %s from either folder (dst: %v; src: %v)", created.Uid, errDst, errSrc)
 			}
 		}
 	}()

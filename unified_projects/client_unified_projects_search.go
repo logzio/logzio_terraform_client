@@ -14,8 +14,9 @@ const (
 	searchProjectsNotFound = http.StatusNotFound
 )
 
-// SearchProjects returns a paginated view of projects (dashboard folders),
-// including each project's dashboards.
+// SearchProjects is a dashboard search grouped by folder: Filter.SearchTerm
+// matches dashboards, every folder is returned (regardless of the term) with
+// its matching dashboards nested, and Total counts the matching dashboards.
 func (c *ProjectsClient) SearchProjects(req SearchProjectsRequest) (*SearchProjectsResponse, error) {
 	body, err := json.Marshal(req)
 	if err != nil {
