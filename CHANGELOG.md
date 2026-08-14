@@ -1,6 +1,10 @@
 # Changes by Version
 
 <!-- next version -->
+## v1.31.0
+- Add [Unified Dashboards API](./unified_dashboards/README.md) (Perses) — CRUD + list + move.
+- Add [Unified Projects (dashboard folders) API](./unified_projects/README.md) — CRUD + list + search + rename.
+
 ## v1.30.2
 - Add the optional, description field to `drop_filters`. contributed by: @kevin-kortum-trustedshops
 ## v1.30.1
