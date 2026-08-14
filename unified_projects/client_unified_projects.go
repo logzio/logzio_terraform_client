@@ -10,6 +10,7 @@ const (
 	projectsServiceEndpoint = "%s/perses-public/api/v1/projects"
 	projectsByNameEndpoint  = "%s/perses-public/api/v1/projects/%s"
 	projectsSearchEndpoint  = "%s/perses-public/api/v1/projects/search"
+	projectsRenameEndpoint  = "%s/perses-public/api/v1/projects/%s/rename"
 
 	projectResourceName = "unified project"
 
@@ -18,8 +19,8 @@ const (
 	listProjectsOperation   = "ListUnifiedProjects"
 	updateProjectOperation  = "UpdateUnifiedProject"
 	searchProjectsOperation = "SearchUnifiedProjects"
-
-	deleteProjectOperation = "DeleteUnifiedProject"
+	deleteProjectOperation  = "DeleteUnifiedProject"
+	renameProjectOperation  = "RenameUnifiedProject"
 )
 
 type ProjectsClient struct {
@@ -104,6 +105,16 @@ func validateSearchProjectsRequest(req SearchProjectsRequest) error {
 func validateDeleteProjectRequest(folderId string) error {
 	if len(folderId) == 0 {
 		return fmt.Errorf("folderId must be set")
+	}
+	return nil
+}
+
+func validateRenameProjectRequest(folderId, newName string) error {
+	if len(folderId) == 0 {
+		return fmt.Errorf("folderId must be set")
+	}
+	if len(newName) == 0 {
+		return fmt.Errorf("newName must be set")
 	}
 	return nil
 }

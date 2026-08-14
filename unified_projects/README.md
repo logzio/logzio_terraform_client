@@ -50,6 +50,7 @@ err = client.DeleteProject("project-id")
 | update | `func (c *ProjectsClient) UpdateProject(name string, req UpdateProjectRequest) (*ProjectSummary, error)` |
 | search | `func (c *ProjectsClient) SearchProjects(req SearchProjectsRequest) ([]ProjectSummary, error)` |
 | delete | `func (c *ProjectsClient) DeleteProject(folderId string) error` |
+| rename | `func (c *ProjectsClient) RenameProject(folderId string, newName string) (*ProjectSummary, error)` |
 
 ## Data Types
 
