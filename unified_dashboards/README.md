@@ -37,6 +37,12 @@ updatedDashboard, err := client.UpdateDashboard("project-1", "dashboard-1", unif
     },
 })
 
+// Move a dashboard to a different folder
+movedDashboard, err := client.MoveDashboard(unified_dashboards.MoveDashboardRequest{
+    Uid:            "dashboard-1",
+    TargetFolderId: "project-2",
+})
+
 // Delete a dashboard
 err = client.DeleteDashboard("project-1", "dashboard-1")
 ```
@@ -49,6 +55,7 @@ err = client.DeleteDashboard("project-1", "dashboard-1")
 | get | `func (c *DashboardsClient) GetDashboard(folderId, uid string) (*Dashboard, error)` |
 | create | `func (c *DashboardsClient) CreateDashboard(folderId string, req CreateDashboardRequest) (*Dashboard, error)` |
 | update | `func (c *DashboardsClient) UpdateDashboard(folderId, uid string, req UpdateDashboardRequest) (*Dashboard, error)` |
+| move | `func (c *DashboardsClient) MoveDashboard(req MoveDashboardRequest) (*MoveDashboardResponse, error)` |
 | delete | `func (c *DashboardsClient) DeleteDashboard(folderId, uid string) error` |
 
 ## Data Types
@@ -57,10 +64,12 @@ err = client.DeleteDashboard("project-1", "dashboard-1")
 
 - `CreateDashboardRequest` - Request payload for creating a dashboard
 - `UpdateDashboardRequest` - Request payload for updating a dashboard
+- `MoveDashboardRequest` - Request payload for moving a dashboard to a different folder
 
 ### Response Types
 
 - `Dashboard` - Dashboard definition with metadata
+- `MoveDashboardResponse` - Response from moving a dashboard
 
 All request and response types include proper JSON tags with `omitempty` for optional fields.
 

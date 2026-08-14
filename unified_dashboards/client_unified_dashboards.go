@@ -35,6 +35,11 @@ type UpdateDashboardRequest struct {
 	Doc map[string]interface{} `json:"doc"`
 }
 
+type MoveDashboardRequest struct {
+	Uid            string `json:"uid"`
+	TargetFolderId string `json:"targetFolderId"`
+}
+
 // Response types
 type Dashboard struct {
 	Uid       string                 `json:"uid"`
@@ -44,6 +49,10 @@ type Dashboard struct {
 	UpdatedAt string                 `json:"updatedAt,omitempty"`
 	CreatedBy string                 `json:"createdBy,omitempty"`
 	UpdatedBy string                 `json:"updatedBy,omitempty"`
+}
+
+type MoveDashboardResponse struct {
+	Uid string `json:"uid"`
 }
 
 func New(apiToken, baseUrl string) (*DashboardsClient, error) {
@@ -98,6 +107,16 @@ func validateDeleteDashboardRequest(folderId, uid string) error {
 	}
 	if len(uid) == 0 {
 		return fmt.Errorf("uid must be set")
+	}
+	return nil
+}
+
+func validateMoveDashboardRequest(req MoveDashboardRequest) error {
+	if len(req.Uid) == 0 {
+		return fmt.Errorf("uid must be set")
+	}
+	if len(req.TargetFolderId) == 0 {
+		return fmt.Errorf("targetFolderId must be set")
 	}
 	return nil
 }
