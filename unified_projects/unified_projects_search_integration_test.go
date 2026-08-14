@@ -29,23 +29,17 @@ func TestIntegrationUnifiedProjects_SearchProjects(t *testing.T) {
 			time.Sleep(2 * time.Second) // Allow for eventual consistency
 
 			// Search for projects using part of the unique name
-			searchReq := unified_projects.SearchProjectsRequest{
+			results, err := underTest.SearchProjects(unified_projects.SearchProjectsRequest{
 				Query: uniqueId,
 				Limit: 10,
 				Page:  1,
-			}
-
-			results, err := underTest.SearchProjects(searchReq)
-			if assert.NoError(t, err) && assert.NotNil(t, results) {
-				assert.GreaterOrEqual(t, results.Total, 1)
-				assert.GreaterOrEqual(t, len(results.Items), 1)
-
-				// Verify our project is in the results
+			})
+			if assert.NoError(t, err) {
 				found := false
-				for _, item := range results.Items {
-					if item.Project.Name == projectName {
+				for _, p := range results {
+					if p.Name == projectName {
 						found = true
-						assert.Equal(t, created.Id, item.Project.Id)
+						assert.Equal(t, created.Id, p.Id)
 						break
 					}
 				}

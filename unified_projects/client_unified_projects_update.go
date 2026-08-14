@@ -14,15 +14,14 @@ const (
 	updateProjectNotFound = http.StatusNotFound
 )
 
-func (c *ProjectsClient) UpdateProject(name string, project Project) (*Project, error) {
-	if len(name) == 0 {
-		return nil, fmt.Errorf("name must be set")
-	}
-	if err := validateUpdateProjectRequest(project); err != nil {
+// UpdateProject updates a project's (dashboard folder's) display name and/or description.
+// The project is addressed by its name.
+func (c *ProjectsClient) UpdateProject(name string, req UpdateProjectRequest) (*ProjectSummary, error) {
+	if err := validateUpdateProjectRequest(name, req); err != nil {
 		return nil, err
 	}
 
-	body, err := json.Marshal(project)
+	body, err := json.Marshal(req)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +41,7 @@ func (c *ProjectsClient) UpdateProject(name string, project Project) (*Project, 
 		return nil, err
 	}
 
-	var result Project
+	var result ProjectSummary
 	if err := json.Unmarshal(res, &result); err != nil {
 		return nil, err
 	}

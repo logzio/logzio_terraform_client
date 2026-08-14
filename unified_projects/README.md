@@ -24,17 +24,9 @@ result, err := client.CreateProject(unified_projects.CreateProjectRequest{
 })
 
 // Update a project
-updatedProject, err := client.UpdateProject("system-metrics", unified_projects.Project{
-    Kind: "Project",
-    Metadata: unified_projects.ProjectMetadata{
-        Name: "system-metrics",
-    },
-    Spec: unified_projects.ProjectSpec{
-        Display: unified_projects.ProjectDisplay{
-            Name:        "System Metrics Updated",
-            Description: "Updated description",
-        },
-    },
+updatedProject, err := client.UpdateProject("system-metrics", unified_projects.UpdateProjectRequest{
+    DisplayName: "System Metrics Updated",
+    Description: "Updated description",
 })
 
 // Search projects
@@ -55,8 +47,8 @@ err = client.DeleteProject("project-id")
 | list | `func (c *ProjectsClient) ListProjects(withDashboards bool) ([]ProjectModel, error)` |
 | get | `func (c *ProjectsClient) GetProject(name string) (*ProjectSummary, error)` |
 | create | `func (c *ProjectsClient) CreateProject(req CreateProjectRequest) (*ProjectSummary, error)` |
-| update | `func (c *ProjectsClient) UpdateProject(name string, project Project) (*Project, error)` |
-| search | `func (c *ProjectsClient) SearchProjects(req SearchProjectsRequest) (*SearchProjectsResponse, error)` |
+| update | `func (c *ProjectsClient) UpdateProject(name string, req UpdateProjectRequest) (*ProjectSummary, error)` |
+| search | `func (c *ProjectsClient) SearchProjects(req SearchProjectsRequest) ([]ProjectSummary, error)` |
 | delete | `func (c *ProjectsClient) DeleteProject(folderId string) error` |
 
 ## Data Types
@@ -64,14 +56,13 @@ err = client.DeleteProject("project-id")
 ### Request Types
 
 - `CreateProjectRequest` - Request payload for creating a project
-- `Project` - Full project specification for updates
-- `SearchProjectsRequest` - Search parameters for project queries
+- `UpdateProjectRequest` - Display name and/or description to update on a project
+- `SearchProjectsRequest` - Search parameters for project queries (encoded as query parameters; the search endpoint is a GET)
 
 ### Response Types
 
 - `ProjectModel` - Wrapper containing project information
 - `ProjectSummary` - Basic project information
-- `SearchProjectsResponse` - Paginated search results
 - `DashboardListItem` - Dashboard reference in project listings
 
-All request and response types include proper JSON tags with `omitempty` for optional fields. 
+`CreateProjectRequest`, `UpdateProjectRequest`, and the response types include proper JSON tags with `omitempty` for optional fields. `SearchProjectsRequest` has no JSON tags since it is encoded as query parameters rather than a request body.

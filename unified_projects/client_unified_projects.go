@@ -31,34 +31,17 @@ type CreateProjectRequest struct {
 	Name string `json:"name"`
 }
 
-type Project struct {
-	Kind     string          `json:"kind"`
-	Metadata ProjectMetadata `json:"metadata"`
-	Spec     ProjectSpec     `json:"spec"`
-}
-
-type ProjectMetadata struct {
-	Name      string `json:"name"`
-	CreatedAt string `json:"created_at,omitempty"`
-	UpdatedAt string `json:"updated_at,omitempty"`
-	Version   int    `json:"version,omitempty"`
-}
-
-type ProjectSpec struct {
-	Display ProjectDisplay `json:"display"`
-}
-
-type ProjectDisplay struct {
-	Name        string `json:"name"`
+type UpdateProjectRequest struct {
+	DisplayName string `json:"displayName,omitempty"`
 	Description string `json:"description,omitempty"`
 }
 
+// SearchProjectsRequest is encoded as query parameters (the search endpoint is a GET).
 type SearchProjectsRequest struct {
-	Query string `json:"query,omitempty"`
-	Limit int    `json:"limit,omitempty"`
-	Page  int    `json:"page,omitempty"`
-	Sort  string `json:"sort,omitempty"`
-	Order string `json:"order,omitempty"`
+	Query string // required
+	Limit int    // optional, API default 1000
+	Page  int    // optional
+	Sort  string // optional, e.g. "asc"/"desc"
 }
 
 // Response types
@@ -81,13 +64,6 @@ type ProjectModel struct {
 	Project ProjectSummary `json:"project"`
 }
 
-type SearchProjectsResponse struct {
-	Items []ProjectModel `json:"items"`
-	Total int            `json:"total"`
-	Page  int            `json:"page"`
-	Limit int            `json:"limit"`
-}
-
 func New(apiToken, baseUrl string) (*ProjectsClient, error) {
 	if len(apiToken) == 0 {
 		return nil, fmt.Errorf("API token not defined")
@@ -108,20 +84,20 @@ func validateCreateProjectRequest(req CreateProjectRequest) error {
 	return nil
 }
 
-func validateUpdateProjectRequest(project Project) error {
-	if len(project.Kind) == 0 {
-		return fmt.Errorf("kind must be set")
+func validateUpdateProjectRequest(name string, req UpdateProjectRequest) error {
+	if len(name) == 0 {
+		return fmt.Errorf("name must be set")
 	}
-	if len(project.Metadata.Name) == 0 {
-		return fmt.Errorf("metadata.name must be set")
-	}
-	if len(project.Spec.Display.Name) == 0 {
-		return fmt.Errorf("spec.display.name must be set")
+	if len(req.DisplayName) == 0 && len(req.Description) == 0 {
+		return fmt.Errorf("displayName or description must be set")
 	}
 	return nil
 }
 
 func validateSearchProjectsRequest(req SearchProjectsRequest) error {
+	if len(req.Query) == 0 {
+		return fmt.Errorf("query must be set")
+	}
 	return nil
 }
 
