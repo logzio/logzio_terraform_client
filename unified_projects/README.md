@@ -59,8 +59,8 @@ err = client.DeleteProject(created.Id)
 | list | `func (c *ProjectsClient) ListProjects(withDashboards bool) ([]ProjectListItem, error)` |
 | update | `func (c *ProjectsClient) UpdateProject(id string, req UpdateProjectRequest) (*ProjectSummary, error)` |
 | search | `func (c *ProjectsClient) SearchProjects(req SearchProjectsRequest) (*SearchProjectsResponse, error)` |
-| rename | `func (c *ProjectsClient) RenameProject(folderId string, newName string) (*ProjectSummary, error)` |
-| delete | `func (c *ProjectsClient) DeleteProject(folderId string) error` |
+| rename | `func (c *ProjectsClient) RenameProject(id string, newName string) (*ProjectSummary, error)` |
+| delete | `func (c *ProjectsClient) DeleteProject(id string) error` |
 
 ## Data Types
 
@@ -72,7 +72,7 @@ err = client.DeleteProject(created.Id)
 
 ### Response Types
 
-- `ProjectSummary` — `Id`, `Name` (display name), `Doc` (the raw Perses Project document), `CreatedAt`, `UpdatedAt`.
+- `ProjectSummary` — `Id`, `Name` (display name), `Doc` (the raw Perses Project document), `CreatedAt`, `UpdatedAt`; `MetadataName()` returns the Perses identity for read-modify-write updates.
 - `ProjectListItem` — one list/search entry: `Project` plus its `Dashboards`.
 - `SearchProjectsResponse` — `Results`, `Total`, `Pagination`.
 

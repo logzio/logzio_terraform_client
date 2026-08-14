@@ -15,19 +15,19 @@ const (
 )
 
 // DeleteProject deletes a project (dashboard folder), addressed by its id.
-func (c *ProjectsClient) DeleteProject(folderId string) error {
-	if err := validateDeleteProjectRequest(folderId); err != nil {
+func (c *ProjectsClient) DeleteProject(id string) error {
+	if err := validateDeleteProjectRequest(id); err != nil {
 		return err
 	}
 
 	_, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
 		ApiToken:     c.ApiToken,
 		HttpMethod:   deleteProjectMethod,
-		Url:          fmt.Sprintf(projectsByIdEndpoint, c.BaseUrl, folderId),
+		Url:          fmt.Sprintf(projectsByIdEndpoint, c.BaseUrl, id),
 		Body:         nil,
 		SuccessCodes: []int{deleteProjectSuccess, deleteProjectOk},
 		NotFoundCode: deleteProjectNotFound,
-		ResourceId:   folderId,
+		ResourceId:   id,
 		ApiAction:    deleteProjectOperation,
 		ResourceName: projectResourceName,
 	})

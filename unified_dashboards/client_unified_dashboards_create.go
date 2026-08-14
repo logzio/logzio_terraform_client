@@ -10,7 +10,8 @@ import (
 
 const (
 	createDashboardMethod   = http.MethodPost
-	createDashboardSuccess  = http.StatusCreated
+	createDashboardSuccess  = http.StatusOK
+	createDashboardCreated  = http.StatusCreated
 	createDashboardNotFound = http.StatusNotFound
 )
 
@@ -29,7 +30,7 @@ func (c *DashboardsClient) CreateDashboard(folderId string, req CreateDashboardR
 		HttpMethod:   createDashboardMethod,
 		Url:          fmt.Sprintf(dashboardsCreateEndpoint, c.BaseUrl, folderId),
 		Body:         body,
-		SuccessCodes: []int{createDashboardSuccess, http.StatusOK},
+		SuccessCodes: []int{createDashboardSuccess, createDashboardCreated},
 		NotFoundCode: createDashboardNotFound,
 		ResourceId:   folderId,
 		ApiAction:    createDashboardOperation,

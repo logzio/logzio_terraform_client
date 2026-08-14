@@ -42,7 +42,10 @@ func (c *DashboardsClient) MoveDashboard(req MoveDashboardRequest) (*MoveDashboa
 
 	var result MoveDashboardResponse
 	if err := json.Unmarshal(res, &result); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%s: failed to unmarshal response: %w (body: %.200s)", moveDashboardOperation, err, res)
+	}
+	if len(result.Uid) == 0 {
+		return nil, fmt.Errorf("%s succeeded but the response contained no dashboard uid (body: %.200s)", moveDashboardOperation, res)
 	}
 
 	return &result, nil

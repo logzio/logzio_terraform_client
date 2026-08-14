@@ -48,7 +48,7 @@ func (c *ProjectsClient) ListProjects(withDashboards bool) ([]ProjectListItem, e
 
 	var result []ProjectListItem
 	if err := json.Unmarshal(res, &result); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%s: failed to unmarshal response: %w (body: %.200s)", listProjectsOperation, err, res)
 	}
 
 	return result, nil

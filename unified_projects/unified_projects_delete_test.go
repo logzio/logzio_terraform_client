@@ -62,6 +62,6 @@ func TestUnifiedProjects_DeleteProjectNoId(t *testing.T) {
 	if assert.NoError(t, err) {
 		err = underTest.DeleteProject("")
 		assert.Error(t, err)
-		assert.Contains(t, err.Error(), "folderId must be set")
+		assert.Contains(t, err.Error(), "id must be set")
 	}
 }

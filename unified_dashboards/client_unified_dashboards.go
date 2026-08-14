@@ -58,7 +58,7 @@ type Dashboard struct {
 	Version   int                    `json:"version,omitempty"`
 	CreatedAt string                 `json:"createdAt,omitempty"`
 	UpdatedAt string                 `json:"updatedAt,omitempty"`
-	IsPrivate bool                   `json:"isPrivate,omitempty"`
+	IsPrivate bool                   `json:"isPrivate"`
 }
 
 type MoveDashboardResponse struct {

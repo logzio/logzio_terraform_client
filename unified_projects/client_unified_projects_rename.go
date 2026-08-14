@@ -18,9 +18,9 @@ type renameProjectRequest struct {
 	NewName string `json:"newName"`
 }
 
-// RenameProject renames a project (dashboard folder), addressed by its folder id.
-func (c *ProjectsClient) RenameProject(folderId string, newName string) (*ProjectSummary, error) {
-	if err := validateRenameProjectRequest(folderId, newName); err != nil {
+// RenameProject renames a project (dashboard folder), addressed by its id.
+func (c *ProjectsClient) RenameProject(id string, newName string) (*ProjectSummary, error) {
+	if err := validateRenameProjectRequest(id, newName); err != nil {
 		return nil, err
 	}
 
@@ -32,11 +32,11 @@ func (c *ProjectsClient) RenameProject(folderId string, newName string) (*Projec
 	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
 		ApiToken:     c.ApiToken,
 		HttpMethod:   renameProjectMethod,
-		Url:          fmt.Sprintf(projectsRenameEndpoint, c.BaseUrl, folderId),
+		Url:          fmt.Sprintf(projectsRenameEndpoint, c.BaseUrl, id),
 		Body:         body,
 		SuccessCodes: []int{renameProjectSuccess},
 		NotFoundCode: renameProjectNotFound,
-		ResourceId:   folderId,
+		ResourceId:   id,
 		ApiAction:    renameProjectOperation,
 		ResourceName: projectResourceName,
 	})

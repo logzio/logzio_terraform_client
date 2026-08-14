@@ -24,10 +24,7 @@ func TestIntegrationUnifiedProjects_DeleteProject(t *testing.T) {
 
 			err = underTest.DeleteProject(created.Id)
 			if !assert.NoError(t, err) {
-				// Deletion failed — clean up on the way out so the account stays tidy.
-				if err := underTest.DeleteProject(created.Id); err != nil {
-					t.Logf("cleanup: failed to delete project %s: %v", created.Id, err)
-				}
+				t.Logf("delete failed; project %s may be left behind", created.Id)
 				return
 			}
 

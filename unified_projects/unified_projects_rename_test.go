@@ -76,7 +76,7 @@ func TestUnifiedProjects_RenameProjectValidation(t *testing.T) {
 	if assert.NoError(t, err) {
 		_, err = underTest.RenameProject("", "x")
 		assert.Error(t, err)
-		assert.Contains(t, err.Error(), "folderId must be set")
+		assert.Contains(t, err.Error(), "id must be set")
 
 		_, err = underTest.RenameProject("project-1", "")
 		assert.Error(t, err)

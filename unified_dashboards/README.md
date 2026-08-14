@@ -23,6 +23,8 @@ doc := map[string]interface{}{
 }
 ```
 
+Note the asymmetry with the projects API: dashboards nest the document under a `"doc"` key, while projects send the bare envelope — both shapes are live-verified.
+
 `folderId` is the containing project's **`id`** (see the unified_projects package), not its name.
 
 ## Usage

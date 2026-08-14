@@ -20,10 +20,13 @@ func TestUnifiedDashboards_UpdateDashboard(t *testing.T) {
 			assert.Equal(t, http.MethodPut, r.Method)
 
 			jsonBytes, _ := io.ReadAll(r.Body)
-			var target unified_dashboards.UpdateDashboardRequest
+			var target map[string]interface{}
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)
-			assert.Equal(t, "Dashboard", target.Doc["kind"])
+			doc, ok := target["doc"].(map[string]interface{})
+			if assert.True(t, ok, `request body must nest the document under "doc"`) {
+				assert.Equal(t, "Dashboard", doc["kind"])
+			}
 
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)

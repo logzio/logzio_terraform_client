@@ -20,11 +20,11 @@ func TestUnifiedDashboards_MoveDashboard(t *testing.T) {
 			assert.Equal(t, http.MethodPost, r.Method)
 
 			jsonBytes, _ := io.ReadAll(r.Body)
-			var target unified_dashboards.MoveDashboardRequest
+			var target map[string]interface{}
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)
-			assert.Equal(t, "dashboard-1", target.Uid)
-			assert.Equal(t, "project-2", target.TargetFolderId)
+			assert.Equal(t, "dashboard-1", target["uid"])
+			assert.Equal(t, "project-2", target["targetFolderId"])
 
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)
@@ -85,5 +85,22 @@ func TestUnifiedDashboards_MoveDashboardValidation(t *testing.T) {
 		_, err = underTest.MoveDashboard(unified_dashboards.MoveDashboardRequest{Uid: "dashboard-1"})
 		assert.Error(t, err)
 		assert.Contains(t, err.Error(), "targetFolderId must be set")
+	}
+}
+
+func TestUnifiedDashboards_MoveDashboardEmptyResponse(t *testing.T) {
+	underTest, err, teardown := setupUnifiedDashboardsTest()
+	defer teardown()
+
+	if assert.NoError(t, err) {
+		mux.HandleFunc("/perses-public/api/v1/dashboards/move", func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusOK)
+			fmt.Fprint(w, "{}")
+		})
+
+		_, err = underTest.MoveDashboard(unified_dashboards.MoveDashboardRequest{Uid: "dashboard-1", TargetFolderId: "project-2"})
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "contained no dashboard uid")
 	}
 }

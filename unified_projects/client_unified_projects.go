@@ -29,18 +29,20 @@ type ProjectsClient struct {
 }
 
 // Request types
+// CreateProjectRequest is not marshalled directly — the client translates it
+// into the Perses Project envelope the API requires.
 type CreateProjectRequest struct {
-	Name        string // the project's identity (metadata.name); required
-	DisplayName string // optional; defaults to Name
-	Description string // optional
+	Name        string `json:"-"` // the project's identity (metadata.name); required
+	DisplayName string `json:"-"` // optional; defaults to Name
+	Description string `json:"-"` // optional
 }
 
 // UpdateProjectRequest replaces the project's Perses document on PUT: fields left
 // empty are cleared on the server, so always send the full desired state.
 type UpdateProjectRequest struct {
-	Name        string // metadata.name — the project's identity; required by the API
-	DisplayName string // required — the PUT replaces the display block entirely
-	Description string // optional; empty clears any existing description
+	Name        string `json:"-"` // metadata.name — the project's identity; required by the API (see ProjectSummary.MetadataName)
+	DisplayName string `json:"-"` // required — the PUT replaces the display block entirely
+	Description string `json:"-"` // optional; empty clears any existing description
 }
 
 // SearchProjectsRequest is the POST body for the projects search endpoint.
@@ -87,10 +89,23 @@ type ProjectSummary struct {
 	UpdatedAt string                 `json:"updatedAt,omitempty"`
 }
 
-// ProjectDashboard is the dashboard payload embedded in project list/search responses.
+// MetadataName returns the project's Perses identity (doc.metadata.name),
+// which is distinct from the display name carried in the Name field. Use it
+// as UpdateProjectRequest.Name in read-modify-write flows; passing the
+// display name there would silently rewrite the project's identity.
+func (p *ProjectSummary) MetadataName() string {
+	metadata, ok := p.Doc["metadata"].(map[string]interface{})
+	if !ok {
+		return ""
+	}
+	name, _ := metadata["name"].(string)
+	return name
+}
+
+// ProjectDashboard is the dashboard payload embedded in project list/search
+// responses. Id is the dashboard's addressable identifier.
 type ProjectDashboard struct {
 	Id        string                 `json:"id,omitempty"`
-	Uid       string                 `json:"uid,omitempty"`
 	Name      string                 `json:"name,omitempty"`
 	ProjectId string                 `json:"projectId,omitempty"`
 	Doc       map[string]interface{} `json:"doc,omitempty"`
@@ -149,16 +164,16 @@ func validateUpdateProjectRequest(id string, req UpdateProjectRequest) error {
 	return nil
 }
 
-func validateDeleteProjectRequest(folderId string) error {
-	if len(folderId) == 0 {
-		return fmt.Errorf("folderId must be set")
+func validateDeleteProjectRequest(id string) error {
+	if len(id) == 0 {
+		return fmt.Errorf("id must be set")
 	}
 	return nil
 }
 
-func validateRenameProjectRequest(folderId, newName string) error {
-	if len(folderId) == 0 {
-		return fmt.Errorf("folderId must be set")
+func validateRenameProjectRequest(id, newName string) error {
+	if len(id) == 0 {
+		return fmt.Errorf("id must be set")
 	}
 	if len(newName) == 0 {
 		return fmt.Errorf("newName must be set")

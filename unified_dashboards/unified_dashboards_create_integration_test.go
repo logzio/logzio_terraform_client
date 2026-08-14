@@ -66,6 +66,21 @@ func TestIntegrationUnifiedDashboards_CreateDashboard(t *testing.T) {
 			assert.Equal(t, proj.Id, created.ProjectId)
 			assert.Equal(t, "Dashboard", created.Doc["kind"])
 			assert.NotEmpty(t, created.CreatedAt)
+
+			time.Sleep(2 * time.Second) // Allow for eventual consistency
+
+			// Live-verify the embedded-dashboards mapping of the projects list.
+			items, err := projClient.ListProjects(true)
+			if assert.NoError(t, err) {
+				for _, item := range items {
+					if item.Project.Id == proj.Id {
+						if assert.Len(t, item.Dashboards, 1, "created dashboard should be embedded in its project's list entry") {
+							assert.Equal(t, proj.Id, item.Dashboards[0].ProjectId)
+						}
+						break
+					}
+				}
+			}
 		}
 	}
 }

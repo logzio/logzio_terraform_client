@@ -35,10 +35,15 @@ func TestUnifiedDashboards_CreateDashboard(t *testing.T) {
 			assert.Equal(t, http.MethodPost, r.Method)
 
 			jsonBytes, _ := io.ReadAll(r.Body)
-			var target unified_dashboards.CreateDashboardRequest
+			var target map[string]interface{}
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)
-			assert.Equal(t, "Dashboard", target.Doc["kind"])
+			// Dashboards wrap the Perses document in a "doc" key (projects send it bare) — pin the wrapper literally.
+			doc, ok := target["doc"].(map[string]interface{})
+			if assert.True(t, ok, `request body must nest the document under "doc"`) {
+				assert.Equal(t, "Dashboard", doc["kind"])
+				assert.Equal(t, "cpu-usage-dashboard", doc["metadata"].(map[string]interface{})["name"])
+			}
 
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)
@@ -100,5 +105,22 @@ func TestUnifiedDashboards_CreateDashboardValidation(t *testing.T) {
 		_, err = underTest.CreateDashboard("project-1", unified_dashboards.CreateDashboardRequest{})
 		assert.Error(t, err)
 		assert.Contains(t, err.Error(), "doc must be set")
+	}
+}
+
+func TestUnifiedDashboards_CreateDashboardEmptyResponse(t *testing.T) {
+	underTest, err, teardown := setupUnifiedDashboardsTest()
+	defer teardown()
+
+	if assert.NoError(t, err) {
+		mux.HandleFunc("/perses-public/api/v1/projects/project-1/dashboards", func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusOK)
+			fmt.Fprint(w, "{}")
+		})
+
+		_, err = underTest.CreateDashboard("project-1", getCreateDashboardRequest())
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "contained no dashboard uid")
 	}
 }

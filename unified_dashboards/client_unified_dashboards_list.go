@@ -22,7 +22,7 @@ func (c *DashboardsClient) ListDashboards() ([]Dashboard, error) {
 		Body:         nil,
 		SuccessCodes: []int{listDashboardsSuccess},
 		NotFoundCode: listDashboardsNotFound,
-		ResourceId:   "list",
+		ResourceId:   nil,
 		ApiAction:    listDashboardsOperation,
 		ResourceName: dashboardResourceName,
 	})
@@ -32,7 +32,7 @@ func (c *DashboardsClient) ListDashboards() ([]Dashboard, error) {
 
 	var result []Dashboard
 	if err := json.Unmarshal(res, &result); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%s: failed to unmarshal response: %w (body: %.200s)", listDashboardsOperation, err, res)
 	}
 
 	return result, nil

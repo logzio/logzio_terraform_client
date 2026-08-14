@@ -39,7 +39,7 @@ func (c *ProjectsClient) SearchProjects(req SearchProjectsRequest) (*SearchProje
 
 	var result SearchProjectsResponse
 	if err := json.Unmarshal(res, &result); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%s: failed to unmarshal response: %w (body: %.200s)", searchProjectsOperation, err, res)
 	}
 
 	return &result, nil

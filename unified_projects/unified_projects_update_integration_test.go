@@ -40,10 +40,30 @@ func TestIntegrationUnifiedProjects_UpdateProject(t *testing.T) {
 
 			time.Sleep(2 * time.Second) // Allow for eventual consistency
 
-			// Verify the update persisted.
+			// Verify the update persisted, and that the Perses identity is
+			// reachable for read-modify-write flows.
 			retrieved, err := underTest.GetProject(created.Id)
 			if assert.NoError(t, err) && assert.NotNil(t, retrieved) {
 				assert.Equal(t, "Updated "+projectName, retrieved.Name)
+				assert.Equal(t, projectName, retrieved.MetadataName())
+
+				// Read-modify-write using the summary itself; omitting
+				// Description must clear the previously set one.
+				cleared, err := underTest.UpdateProject(retrieved.Id, unified_projects.UpdateProjectRequest{
+					Name:        retrieved.MetadataName(),
+					DisplayName: "Cleared " + projectName,
+				})
+				if assert.NoError(t, err) && assert.NotNil(t, cleared) {
+					time.Sleep(2 * time.Second) // Allow for eventual consistency
+					after, err := underTest.GetProject(created.Id)
+					if assert.NoError(t, err) && assert.NotNil(t, after) {
+						assert.Equal(t, "Cleared "+projectName, after.Name)
+						spec, _ := after.Doc["spec"].(map[string]interface{})
+						display, _ := spec["display"].(map[string]interface{})
+						_, hasDescription := display["description"]
+						assert.False(t, hasDescription, "omitting Description on update should clear it")
+					}
+				}
 			}
 		}
 	}
