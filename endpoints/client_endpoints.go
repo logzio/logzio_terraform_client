@@ -19,34 +19,34 @@ const (
 
 // supported endpoint types
 const (
-	EndpointTypeSlack          string = "slack"
-	EndpointTypeCustom         string = "custom"
-	EndpointTypePagerDuty      string = "pagerduty"
-	EndpointTypeBigPanda       string = "bigpanda"
-	EndpointTypeDataDog        string = "datadog"
-	EndpointTypeVictorOps      string = "victorops"
-	EndpointTypeOpsGenie       string = "opsgenie"
-	EndpointTypeServiceNow     string = "servicenow"
-	EndpointTypeMicrosoftTeams string = "microsoftteams"
+	EndpointTypeSlack          = "slack"
+	EndpointTypeCustom         = "custom"
+	EndpointTypePagerDuty      = "pagerduty"
+	EndpointTypeBigPanda       = "bigpanda"
+	EndpointTypeDataDog        = "datadog"
+	EndpointTypeVictorOps      = "victorops"
+	EndpointTypeOpsGenie       = "opsgenie"
+	EndpointTypeServiceNow     = "servicenow"
+	EndpointTypeMicrosoftTeams = "microsoftteams"
 )
 
 type CreateOrUpdateEndpoint struct {
-	Title         string      `json:"title"`                   // all
-	Description   string      `json:"description"`             // all
-	Url           string      `json:"url,omitempty"`           // slack, custom, serviceNow, microsoftTeams
-	Method        string      `json:"method,omitempty'"`       // custom
-	Headers       *string     `json:"headers,omitempty"`       // custom. Set to pointer to allow an empty string
-	BodyTemplate  interface{} `json:"bodyTemplate,omitempty"`  // custom
-	ServiceKey    string      `json:"serviceKey,omitempty"`    // pagerDuty
-	ApiToken      string      `json:"apiToken,omitempty"`      // bigPanda
-	AppKey        string      `json:"appKey,omitempty"`        // bigPanda
-	ApiKey        string      `json:"apiKey,omitempty"`        // dataDog, opsGenie
-	RoutingKey    string      `json:"routingKey,omitempty"`    // victorOps
-	MessageType   string      `json:"messageType,omitempty"`   // victorOps
-	ServiceApiKey string      `json:"serviceApiKey,omitempty"` // victorOps
-	Username      string      `json:"username,omitempty"`      // serviceNow
-	Password      string      `json:"password,omitempty"`      // serviceNow
-	Type          string      `json:"-"`                       // only for identification of the endpoint
+	Title         string  `json:"title"`                   // all
+	Description   string  `json:"description"`             // all
+	Url           string  `json:"url,omitempty"`           // slack, custom, serviceNow, microsoftTeams
+	Method        string  `json:"method,omitempty"`        // custom
+	Headers       *string `json:"headers,omitempty"`       // custom. Set to pointer to allow an empty string
+	BodyTemplate  any     `json:"bodyTemplate,omitempty"`  // custom
+	ServiceKey    string  `json:"serviceKey,omitempty"`    // pagerDuty
+	ApiToken      string  `json:"apiToken,omitempty"`      // bigPanda
+	AppKey        string  `json:"appKey,omitempty"`        // bigPanda
+	ApiKey        string  `json:"apiKey,omitempty"`        // dataDog, opsGenie
+	RoutingKey    string  `json:"routingKey,omitempty"`    // victorOps
+	MessageType   string  `json:"messageType,omitempty"`   // victorOps
+	ServiceApiKey string  `json:"serviceApiKey,omitempty"` // victorOps
+	Username      string  `json:"username,omitempty"`      // serviceNow
+	Password      string  `json:"password,omitempty"`      // serviceNow
+	Type          string  `json:"-"`                       // only for identification of the endpoint
 }
 
 type CreateOrUpdateEndpointResponse struct {
@@ -54,23 +54,23 @@ type CreateOrUpdateEndpointResponse struct {
 }
 
 type Endpoint struct {
-	Type          string      `json:"endpointType"`
-	Id            int32       `json:"id"`
-	Title         string      `json:"title"`
-	Description   string      `json:"description"`
-	Url           string      `json:"url,omitempty"`           // slack, custom, serviceNow, microsoftTeams
-	Method        string      `json:"method,omitempty'"`       // custom
-	Headers       string      `json:"headers,omitempty"`       // custom
-	BodyTemplate  interface{} `json:"bodyTemplate,omitempty"`  // custom
-	ServiceKey    string      `json:"serviceKey,omitempty"`    // pagerDuty
-	ApiToken      string      `json:"apiToken,omitempty"`      // bigPanda
-	AppKey        string      `json:"appKey,omitempty"`        // bigPanda
-	ApiKey        string      `json:"apiKey,omitempty"`        // dataDog, opsGenie
-	RoutingKey    string      `json:"routingKey,omitempty"`    // victorOps
-	MessageType   string      `json:"messageType,omitempty"`   //victorOps
-	ServiceApiKey string      `json:"serviceApiKey,omitempty"` // victorOps
-	Username      string      `json:"username,omitempty"`      // serviceNow
-	Password      string      `json:"password,omitempty"`      // serviceNow
+	Type          string `json:"endpointType"`
+	Id            int32  `json:"id"`
+	Title         string `json:"title"`
+	Description   string `json:"description"`
+	Url           string `json:"url,omitempty"`           // slack, custom, serviceNow, microsoftTeams
+	Method        string `json:"method,omitempty"`        // custom
+	Headers       string `json:"headers,omitempty"`       // custom
+	BodyTemplate  any    `json:"bodyTemplate,omitempty"`  // custom
+	ServiceKey    string `json:"serviceKey,omitempty"`    // pagerDuty
+	ApiToken      string `json:"apiToken,omitempty"`      // bigPanda
+	AppKey        string `json:"appKey,omitempty"`        // bigPanda
+	ApiKey        string `json:"apiKey,omitempty"`        // dataDog, opsGenie
+	RoutingKey    string `json:"routingKey,omitempty"`    // victorOps
+	MessageType   string `json:"messageType,omitempty"`   //victorOps
+	ServiceApiKey string `json:"serviceApiKey,omitempty"` // victorOps
+	Username      string `json:"username,omitempty"`      // serviceNow
+	Password      string `json:"password,omitempty"`      // serviceNow
 }
 
 type EndpointsClient struct {
@@ -82,7 +82,7 @@ func New(apiToken, baseUrl string) (*EndpointsClient, error) {
 		return nil, fmt.Errorf("API token not defined")
 	}
 	if len(baseUrl) == 0 {
-		return nil, fmt.Errorf("Base URL not defined")
+		return nil, fmt.Errorf("base URL not defined")
 	}
 	c := &EndpointsClient{
 		Client: client.New(apiToken, baseUrl),

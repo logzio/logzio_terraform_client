@@ -3,7 +3,7 @@ package drop_filters
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/logzio/logzio_terraform_client"
+	logzio_client "github.com/logzio/logzio_terraform_client"
 	"net/http"
 )
 

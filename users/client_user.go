@@ -2,6 +2,7 @@ package users
 
 import (
 	"fmt"
+
 	logzio_client "github.com/logzio/logzio_terraform_client"
 	"github.com/logzio/logzio_terraform_client/client"
 )
@@ -53,7 +54,7 @@ func New(apiToken string, baseUrl string) (*UsersClient, error) {
 		return nil, fmt.Errorf("API token not defined")
 	}
 	if len(baseUrl) == 0 {
-		return nil, fmt.Errorf("Base URL not defined")
+		return nil, fmt.Errorf("base URL not defined")
 	}
 
 	c := &UsersClient{
@@ -76,7 +77,7 @@ func validateCreateUpdateUser(createUser CreateUpdateUser) error {
 	}
 
 	if len(createUser.Role) == 0 {
-		return fmt.Errorf("Role must be set")
+		return fmt.Errorf("role must be set")
 	}
 
 	validRoles := []string{
@@ -86,7 +87,7 @@ func validateCreateUpdateUser(createUser CreateUpdateUser) error {
 	}
 
 	if !logzio_client.Contains(validRoles, createUser.Role) {
-		return fmt.Errorf("Role must be one of %s", validRoles)
+		return fmt.Errorf("role must be one of %s", validRoles)
 	}
 
 	return nil

@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	getUserServiceUrl         = userServiceEndpoint + "/%d"
-	getUserServiceMethod      = http.MethodGet
-	getUserServiceSuccess int = http.StatusOK
+	getUserServiceUrl     = userServiceEndpoint + "/%d"
+	getUserServiceMethod  = http.MethodGet
+	getUserServiceSuccess = http.StatusOK
 )
 
 func (c *UsersClient) GetUser(userId int32) (*User, error) {

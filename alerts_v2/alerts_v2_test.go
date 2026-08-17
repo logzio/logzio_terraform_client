@@ -103,9 +103,9 @@ func TestNewWithEmptyBaseUrl(t *testing.T) {
 	if err == nil {
 		t.Fatal("Expected error when baseUrl is empty")
 	}
-	if err.Error() != "Base URL not defined" {
+	if err.Error() != "base URL not defined" {
 		t.Fatalf("The expected error message to be '%s' but was '%s'",
-			"Base URL not defined", err.Error())
+			"base URL not defined", err.Error())
 	}
 }
 

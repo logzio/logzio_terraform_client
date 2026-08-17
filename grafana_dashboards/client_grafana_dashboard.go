@@ -26,16 +26,16 @@ type GrafanaObjectsClient struct {
 }
 
 type CreateUpdatePayload struct {
-	Dashboard map[string]interface{} `json:"dashboard"`
-	FolderId  float64                `json:"folderId,omitempty"`
-	FolderUid string                 `json:"folderUid"`
-	Message   string                 `json:"message"`
-	Overwrite bool                   `json:"overwrite"`
+	Dashboard map[string]any `json:"dashboard"`
+	FolderId  float64        `json:"folderId,omitempty"`
+	FolderUid string         `json:"folderUid"`
+	Message   string         `json:"message"`
+	Overwrite bool           `json:"overwrite"`
 }
 
 type GetResults struct {
-	Dashboard map[string]interface{} `json:"dashboard"`
-	Meta      map[string]interface{} `json:"meta"`
+	Dashboard map[string]any `json:"dashboard"`
+	Meta      map[string]any `json:"meta"`
 }
 
 type DeleteResults struct {
@@ -60,7 +60,7 @@ func New(apiToken string, baseUrl string) (*GrafanaObjectsClient, error) {
 		return nil, fmt.Errorf("API token not defined")
 	}
 	if len(baseUrl) == 0 {
-		return nil, fmt.Errorf("Base URL not defined")
+		return nil, fmt.Errorf("base URL not defined")
 	}
 
 	grafanaDashboardClient := &GrafanaObjectsClient{

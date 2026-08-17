@@ -7,10 +7,10 @@ import (
 	"net/http"
 )
 
-const activateDropFilterServiceUrl string = dropFiltersServiceEndpoint + "/%s/activate"
-const activateDropFilterServiceMethod string = http.MethodPost
-const activateDropFilterMethodSuccess int = http.StatusOK
-const activateDropFilterMethodNotFound int = http.StatusNotFound
+const activateDropFilterServiceUrl = dropFiltersServiceEndpoint + "/%s/activate"
+const activateDropFilterServiceMethod = http.MethodPost
+const activateDropFilterMethodSuccess = http.StatusOK
+const activateDropFilterMethodNotFound = http.StatusNotFound
 
 // ActivateDropFilter activates drop filter by id, returns the activated drop filter or error if occurred
 func (c *DropFiltersClient) ActivateDropFilter(dropFilterId string) (*DropFilter, error) {

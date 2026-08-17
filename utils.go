@@ -4,17 +4,18 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/avast/retry-go"
+	"github.com/avast/retry-go/v5"
 	"github.com/logzio/logzio_terraform_client/client"
 	"io"
 	"net/http"
+	"slices"
 	"strings"
 )
 
 const (
-	serviceSuccess   int = http.StatusOK
-	serviceNoContent int = http.StatusNoContent // This is like StatusOK with no body in response
-	serviceCreated   int = http.StatusCreated
+	serviceSuccess   = http.StatusOK
+	serviceNoContent = http.StatusNoContent // This is like StatusOK with no body in response
+	serviceCreated   = http.StatusCreated
 )
 
 type LogzioApiCallDetails struct {
@@ -24,7 +25,7 @@ type LogzioApiCallDetails struct {
 	Body         []byte
 	SuccessCodes []int
 	NotFoundCode int
-	ResourceId   interface{}
+	ResourceId   any
 	ApiAction    string
 	ResourceName string
 }
@@ -35,30 +36,20 @@ func AddHttpHeaders(apiToken string, req *http.Request) {
 }
 
 func Contains(slice []string, s string) bool {
-	for _, value := range slice {
-		if value == s {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(slice, s)
 }
 
 func CheckValidStatus(response *http.Response, status []int) bool {
-	for x := 0; x < len(status); x++ {
-		if response.StatusCode == status[x] {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(status, response.StatusCode)
 }
 
-func CreateHttpRequest(req *http.Request) (map[string]interface{}, error) {
+func CreateHttpRequest(req *http.Request) (map[string]any, error) {
 	jsonBytes, err := CreateHttpRequestBytesResponse(req)
 	if err != nil {
 		return nil, err
 	}
 
-	var target map[string]interface{}
+	var target map[string]any
 	if len(jsonBytes) > 0 {
 		err = json.Unmarshal(jsonBytes, &target)
 		if err != nil {
@@ -94,26 +85,7 @@ func CallLogzioApi(logzioCall LogzioApiCallDetails) ([]byte, error) {
 	var resp *http.Response
 	var jsonBytes []byte
 
-	err = retry.Do(
-		func() error {
-			resp, err = httpClient.Do(req)
-			if err != nil {
-				return err
-			}
-
-			jsonBytes, _ = io.ReadAll(resp.Body)
-			if !CheckValidStatus(resp, logzioCall.SuccessCodes) {
-				if resp.StatusCode == logzioCall.NotFoundCode {
-					return fmt.Errorf("API call %s failed with missing %s %d, data: %s",
-						logzioCall.ApiAction, logzioCall.ResourceName, logzioCall.ResourceId, jsonBytes)
-				}
-
-				return fmt.Errorf("API call %s failed with status code %d, data: %s",
-					logzioCall.ApiAction, resp.StatusCode, jsonBytes)
-			}
-
-			return nil
-		},
+	err = retry.New(
 		retry.RetryIf(
 			func(err error) bool {
 				if err != nil {
@@ -127,7 +99,25 @@ func CallLogzioApi(logzioCall LogzioApiCallDetails) ([]byte, error) {
 			}),
 		retry.DelayType(retry.BackOffDelay),
 		retry.Attempts(8),
-	)
+	).Do(func() error {
+		resp, err = httpClient.Do(req)
+		if err != nil {
+			return err
+		}
+
+		jsonBytes, _ = io.ReadAll(resp.Body)
+		if !CheckValidStatus(resp, logzioCall.SuccessCodes) {
+			if resp.StatusCode == logzioCall.NotFoundCode {
+				return fmt.Errorf("API call %s failed with missing %s %d, data: %s",
+					logzioCall.ApiAction, logzioCall.ResourceName, logzioCall.ResourceId, jsonBytes)
+			}
+
+			return fmt.Errorf("API call %s failed with status code %d, data: %s",
+				logzioCall.ApiAction, resp.StatusCode, jsonBytes)
+		}
+
+		return nil
+	})
 	defer resp.Body.Close()
 
 	if err != nil {

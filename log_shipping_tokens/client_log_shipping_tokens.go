@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	logShippingTokensServiceEndpoint string = "%s/v1/log-shipping/tokens"
+	logShippingTokensServiceEndpoint = "%s/v1/log-shipping/tokens"
 
 	operationGetLogShippingToken        = "GetLogShippingToken"
 	operationUpdateLogShippingToken     = "UpdateLogShippingToken"
@@ -50,7 +50,7 @@ type LogShippingTokensLimits struct {
 type RetrieveLogShippingTokensRequest struct {
 	Filter     ShippingTokensFilterRequest     `json:"filter"`
 	Sort       []ShippingTokensSortRequest     `json:"sort"`
-	Pagination ShippingTokensPaginationRequest `json:"pagination,omitempty"`
+	Pagination ShippingTokensPaginationRequest `json:"pagination"`
 }
 
 type ShippingTokensFilterRequest struct {
@@ -83,7 +83,7 @@ func New(apiToken, baseUrl string) (*LogShippingTokensClient, error) {
 		return nil, fmt.Errorf("API token not defined")
 	}
 	if len(baseUrl) == 0 {
-		return nil, fmt.Errorf("Base URL not defined")
+		return nil, fmt.Errorf("base URL not defined")
 	}
 	c := &LogShippingTokensClient{
 		Client: client.New(apiToken, baseUrl),

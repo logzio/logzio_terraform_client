@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	createUserServiceUrl     string = userServiceEndpoint
-	createUserServiceMethod  string = http.MethodPost
-	createUserServiceSuccess int    = http.StatusOK
+	createUserServiceUrl     = userServiceEndpoint
+	createUserServiceMethod  = http.MethodPost
+	createUserServiceSuccess = http.StatusOK
 )
 
 func (c *UsersClient) CreateUser(createUser CreateUpdateUser) (*ResponseId, error) {

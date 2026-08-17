@@ -51,7 +51,7 @@ func getGrafanaContactPointObject() grafana_contact_points.GrafanaContactPoint {
 	return grafana_contact_points.GrafanaContactPoint{
 		Name: "tf-client-test",
 		Type: "email",
-		Settings: map[string]interface{}{
+		Settings: map[string]any{
 			"addresses":   "example1@example.com;example2@example.com",
 			"singleEmail": false,
 		},

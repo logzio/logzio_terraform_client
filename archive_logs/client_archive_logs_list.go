@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	listArchiveLogsServiceUrl     string = archiveLogsServiceEndpoint
-	listArchiveLogsServiceMethod  string = http.MethodGet
-	listArchiveLogsServiceSuccess int    = http.StatusOK
+	listArchiveLogsServiceUrl     = archiveLogsServiceEndpoint
+	listArchiveLogsServiceMethod  = http.MethodGet
+	listArchiveLogsServiceSuccess = http.StatusOK
 )
 
 // ListArchiveLog Returns all the archives for logs in an array associated with the account identified by the supplied API token, returns an error if

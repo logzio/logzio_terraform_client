@@ -26,11 +26,11 @@ func TestGrafanaObjects_GetOK(t *testing.T) {
 	result, err := underTest.GetGrafanaDashboard(fmt.Sprint(dashboardId))
 	assert.NoError(t, err)
 	assert.Equal(t, result, &grafana_dashboards.GetResults{
-		Dashboard: map[string]interface{}{
+		Dashboard: map[string]any{
 			"title": "getOK",
 			"uid":   fmt.Sprint(dashboardId),
 		},
-		Meta: map[string]interface{}{
+		Meta: map[string]any{
 			"isStarred": true,
 			"url":       "testUrl",
 			"folderId":  float64(1),

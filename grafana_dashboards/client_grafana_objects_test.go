@@ -46,11 +46,11 @@ func fixture(path string) string {
 }
 
 func getCreateUpdateDashboard() grafana_dashboards.CreateUpdatePayload {
-	dashboard := map[string]interface{}{
+	dashboard := map[string]any{
 		"title":  "dashboard_test",
 		"tags":   []string{"some", "tags"},
 		"uid":    "",
-		"panels": make([]interface{}, 0),
+		"panels": make([]any, 0),
 	}
 
 	return grafana_dashboards.CreateUpdatePayload{

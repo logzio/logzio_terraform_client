@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	initiateRestoreLogsServiceUrl            = restoreLogsServiceEndpoint
-	initiateRestoreLogsServiceMethod  string = http.MethodPost
-	initiateRestoreLogsServiceSuccess        = http.StatusOK
+	initiateRestoreLogsServiceUrl     = restoreLogsServiceEndpoint
+	initiateRestoreLogsServiceMethod  = http.MethodPost
+	initiateRestoreLogsServiceSuccess = http.StatusOK
 )
 
 // InitiateRestoreOperation initiates a new operation to restore data from a specific time frame

@@ -2,15 +2,15 @@ package alerts_v2
 
 import (
 	"fmt"
-	"github.com/logzio/logzio_terraform_client"
+	logzio_client "github.com/logzio/logzio_terraform_client"
 	"net/http"
 )
 
 const (
-	enableAlertServiceUrl            = alertsServiceEndpoint + "/%d/enable"
-	enableAlertServiceMethod  string = http.MethodPost
-	enableAlertMethodSuccess  int    = http.StatusNoContent
-	enableAlertMethodNotFound int    = http.StatusNotFound
+	enableAlertServiceUrl     = alertsServiceEndpoint + "/%d/enable"
+	enableAlertServiceMethod  = http.MethodPost
+	enableAlertMethodSuccess  = http.StatusNoContent
+	enableAlertMethodNotFound = http.StatusNotFound
 )
 
 // EnableAlert enables an alert given its unique identifier. Returns the alert, an error otherwise

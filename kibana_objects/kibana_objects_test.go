@@ -77,10 +77,10 @@ func getImportRequest() (kibana_objects.KibanaObjectImportRequest, error) {
         "type": "search",
         "id": "tf-client-test-` + randomSuffix + `"
       }`
-	var sourceObj map[string]interface{}
+	var sourceObj map[string]any
 	err := json.Unmarshal([]byte(source), &sourceObj)
 
-	hitsObj := map[string]interface{}{
+	hitsObj := map[string]any{
 		"_index":  "logzioCustomerIndex*",
 		"_type":   "_doc",
 		"_id":     "search:tf-client-test-" + randomSuffix,
@@ -89,7 +89,7 @@ func getImportRequest() (kibana_objects.KibanaObjectImportRequest, error) {
 
 	return kibana_objects.KibanaObjectImportRequest{
 		KibanaVersion: "7.2.1",
-		Hits:          []map[string]interface{}{hitsObj},
+		Hits:          []map[string]any{hitsObj},
 	}, err
 }
 

@@ -3,14 +3,14 @@ package drop_filters
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/logzio/logzio_terraform_client"
+	logzio_client "github.com/logzio/logzio_terraform_client"
 	"net/http"
 )
 
-const deactivateDropFilterServiceUrl string = dropFiltersServiceEndpoint + "/%s/deactivate"
-const deactivateDropFilterServiceMethod string = http.MethodPost
-const deactivateDropFilterMethodSuccess int = http.StatusOK
-const deactivateDropFilterMethodNotFound int = http.StatusNotFound
+const deactivateDropFilterServiceUrl = dropFiltersServiceEndpoint + "/%s/deactivate"
+const deactivateDropFilterServiceMethod = http.MethodPost
+const deactivateDropFilterMethodSuccess = http.StatusOK
+const deactivateDropFilterMethodNotFound = http.StatusNotFound
 
 // DeactivateDropFilter deactivates drop filter by id, returns the deactivated drop filter or error if occurred
 func (c *DropFiltersClient) DeactivateDropFilter(dropFilterId string) (*DropFilter, error) {

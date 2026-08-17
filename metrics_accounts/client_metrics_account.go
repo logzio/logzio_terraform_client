@@ -54,7 +54,7 @@ func New(apiToken string, baseUrl string) (*MetricsAccountClient, error) {
 		return nil, fmt.Errorf("API token not defined")
 	}
 	if len(baseUrl) == 0 {
-		return nil, fmt.Errorf("Base URL not defined")
+		return nil, fmt.Errorf("base URL not defined")
 	}
 
 	c := &MetricsAccountClient{

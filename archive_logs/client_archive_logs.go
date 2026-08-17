@@ -5,7 +5,7 @@ import (
 	"github.com/logzio/logzio_terraform_client/client"
 )
 
-const archiveLogsServiceEndpoint string = "%s/v2/archive/settings"
+const archiveLogsServiceEndpoint = "%s/v2/archive/settings"
 
 const (
 	StorageTypeS3       = "S3"
@@ -17,8 +17,8 @@ const (
 	retrieveArchiveSettings = "RetrieveArchiveSettings"
 	updateArchiveSettings   = "UpdateArchiveSettings"
 	deleteArchiveSettings   = "DeleteArchiveSettings"
-	testArchiveSettings     = "TestArchiveSettings"
 	listArchivesSettings    = "ListArchiveSettings"
+	// testArchiveSettings     = "TestArchiveSettings"
 
 	archiveResourceName = "archive"
 )
@@ -84,7 +84,7 @@ func New(apiToken string, baseUrl string) (*ArchiveLogsClient, error) {
 		return nil, fmt.Errorf("API token not defined")
 	}
 	if len(baseUrl) == 0 {
-		return nil, fmt.Errorf("Base URL not defined")
+		return nil, fmt.Errorf("base URL not defined")
 	}
 
 	c := &ArchiveLogsClient{

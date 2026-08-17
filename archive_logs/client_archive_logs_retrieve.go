@@ -8,10 +8,10 @@ import (
 )
 
 const (
-	retrieveArchiveLogsServiceUrl            = archiveLogsServiceEndpoint + "/%d"
-	retrieveArchiveLogsServiceMethod  string = http.MethodGet
-	retrieveArchiveLogsMethodSuccess  int    = http.StatusOK
-	retrieveArchiveLogsMethodNotFound int    = http.StatusNotFound
+	retrieveArchiveLogsServiceUrl     = archiveLogsServiceEndpoint + "/%d"
+	retrieveArchiveLogsServiceMethod  = http.MethodGet
+	retrieveArchiveLogsMethodSuccess  = http.StatusOK
+	retrieveArchiveLogsMethodNotFound = http.StatusNotFound
 )
 
 // RetrieveArchiveLogsSetting gets an archive id and returns its settings or an error

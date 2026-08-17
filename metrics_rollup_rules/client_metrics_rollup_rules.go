@@ -2,6 +2,7 @@ package metrics_rollup_rules
 
 import (
 	"fmt"
+	"slices"
 
 	"github.com/logzio/logzio_terraform_client/client"
 )
@@ -154,7 +155,7 @@ func New(apiToken, baseUrl string) (*MetricsRollupRulesClient, error) {
 		return nil, fmt.Errorf("API token not defined")
 	}
 	if len(baseUrl) == 0 {
-		return nil, fmt.Errorf("Base URL not defined")
+		return nil, fmt.Errorf("base URL not defined")
 	}
 
 	return &MetricsRollupRulesClient{
@@ -303,10 +304,8 @@ func GetValidLabelsRemovalMethods() []LabelsRemovalMethod {
 func isValidMetricType(metricType MetricType) error {
 	validMetricTypes := GetValidMetricType()
 
-	for _, validType := range validMetricTypes {
-		if validType == metricType {
-			return nil
-		}
+	if slices.Contains(validMetricTypes, metricType) {
+		return nil
 	}
 	return fmt.Errorf("invalid metric type. metric type must be one of: %s", validMetricTypes)
 }
@@ -315,10 +314,8 @@ func isValidMetricType(metricType MetricType) error {
 func isValidAggregationFunction(agg AggregationFunction) error {
 	validAggs := GetValidAggregationFunctions()
 
-	for _, validAgg := range validAggs {
-		if validAgg == agg {
-			return nil
-		}
+	if slices.Contains(validAggs, agg) {
+		return nil
 	}
 	return fmt.Errorf("invalid aggregation function. aggregation function must be one of: %s", validAggs)
 }
@@ -327,10 +324,8 @@ func isValidAggregationFunction(agg AggregationFunction) error {
 func isValidLabelsRemovalMethod(method LabelsRemovalMethod) error {
 	validMethods := GetValidLabelsRemovalMethods()
 
-	for _, validMethod := range validMethods {
-		if validMethod == method {
-			return nil
-		}
+	if slices.Contains(validMethods, method) {
+		return nil
 	}
 	return fmt.Errorf("invalid labels elimination method. method must be one of: %s", validMethods)
 }

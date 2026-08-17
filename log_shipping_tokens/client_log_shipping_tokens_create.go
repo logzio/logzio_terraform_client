@@ -3,7 +3,7 @@ package log_shipping_tokens
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/logzio/logzio_terraform_client"
+	logzio_client "github.com/logzio/logzio_terraform_client"
 	"net/http"
 )
 

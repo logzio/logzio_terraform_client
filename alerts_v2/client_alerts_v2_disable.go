@@ -2,15 +2,15 @@ package alerts_v2
 
 import (
 	"fmt"
-	"github.com/logzio/logzio_terraform_client"
+	logzio_client "github.com/logzio/logzio_terraform_client"
 	"net/http"
 )
 
 const (
-	disableAlertServiceUrl                   = alertsServiceEndpoint + "/%d/disable"
-	disableAlertServiceMethod         string = http.MethodPost
-	disableAlertServiceSuccess        int    = http.StatusNoContent
-	disableAlertServiceStatusNotFound        = http.StatusNotFound
+	disableAlertServiceUrl            = alertsServiceEndpoint + "/%d/disable"
+	disableAlertServiceMethod         = http.MethodPost
+	disableAlertServiceSuccess        = http.StatusNoContent
+	disableAlertServiceStatusNotFound = http.StatusNotFound
 )
 
 // DisableAlert disables an alert given its unique identifier. Returns the alert, an error otherwise

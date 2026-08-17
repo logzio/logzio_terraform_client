@@ -3,15 +3,15 @@ package authentication_groups
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/logzio/logzio_terraform_client"
+	logzio_client "github.com/logzio/logzio_terraform_client"
 	"net/http"
 )
 
 const (
-	authGroupsGetServiceUrl            = authGroupsServiceEndpoint
-	authGroupsGetServiceMethod  string = http.MethodGet
-	authGroupsGetMethodSuccess  int    = http.StatusOK
-	authGroupsGetMethodNotFound int    = http.StatusNotFound
+	authGroupsGetServiceUrl     = authGroupsServiceEndpoint
+	authGroupsGetServiceMethod  = http.MethodGet
+	authGroupsGetMethodSuccess  = http.StatusOK
+	authGroupsGetMethodNotFound = http.StatusNotFound
 )
 
 // GetAuthenticationGroups returns all authentication groups, or error if occurred
