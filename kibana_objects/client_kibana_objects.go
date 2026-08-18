@@ -11,7 +11,6 @@ type ExportType string
 // Enums for exportType
 const (
 	kibanaObjectsServiceEndpoint = "%s/v1/kibana"
-	// loggerName                   = "logzio-client"
 
 	ExportTypeSearch        ExportType = "search"
 	ExportTypeVisualization ExportType = "visualization"
