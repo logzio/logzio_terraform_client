@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	listUserServiceUrl         = userServiceEndpoint
-	listUserServiceMethod      = http.MethodGet
-	listUserServiceSuccess int = http.StatusOK
+	listUserServiceUrl     = userServiceEndpoint
+	listUserServiceMethod  = http.MethodGet
+	listUserServiceSuccess = http.StatusOK
 )
 
 func (c *UsersClient) ListUsers() ([]User, error) {

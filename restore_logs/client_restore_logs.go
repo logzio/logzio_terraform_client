@@ -5,7 +5,7 @@ import (
 	"github.com/logzio/logzio_terraform_client/client"
 )
 
-const restoreLogsServiceEndpoint string = "%s/archive/restore"
+const restoreLogsServiceEndpoint = "%s/archive/restore"
 
 const (
 	RestoreStatusInProgress    = "IN_PROGRESS"
@@ -55,7 +55,7 @@ func New(apiToken string, baseUrl string) (*RestoreClient, error) {
 		return nil, fmt.Errorf("API token not defined")
 	}
 	if len(baseUrl) == 0 {
-		return nil, fmt.Errorf("Base URL not defined")
+		return nil, fmt.Errorf("base URL not defined")
 	}
 
 	c := &RestoreClient{

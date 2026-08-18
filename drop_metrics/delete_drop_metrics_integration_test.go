@@ -38,7 +38,7 @@ func TestIntegrationDropMetrics_DeleteDropMetricMultiple(t *testing.T) {
 		// Create multiple metrics and delete them one by one
 		var createdIds []int64
 
-		for i := 0; i < 3; i++ {
+		for i := range 3 {
 			createReq, err := getCreateDropMetric()
 			assert.NoError(t, err)
 			createReq.Filter.Expression[0].Value = fmt.Sprintf("test-metric-delete-multi-%d", i)

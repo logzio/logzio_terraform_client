@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	updateUserServiceUrl     string = userServiceEndpoint + "/%d"
-	updateUserServiceMethod  string = http.MethodPut
-	updateUserServiceSuccess int    = http.StatusOK
+	updateUserServiceUrl     = userServiceEndpoint + "/%d"
+	updateUserServiceMethod  = http.MethodPut
+	updateUserServiceSuccess = http.StatusOK
 )
 
 // NOTE: The logz.io API user update API function will not update the username field

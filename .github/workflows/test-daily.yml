@@ -37,10 +37,9 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.24
+          go-version: 1.25
       - name: Test
         # We exclude kibana_objects tests
         run: go test $(go list ./... | grep -v kibana_objects | grep -v grafana_folders)
       - name: Test grafana folders
         run: go test -parallel 1 ./grafana_folders
-        

@@ -52,15 +52,15 @@ func (c *GrafanaContactPointClient) CreateGrafanaContactPoint(payload GrafanaCon
 
 func validateContactPoint(payload GrafanaContactPoint) error {
 	if len(payload.Name) == 0 {
-		return fmt.Errorf("name must be set!")
+		return fmt.Errorf("name must be set")
 	}
 
 	if len(payload.Type) == 0 {
-		return fmt.Errorf("type must be set!")
+		return fmt.Errorf("type must be set")
 	}
 
-	if payload.Settings == nil || len(payload.Settings) == 0 {
-		return fmt.Errorf("settings must be set!")
+	if len(payload.Settings) == 0 {
+		return fmt.Errorf("settings must be set")
 	}
 
 	return nil

@@ -2,11 +2,13 @@ package s3_fetcher
 
 import (
 	"fmt"
+	"slices"
+
 	"github.com/logzio/logzio_terraform_client/client"
 )
 
 const (
-	s3FetcherServiceEndpoint string = "%s/v1/log-shipping/s3-buckets"
+	s3FetcherServiceEndpoint = "%s/v1/log-shipping/s3-buckets"
 
 	s3FetcherResourceName = "s3 fetcher"
 
@@ -74,7 +76,7 @@ func New(apiToken, baseUrl string) (*S3FetcherClient, error) {
 		return nil, fmt.Errorf("API token not defined")
 	}
 	if len(baseUrl) == 0 {
-		return nil, fmt.Errorf("Base URL not defined")
+		return nil, fmt.Errorf("base URL not defined")
 	}
 	c := &S3FetcherClient{
 		Client: client.New(apiToken, baseUrl),
@@ -138,10 +140,8 @@ func GetValidRegions() []AwsRegion {
 
 func isValidRegion(region AwsRegion) error {
 	validRegions := GetValidRegions()
-	for _, validRegion := range validRegions {
-		if validRegion == region {
-			return nil
-		}
+	if slices.Contains(validRegions, region) {
+		return nil
 	}
 
 	return fmt.Errorf("invalid region. region must be one of: %s", validRegions)

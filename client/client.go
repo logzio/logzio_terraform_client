@@ -38,7 +38,7 @@ func GetHttpClient(req *http.Request) *http.Client {
 	}
 }
 
-func IsErrorResponse(response map[string]interface{}) (bool, string) {
+func IsErrorResponse(response map[string]any) (bool, string) {
 	if _, ok := response[ERROR_CODE]; ok {
 		return true, response[ERROR_CODE].(string)
 	}

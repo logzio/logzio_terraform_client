@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	listRestoreLogsServiceUrl     string = restoreLogsServiceEndpoint
-	listRestoreLogsServiceMethod  string = http.MethodGet
-	listRestoreLogsServiceSuccess int    = http.StatusOK
+	listRestoreLogsServiceUrl     = restoreLogsServiceEndpoint
+	listRestoreLogsServiceMethod  = http.MethodGet
+	listRestoreLogsServiceSuccess = http.StatusOK
 )
 
 // ListRestoreOperations Returns all the restore operations for logs in an array associated with the account identified by the supplied API token, returns an error if

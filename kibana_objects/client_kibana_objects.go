@@ -11,7 +11,6 @@ type ExportType string
 // Enums for exportType
 const (
 	kibanaObjectsServiceEndpoint = "%s/v1/kibana"
-	loggerName                   = "logzio-client"
 
 	ExportTypeSearch        ExportType = "search"
 	ExportTypeVisualization ExportType = "visualization"
@@ -33,14 +32,14 @@ type KibanaObjectExportRequest struct {
 }
 
 type KibanaObjectExportResponse struct {
-	KibanaVersion string        `json:"kibanaVersion"`
-	Hits          []interface{} `json:"hits"`
+	KibanaVersion string `json:"kibanaVersion"`
+	Hits          []any  `json:"hits"`
 }
 
 type KibanaObjectImportRequest struct {
-	KibanaVersion string                   `json:"kibanaVersion"`
-	Override      *bool                    `json:"override,omitempty"`
-	Hits          []map[string]interface{} `json:"hits"`
+	KibanaVersion string           `json:"kibanaVersion"`
+	Override      *bool            `json:"override,omitempty"`
+	Hits          []map[string]any `json:"hits"`
 }
 
 type KibanaObjectImportResponse struct {
@@ -55,7 +54,7 @@ func New(apiToken, baseUrl string) (*KibanaObjectsClient, error) {
 		return nil, fmt.Errorf("API token not defined")
 	}
 	if len(baseUrl) == 0 {
-		return nil, fmt.Errorf("Base URL not defined")
+		return nil, fmt.Errorf("base URL not defined")
 	}
 	c := &KibanaObjectsClient{
 		Client: client.New(apiToken, baseUrl),

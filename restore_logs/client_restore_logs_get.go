@@ -8,10 +8,10 @@ import (
 )
 
 const (
-	getRestoreLogsServiceUrl                = restoreLogsServiceEndpoint + "/%d"
-	getRestoreLogsServiceMethod      string = http.MethodGet
-	getRestoreLogsMethodSuccess      int    = http.StatusOK
-	getRestoreLogsLogsMethodNotFound int    = http.StatusNotFound
+	getRestoreLogsServiceUrl         = restoreLogsServiceEndpoint + "/%d"
+	getRestoreLogsServiceMethod      = http.MethodGet
+	getRestoreLogsMethodSuccess      = http.StatusOK
+	getRestoreLogsLogsMethodNotFound = http.StatusNotFound
 )
 
 // GetRestoreOperation gets a restore operation id and returns its status or an error

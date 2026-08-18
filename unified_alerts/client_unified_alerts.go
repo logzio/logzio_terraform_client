@@ -12,48 +12,48 @@ const (
 )
 
 const (
-	TypeLogAlert    string = "LOG_ALERT"
-	TypeMetricAlert string = "METRIC_ALERT"
+	TypeLogAlert    = "LOG_ALERT"
+	TypeMetricAlert = "METRIC_ALERT"
 
-	UrlTypeLogs    string = "logs"
-	UrlTypeMetrics string = "metrics"
+	UrlTypeLogs    = "logs"
+	UrlTypeMetrics = "metrics"
 
-	AggregationTypeSum         string = "SUM"
-	AggregationTypeMin         string = "MIN"
-	AggregationTypeMax         string = "MAX"
-	AggregationTypeAvg         string = "AVG"
-	AggregationTypeCount       string = "COUNT"
-	AggregationTypeUniqueCount string = "UNIQUE_COUNT"
-	AggregationTypeNone        string = "NONE"
-	AggregationTypePercentage  string = "PERCENTAGE"
-	AggregationTypePercentile  string = "PERCENTILE"
+	AggregationTypeSum         = "SUM"
+	AggregationTypeMin         = "MIN"
+	AggregationTypeMax         = "MAX"
+	AggregationTypeAvg         = "AVG"
+	AggregationTypeCount       = "COUNT"
+	AggregationTypeUniqueCount = "UNIQUE_COUNT"
+	AggregationTypeNone        = "NONE"
+	AggregationTypePercentage  = "PERCENTAGE"
+	AggregationTypePercentile  = "PERCENTILE"
 
-	OperatorLessThan            string = "LESS_THAN"
-	OperatorGreaterThan         string = "GREATER_THAN"
-	OperatorLessThanOrEquals    string = "LESS_THAN_OR_EQUALS"
-	OperatorGreaterThanOrEquals string = "GREATER_THAN_OR_EQUALS"
-	OperatorEquals              string = "EQUALS"
-	OperatorNotEquals           string = "NOT_EQUALS"
+	OperatorLessThan            = "LESS_THAN"
+	OperatorGreaterThan         = "GREATER_THAN"
+	OperatorLessThanOrEquals    = "LESS_THAN_OR_EQUALS"
+	OperatorGreaterThanOrEquals = "GREATER_THAN_OR_EQUALS"
+	OperatorEquals              = "EQUALS"
+	OperatorNotEquals           = "NOT_EQUALS"
 
-	SeverityInfo   string = "INFO"
-	SeverityLow    string = "LOW"
-	SeverityMedium string = "MEDIUM"
-	SeverityHigh   string = "HIGH"
-	SeveritySevere string = "SEVERE"
+	SeverityInfo   = "INFO"
+	SeverityLow    = "LOW"
+	SeverityMedium = "MEDIUM"
+	SeverityHigh   = "HIGH"
+	SeveritySevere = "SEVERE"
 
-	TriggerTypeThreshold string = "threshold"
-	TriggerTypeMath      string = "math"
+	TriggerTypeThreshold = "threshold"
+	TriggerTypeMath      = "math"
 
-	OperatorTypeAbove        string = "above"
-	OperatorTypeBelow        string = "below"
-	OperatorTypeWithinRange  string = "within_range"
-	OperatorTypeOutsideRange string = "outside_range"
+	OperatorTypeAbove        = "above"
+	OperatorTypeBelow        = "below"
+	OperatorTypeWithinRange  = "within_range"
+	OperatorTypeOutsideRange = "outside_range"
 
-	SortDesc string = "DESC"
-	SortAsc  string = "ASC"
+	SortDesc = "DESC"
+	SortAsc  = "ASC"
 
-	OutputTypeJson  string = "JSON"
-	OutputTypeTable string = "TABLE"
+	OutputTypeJson  = "JSON"
+	OutputTypeTable = "TABLE"
 
 	createUnifiedAlertOperation = "CreateUnifiedAlert"
 	getUnifiedAlertOperation    = "GetUnifiedAlert"
@@ -140,29 +140,29 @@ type Recipients struct {
 }
 
 type SubComponent struct {
-	QueryDefinition QueryDefinition     `json:"queryDefinition,omitempty"`
-	Trigger         SubComponentTrigger `json:"trigger,omitempty"`
-	Output          SubComponentOutput  `json:"output,omitempty"`
+	QueryDefinition QueryDefinition     `json:"queryDefinition"`
+	Trigger         SubComponentTrigger `json:"trigger"`
+	Output          SubComponentOutput  `json:"output"`
 }
 
 type QueryDefinition struct {
 	Query                    string      `json:"query,omitempty"`
-	Filters                  BoolFilter  `json:"filters,omitempty"`
+	Filters                  BoolFilter  `json:"filters"`
 	GroupBy                  []string    `json:"groupBy,omitempty"`
-	Aggregation              Aggregation `json:"aggregation,omitempty"`
+	Aggregation              Aggregation `json:"aggregation"`
 	ShouldQueryOnAllAccounts bool        `json:"shouldQueryOnAllAccounts,omitempty"`
 	AccountIdsToQueryOn      []int       `json:"accountIdsToQueryOn,omitempty"`
 }
 
 type BoolFilter struct {
-	Bool FilterLists `json:"bool,omitempty"`
+	Bool FilterLists `json:"bool"`
 }
 
 type FilterLists struct {
-	Must    []map[string]interface{} `json:"must,omitempty"`
-	Should  []map[string]interface{} `json:"should,omitempty"`
-	Filter  []map[string]interface{} `json:"filter,omitempty"`
-	MustNot []map[string]interface{} `json:"must_not,omitempty"`
+	Must    []map[string]any `json:"must,omitempty"`
+	Should  []map[string]any `json:"should,omitempty"`
+	Filter  []map[string]any `json:"filter,omitempty"`
+	MustNot []map[string]any `json:"must_not,omitempty"`
 }
 
 type Aggregation struct {
@@ -199,7 +199,7 @@ type Schedule struct {
 
 type MetricQuery struct {
 	RefId           string                `json:"refId,omitempty"`
-	QueryDefinition MetricQueryDefinition `json:"queryDefinition,omitempty"`
+	QueryDefinition MetricQueryDefinition `json:"queryDefinition"`
 }
 
 type MetricQueryDefinition struct {
@@ -212,7 +212,7 @@ func New(apiToken, baseUrl string) (*UnifiedAlertsClient, error) {
 		return nil, fmt.Errorf("API token not defined")
 	}
 	if len(baseUrl) == 0 {
-		return nil, fmt.Errorf("Base URL not defined")
+		return nil, fmt.Errorf("base URL not defined")
 	}
 	return &UnifiedAlertsClient{
 		Client: client.New(apiToken, baseUrl),
@@ -253,7 +253,7 @@ func validateCreateUnifiedAlertRequest(req CreateUnifiedAlert) error {
 }
 
 func validateLogAlertConfiguration(config *AlertConfiguration) error {
-	if config.SubComponents == nil || len(config.SubComponents) == 0 {
+	if len(config.SubComponents) == 0 {
 		return fmt.Errorf("alertConfiguration.subComponents must not be empty")
 	}
 
@@ -271,7 +271,7 @@ func validateLogAlertConfiguration(config *AlertConfiguration) error {
 
 	for i, subComponent := range config.SubComponents {
 		if config.AlertOutputTemplateType == OutputTypeTable {
-			if subComponent.Output.Columns == nil || len(subComponent.Output.Columns) == 0 {
+			if len(subComponent.Output.Columns) == 0 {
 				return fmt.Errorf("alertConfiguration.subComponents[%d].output.columns must be defined when alertOutputTemplateType is TABLE", i)
 			}
 		}
@@ -281,7 +281,7 @@ func validateLogAlertConfiguration(config *AlertConfiguration) error {
 		}
 
 		if !subComponent.QueryDefinition.ShouldQueryOnAllAccounts {
-			if subComponent.QueryDefinition.AccountIdsToQueryOn == nil || len(subComponent.QueryDefinition.AccountIdsToQueryOn) == 0 {
+			if len(subComponent.QueryDefinition.AccountIdsToQueryOn) == 0 {
 				return fmt.Errorf("alertConfiguration.subComponents[%d].queryDefinition.accountIdsToQueryOn must be set when shouldQueryOnAllAccounts is false", i)
 			}
 		}
@@ -304,7 +304,7 @@ func validateLogAlertConfiguration(config *AlertConfiguration) error {
 			}
 		}
 
-		if subComponent.Output.Columns != nil && len(subComponent.Output.Columns) > 0 {
+		if len(subComponent.Output.Columns) > 0 {
 			for j, column := range subComponent.Output.Columns {
 				if len(column.Sort) > 0 {
 					if !logzio_client.Contains(validSorts, column.Sort) {
@@ -356,7 +356,7 @@ func validateMetricAlertConfiguration(config *AlertConfiguration) error {
 		}
 	}
 
-	if config.Queries == nil || len(config.Queries) == 0 {
+	if len(config.Queries) == 0 {
 		return fmt.Errorf("alertConfiguration.queries must not be empty for metric alerts")
 	}
 

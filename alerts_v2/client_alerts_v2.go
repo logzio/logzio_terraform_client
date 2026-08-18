@@ -8,38 +8,38 @@ import (
 )
 
 const (
-	alertsServiceEndpoint string = "%s/v2/alerts"
+	alertsServiceEndpoint = "%s/v2/alerts"
 )
 
 const (
-	AggregationTypeSum         string = "SUM"
-	AggregationTypeMin         string = "MIN"
-	AggregationTypeMax         string = "MAX"
-	AggregationTypeAvg         string = "AVG"
-	AggregationTypeCount       string = "COUNT"
-	AggregationTypeUniqueCount string = "UNIQUE_COUNT"
-	AggregationTypeNone        string = "NONE"
+	AggregationTypeSum         = "SUM"
+	AggregationTypeMin         = "MIN"
+	AggregationTypeMax         = "MAX"
+	AggregationTypeAvg         = "AVG"
+	AggregationTypeCount       = "COUNT"
+	AggregationTypeUniqueCount = "UNIQUE_COUNT"
+	AggregationTypeNone        = "NONE"
 
-	OperatorLessThan            string = "LESS_THAN"
-	OperatorGreaterThan         string = "GREATER_THAN"
-	OperatorLessThanOrEquals    string = "LESS_THAN_OR_EQUALS"
-	OperatorGreaterThanOrEquals string = "GREATER_THAN_OR_EQUALS"
-	OperatorEquals              string = "EQUALS"
-	OperatorNotEquals           string = "NOT_EQUALS"
+	OperatorLessThan            = "LESS_THAN"
+	OperatorGreaterThan         = "GREATER_THAN"
+	OperatorLessThanOrEquals    = "LESS_THAN_OR_EQUALS"
+	OperatorGreaterThanOrEquals = "GREATER_THAN_OR_EQUALS"
+	OperatorEquals              = "EQUALS"
+	OperatorNotEquals           = "NOT_EQUALS"
 
-	SeverityInfo   string = "INFO"
-	SeverityLow    string = "LOW"
-	SeverityMedium string = "MEDIUM"
-	SeverityHigh   string = "HIGH"
-	SeveritySevere string = "SEVERE"
+	SeverityInfo   = "INFO"
+	SeverityLow    = "LOW"
+	SeverityMedium = "MEDIUM"
+	SeverityHigh   = "HIGH"
+	SeveritySevere = "SEVERE"
 
-	SortDesc string = "DESC"
-	SortAsc  string = "ASC"
+	SortDesc = "DESC"
+	SortAsc  = "ASC"
 
-	OutputTypeJson  string = "JSON"
-	OutputTypeTable string = "TABLE"
+	OutputTypeJson  = "JSON"
+	OutputTypeTable = "TABLE"
 
-	CorrelationOperatorAnd string = "AND"
+	CorrelationOperatorAnd = "AND"
 
 	createAlertOperation  = "CreateAlertV2"
 	deleteAlertOperation  = "DeleteAlertV2"
@@ -60,16 +60,16 @@ type CreateAlertType struct {
 	Title                  string              `json:"title,omitempty"`
 	Description            string              `json:"description,omitempty"`
 	Tags                   []string            `json:"tags,omitempty"`
-	Output                 AlertOutput         `json:"output,omitempty"`
+	Output                 AlertOutput         `json:"output"`
 	SearchTimeFrameMinutes int                 `json:"searchTimeFrameMinutes,omitempty"`
 	SubComponents          []SubAlert          `json:"subComponents,omitempty"`
-	Correlations           SubAlertCorrelation `json:"correlations,omitempty"`
+	Correlations           SubAlertCorrelation `json:"correlations"`
 	Enabled                string              `json:"enabled,omitempty"`
-	Schedule               ScheduleObj         `json:"schedule,omitempty"`
+	Schedule               ScheduleObj         `json:"schedule"`
 }
 
 type AlertOutput struct {
-	Recipients                   AlertRecipients `json:"recipients,omitempty"`
+	Recipients                   AlertRecipients `json:"recipients"`
 	SuppressNotificationsMinutes int             `json:"suppressNotificationsMinutes,omitempty"`
 	Type                         string          `json:"type,omitempty"`
 }
@@ -80,27 +80,27 @@ type AlertRecipients struct {
 }
 
 type SubAlert struct {
-	QueryDefinition AlertQuery     `json:"queryDefinition,omitempty"`
-	Trigger         AlertTrigger   `json:"trigger,omitempty"`
-	Output          SubAlertOutput `json:"output,omitempty"`
+	QueryDefinition AlertQuery     `json:"queryDefinition"`
+	Trigger         AlertTrigger   `json:"trigger"`
+	Output          SubAlertOutput `json:"output"`
 }
 
 type AlertQuery struct {
 	Query                    string         `json:"query,omitempty"`
-	Filters                  BoolFilter     `json:"filters,omitempty"`
+	Filters                  BoolFilter     `json:"filters"`
 	GroupBy                  []string       `json:"groupBy,omitempty"`
-	Aggregation              AggregationObj `json:"aggregation,omitempty"`
+	Aggregation              AggregationObj `json:"aggregation"`
 	ShouldQueryOnAllAccounts bool           `json:"shouldQueryOnAllAccounts,omitempty"`
-	AccountIdsToQueryOn      []int          `json:"accountIdsToQueryOn,omitempty,omitempty"`
+	AccountIdsToQueryOn      []int          `json:"accountIdsToQueryOn,omitempty"`
 }
 
 type BoolFilter struct {
-	Bool FilterLists `json:"bool,omitempty"`
+	Bool FilterLists `json:"bool"`
 }
 
 type FilterLists struct {
-	Must    []map[string]interface{} `json:"must,omitempty"`
-	MustNot []map[string]interface{} `json:"must_not,omitempty"`
+	Must    []map[string]any `json:"must,omitempty"`
+	MustNot []map[string]any `json:"must_not,omitempty"`
 }
 
 type AggregationObj struct {
@@ -144,11 +144,11 @@ type AlertType struct {
 	Title                  string              `json:"title"`
 	Description            string              `json:"description,omitempty"`
 	Tags                   []string            `json:"tags,omitempty"`
-	Output                 AlertOutput         `json:"output,omitempty"`
+	Output                 AlertOutput         `json:"output"`
 	SearchTimeFrameMinutes int                 `json:"searchTimeFrameMinutes"`
 	SubComponents          []SubAlert          `json:"subComponents"`
-	Correlations           SubAlertCorrelation `json:"correlations,omitempty"`
-	Schedule               ScheduleObj         `json:"schedule,omitempty"`
+	Correlations           SubAlertCorrelation `json:"correlations"`
+	Schedule               ScheduleObj         `json:"schedule"`
 }
 
 func New(apiToken, baseUrl string) (*AlertsV2Client, error) {
@@ -156,7 +156,7 @@ func New(apiToken, baseUrl string) (*AlertsV2Client, error) {
 		return nil, fmt.Errorf("API token not defined")
 	}
 	if len(baseUrl) == 0 {
-		return nil, fmt.Errorf("Base URL not defined")
+		return nil, fmt.Errorf("base URL not defined")
 	}
 	c := &AlertsV2Client{
 		Client: client.New(apiToken, baseUrl),
@@ -169,7 +169,7 @@ func validateCreateAlertRequest(alert CreateAlertType) error {
 		return fmt.Errorf("title must be set")
 	}
 
-	if alert.SubComponents == nil || len(alert.SubComponents) == 0 {
+	if len(alert.SubComponents) == 0 {
 		return fmt.Errorf("subComponents must be not empty")
 	}
 
@@ -203,7 +203,7 @@ func validateCreateAlertRequest(alert CreateAlertType) error {
 			}
 		}
 
-		if subComponent.Output.Columns != nil && len(subComponent.Output.Columns) > 0 {
+		if len(subComponent.Output.Columns) > 0 {
 			for _, column := range subComponent.Output.Columns {
 				if len(column.Sort) > 0 {
 					if !logzio_client.Contains(validSorts, column.Sort) {

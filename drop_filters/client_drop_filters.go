@@ -7,14 +7,13 @@ import (
 )
 
 const (
-	dropFiltersServiceEndpoint    string = "%s/v1/drop-filters"
-	createDropFilterOperation            = "CreateDropFilter"
-	activateDropFilterOperation          = "ActivateDropFilter"
-	deactivateDropFilterOperation        = "DeactivateDropFilter"
-	deleteDropFilterOperation            = "DeleteDropFilter"
-	retrieveDropFiltersOperation         = "RetrieveDropFilters"
-
-	dropFilterResourceName = "drop filter"
+	dropFiltersServiceEndpoint    = "%s/v1/drop-filters"
+	createDropFilterOperation     = "CreateDropFilter"
+	activateDropFilterOperation   = "ActivateDropFilter"
+	deactivateDropFilterOperation = "DeactivateDropFilter"
+	deleteDropFilterOperation     = "DeleteDropFilter"
+	retrieveDropFiltersOperation  = "RetrieveDropFilters"
+	dropFilterResourceName        = "drop filter"
 )
 
 type DropFiltersClient struct {
@@ -29,8 +28,8 @@ type CreateDropFilter struct {
 }
 
 type FieldConditionObject struct {
-	FieldName string      `json:"fieldName"`
-	Value     interface{} `json:"value"`
+	FieldName string `json:"fieldName"`
+	Value     any    `json:"value"`
 }
 
 type DropFilter struct {
@@ -47,7 +46,7 @@ func New(apiToken, baseUrl string) (*DropFiltersClient, error) {
 		return nil, fmt.Errorf("API token not defined")
 	}
 	if len(baseUrl) == 0 {
-		return nil, fmt.Errorf("Base URL not defined")
+		return nil, fmt.Errorf("base URL not defined")
 	}
 	c := &DropFiltersClient{
 		Client: client.New(apiToken, baseUrl),
@@ -67,7 +66,7 @@ func validateCreateDropFilterRequest(filter CreateDropFilter) error {
 		}
 
 		if condition.Value == nil {
-			return fmt.Errorf("Value must be set")
+			return fmt.Errorf("value must be set")
 		}
 	}
 

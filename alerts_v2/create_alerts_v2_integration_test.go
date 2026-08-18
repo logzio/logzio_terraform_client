@@ -29,7 +29,7 @@ func TestIntegrationAlertsV2_CreateAlertWithFilter(t *testing.T) {
 		createAlert := getCreateAlertType()
 		createAlert.Title = "test alerts v2 with filter"
 		match := map[string]string{"type": "mytype"}
-		must := map[string]interface{}{"match": match}
+		must := map[string]any{"match": match}
 		createAlert.SubComponents[0].QueryDefinition.Filters.Bool.Must = append(createAlert.SubComponents[0].QueryDefinition.Filters.Bool.Must, must)
 		alert, err := underTest.CreateAlert(createAlert)
 

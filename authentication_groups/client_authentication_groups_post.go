@@ -8,10 +8,10 @@ import (
 )
 
 const (
-	authGroupsPostUrl                   = authGroupsServiceEndpoint
-	authGroupsPostServiceMethod  string = http.MethodPost
-	authGroupsPostStatusSuccess  int    = http.StatusOK
-	authGroupsPostStatusNotFound int    = http.StatusNotFound
+	authGroupsPostUrl            = authGroupsServiceEndpoint
+	authGroupsPostServiceMethod  = http.MethodPost
+	authGroupsPostStatusSuccess  = http.StatusOK
+	authGroupsPostStatusNotFound = http.StatusNotFound
 )
 
 // PostAuthenticationGroups receives a list of authentication groups and generates a request to Logz.io

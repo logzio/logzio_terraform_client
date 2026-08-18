@@ -56,7 +56,7 @@ func (c *GrafanaFolderClient) CreateGrafanaFolder(payload CreateUpdateFolder) (*
 
 func validateCreateGrafanaFolder(payload CreateUpdateFolder) error {
 	if len(payload.Title) == 0 {
-		return fmt.Errorf("Field title must be set!")
+		return fmt.Errorf("field title must be set")
 	}
 
 	return nil

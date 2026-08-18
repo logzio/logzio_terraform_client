@@ -31,12 +31,12 @@ type GrafanaContactPointClient struct {
 }
 
 type GrafanaContactPoint struct {
-	Uid                   string                 `json:"uid"`
-	Name                  string                 `json:"name"`
-	Type                  string                 `json:"type"`
-	Settings              map[string]interface{} `json:"settings"`
-	DisableResolveMessage bool                   `json:"disableResolveMessage"`
-	Provenance            string                 `json:"provenance"`
+	Uid                   string         `json:"uid"`
+	Name                  string         `json:"name"`
+	Type                  string         `json:"type"`
+	Settings              map[string]any `json:"settings"`
+	DisableResolveMessage bool           `json:"disableResolveMessage"`
+	Provenance            string         `json:"provenance"`
 }
 
 func New(apiToken string, baseUrl string) (*GrafanaContactPointClient, error) {
@@ -44,7 +44,7 @@ func New(apiToken string, baseUrl string) (*GrafanaContactPointClient, error) {
 		return nil, fmt.Errorf("API token not defined")
 	}
 	if len(baseUrl) == 0 {
-		return nil, fmt.Errorf("Base URL not defined")
+		return nil, fmt.Errorf("base URL not defined")
 	}
 
 	grafanaContactPointClient := &GrafanaContactPointClient{

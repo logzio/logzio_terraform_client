@@ -7,10 +7,10 @@ import (
 )
 
 const (
-	unsuspendUserServiceUrl              string = userServiceEndpoint + "/unsuspend/%d"
-	unsuspendUserServiceMethod           string = http.MethodPost
-	unsuspendUserServiceSuccess          int    = http.StatusOK
-	unsuspendUserServiceSuccessNoContent        = http.StatusNoContent
+	unsuspendUserServiceUrl              = userServiceEndpoint + "/unsuspend/%d"
+	unsuspendUserServiceMethod           = http.MethodPost
+	unsuspendUserServiceSuccess          = http.StatusOK
+	unsuspendUserServiceSuccessNoContent = http.StatusNoContent
 )
 
 func (c *UsersClient) UnSuspendUser(userId int32) error {

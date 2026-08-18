@@ -113,7 +113,7 @@ func New(apiToken, baseUrl string) (*DropMetricsClient, error) {
 		return nil, fmt.Errorf("API token not defined")
 	}
 	if len(baseUrl) == 0 {
-		return nil, fmt.Errorf("Base URL not defined")
+		return nil, fmt.Errorf("base URL not defined")
 	}
 
 	return &DropMetricsClient{

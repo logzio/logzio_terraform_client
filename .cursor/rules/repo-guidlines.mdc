@@ -1,6 +1,6 @@
 ---
-description: 
-globs: 
+description:
+globs:
 alwaysApply: true
 ---
 # Logz.io Terraform Client Development Rules
@@ -74,12 +74,12 @@ const <area>ServiceEndpoint = "%s/v1/<area>"
 const (
     // Enum constants
     TypeExample = "EXAMPLE"
-    
+
     // Operation names for logging
     createOperation = "Create<Area>"
     getOperation    = "Get<Area>"
     // ...
-    
+
     resourceName = "<area>"
 )
 
@@ -104,7 +104,7 @@ func New(apiToken, baseUrl string) (*<Area>Client, error) {
         return nil, fmt.Errorf("API token not defined")
     }
     if len(baseUrl) == 0 {
-        return nil, fmt.Errorf("Base URL not defined")
+        return nil, fmt.Errorf("base URL not defined")
     }
     return &<Area>Client{
         Client: client.New(apiToken, baseUrl),
@@ -267,10 +267,10 @@ result, err := client.Create<Area>(<area>.Create<Area>{
 })
 ```
 
-| Function | Signature |
-|----------|-----------|
-| create | `func (c *Client) Create<Area>(req Create<Area>) (*<Area>, error)` |
-| get | `func (c *Client) Get<Area>(id int64) (*<Area>, error)` |
+| Function | Signature                                                          |
+| -------- | ------------------------------------------------------------------ |
+| create   | `func (c *Client) Create<Area>(req Create<Area>) (*<Area>, error)` |
+| get      | `func (c *Client) Get<Area>(id int64) (*<Area>, error)`            |
 ```
 
 ### Root README Update
@@ -362,4 +362,4 @@ func (c *Client) List<Resources>() ([]<Resource>, error) {
 - ❌ Breaking changes - maintain backwards compatibility
 - ❌ Inconsistent naming - follow the established patterns
 
-When in doubt, copy from an existing package (alerts_v2, drop_filters) and adapt the patterns. 
+When in doubt, copy from an existing package (alerts_v2, drop_filters) and adapt the patterns.

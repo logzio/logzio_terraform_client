@@ -7,10 +7,10 @@ import (
 )
 
 const (
-	deleteAlertServiceMethod      = http.MethodDelete
-	deleteAlertServiceUrl         = alertsServiceEndpoint + "/%d"
-	deleteAlertMethodSuccess  int = http.StatusOK
-	deleteAlertMethodNotFound int = http.StatusNotFound
+	deleteAlertServiceMethod  = http.MethodDelete
+	deleteAlertServiceUrl     = alertsServiceEndpoint + "/%d"
+	deleteAlertMethodSuccess  = http.StatusOK
+	deleteAlertMethodNotFound = http.StatusNotFound
 )
 
 // DeleteAlert deletes an alert specified by its unique id, returns an error if a problem is encountered

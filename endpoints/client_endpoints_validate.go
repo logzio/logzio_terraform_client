@@ -4,6 +4,7 @@ import (
 	"fmt"
 	logzio_client "github.com/logzio/logzio_terraform_client"
 	"net/http"
+	"slices"
 	"strings"
 )
 
@@ -145,11 +146,5 @@ func validateCreateOrUpdateEndpointRequestMicrosoftTeams(endpoint CreateOrUpdate
 func isValidEndpoint(endpointType string) bool {
 	validEndpoints := []string{EndpointTypeSlack, EndpointTypeCustom, EndpointTypePagerDuty, EndpointTypeBigPanda,
 		EndpointTypeDataDog, EndpointTypeVictorOps, EndpointTypeOpsGenie, EndpointTypeServiceNow, EndpointTypeMicrosoftTeams}
-	for _, endpoint := range validEndpoints {
-		if endpoint == endpointType {
-			return true
-		}
-	}
-
-	return false
+	return slices.Contains(validEndpoints, endpointType)
 }
