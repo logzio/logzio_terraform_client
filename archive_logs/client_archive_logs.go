@@ -18,7 +18,6 @@ const (
 	updateArchiveSettings   = "UpdateArchiveSettings"
 	deleteArchiveSettings   = "DeleteArchiveSettings"
 	listArchivesSettings    = "ListArchiveSettings"
-	// testArchiveSettings     = "TestArchiveSettings"
 
 	archiveResourceName = "archive"
 )
