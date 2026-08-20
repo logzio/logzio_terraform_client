@@ -20,16 +20,16 @@ func TestUnifiedProjects_SearchProjects(t *testing.T) {
 			assert.Equal(t, http.MethodPost, r.Method)
 
 			jsonBytes, _ := io.ReadAll(r.Body)
-			var target map[string]interface{}
+			var target map[string]any
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)
 			// Pin the server's real search schema literally.
-			filter, ok := target["filter"].(map[string]interface{})
+			filter, ok := target["filter"].(map[string]any)
 			if assert.True(t, ok, `body must carry a "filter" object`) {
 				assert.Equal(t, "system", filter["searchTerm"])
-				assert.Equal(t, []interface{}{float64(123)}, filter["createdBy"])
+				assert.Equal(t, []any{float64(123)}, filter["createdBy"])
 			}
-			pagination, ok := target["pagination"].(map[string]interface{})
+			pagination, ok := target["pagination"].(map[string]any)
 			if assert.True(t, ok, `body must carry a "pagination" object`) {
 				assert.Equal(t, float64(1), pagination["pageNumber"])
 				assert.Equal(t, float64(10), pagination["pageSize"])
@@ -52,6 +52,8 @@ func TestUnifiedProjects_SearchProjects(t *testing.T) {
 				assert.Equal(t, "project-1", resp.Results[0].Project.Id)
 				assert.Equal(t, "System Metrics", resp.Results[0].Project.Name)
 				if assert.Len(t, resp.Results[0].Dashboards, 1) {
+					// See the list test: uid and id differ on purpose.
+					assert.Equal(t, "1f96a105-8ec3-4242-b074-0f57f37e7fbb", resp.Results[0].Dashboards[0].Uid)
 					assert.Equal(t, "3da41d03-ca61-436d-be45-69047d4f84be", resp.Results[0].Dashboards[0].Id)
 					assert.Equal(t, "project-1", resp.Results[0].Dashboards[0].ProjectId)
 				}
@@ -67,7 +69,7 @@ func TestUnifiedProjects_SearchProjectsOmitsUnsetFields(t *testing.T) {
 	if assert.NoError(t, err) {
 		mux.HandleFunc("/perses-public/api/v1/projects/search", func(w http.ResponseWriter, r *http.Request) {
 			jsonBytes, _ := io.ReadAll(r.Body)
-			var target map[string]interface{}
+			var target map[string]any
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)
 			_, hasFilter := target["filter"]

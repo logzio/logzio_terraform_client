@@ -94,11 +94,11 @@ func newProjectEnvelope(name, displayName, description string) projectEnvelope {
 
 // Response types
 type ProjectSummary struct {
-	Id        string                 `json:"id"`
-	Name      string                 `json:"name,omitempty"` // the project's display name
-	Doc       map[string]interface{} `json:"doc,omitempty"`  // the Perses Project document (kind/metadata/spec)
-	CreatedAt string                 `json:"createdAt,omitempty"`
-	UpdatedAt string                 `json:"updatedAt,omitempty"`
+	Id        string         `json:"id"`
+	Name      string         `json:"name,omitempty"` // the project's display name
+	Doc       map[string]any `json:"doc,omitempty"`  // the Perses Project document (kind/metadata/spec)
+	CreatedAt string         `json:"createdAt,omitempty"`
+	UpdatedAt string         `json:"updatedAt,omitempty"`
 }
 
 // MetadataName returns the project's Perses identity (doc.metadata.name),
@@ -109,7 +109,7 @@ type ProjectSummary struct {
 // malformed) — UpdateProject's validation rejects that with "name must be
 // set" rather than sending a bad identity.
 func (p *ProjectSummary) MetadataName() string {
-	metadata, ok := p.Doc["metadata"].(map[string]interface{})
+	metadata, ok := p.Doc["metadata"].(map[string]any)
 	if !ok {
 		return ""
 	}
@@ -118,12 +118,25 @@ func (p *ProjectSummary) MetadataName() string {
 }
 
 // ProjectDashboard is the dashboard payload embedded in project list/search
-// responses. Id is the dashboard's addressable identifier.
+// responses. It mirrors unified_dashboards.Dashboard, including that type's
+// split between a stable Uid and a throwaway version-row Id.
+//
+// Use Uid. It is the only identifier the dashboard routes accept — passing Id
+// to unified_dashboards.GetDashboard/UpdateDashboard/DeleteDashboard yields a
+// 404, and persisting Id in a Terraform state would break the moment somebody
+// edits the dashboard, because the server issues a new row id per revision.
+//
+// The trap is that a brand-new dashboard is created with id == uid == name, so
+// code and tests that only ever look at freshly created dashboards cannot tell
+// the two apart. Probed 2026-08-20 against the live gateway with a version-2
+// dashboard, which is what separates them; the create-dashboard integration
+// test now updates before asserting, for the same reason.
 type ProjectDashboard struct {
-	Id        string                 `json:"id,omitempty"`
-	Name      string                 `json:"name,omitempty"`
-	ProjectId string                 `json:"projectId,omitempty"`
-	Doc       map[string]interface{} `json:"doc,omitempty"`
+	Uid       string         `json:"uid,omitempty"` // stable identifier — address dashboards by this
+	Id        string         `json:"id,omitempty"`  // version-row id — changes on every update, not addressable
+	Name      string         `json:"name,omitempty"`
+	ProjectId string         `json:"projectId,omitempty"`
+	Doc       map[string]any `json:"doc,omitempty"`
 }
 
 // ProjectListItem is one entry of the list and search responses: the project
@@ -144,7 +157,7 @@ func New(apiToken, baseUrl string) (*ProjectsClient, error) {
 		return nil, fmt.Errorf("API token not defined")
 	}
 	if len(baseUrl) == 0 {
-		return nil, fmt.Errorf("Base URL not defined")
+		return nil, fmt.Errorf("base URL not defined")
 	}
 	return &ProjectsClient{
 		Client: client.New(apiToken, baseUrl),

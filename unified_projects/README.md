@@ -76,7 +76,19 @@ err = client.DeleteProject(created.Id)
 
 - `ProjectSummary` — `Id`, `Name` (display name), `Doc` (the raw Perses Project document), `CreatedAt`, `UpdatedAt`; `MetadataName()` returns the Perses identity for read-modify-write updates.
 - `ProjectListItem` — one list/search entry: `Project` plus its `Dashboards`.
+- `ProjectDashboard` — an embedded dashboard: `Uid`, `Id`, `Name`, `ProjectId`, `Doc` (see [Embedded dashboard ids](#embedded-dashboard-ids)).
 - `SearchProjectsResponse` — `Results`, `Total`, `Pagination`.
+
+## Embedded dashboard ids
+
+`ProjectDashboard` carries the same two identifiers as `unified_dashboards.Dashboard`, and they mean the same thing:
+
+- **`Uid`** — the stable handle. This is what `unified_dashboards.GetDashboard`/`UpdateDashboard`/`DeleteDashboard`/`MoveDashboard` accept. Persist this one.
+- **`Id`** — the version-row id, replaced on every update. Not addressable: passing it to a dashboard route returns "failed with missing unified dashboard".
+
+A brand-new dashboard is created with `id == uid == name`, so the two are indistinguishable until somebody edits the dashboard — which makes storing `Id` a bug that only shows up later. Probed live with a version-2 dashboard (2026-08-20); the create-dashboard integration test in `unified_dashboards` updates before asserting, and checks that `Uid` resolves while `Id` 404s.
+
+For a folder's dashboards on their own, `unified_dashboards.ListFolderDashboards(folderId)` is cheaper than a `ListProjects(true)` that you then filter.
 
 ## Notes
 

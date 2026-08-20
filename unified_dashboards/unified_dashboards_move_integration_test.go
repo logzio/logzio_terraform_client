@@ -67,13 +67,31 @@ func TestIntegrationUnifiedDashboards_MoveDashboard(t *testing.T) {
 
 	time.Sleep(2 * time.Second) // Allow for eventual consistency
 
+	// Update once before moving. A freshly created dashboard has id == uid ==
+	// name, which makes any assertion about the move response ambiguous — it
+	// would pass whichever identifier the server actually returned. One update
+	// forks the version row off the uid so the assertions below can tell them
+	// apart.
+	updated, err := dashClient.UpdateDashboard(src.Id, created.Uid, unified_dashboards.UpdateDashboardRequest{
+		Doc: itDashboardDoc("it-move-dashboard-"+uniqueId, "IT Move Dashboard "+uniqueId+" v2"),
+	})
+	if !assert.NoError(t, err) || !assert.NotNil(t, updated) {
+		return
+	}
+	assert.Equal(t, created.Uid, updated.Uid, "the uid must survive an update")
+	assert.NotEqual(t, created.Uid, updated.Id, "the version-row id must fork away from the uid on update")
+
+	time.Sleep(2 * time.Second) // Allow for eventual consistency
+
 	moved, err := dashClient.MoveDashboard(unified_dashboards.MoveDashboardRequest{
 		DashboardId:  created.Uid,
 		OldProjectId: src.Id,
 		NewProjectId: dst.Id,
 	})
 	if assert.NoError(t, err) && assert.NotNil(t, moved) {
-		assert.Equal(t, created.Uid, moved.Id)
+		// The move response's "id" is the current version-row id, not the uid.
+		assert.Equal(t, updated.Id, moved.Id, "move should acknowledge with the current version-row id")
+		assert.NotEqual(t, created.Uid, moved.Id, "move must not be read as returning the uid")
 
 		time.Sleep(2 * time.Second) // Allow for eventual consistency
 

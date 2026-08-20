@@ -13,14 +13,14 @@ import (
 
 func getCreateDashboardRequest() unified_dashboards.CreateDashboardRequest {
 	return unified_dashboards.CreateDashboardRequest{
-		Doc: map[string]interface{}{
+		Doc: map[string]any{
 			"kind":     "Dashboard",
-			"metadata": map[string]interface{}{"name": "cpu-usage-dashboard"},
-			"spec": map[string]interface{}{
-				"display":  map[string]interface{}{"name": "CPU Usage Dashboard"},
+			"metadata": map[string]any{"name": "cpu-usage-dashboard"},
+			"spec": map[string]any{
+				"display":  map[string]any{"name": "CPU Usage Dashboard"},
 				"duration": "1h",
-				"panels":   map[string]interface{}{},
-				"layouts":  []interface{}{},
+				"panels":   map[string]any{},
+				"layouts":  []any{},
 			},
 		},
 	}
@@ -35,14 +35,14 @@ func TestUnifiedDashboards_CreateDashboard(t *testing.T) {
 			assert.Equal(t, http.MethodPost, r.Method)
 
 			jsonBytes, _ := io.ReadAll(r.Body)
-			var target map[string]interface{}
+			var target map[string]any
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)
 			// Dashboards wrap the Perses document in a "doc" key (projects send it bare) — pin the wrapper literally.
-			doc, ok := target["doc"].(map[string]interface{})
+			doc, ok := target["doc"].(map[string]any)
 			if assert.True(t, ok, `request body must nest the document under "doc"`) {
 				assert.Equal(t, "Dashboard", doc["kind"])
-				assert.Equal(t, "cpu-usage-dashboard", doc["metadata"].(map[string]interface{})["name"])
+				assert.Equal(t, "cpu-usage-dashboard", doc["metadata"].(map[string]any)["name"])
 			}
 
 			w.Header().Set("Content-Type", "application/json")

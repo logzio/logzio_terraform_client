@@ -30,6 +30,10 @@ func TestUnifiedProjects_ListProjects(t *testing.T) {
 			assert.Equal(t, "Project", projects[0].Project.Doc["kind"])
 			// dashboards are a sibling of "project" in each list entry
 			if assert.Len(t, projects[0].Dashboards, 1) {
+				// uid and id are deliberately different values in the fixture:
+				// they coincide only on a never-updated dashboard, so a decode
+				// that dropped one of them would still pass if they matched.
+				assert.Equal(t, "1f96a105-8ec3-4242-b074-0f57f37e7fbb", projects[0].Dashboards[0].Uid)
 				assert.Equal(t, "3da41d03-ca61-436d-be45-69047d4f84be", projects[0].Dashboards[0].Id)
 				assert.Equal(t, "project-1", projects[0].Dashboards[0].ProjectId)
 			}

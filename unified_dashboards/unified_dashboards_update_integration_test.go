@@ -57,8 +57,8 @@ func TestIntegrationUnifiedDashboards_UpdateDashboard(t *testing.T) {
 				assert.Equal(t, created.Uid, updated.Uid)
 				assert.Greater(t, updated.Version, created.Version)
 
-				spec := updated.Doc["spec"].(map[string]interface{})
-				display := spec["display"].(map[string]interface{})
+				spec := updated.Doc["spec"].(map[string]any)
+				display := spec["display"].(map[string]any)
 				assert.Equal(t, "IT Updated Dashboard "+uniqueId, display["name"])
 			}
 		}

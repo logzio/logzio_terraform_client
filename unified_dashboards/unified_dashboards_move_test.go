@@ -20,7 +20,7 @@ func TestUnifiedDashboards_MoveDashboard(t *testing.T) {
 			assert.Equal(t, http.MethodPut, r.Method)
 
 			jsonBytes, _ := io.ReadAll(r.Body)
-			var target map[string]interface{}
+			var target map[string]any
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)
 			assert.Equal(t, "dashboard-1", target["dashboardId"])

@@ -12,15 +12,15 @@ import (
 
 // itDashboardDoc builds a minimal valid Perses Dashboard document — the API
 // requires the full envelope (kind/metadata/spec).
-func itDashboardDoc(name, displayName string) map[string]interface{} {
-	return map[string]interface{}{
+func itDashboardDoc(name, displayName string) map[string]any {
+	return map[string]any{
 		"kind":     "Dashboard",
-		"metadata": map[string]interface{}{"name": name},
-		"spec": map[string]interface{}{
-			"display":  map[string]interface{}{"name": displayName},
+		"metadata": map[string]any{"name": name},
+		"spec": map[string]any{
+			"display":  map[string]any{"name": displayName},
 			"duration": "1h",
-			"panels":   map[string]interface{}{},
-			"layouts":  []interface{}{},
+			"panels":   map[string]any{},
+			"layouts":  []any{},
 		},
 	}
 }
@@ -69,6 +69,21 @@ func TestIntegrationUnifiedDashboards_CreateDashboard(t *testing.T) {
 
 			time.Sleep(2 * time.Second) // Allow for eventual consistency
 
+			// Update once before verifying identifiers. On a brand-new
+			// dashboard the server sets id == uid == name, so an assertion
+			// made here would hold for either field and prove nothing about
+			// which one the embedded payload actually carries.
+			updated, err := dashClient.UpdateDashboard(proj.Id, created.Uid, unified_dashboards.UpdateDashboardRequest{
+				Doc: itDashboardDoc("it-dashboard-"+uniqueId, "IT Dashboard "+uniqueId+" v2"),
+			})
+			if !assert.NoError(t, err) || !assert.NotNil(t, updated) {
+				return
+			}
+			assert.Equal(t, created.Uid, updated.Uid, "the uid must survive an update")
+			assert.NotEqual(t, updated.Uid, updated.Id, "the version-row id must fork away from the uid on update")
+
+			time.Sleep(2 * time.Second) // Allow for eventual consistency
+
 			// Live-verify the embedded-dashboards mapping of the projects list.
 			items, err := projClient.ListProjects(true)
 			if assert.NoError(t, err) {
@@ -77,8 +92,21 @@ func TestIntegrationUnifiedDashboards_CreateDashboard(t *testing.T) {
 					if item.Project.Id == proj.Id {
 						found = true
 						if assert.Len(t, item.Dashboards, 1, "created dashboard should be embedded in its project's list entry") {
-							assert.Equal(t, proj.Id, item.Dashboards[0].ProjectId)
-							assert.Equal(t, created.Uid, item.Dashboards[0].Id, "embedded dashboard Id should be the addressable uid")
+							embedded := item.Dashboards[0]
+							assert.Equal(t, proj.Id, embedded.ProjectId)
+							assert.Equal(t, created.Uid, embedded.Uid, "embedded Uid is the addressable handle")
+							assert.Equal(t, updated.Id, embedded.Id, "embedded Id is the version-row id")
+							assert.NotEqual(t, embedded.Uid, embedded.Id, "the two must not be conflated")
+
+							// The distinction is not cosmetic: only the uid resolves.
+							byUid, err := dashClient.GetDashboard(proj.Id, embedded.Uid)
+							assert.NoError(t, err, "embedded Uid must address the dashboard")
+							assert.NotNil(t, byUid)
+
+							_, err = dashClient.GetDashboard(proj.Id, embedded.Id)
+							if assert.Error(t, err, "embedded Id must not address the dashboard") {
+								assert.Contains(t, err.Error(), "failed with missing unified dashboard")
+							}
 						}
 						break
 					}

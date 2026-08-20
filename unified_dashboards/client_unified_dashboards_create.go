@@ -28,7 +28,7 @@ func (c *DashboardsClient) CreateDashboard(folderId string, req CreateDashboardR
 	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
 		ApiToken:     c.ApiToken,
 		HttpMethod:   createDashboardMethod,
-		Url:          fmt.Sprintf(dashboardsCreateEndpoint, c.BaseUrl, folderId),
+		Url:          fmt.Sprintf(folderDashboardsEndpoint, c.BaseUrl, folderId),
 		Body:         body,
 		SuccessCodes: []int{createDashboardSuccess, createDashboardCreated},
 		NotFoundCode: createDashboardNotFound,

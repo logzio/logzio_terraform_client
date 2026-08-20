@@ -20,13 +20,13 @@ func TestUnifiedProjects_CreateProject(t *testing.T) {
 			assert.Equal(t, http.MethodPost, r.Method)
 
 			jsonBytes, _ := io.ReadAll(r.Body)
-			var target map[string]interface{}
+			var target map[string]any
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)
 			// The API expects a Perses Project envelope — pin the wire shape literally.
 			assert.Equal(t, "Project", target["kind"])
-			assert.Equal(t, "new-project", target["metadata"].(map[string]interface{})["name"])
-			display := target["spec"].(map[string]interface{})["display"].(map[string]interface{})
+			assert.Equal(t, "new-project", target["metadata"].(map[string]any)["name"])
+			display := target["spec"].(map[string]any)["display"].(map[string]any)
 			assert.Equal(t, "new-project", display["name"])
 
 			w.Header().Set("Content-Type", "application/json")
@@ -52,10 +52,10 @@ func TestUnifiedProjects_CreateProjectWithDisplayName(t *testing.T) {
 	if assert.NoError(t, err) {
 		mux.HandleFunc("/perses-public/api/v1/projects", func(w http.ResponseWriter, r *http.Request) {
 			jsonBytes, _ := io.ReadAll(r.Body)
-			var target map[string]interface{}
+			var target map[string]any
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)
-			display := target["spec"].(map[string]interface{})["display"].(map[string]interface{})
+			display := target["spec"].(map[string]any)["display"].(map[string]any)
 			assert.Equal(t, "Pretty Name", display["name"])
 			assert.Equal(t, "some description", display["description"])
 

@@ -19,6 +19,7 @@
     },
     "dashboards": [
       {
+        "uid": "1f96a105-8ec3-4242-b074-0f57f37e7fbb",
         "id": "3da41d03-ca61-436d-be45-69047d4f84be",
         "name": "1f96a105-8ec3-4242-b074-0f57f37e7fbb",
         "projectId": "project-1",

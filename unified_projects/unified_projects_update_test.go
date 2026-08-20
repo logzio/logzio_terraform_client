@@ -20,12 +20,12 @@ func TestUnifiedProjects_UpdateProject(t *testing.T) {
 			assert.Equal(t, http.MethodPut, r.Method)
 
 			jsonBytes, _ := io.ReadAll(r.Body)
-			var target map[string]interface{}
+			var target map[string]any
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)
 			assert.Equal(t, "Project", target["kind"])
-			assert.Equal(t, "system-metrics", target["metadata"].(map[string]interface{})["name"])
-			display := target["spec"].(map[string]interface{})["display"].(map[string]interface{})
+			assert.Equal(t, "system-metrics", target["metadata"].(map[string]any)["name"])
+			display := target["spec"].(map[string]any)["display"].(map[string]any)
 			assert.Equal(t, "System Metrics Updated", display["name"])
 			assert.Equal(t, "Updated description", display["description"])
 
@@ -54,10 +54,10 @@ func TestUnifiedProjects_UpdateProjectOmitsEmptyDescription(t *testing.T) {
 	if assert.NoError(t, err) {
 		mux.HandleFunc("/perses-public/api/v1/projects/project-1", func(w http.ResponseWriter, r *http.Request) {
 			jsonBytes, _ := io.ReadAll(r.Body)
-			var target map[string]interface{}
+			var target map[string]any
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)
-			display := target["spec"].(map[string]interface{})["display"].(map[string]interface{})
+			display := target["spec"].(map[string]any)["display"].(map[string]any)
 			_, hasDescription := display["description"]
 			assert.False(t, hasDescription, "empty description must be omitted (the PUT replaces the document, omitting clears it)")
 

@@ -20,10 +20,10 @@ func TestUnifiedDashboards_UpdateDashboard(t *testing.T) {
 			assert.Equal(t, http.MethodPut, r.Method)
 
 			jsonBytes, _ := io.ReadAll(r.Body)
-			var target map[string]interface{}
+			var target map[string]any
 			err = json.Unmarshal(jsonBytes, &target)
 			assert.NoError(t, err)
-			doc, ok := target["doc"].(map[string]interface{})
+			doc, ok := target["doc"].(map[string]any)
 			if assert.True(t, ok, `request body must nest the document under "doc"`) {
 				assert.Equal(t, "Dashboard", doc["kind"])
 			}
@@ -34,10 +34,10 @@ func TestUnifiedDashboards_UpdateDashboard(t *testing.T) {
 		})
 
 		updated, err := underTest.UpdateDashboard("project-1", "dashboard-1", unified_dashboards.UpdateDashboardRequest{
-			Doc: map[string]interface{}{
+			Doc: map[string]any{
 				"kind":     "Dashboard",
-				"metadata": map[string]interface{}{"name": "system-overview"},
-				"spec":     map[string]interface{}{"display": map[string]interface{}{"name": "Updated System Overview"}},
+				"metadata": map[string]any{"name": "system-overview"},
+				"spec":     map[string]any{"display": map[string]any{"name": "Updated System Overview"}},
 			},
 		})
 		assert.NoError(t, err)
@@ -60,7 +60,7 @@ func TestUnifiedDashboards_UpdateDashboardAPIFail(t *testing.T) {
 		})
 
 		_, err = underTest.UpdateDashboard("project-1", "dashboard-1", unified_dashboards.UpdateDashboardRequest{
-			Doc: map[string]interface{}{"title": "x"},
+			Doc: map[string]any{"title": "x"},
 		})
 		assert.Error(t, err)
 		assert.Contains(t, err.Error(), "status code 500")
@@ -78,7 +78,7 @@ func TestUnifiedDashboards_UpdateDashboardNotFound(t *testing.T) {
 		})
 
 		_, err = underTest.UpdateDashboard("project-1", "missing", unified_dashboards.UpdateDashboardRequest{
-			Doc: map[string]interface{}{"title": "x"},
+			Doc: map[string]any{"title": "x"},
 		})
 		assert.Error(t, err)
 		assert.Contains(t, err.Error(), "failed with missing unified dashboard")
@@ -90,11 +90,11 @@ func TestUnifiedDashboards_UpdateDashboardValidation(t *testing.T) {
 	defer teardown()
 
 	if assert.NoError(t, err) {
-		_, err = underTest.UpdateDashboard("", "dashboard-1", unified_dashboards.UpdateDashboardRequest{Doc: map[string]interface{}{"x": 1}})
+		_, err = underTest.UpdateDashboard("", "dashboard-1", unified_dashboards.UpdateDashboardRequest{Doc: map[string]any{"x": 1}})
 		assert.Error(t, err)
 		assert.Contains(t, err.Error(), "folderId must be set")
 
-		_, err = underTest.UpdateDashboard("project-1", "", unified_dashboards.UpdateDashboardRequest{Doc: map[string]interface{}{"x": 1}})
+		_, err = underTest.UpdateDashboard("project-1", "", unified_dashboards.UpdateDashboardRequest{Doc: map[string]any{"x": 1}})
 		assert.Error(t, err)
 		assert.Contains(t, err.Error(), "uid must be set")
 
