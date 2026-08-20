@@ -19,9 +19,11 @@ const (
 // search grouped by folder.
 //
 // Filter.SearchTerm genuinely narrows the result set here (the projects
-// endpoint returns every folder regardless of the term). Total is the
-// unpaginated match count, so it can exceed len(Results); page through with
-// Pagination. The endpoint is POST-only — GET /dashboards/search 404s.
+// endpoint returns every folder regardless of the term), but it matches only
+// the document's metadata.name — not the display name, and not anything nested
+// in the document such as panel names, queries or datasource references. Total
+// is the unpaginated match count, so it can exceed len(Results); page through
+// with Pagination. The endpoint is POST-only — GET /dashboards/search 404s.
 func (c *DashboardsClient) SearchDashboards(req SearchDashboardsRequest) (*SearchDashboardsResponse, error) {
 	body, err := json.Marshal(req)
 	if err != nil {

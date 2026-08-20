@@ -55,8 +55,12 @@ type SearchDashboardsRequest struct {
 }
 
 type SearchDashboardsFilter struct {
-	// SearchTerm matches dashboards by name. Verified live: an exact term
-	// narrows the result set and an unmatched one returns zero results.
+	// SearchTerm matches against the Perses document's metadata.name — the
+	// dashboard's identity — and nothing else. Probed 2026-08-20 with a
+	// dashboard whose display name, panel name, datasource reference and
+	// PromQL query all contained a distinctive token: searching for any of
+	// them returned zero results, while its metadata.name matched. This is
+	// not a full-text search over the document.
 	SearchTerm string `json:"searchTerm,omitempty"`
 	// CreatedBy mirrors unified_projects.SearchProjectsFilter, but the gateway
 	// currently ignores it — a bogus account id still returns every dashboard

@@ -38,9 +38,13 @@ func TestIntegrationUnifiedDashboards_SearchDashboards(t *testing.T) {
 
 	time.Sleep(2 * time.Second) // Allow for eventual consistency
 
+	// metadata.name and the display name are deliberately different strings:
+	// SearchTerm matches the former only, and the assertions below rely on
+	// being able to tell them apart.
 	dashName := "it-dashsearch-" + uniqueId
+	displayName := "zzdisplayonly-" + uniqueId
 	created, err := dashClient.CreateDashboard(proj.Id, unified_dashboards.CreateDashboardRequest{
-		Doc: itDashboardDoc(dashName, "IT Dashboard Search "+uniqueId),
+		Doc: itDashboardDoc(dashName, displayName),
 	})
 	if !assert.NoError(t, err) || !assert.NotNil(t, created) {
 		return
@@ -83,6 +87,16 @@ func TestIntegrationUnifiedDashboards_SearchDashboards(t *testing.T) {
 	if assert.NoError(t, err) && assert.NotNil(t, none) {
 		assert.Empty(t, none.Results)
 		assert.Equal(t, 0, none.Total)
+	}
+
+	// SearchTerm reads metadata.name only. The display name is unique to this
+	// dashboard and still matches nothing, which is what stops the endpoint
+	// being mistaken for a full-text search over the document.
+	byDisplay, err := dashClient.SearchDashboards(unified_dashboards.SearchDashboardsRequest{
+		Filter: &unified_dashboards.SearchDashboardsFilter{SearchTerm: displayName},
+	})
+	if assert.NoError(t, err) && assert.NotNil(t, byDisplay) {
+		assert.Empty(t, byDisplay.Results, "searchTerm must not match the display name")
 	}
 
 	// Pagination is honoured, and Total stays the unpaginated match count.
