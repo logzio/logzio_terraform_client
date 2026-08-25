@@ -1,0 +1,15 @@
+{
+  "id": "project-1",
+  "name": "renamed-project",
+  "doc": {
+    "kind": "Project",
+    "metadata": { "name": "system-metrics" },
+    "spec": { "display": { "name": "renamed-project" } }
+  },
+  "entityId": 1,
+  "createdBy": 977560,
+  "updatedBy": 977560,
+  "createdAt": "2024-03-20T10:00:00Z",
+  "updatedAt": "2024-03-22T16:00:00Z",
+  "isDeleted": false
+}

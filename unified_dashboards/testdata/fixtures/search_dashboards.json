@@ -1,0 +1,24 @@
+{
+  "results": [
+    {
+      "id": "row-4c81ee20",
+      "uid": "dashboard-1",
+      "name": "dashboard-1",
+      "projectId": "project-1",
+      "doc": {
+        "kind": "Dashboard",
+        "metadata": { "name": "system-overview", "project": "project-1" },
+        "spec": { "display": { "name": "System Overview" }, "duration": "1h", "panels": {}, "layouts": [] }
+      },
+      "version": 2,
+      "createdBy": 2045352,
+      "updatedBy": 2045352,
+      "createdAt": "2024-03-20T10:00:00Z",
+      "updatedAt": "2024-03-22T10:00:00Z",
+      "isDeleted": false,
+      "isPrivate": false
+    }
+  ],
+  "total": 3,
+  "pagination": { "pageNumber": 1, "pageSize": 1 }
+}

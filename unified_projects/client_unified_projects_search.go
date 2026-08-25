@@ -1,0 +1,47 @@
+package unified_projects
+
+import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+
+	logzio_client "github.com/logzio/logzio_terraform_client"
+)
+
+const (
+	searchProjectsMethod   = http.MethodPost
+	searchProjectsSuccess  = http.StatusOK
+	searchProjectsNotFound = http.StatusNotFound
+)
+
+// SearchProjects is a dashboard search grouped by folder: Filter.SearchTerm
+// matches dashboards, every folder is returned (regardless of the term) with
+// its matching dashboards nested, and Total counts the matching dashboards.
+func (c *ProjectsClient) SearchProjects(req SearchProjectsRequest) (*SearchProjectsResponse, error) {
+	body, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := logzio_client.CallLogzioApi(logzio_client.LogzioApiCallDetails{
+		ApiToken:     c.ApiToken,
+		HttpMethod:   searchProjectsMethod,
+		Url:          fmt.Sprintf(projectsSearchEndpoint, c.BaseUrl),
+		Body:         body,
+		SuccessCodes: []int{searchProjectsSuccess},
+		NotFoundCode: searchProjectsNotFound,
+		ResourceId:   nil,
+		ApiAction:    searchProjectsOperation,
+		ResourceName: projectResourceName,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	var result SearchProjectsResponse
+	if err := json.Unmarshal(res, &result); err != nil {
+		return nil, fmt.Errorf("%s: failed to unmarshal response: %w (body: %.200s)", searchProjectsOperation, err, res)
+	}
+
+	return &result, nil
+}

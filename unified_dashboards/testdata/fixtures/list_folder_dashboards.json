@@ -1,0 +1,38 @@
+[
+  {
+    "id": "row-9f2c1a44",
+    "uid": "dashboard-1",
+    "name": "dashboard-1",
+    "projectId": "project-1",
+    "doc": {
+      "kind": "Dashboard",
+      "metadata": { "name": "system-overview", "project": "project-1" },
+      "spec": { "display": { "name": "System Overview" }, "duration": "1h", "panels": {}, "layouts": [] }
+    },
+    "version": 3,
+    "createdBy": 2045352,
+    "updatedBy": 2045352,
+    "createdAt": "2024-03-20T10:00:00Z",
+    "updatedAt": "2024-03-22T10:00:00Z",
+    "isDeleted": false,
+    "isPrivate": false
+  },
+  {
+    "id": "row-0b7de915",
+    "uid": "dashboard-3",
+    "name": "dashboard-3",
+    "projectId": "project-1",
+    "doc": {
+      "kind": "Dashboard",
+      "metadata": { "name": "disk-usage", "project": "project-1" },
+      "spec": { "display": { "name": "Disk Usage" }, "duration": "6h", "panels": {}, "layouts": [] }
+    },
+    "version": 1,
+    "createdBy": 2045352,
+    "updatedBy": 2045352,
+    "createdAt": "2024-03-21T08:00:00Z",
+    "updatedAt": "2024-03-21T08:00:00Z",
+    "isDeleted": 0,
+    "isPrivate": true
+  }
+]

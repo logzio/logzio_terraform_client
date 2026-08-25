@@ -1,0 +1,17 @@
+{
+  "id": "project-new",
+  "name": "new-project",
+  "doc": {
+    "kind": "Project",
+    "metadata": { "name": "new-project" },
+    "spec": { "display": { "name": "new-project" } }
+  },
+  "entityId": 1,
+  "createdBy": 2045352,
+  "updatedBy": 2045352,
+  "createdAt": "2024-03-22T14:30:00Z",
+  "updatedAt": "2024-03-22T14:30:00Z",
+  "isDeleted": false,
+  "deletedAt": null,
+  "deletedBy": null
+}

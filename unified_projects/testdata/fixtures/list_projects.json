@@ -1,0 +1,52 @@
+[
+  {
+    "project": {
+      "id": "project-1",
+      "name": "System Metrics",
+      "doc": {
+        "kind": "Project",
+        "metadata": { "name": "system-metrics" },
+        "spec": { "display": { "name": "System Metrics", "description": "System monitoring dashboards" } }
+      },
+      "entityId": 1,
+      "createdBy": 977560,
+      "updatedBy": 977560,
+      "createdAt": "2024-03-20T10:00:00Z",
+      "updatedAt": "2024-03-20T12:00:00Z",
+      "isDeleted": 0,
+      "deletedAt": null,
+      "deletedBy": null
+    },
+    "dashboards": [
+      {
+        "uid": "1f96a105-8ec3-4242-b074-0f57f37e7fbb",
+        "id": "3da41d03-ca61-436d-be45-69047d4f84be",
+        "name": "1f96a105-8ec3-4242-b074-0f57f37e7fbb",
+        "projectId": "project-1",
+        "doc": {
+          "kind": "Dashboard",
+          "metadata": { "name": "cpu-usage", "project": "project-1" },
+          "spec": { "display": { "name": "CPU Usage" }, "duration": "1h", "panels": {}, "layouts": [] }
+        }
+      }
+    ]
+  },
+  {
+    "project": {
+      "id": "project-2",
+      "name": "Application Logs",
+      "doc": {
+        "kind": "Project",
+        "metadata": { "name": "application-logs" },
+        "spec": { "display": { "name": "Application Logs", "description": "Application logging dashboards" } }
+      },
+      "entityId": 1,
+      "createdBy": 977560,
+      "updatedBy": 977560,
+      "createdAt": "2024-03-21T09:00:00Z",
+      "updatedAt": "2024-03-21T09:00:00Z",
+      "isDeleted": 0
+    },
+    "dashboards": []
+  }
+]
