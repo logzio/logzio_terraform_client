@@ -4,6 +4,8 @@
 ## v1.31.0
 - Add [Unified Dashboards API](./unified_dashboards/README.md) (Perses) — CRUD + list + per-folder list + search + move.
 - Add [Unified Projects (dashboard folders) API](./unified_projects/README.md) — CRUD + list + search + rename.
+- Upgrade to Go 1.25. [#163]
+- Use lowercase error strings (Go convention). [#163]
 
 ## v1.30.2
 - Add the optional, description field to `drop_filters`. contributed by: @kevin-kortum-trustedshops
