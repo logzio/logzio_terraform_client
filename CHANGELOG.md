@@ -1,6 +1,9 @@
 # Changes by Version
 
 <!-- next version -->
+## v1.31.1
+- Fix nil-pointer panic in `CallLogzioApi` when the HTTP request fails before a response is returned.
+
 ## v1.31.0
 - Add [Unified Dashboards API](./unified_dashboards/README.md) (Perses) — CRUD + list + per-folder list + search + move.
 - Add [Unified Projects (dashboard folders) API](./unified_projects/README.md) — CRUD + list + search + rename.
