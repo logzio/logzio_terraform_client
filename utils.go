@@ -104,6 +104,7 @@ func CallLogzioApi(logzioCall LogzioApiCallDetails) ([]byte, error) {
 		if err != nil {
 			return err
 		}
+		defer resp.Body.Close()
 
 		jsonBytes, _ = io.ReadAll(resp.Body)
 		if !CheckValidStatus(resp, logzioCall.SuccessCodes) {
@@ -118,8 +119,6 @@ func CallLogzioApi(logzioCall LogzioApiCallDetails) ([]byte, error) {
 
 		return nil
 	})
-	defer resp.Body.Close()
-
 	if err != nil {
 		return nil, err
 	}
