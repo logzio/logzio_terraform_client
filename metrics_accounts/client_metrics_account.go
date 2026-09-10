@@ -15,6 +15,9 @@ const (
 	operationUpdateMetricsAccount = "UpdateMetricsAccount"
 	operationCreateMetricsAccount = "CreateMetricsAccount"
 
+	operationGetMetricsAccountSoftLimit    = "GetMetricsAccountSoftLimit"
+	operationUpdateMetricsAccountSoftLimit = "UpdateMetricsAccountSoftLimit"
+
 	metricsAccountResourceName = "metrics account"
 )
 
@@ -37,6 +40,19 @@ type MetricsAccount struct {
 	CreatedAt             int64   `json:"createdAt"`
 	PlanUts               int32   `json:"planUts"`
 	AuthorizedAccountsIds []int32 `json:"authorizedAccountsIds"`
+}
+
+// MetricsAccountSoftLimit is the soft limit, in unique time series, of a consumption metrics account.
+// SoftLimitUniqueMetrics is nil when no soft limit is set.
+type MetricsAccountSoftLimit struct {
+	MetricsAccountId       int32  `json:"metricsAccountId"`
+	SoftLimitUniqueMetrics *int32 `json:"softLimitUniqueMetrics"`
+}
+
+// UpdateMetricsAccountSoftLimit is the request body for setting the soft limit of a consumption
+// metrics account.
+type UpdateMetricsAccountSoftLimit struct {
+	SoftLimitUniqueMetrics int32 `json:"softLimitUniqueMetrics"`
 }
 
 type MetricsAccountCreateResponse struct {

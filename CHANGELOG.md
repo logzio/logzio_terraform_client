@@ -1,6 +1,9 @@
 # Changes by Version
 
 <!-- next version -->
+## Unreleased
+- Add soft limit support to `metrics_accounts`: `GetMetricsAccountSoftLimit` and `UpdateMetricsAccountSoftLimit` for consumption metrics accounts.
+
 ## v1.31.1
 - Fix nil-pointer panic in `CallLogzioApi` when the HTTP request fails before a response is returned.
 
