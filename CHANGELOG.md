@@ -3,6 +3,7 @@
 <!-- next version -->
 ## Unreleased
 - Add soft limit support to `metrics_accounts`: `GetMetricsAccountSoftLimit` and `UpdateMetricsAccountSoftLimit` for consumption metrics accounts.
+- Add [Consumption Tracing Accounts API](./tracing_accounts/README.md) — CRUD + list + get/update soft limit.
 
 ## v1.31.1
 - Fix nil-pointer panic in `CallLogzioApi` when the HTTP request fails before a response is returned.
