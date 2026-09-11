@@ -53,6 +53,11 @@ type TracingAccount struct {
 
 // TracingAccountSoftLimit is the soft limit, in GB, of a consumption tracing account.
 // SoftLimitGB is nil when no soft limit is set.
+//
+// For tracing the soft limit and MaxDailyGB are the same underlying value: the API reads
+// SoftLimitGB from the account's maxDailyGB and writes maxDailyGB from SoftLimitGB. These endpoints
+// therefore duplicate GetTracingAccount().MaxDailyGB, and are provided for API-surface completeness
+// - MaxDailyGB on create or update sets the same thing.
 type TracingAccountSoftLimit struct {
 	AccountId   int32    `json:"accountId"`
 	SoftLimitGB *float32 `json:"softLimitGB"`

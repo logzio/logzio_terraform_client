@@ -51,6 +51,11 @@ type MetricsAccountSoftLimit struct {
 
 // UpdateMetricsAccountSoftLimit is the request body for setting the soft limit of a consumption
 // metrics account.
+//
+// The API has no way to remove a soft limit once set: the field is non-nullable server side and
+// there is no delete endpoint. Note that 0 is stored as-is and is not a removal - the limiter only
+// applies a soft limit that is greater than the plan UTS, so a stored 0 is silently ignored and the
+// account falls back to plan x overage factor.
 type UpdateMetricsAccountSoftLimit struct {
 	SoftLimitUniqueMetrics int32 `json:"softLimitUniqueMetrics"`
 }

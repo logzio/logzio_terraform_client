@@ -119,8 +119,8 @@ func TestTracingAccount_UpdateSoftLimitIdMismatch(t *testing.T) {
 	assert.False(t, called, "no request should be sent when validation fails")
 }
 
-// Zero is a legal soft limit and must not be rejected by the client-side validation.
-func TestTracingAccount_UpdateSoftLimitZeroIsAllowed(t *testing.T) {
+// Zero is accepted by the API and must not be rejected client side. There is no removal endpoint.
+func TestTracingAccount_UpdateSoftLimitZeroIsStoredNotARemoval(t *testing.T) {
 	underTest, err, teardown := setupTracingAccountsTest()
 	assert.NoError(t, err)
 	defer teardown()

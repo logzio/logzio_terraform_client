@@ -1,7 +1,7 @@
 # Changes by Version
 
 <!-- next version -->
-## Unreleased
+## v1.32.0
 - Add soft limit support to `metrics_accounts`: `GetMetricsAccountSoftLimit` and `UpdateMetricsAccountSoftLimit` for consumption metrics accounts.
 - Add [Consumption Tracing Accounts API](./tracing_accounts/README.md) — CRUD + list + get/update soft limit.
 

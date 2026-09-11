@@ -121,8 +121,10 @@ func TestMetricsAccount_UpdateSoftLimit(t *testing.T) {
 	assert.Equal(t, int32(2500), *softLimit.SoftLimitUniqueMetrics)
 }
 
-// Zero is a legal soft limit and must not be rejected by the client-side validation.
-func TestMetricsAccount_UpdateSoftLimitZeroIsAllowed(t *testing.T) {
+// Zero is accepted by the API and must not be rejected client side. It is NOT a removal: it is
+// stored as-is, and because the limiter only applies a soft limit greater than the plan UTS, a
+// stored 0 is silently ignored rather than capping the account at zero.
+func TestMetricsAccount_UpdateSoftLimitZeroIsStoredNotARemoval(t *testing.T) {
 	underTest, err, teardown := setupMetricsAccountsTest()
 	assert.NoError(t, err)
 	defer teardown()
