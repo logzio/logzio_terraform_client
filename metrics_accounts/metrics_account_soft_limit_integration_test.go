@@ -20,7 +20,11 @@ func TestIntegrationMetricsAccount_GetMetricsAccountSoftLimit(t *testing.T) {
 
 		metricsAccount, err := underTest.CreateMetricsAccount(createMetricsAccount)
 		if assert.NoError(t, err) && assert.NotNil(t, metricsAccount) {
-			t.Logf("CREATED metrics account id=%d name=%s planUts=%d (kept, not deleted)", metricsAccount.Id, metricsAccount.AccountName, metricsAccount.PlanUts)
+			defer func() {
+				// a failed cleanup leaks a real account, so surface it instead of ignoring it
+				assert.NoError(t, underTest.DeleteMetricsAccount(int64(metricsAccount.Id)),
+					"cleanup of metrics account %d failed", metricsAccount.Id)
+			}()
 			assert.Equal(t, int32(planUtsForSoftLimitTest), metricsAccount.PlanUts)
 			time.Sleep(4 * time.Second)
 
@@ -47,7 +51,11 @@ func TestIntegrationMetricsAccount_UpdateMetricsAccountSoftLimit(t *testing.T) {
 
 		metricsAccount, err := underTest.CreateMetricsAccount(createMetricsAccount)
 		if assert.NoError(t, err) && assert.NotNil(t, metricsAccount) {
-			t.Logf("CREATED metrics account id=%d name=%s planUts=%d (kept, not deleted)", metricsAccount.Id, metricsAccount.AccountName, metricsAccount.PlanUts)
+			defer func() {
+				// a failed cleanup leaks a real account, so surface it instead of ignoring it
+				assert.NoError(t, underTest.DeleteMetricsAccount(int64(metricsAccount.Id)),
+					"cleanup of metrics account %d failed", metricsAccount.Id)
+			}()
 			time.Sleep(4 * time.Second)
 
 			// above the plan UTS of 100, so the limiter actually applies it
