@@ -41,11 +41,13 @@ type AuthorizedAccount struct {
 }
 
 type TracingAccount struct {
-	AccountId          int32               `json:"accountId"`
-	AccountName        string              `json:"accountName"`
-	MaxDailyGB         *float32            `json:"maxDailyGB"`
-	Retention          int32               `json:"retention"`
-	CreatedAt          string              `json:"createdAt"`
+	AccountId   int32    `json:"accountId"`
+	AccountName string   `json:"accountName"`
+	MaxDailyGB  *float32 `json:"maxDailyGB"`
+	Retention   int32    `json:"retention"`
+	// epoch seconds with a fractional part, e.g. 1784553267.000000000 - not a string and not
+	// an integer, so neither string nor int64 can unmarshal it
+	CreatedAt          float64             `json:"createdAt"`
 	Token              string              `json:"token,omitempty"`
 	AuthorizedAccounts []AuthorizedAccount `json:"authorizedAccounts"`
 	SuspensionState    *string             `json:"suspensionState,omitempty"`
