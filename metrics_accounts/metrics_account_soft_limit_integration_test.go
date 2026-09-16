@@ -20,7 +20,7 @@ func TestIntegrationMetricsAccount_GetMetricsAccountSoftLimit(t *testing.T) {
 
 		metricsAccount, err := underTest.CreateMetricsAccount(createMetricsAccount)
 		if assert.NoError(t, err) && assert.NotNil(t, metricsAccount) {
-			defer underTest.DeleteMetricsAccount(int64(metricsAccount.Id))
+			t.Logf("CREATED metrics account id=%d name=%s planUts=%d (kept, not deleted)", metricsAccount.Id, metricsAccount.AccountName, metricsAccount.PlanUts)
 			assert.Equal(t, int32(planUtsForSoftLimitTest), metricsAccount.PlanUts)
 			time.Sleep(4 * time.Second)
 
@@ -47,7 +47,7 @@ func TestIntegrationMetricsAccount_UpdateMetricsAccountSoftLimit(t *testing.T) {
 
 		metricsAccount, err := underTest.CreateMetricsAccount(createMetricsAccount)
 		if assert.NoError(t, err) && assert.NotNil(t, metricsAccount) {
-			defer underTest.DeleteMetricsAccount(int64(metricsAccount.Id))
+			t.Logf("CREATED metrics account id=%d name=%s planUts=%d (kept, not deleted)", metricsAccount.Id, metricsAccount.AccountName, metricsAccount.PlanUts)
 			time.Sleep(4 * time.Second)
 
 			// above the plan UTS of 100, so the limiter actually applies it
