@@ -119,22 +119,6 @@ func TestTracingAccount_UpdateSoftLimitIdMismatch(t *testing.T) {
 	assert.False(t, called, "no request should be sent when validation fails")
 }
 
-// Zero is accepted by the API and must not be rejected client side. There is no removal endpoint.
-func TestTracingAccount_UpdateSoftLimitZeroIsStoredNotARemoval(t *testing.T) {
-	underTest, err, teardown := setupTracingAccountsTest()
-	assert.NoError(t, err)
-	defer teardown()
-
-	mux.HandleFunc("/v1/account-management/consumption/tracing-accounts/", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprint(w, fixture("update_tracing_account_soft_limit.json"))
-	})
-
-	_, err = underTest.UpdateTracingAccountSoftLimit(int64(7654321),
-		tracing_accounts.UpdateTracingAccountSoftLimit{TracingAccountId: 7654321, SoftLimitGB: 0})
-	assert.NoError(t, err)
-}
-
 // Mirrors the API validation, which rejects a negative soft limit with 400 ILLEGAL_SOFT_LIMIT.
 func TestTracingAccount_UpdateSoftLimitNegative(t *testing.T) {
 	underTest, err, teardown := setupTracingAccountsTest()

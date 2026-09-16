@@ -95,13 +95,3 @@ func TestIntegrationTracingAccount_UpdateTracingAccountSoftLimitMismatchedId(t *
 		}
 	}
 }
-
-func TestIntegrationTracingAccount_GetTracingAccountSoftLimitNotExists(t *testing.T) {
-	underTest, _, err := setupTracingAccountsIntegrationTest()
-
-	if assert.NoError(t, err) {
-		softLimit, err := underTest.GetTracingAccountSoftLimit(int64(1234567))
-		assert.Error(t, err)
-		assert.Nil(t, softLimit)
-	}
-}

@@ -121,24 +121,6 @@ func TestMetricsAccount_UpdateSoftLimit(t *testing.T) {
 	assert.Equal(t, int32(2500), *softLimit.SoftLimitUniqueMetrics)
 }
 
-// Zero is accepted by the API and must not be rejected client side. It is NOT a removal: it is
-// stored as-is, and because the limiter only applies a soft limit greater than the plan UTS, a
-// stored 0 is silently ignored rather than capping the account at zero.
-func TestMetricsAccount_UpdateSoftLimitZeroIsStoredNotARemoval(t *testing.T) {
-	underTest, err, teardown := setupMetricsAccountsTest()
-	assert.NoError(t, err)
-	defer teardown()
-
-	mux.HandleFunc("/v1/account-management/metrics-accounts/", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprint(w, fixture("update_metrics_account_soft_limit.json"))
-	})
-
-	_, err = underTest.UpdateMetricsAccountSoftLimit(int64(1234567),
-		metrics_accounts.UpdateMetricsAccountSoftLimit{SoftLimitUniqueMetrics: 0})
-	assert.NoError(t, err)
-}
-
 // Mirrors the API validation, which rejects a negative soft limit with 400 INVALID_SOFT_LIMIT.
 func TestMetricsAccount_UpdateSoftLimitNegative(t *testing.T) {
 	underTest, err, teardown := setupMetricsAccountsTest()

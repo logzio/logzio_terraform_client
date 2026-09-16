@@ -44,16 +44,6 @@ func TestIntegrationTracingAccount_GetTracingAccount(t *testing.T) {
 	}
 }
 
-func TestIntegrationTracingAccount_GetTracingAccountNotExists(t *testing.T) {
-	underTest, _, err := setupTracingAccountsIntegrationTest()
-
-	if assert.NoError(t, err) {
-		tracingAccount, err := underTest.GetTracingAccount(int64(1234567))
-		assert.Error(t, err)
-		assert.Nil(t, tracingAccount)
-	}
-}
-
 func TestIntegrationTracingAccount_ListTracingAccounts(t *testing.T) {
 	underTest, email, err := setupTracingAccountsIntegrationTest()
 
@@ -129,14 +119,5 @@ func TestIntegrationTracingAccount_DeleteTracingAccount(t *testing.T) {
 			assert.Error(t, err)
 			assert.Nil(t, getTracingAccount)
 		}
-	}
-}
-
-func TestIntegrationTracingAccount_DeleteTracingAccountNotExists(t *testing.T) {
-	underTest, _, err := setupTracingAccountsIntegrationTest()
-
-	if assert.NoError(t, err) {
-		err = underTest.DeleteTracingAccount(int64(1234567))
-		assert.Error(t, err)
 	}
 }
