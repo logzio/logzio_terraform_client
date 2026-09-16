@@ -15,7 +15,11 @@ func TestIntegrationTracingAccount_CreateTracingAccount(t *testing.T) {
 
 		tracingAccount, err := underTest.CreateTracingAccount(createTracingAccount)
 		if assert.NoError(t, err) && assert.NotNil(t, tracingAccount) {
-			defer underTest.DeleteTracingAccount(int64(tracingAccount.AccountId))
+			defer func() {
+				// a failed cleanup leaks a real account, so surface it instead of ignoring it
+				assert.NoError(t, underTest.DeleteTracingAccount(int64(tracingAccount.AccountId)),
+					"cleanup of tracing account %d failed", tracingAccount.AccountId)
+			}()
 			assert.NotZero(t, tracingAccount.AccountId)
 			assert.Equal(t, createTracingAccount.AccountName, tracingAccount.AccountName)
 		}
@@ -31,7 +35,11 @@ func TestIntegrationTracingAccount_GetTracingAccount(t *testing.T) {
 
 		tracingAccount, err := underTest.CreateTracingAccount(createTracingAccount)
 		if assert.NoError(t, err) && assert.NotNil(t, tracingAccount) {
-			defer underTest.DeleteTracingAccount(int64(tracingAccount.AccountId))
+			defer func() {
+				// a failed cleanup leaks a real account, so surface it instead of ignoring it
+				assert.NoError(t, underTest.DeleteTracingAccount(int64(tracingAccount.AccountId)),
+					"cleanup of tracing account %d failed", tracingAccount.AccountId)
+			}()
 			time.Sleep(4 * time.Second)
 
 			getTracingAccount, err := underTest.GetTracingAccount(int64(tracingAccount.AccountId))
@@ -53,7 +61,11 @@ func TestIntegrationTracingAccount_ListTracingAccounts(t *testing.T) {
 
 		tracingAccount, err := underTest.CreateTracingAccount(createTracingAccount)
 		if assert.NoError(t, err) && assert.NotNil(t, tracingAccount) {
-			defer underTest.DeleteTracingAccount(int64(tracingAccount.AccountId))
+			defer func() {
+				// a failed cleanup leaks a real account, so surface it instead of ignoring it
+				assert.NoError(t, underTest.DeleteTracingAccount(int64(tracingAccount.AccountId)),
+					"cleanup of tracing account %d failed", tracingAccount.AccountId)
+			}()
 			time.Sleep(4 * time.Second)
 
 			tracingAccounts, err := underTest.ListTracingAccounts()
@@ -81,7 +93,11 @@ func TestIntegrationTracingAccount_UpdateTracingAccount(t *testing.T) {
 
 		tracingAccount, err := underTest.CreateTracingAccount(createTracingAccount)
 		if assert.NoError(t, err) && assert.NotNil(t, tracingAccount) {
-			defer underTest.DeleteTracingAccount(int64(tracingAccount.AccountId))
+			defer func() {
+				// a failed cleanup leaks a real account, so surface it instead of ignoring it
+				assert.NoError(t, underTest.DeleteTracingAccount(int64(tracingAccount.AccountId)),
+					"cleanup of tracing account %d failed", tracingAccount.AccountId)
+			}()
 			time.Sleep(time.Second * 2)
 
 			createTracingAccount.AccountName = "test_after_update"

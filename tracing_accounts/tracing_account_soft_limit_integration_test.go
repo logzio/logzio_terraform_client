@@ -16,7 +16,11 @@ func TestIntegrationTracingAccount_GetTracingAccountSoftLimit(t *testing.T) {
 
 		tracingAccount, err := underTest.CreateTracingAccount(createTracingAccount)
 		if assert.NoError(t, err) && assert.NotNil(t, tracingAccount) {
-			defer underTest.DeleteTracingAccount(int64(tracingAccount.AccountId))
+			defer func() {
+				// a failed cleanup leaks a real account, so surface it instead of ignoring it
+				assert.NoError(t, underTest.DeleteTracingAccount(int64(tracingAccount.AccountId)),
+					"cleanup of tracing account %d failed", tracingAccount.AccountId)
+			}()
 			time.Sleep(4 * time.Second)
 
 			softLimit, err := underTest.GetTracingAccountSoftLimit(int64(tracingAccount.AccountId))
@@ -41,7 +45,11 @@ func TestIntegrationTracingAccount_UpdateTracingAccountSoftLimit(t *testing.T) {
 
 		tracingAccount, err := underTest.CreateTracingAccount(createTracingAccount)
 		if assert.NoError(t, err) && assert.NotNil(t, tracingAccount) {
-			defer underTest.DeleteTracingAccount(int64(tracingAccount.AccountId))
+			defer func() {
+				// a failed cleanup leaks a real account, so surface it instead of ignoring it
+				assert.NoError(t, underTest.DeleteTracingAccount(int64(tracingAccount.AccountId)),
+					"cleanup of tracing account %d failed", tracingAccount.AccountId)
+			}()
 			time.Sleep(4 * time.Second)
 
 			updated, err := underTest.UpdateTracingAccountSoftLimit(int64(tracingAccount.AccountId),
@@ -81,7 +89,11 @@ func TestIntegrationTracingAccount_UpdateTracingAccountSoftLimitMismatchedId(t *
 
 		tracingAccount, err := underTest.CreateTracingAccount(createTracingAccount)
 		if assert.NoError(t, err) && assert.NotNil(t, tracingAccount) {
-			defer underTest.DeleteTracingAccount(int64(tracingAccount.AccountId))
+			defer func() {
+				// a failed cleanup leaks a real account, so surface it instead of ignoring it
+				assert.NoError(t, underTest.DeleteTracingAccount(int64(tracingAccount.AccountId)),
+					"cleanup of tracing account %d failed", tracingAccount.AccountId)
+			}()
 			time.Sleep(4 * time.Second)
 
 			// the API rejects a body id that does not match the path id
