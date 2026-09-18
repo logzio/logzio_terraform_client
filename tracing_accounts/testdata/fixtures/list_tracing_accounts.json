@@ -1,0 +1,18 @@
+[
+  {
+    "accountId": 7654321,
+    "accountName": "tf_client_test_tracing",
+    "maxDailyGB": 5.0,
+    "retention": 14,
+    "createdAt": 1784553267.000000000,
+    "authorizedAccounts": []
+  },
+  {
+    "accountId": 7654322,
+    "accountName": "second",
+    "maxDailyGB": null,
+    "retention": 7,
+    "createdAt": 1784553267.000000000,
+    "authorizedAccounts": []
+  }
+]

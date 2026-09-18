@@ -1,0 +1,1 @@
+{"errorCode":"NOT_CONSUMPTION_ACCOUNT","message":"account must be of consumption type"}
