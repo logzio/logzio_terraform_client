@@ -1,0 +1,1 @@
+{"errorCode":"METRICS_ACCOUNT_MANAGEMENT/NOT_CONSUMPTION_ACCOUNT","message":"account must be of consumption type"}

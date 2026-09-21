@@ -22,3 +22,8 @@ account := metrics_accounts.CreateOrUpdateMetricsAccount{
 | delete metrics account | `func (c *MetricsAccountClient) DeleteMetricsAccount(metricsAccountId int64) error`                                                             |
 | get metrics account    | `func (c *MetricsAccountClient) GetMetricsAccount(metricsAccountId int64) (*MetricsAccount, error)`                                             |
 | list metrics accounts  | `func (c *MetricsAccountClient) ListMetricsAccounts() ([]MetricsAccount, error)`                                                                |
+| get soft limit         | `func (c *MetricsAccountClient) GetMetricsAccountSoftLimit(metricsAccountId int64) (*MetricsAccountSoftLimit, error)`                           |
+| update soft limit      | `func (c *MetricsAccountClient) UpdateMetricsAccountSoftLimit(metricsAccountId int64, updateSoftLimit UpdateMetricsAccountSoftLimit) (*MetricsAccountSoftLimit, error)` |
+
+The soft limit endpoints are available for **consumption** accounts only. For a subscription
+owner the API responds with `400`.

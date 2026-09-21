@@ -48,6 +48,24 @@ func setupMetricsAccountsIntegrationTest() (*metrics_accounts.MetricsAccountClie
 	return underTest, email, err
 }
 
+// setupMetricsAccountsConsumptionIntegrationTest authenticates with the consumption account token.
+// The soft limit endpoints reject a non-consumption owner with 400, so they cannot run under the
+// token the other metrics account integration tests use.
+func setupMetricsAccountsConsumptionIntegrationTest() (*metrics_accounts.MetricsAccountClient, string, error) {
+	apiToken, err := test_utils.GetConsumptionApiToken()
+	if err != nil {
+		return nil, "", err
+	}
+
+	email, err := test_utils.GetLogzioEmail()
+	if err != nil {
+		return nil, "", err
+	}
+
+	underTest, err := metrics_accounts.New(apiToken, test_utils.GetLogzIoBaseUrl())
+	return underTest, email, err
+}
+
 func getCreateOrUpdateMetricsAccount(email string) metrics_accounts.CreateOrUpdateMetricsAccount {
 	metricsAccount := metrics_accounts.CreateOrUpdateMetricsAccount{
 		Email:                 email,
