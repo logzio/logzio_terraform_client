@@ -28,3 +28,11 @@ subaccount := sub_accounts.CreateOrUpdateSubAccount{
 |get detailed sub-account|`func (c *SubAccountClient) GetDetailedSubAccount(subAccountId int64) (*DetailedSubAccount, error)`|
 |list sub-accounts|`func (c *SubAccountClient) ListSubAccounts() ([]SubAccount, error)`|
 |list detailed sub-accounts|`func (c *SubAccountClient) ListDetailedSubAccounts() ([]DetailedSubAccount, error)`|
+|update warm tier retention|`func (c *SubAccountClient) UpdateWarmRetention(accountId int64, updateWarmRetention UpdateWarmRetention) ([]AccountRetentionDetails, error)`|
+
+To set the warm tier retention of the main account or of one of its sub-accounts:
+```go
+client, _ := sub_accounts.New(apiToken, apiServerAddress)
+retentionDetails, err := client.UpdateWarmRetention(accountId, sub_accounts.UpdateWarmRetention{SnapSearchRetentionDays: 3})
+```
+The main account must already have warm tier and keep at least 1 day of it. A sub-account can be set from 0 (no warm tier) up to the main account's warm retention. The response is the hot and warm retention of the main account and all its sub-accounts after the update.

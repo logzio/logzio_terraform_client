@@ -1,0 +1,5 @@
+[
+  {"accountId": 1234567, "retentionDays": 7, "snapSearchRetentionDays": 3, "lastWarmDate": 1790640000.000000000},
+  {"accountId": 1234568, "retentionDays": 7, "snapSearchRetentionDays": null, "lastWarmDate": null},
+  {"accountId": 1234500, "retentionDays": 7, "snapSearchRetentionDays": 5, "lastWarmDate": 1790640000.000000000}
+]

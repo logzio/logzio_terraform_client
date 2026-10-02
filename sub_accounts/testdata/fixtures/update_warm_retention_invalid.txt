@@ -1,0 +1,1 @@
+{"errorCode":"TimeBasedAccount/INVALID_WARM_RETENTION","message":"Invalid warm retention for account 1234567. Reason: a sub account's warm retention can't exceed the main account's (5 days).","requestId":"test-request-id","parameters":{"accountId":1234567}}
