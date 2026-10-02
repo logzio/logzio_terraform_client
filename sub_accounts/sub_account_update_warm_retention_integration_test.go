@@ -1,116 +1,137 @@
 package sub_accounts_test
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
 	"github.com/logzio/logzio_terraform_client/sub_accounts"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
-// Setting the main account's warm retention to the value it already has exercises the endpoint for the main
-// account without changing it.
 func TestIntegrationSubAccount_UpdateWarmRetentionMainAccount(t *testing.T) {
 	underTest, _, err := setupSubAccountsWarmIntegrationTest()
-	require.NoError(t, err)
 
-	mainAccount := getWarmMainAccount(t, underTest)
-
-	retentionDetails, err := underTest.UpdateWarmRetention(int64(mainAccount.AccountId),
-		sub_accounts.UpdateWarmRetention{SnapSearchRetentionDays: mainAccount.SnapSearchRetentionDays})
-	require.NoError(t, err)
-
-	updated := findRetentionDetails(t, retentionDetails, mainAccount.AccountId)
-	require.NotNil(t, updated.SnapSearchRetentionDays)
-	assert.Equal(t, mainAccount.SnapSearchRetentionDays, *updated.SnapSearchRetentionDays)
+	if assert.NoError(t, err) {
+		mainAccount, err := getWarmMainAccount(underTest)
+		if assert.NoError(t, err) {
+			// setting the value the main account already has exercises the endpoint without changing the account
+			retentionDetails, err := underTest.UpdateWarmRetention(int64(mainAccount.AccountId),
+				sub_accounts.UpdateWarmRetention{SnapSearchRetentionDays: mainAccount.SnapSearchRetentionDays})
+			if assert.NoError(t, err) {
+				updated := findRetentionDetails(retentionDetails, mainAccount.AccountId)
+				if assert.NotNil(t, updated) && assert.NotNil(t, updated.SnapSearchRetentionDays) {
+					assert.Equal(t, mainAccount.SnapSearchRetentionDays, *updated.SnapSearchRetentionDays)
+				}
+			}
+		}
+	}
 }
 
 func TestIntegrationSubAccount_UpdateWarmRetentionSubAccount(t *testing.T) {
 	underTest, email, err := setupSubAccountsWarmIntegrationTest()
-	require.NoError(t, err)
 
-	mainAccount := getWarmMainAccount(t, underTest)
-	subAccountId := createWarmTestSubAccount(t, underTest, email, mainAccount, "_warm_update")
-	defer underTest.DeleteSubAccount(subAccountId)
+	if assert.NoError(t, err) {
+		mainAccount, err := getWarmMainAccount(underTest)
+		if assert.NoError(t, err) {
+			createSubAccount := getWarmCreateSubAccount(email, mainAccount)
+			createSubAccount.AccountName = createSubAccount.AccountName + "_warm_update"
 
-	retentionDetails, err := underTest.UpdateWarmRetention(subAccountId, sub_accounts.UpdateWarmRetention{SnapSearchRetentionDays: 1})
-	require.NoError(t, err)
-	updated := findRetentionDetails(t, retentionDetails, int32(subAccountId))
-	require.NotNil(t, updated.SnapSearchRetentionDays)
-	assert.Equal(t, int32(1), *updated.SnapSearchRetentionDays)
+			subAccount, err := underTest.CreateSubAccount(createSubAccount)
+			if assert.NoError(t, err) && assert.NotNil(t, subAccount) {
+				time.Sleep(4 * time.Second)
+				defer underTest.DeleteSubAccount(int64(subAccount.AccountId))
 
-	assert.Eventually(t, func() bool {
-		subAccount, getErr := underTest.GetSubAccount(subAccountId)
-		return getErr == nil && subAccount.SnapSearchRetentionDays == 1
-	}, 30*time.Second, 2*time.Second, "GetSubAccount should read back the updated warm retention")
+				retentionDetails, err := underTest.UpdateWarmRetention(int64(subAccount.AccountId),
+					sub_accounts.UpdateWarmRetention{SnapSearchRetentionDays: 1})
+				if assert.NoError(t, err) {
+					updated := findRetentionDetails(retentionDetails, subAccount.AccountId)
+					if assert.NotNil(t, updated) && assert.NotNil(t, updated.SnapSearchRetentionDays) {
+						assert.Equal(t, int32(1), *updated.SnapSearchRetentionDays)
+					}
+				}
+				// verify that the update was made
+				time.Sleep(time.Second * 2)
+				getSubAccount, err := underTest.GetSubAccount(int64(subAccount.AccountId))
+				assert.NoError(t, err)
+				assert.Equal(t, int32(1), getSubAccount.SnapSearchRetentionDays)
 
-	// 0 turns warm tier off for a sub account.
-	retentionDetails, err = underTest.UpdateWarmRetention(subAccountId, sub_accounts.UpdateWarmRetention{SnapSearchRetentionDays: 0})
-	require.NoError(t, err)
-	updated = findRetentionDetails(t, retentionDetails, int32(subAccountId))
-	require.NotNil(t, updated.SnapSearchRetentionDays)
-	assert.Equal(t, int32(0), *updated.SnapSearchRetentionDays)
+				// 0 turns warm tier off for a sub account
+				time.Sleep(time.Second * 2)
+				retentionDetails, err = underTest.UpdateWarmRetention(int64(subAccount.AccountId),
+					sub_accounts.UpdateWarmRetention{SnapSearchRetentionDays: 0})
+				if assert.NoError(t, err) {
+					updated := findRetentionDetails(retentionDetails, subAccount.AccountId)
+					if assert.NotNil(t, updated) && assert.NotNil(t, updated.SnapSearchRetentionDays) {
+						assert.Equal(t, int32(0), *updated.SnapSearchRetentionDays)
+					}
+				}
+			}
+		}
+	}
 }
 
 func TestIntegrationSubAccount_UpdateWarmRetentionAboveMainAccount(t *testing.T) {
 	underTest, email, err := setupSubAccountsWarmIntegrationTest()
-	require.NoError(t, err)
 
-	mainAccount := getWarmMainAccount(t, underTest)
-	subAccountId := createWarmTestSubAccount(t, underTest, email, mainAccount, "_warm_above")
-	defer underTest.DeleteSubAccount(subAccountId)
+	if assert.NoError(t, err) {
+		mainAccount, err := getWarmMainAccount(underTest)
+		if assert.NoError(t, err) {
+			createSubAccount := getWarmCreateSubAccount(email, mainAccount)
+			createSubAccount.AccountName = createSubAccount.AccountName + "_warm_above"
 
-	retentionDetails, err := underTest.UpdateWarmRetention(subAccountId,
-		sub_accounts.UpdateWarmRetention{SnapSearchRetentionDays: mainAccount.SnapSearchRetentionDays + 1})
-	assert.Error(t, err)
-	assert.Nil(t, retentionDetails)
-	assert.Contains(t, err.Error(), "INVALID_WARM_RETENTION")
+			subAccount, err := underTest.CreateSubAccount(createSubAccount)
+			if assert.NoError(t, err) && assert.NotNil(t, subAccount) {
+				time.Sleep(4 * time.Second)
+				defer underTest.DeleteSubAccount(int64(subAccount.AccountId))
+
+				retentionDetails, err := underTest.UpdateWarmRetention(int64(subAccount.AccountId),
+					sub_accounts.UpdateWarmRetention{SnapSearchRetentionDays: mainAccount.SnapSearchRetentionDays + 1})
+				assert.Nil(t, retentionDetails)
+				if assert.Error(t, err) {
+					assert.Contains(t, err.Error(), "INVALID_WARM_RETENTION")
+				}
+			}
+		}
+	}
 }
 
-// getWarmMainAccount returns the main account of the warm API token, failing the test when it has no warm tier,
-// which the endpoint needs.
-func getWarmMainAccount(t *testing.T, underTest *sub_accounts.SubAccountClient) sub_accounts.SubAccount {
+// getWarmMainAccount returns the main account of the warm API token, which must have warm tier for the endpoint to work
+func getWarmMainAccount(underTest *sub_accounts.SubAccountClient) (sub_accounts.SubAccount, error) {
 	accounts, err := underTest.ListSubAccounts()
-	require.NoError(t, err)
+	if err != nil {
+		return sub_accounts.SubAccount{}, err
+	}
 	for _, account := range accounts {
 		if account.IsOwner {
-			require.Greater(t, account.SnapSearchRetentionDays, int32(0), "the warm test account must have warm tier")
-			return account
+			if account.SnapSearchRetentionDays <= 0 {
+				return sub_accounts.SubAccount{}, fmt.Errorf("main account %d has no warm tier", account.AccountId)
+			}
+			return account, nil
 		}
 	}
-	require.FailNow(t, "the warm API token's main account is missing from the accounts list")
-	return sub_accounts.SubAccount{}
+	return sub_accounts.SubAccount{}, fmt.Errorf("main account is missing from the accounts list")
 }
 
-// createWarmTestSubAccount creates a sub account with no warm retention, the main account's hot retention and volume
-// mode, and returns its id.
-func createWarmTestSubAccount(t *testing.T, underTest *sub_accounts.SubAccountClient, email string,
-	mainAccount sub_accounts.SubAccount, nameSuffix string) int64 {
+// getWarmCreateSubAccount returns a sub account without warm retention that the main account can hold: same hot
+// retention and volume mode, and little volume for a fixed main account
+func getWarmCreateSubAccount(email string, mainAccount sub_accounts.SubAccount) sub_accounts.CreateOrUpdateSubAccount {
 	createSubAccount := getCreateOrUpdateSubAccount(email)
-	createSubAccount.AccountName = createSubAccount.AccountName + nameSuffix
 	createSubAccount.RetentionDays = mainAccount.RetentionDays
 	if mainAccount.Flexible {
-		createSubAccount.Flexible = "true"
 		createSubAccount.ReservedDailyGB = new(float32)
+		createSubAccount.Flexible = "true"
 	} else {
-		// a fixed main account must have this much volume left to hand out, so keep it small
 		*createSubAccount.MaxDailyGB = 0.01
 	}
-
-	subAccount, err := underTest.CreateSubAccount(createSubAccount)
-	require.NoError(t, err)
-	require.NotNil(t, subAccount)
-	time.Sleep(4 * time.Second)
-	return int64(subAccount.AccountId)
+	return createSubAccount
 }
 
-func findRetentionDetails(t *testing.T, retentionDetails []sub_accounts.AccountRetentionDetails, accountId int32) sub_accounts.AccountRetentionDetails {
-	for _, details := range retentionDetails {
-		if details.AccountId == accountId {
-			return details
+func findRetentionDetails(retentionDetails []sub_accounts.AccountRetentionDetails, accountId int32) *sub_accounts.AccountRetentionDetails {
+	for i := range retentionDetails {
+		if retentionDetails[i].AccountId == accountId {
+			return &retentionDetails[i]
 		}
 	}
-	require.FailNowf(t, "missing retention details", "account %d is missing from the response", accountId)
-	return sub_accounts.AccountRetentionDetails{}
+	return nil
 }
