@@ -1,6 +1,9 @@
 # Changes by Version
 
 <!-- next version -->
+## v1.33.0
+- Add `UpdateWarmRetention` to [`sub_accounts`](./sub_accounts/README.md): sets the warm tier retention of the main account or one of its sub accounts through `PUT /v1/account-management/time-based-accounts/{accountId}/retention-details`.
+
 ## v1.32.0
 - Add soft limit support to `metrics_accounts`: `GetMetricsAccountSoftLimit` and `UpdateMetricsAccountSoftLimit` for consumption metrics accounts.
 - Add [Consumption Tracing Accounts API](./tracing_accounts/README.md) — CRUD + list + get/update soft limit.

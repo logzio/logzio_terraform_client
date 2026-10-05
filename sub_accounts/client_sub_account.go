@@ -17,9 +17,23 @@ const (
 	operationListSubAccounts       = "ListSubAccounts"
 	operationUpdateSubAccount      = "UpdateSubAccount"
 	operationCreateSubAccount      = "CreateSubAccount"
+	operationUpdateWarmRetention   = "UpdateWarmRetention"
 
 	subAccountResourceName = "sub account"
 )
+
+// UpdateWarmRetention is the body of UpdateWarmRetention.
+type UpdateWarmRetention struct {
+	SnapSearchRetentionDays int32 `json:"snapSearchRetentionDays"`
+}
+
+// AccountRetentionDetails is the hot and warm retention of one account. SnapSearchRetentionDays is nil when no warm
+// retention was ever set for the account and 0 when it was turned off - both mean the account has no warm tier.
+type AccountRetentionDetails struct {
+	AccountId               int32  `json:"accountId"`
+	RetentionDays           int32  `json:"retentionDays"`
+	SnapSearchRetentionDays *int32 `json:"snapSearchRetentionDays"`
+}
 
 type SubAccountClient struct {
 	*client.Client
